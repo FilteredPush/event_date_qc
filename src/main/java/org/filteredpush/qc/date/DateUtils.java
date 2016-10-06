@@ -63,12 +63,12 @@ public class DateUtils {
 	/**
 	 * Attempt to construct an ISO formatted date as a string built from atomic parts of the date.
 	 * 
-	 * @param verbatimEventDate
-	 * @param startDayOfYear
-	 * @param endDayOfYear
-	 * @param year
-	 * @param month
-	 * @param day
+	 * @param verbatimEventDate a string containing the verbatim event date 
+	 * @param startDayOfYear a string containing the start day of a year, expected to parse to an integer.
+	 * @param endDayOfYear a string containing the end day of a year, expected to parse to an integer.
+	 * @param year a string containing the year, expected to parse to an integer.
+	 * @param month a string containing the month, expected to parse to an integer.
+	 * @param day a string containing the start day, expected to parse to an integer.
 	 * 
 	 * @return null, or a string in the form of an ISO date consistent with the input fields.
 	 * 	 
@@ -153,8 +153,8 @@ public class DateUtils {
 	 * Attempt to extract a date or date range in standard format from a provided verbatim 
 	 * date string.  
 	 * 
-	 * @param verbatimEventDate
-	 * @return
+	 * @param verbatimEventDate a string containing a verbatim event date.
+	 * @return a map with result and resultState as keys
 	 */
 	public static Map<String,String> extractDateFromVerbatim(String verbatimEventDate) {
 		return extractDateFromVerbatim(verbatimEventDate, DateUtils.YEAR_BEFORE_SUSPECT);
@@ -163,9 +163,9 @@ public class DateUtils {
 	/**
 	 * Extract a date from a verbatim date, returning ranges specified to day.
 	 * 
-	 * @param verbatimEventDate
-	 * @param yearsBeforeSuspect
-	 * @return 
+	 * @param verbatimEventDate a string containing a verbatim event date.
+	 * @param yearsBeforeSuspect the value for a year before which parsed years should be considered suspect.
+	 * @return  a map with result and resultState as keys
 	 */
 	public static Map<String,String> extractDateToDayFromVerbatim(String verbatimEventDate, int yearsBeforeSuspect) {
 		Map<String,String> result =  extractDateFromVerbatim(verbatimEventDate, yearsBeforeSuspect);
@@ -187,7 +187,7 @@ public class DateUtils {
 	 * Given a string that may represent a date or range of dates, or date time or range of date times,
 	 * attempt to extract a standard date from that string.
 	 * 
-	 * @param verbatimEventDate
+	 * @param verbatimEventDate a string containing a verbatim event date.
 	 * @param yearsBeforeSuspect  Dates that parse to a year prior to this year are marked as suspect.
 	 * 
 	 * @return a map with keys resultState for the nature of the match and result for the resulting date. 
@@ -865,9 +865,9 @@ public class DateUtils {
      * dates from that date range (ignoring time (thus the duration for the 
      * interval will be from one date midnight to another).
      * 
-     * @see extractInterval, which is probably the method you want.
+     * @see #extractInterval(String) which is probably the method you want.
      * 
-     * @param eventDate
+     * @param eventDate a string containing a dwc:eventDate from which to extract an interval.
      * @return An interval from one DateMidnight to another DateMidnight.
      */
     public static Interval extractDateInterval(String eventDate) {
@@ -921,9 +921,9 @@ public class DateUtils {
      * Given a string that may be a date or a date range, extract a interval of
      * dates from that date range, up to the end milisecond of the last day.
      * 
-     * @see extractDateInterval which returns a pair of DateMidnights.
+     * @see #extractDateInterval(String) which returns a pair of DateMidnights.
      * 
-     * @param eventDate
+     * @param eventDate a string containing a dwc:eventDate from which to extract an interval.
      * @return an interval from the beginning of event date to the end of event date.
      */
     public static Interval extractInterval(String eventDate) {
@@ -985,7 +985,7 @@ public class DateUtils {
     /**
      * Extract a single joda date from an event date.
      * 
-     * @param eventDate
+     * @param eventDate an event date from which to try to extract a DateMidnight
      * @return a DateMidnight or null if a date cannot be extracted
      */
     public static DateMidnight extractDate(String eventDate) {
@@ -1011,11 +1011,11 @@ public class DateUtils {
      * Identify whether an event date is consistent with its atomic parts.  
      * 
      * @param eventDate  dwc:eventDate string to compare with atomic parts.
-     * @param startDayOfYear
-     * @param endDayOfYear
-     * @param year
-     * @param month
-     * @param day
+     * @param startDayOfYear  dwc:startDayOfYear for comparison with eventDate
+     * @param endDayOfYear dwc:endDayOfYear for comparison with eventDate
+     * @param year dwc:year for comparison with eventDate
+     * @param month dwc:month for comparison with eventDate
+     * @param day dwc:day for comparison with eventDate
      * 
      * @return true if consistent, or if eventDate is empty, or if all 
      *    atomic parts are empty, otherwise false.
@@ -1076,10 +1076,10 @@ public class DateUtils {
      * interval.  If eventDate is not null and year, month, and day are, then result is false (data is 
      * not consistent with no data).
      * 
-     * @param eventDate
-     * @param year
-     * @param month
-     * @param day
+     * @param eventDate dwc:eventDate
+     * @param year dwc:year
+     * @param month dwc:month
+     * @param day dwc:day
      * 
      * @return true if eventDate is consistent with year-month-day.
      */
@@ -1207,6 +1207,12 @@ public class DateUtils {
     	return result;
     }
     
+    /**
+     * Attempt to extract a time from an eventDate that could contain time information.
+     * 
+     * @param eventDate dwc:eventDate from which to try to extract a time (in UTC).
+     * @return a string containing a time in UTC or null
+     */
     public static String extractZuluTime(String eventDate) {
     	String result = null;
     	if (!isEmpty(eventDate)) { 
@@ -1385,7 +1391,7 @@ public class DateUtils {
      * month=09, but Sept. doesn't.  Likewise settembre parses as month=09, but
      * Settembre doesn't as joda expects months in Italian to be in lower case.
      * 
-     * @param verbatimEventDate
+     * @param verbatimEventDate string containing a dwc:verbatimEventDate
      * @return String containing verbatimEventDate with transformations applied.
      */
     public static String cleanMonth(String verbatimEventDate) {
@@ -1510,8 +1516,8 @@ public class DateUtils {
     /**
      * Run from the command line, arguments -f to specify a file, -m to show matches.
      * 
-     * @param args "-f filename" to check a file containing a list of dates, one per line.
-     *    "-m" to show matched dates and their interpretations otherwise lists non-matched lines.  
+     * @param args -f filename to check a file containing a list of dates, one per line.
+     *    -m to show matched dates and their interpretations otherwise lists non-matched lines.  
      */
     public static void main(String[] args) { 
         try {
