@@ -9,7 +9,7 @@ Tools for working with dates in forms found in biodiversity data.
   <dependency>
     <groupId>org.filteredpush</groupId>
     <artifactId>event_date_qc</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
   </dependency>
 </pre>
 
