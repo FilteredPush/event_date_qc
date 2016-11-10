@@ -5,7 +5,7 @@
 	<artifactId>event_date_qc</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>event_date_qc</name>
-	<description>FilteredPush dwc:Event data quality library</description>
+	<description>FilteredPush dwc:Event data quality library.  Tools for working with dates in forms found in biodiversity data.</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
