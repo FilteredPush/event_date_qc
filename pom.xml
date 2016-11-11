@@ -6,8 +6,28 @@
 	<version>1.0.0</version>
 	<name>event_date_qc</name>
 	<description>FilteredPush dwc:Event data quality library.  Tools for working with dates in forms found in biodiversity data.</description>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <url>https://wiki.filteredpush.org/</url>
+    <licenses>
+        <license>
+            <name>Apache license, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Paul J. Morris</name>
+            <email>mole@morris.net</email>
+            <organization>Museum of Comparative Zoology, Harvard University</organization>
+            <organizationUrl>https://www.mcz.harvard.edu/</organizationUrl>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:git@github.com:FilteredPush/event_date_qc.git</connection>
+        <developerConnection>scm:git:git@github.com:FilteredPush/event_date_qc.git</developerConnection>
+        <url>git@github.com:FilteredPush/event_date_qc.git</url>
+    </scm>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 	<dependencies>
@@ -82,6 +102,17 @@
 					</execution>
 				</executions>
 			</plugin>
+<plugin>
+  <groupId>org.sonatype.plugins</groupId>
+  <artifactId>nexus-staging-maven-plugin</artifactId>
+  <version>1.6.7</version>
+  <extensions>true</extensions>
+  <configuration>
+     <serverId>ossrh</serverId>
+     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+     <autoReleaseAfterClose>true</autoReleaseAfterClose>
+  </configuration>
+</plugin>
 		</plugins>
 	</build>
 	<distributionManagement>
