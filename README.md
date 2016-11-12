@@ -3,6 +3,11 @@ Data Quality library for dwc:eventDate and other dwc:Event terms.
 
 Tools for working with dates in forms found in biodiversity data.
 
+DOI: 10.5281/zenodo.166329 
+
+[![DOI](https://zenodo.org/badge/70093157.svg)](https://zenodo.org/badge/latestdoi/70093157)
+
+
 # Include using maven
 
 Available in Maven Central.
