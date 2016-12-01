@@ -62,5 +62,5 @@ To deploy a new release to maven central, set the version in pom.xml to a non-sn
 
 After this, you will need to login to the sonatype oss repository hosting nexus instance, find the staged release in the staging repositories, and perform the release.  It should be possible (haven't verified this yet) to perform the release from the command line instead by running: 
 
-    mvn nexus-staging:release
+    mvn nexus-staging:release -P release
 
