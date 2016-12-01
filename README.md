@@ -43,7 +43,7 @@ Available in Maven Central.
     <dependency>
         <groupId>org.filteredpush</groupId>
         <artifactId>event_date_qc</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </dependency>
 
 # Building
