@@ -45,6 +45,8 @@ public class DateUtilsTest {
 		assertEquals(null, DateUtils.createEventDateFromParts(null, "01", "01", null, "01", "01"));
 		
 		assertEquals("1882-03-24", DateUtils.createEventDateFromParts("1882-03-24", null, null, "1882", "03", "24"));
+		assertEquals("1882-03-04", DateUtils.createEventDateFromParts("1882-03-04", null, null, "1882", "3", "4"));
+		assertEquals("1882-03-04", DateUtils.createEventDateFromParts(null, null, null, "1882", "3", "4"));
 		assertEquals("1882-03-24", DateUtils.createEventDateFromParts("1882-03-24", null, null, null, null, null));
 		assertEquals("1882-03-24", DateUtils.createEventDateFromParts("03/24/1882", null, null, null, null, null));
 		assertEquals("1882-03-24", DateUtils.createEventDateFromParts("24/03/1882", null, null, null, null, null));

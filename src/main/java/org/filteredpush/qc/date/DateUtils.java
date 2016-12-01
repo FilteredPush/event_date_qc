@@ -141,10 +141,12 @@ public class DateUtils {
 			}
 		}			
 		if (year!=null && year.matches("[0-9]{4}") && month!=null && month.matches("[0-9]{1,2}") &&( day==null || day.trim().length()==0 )) {  
-		    result = year + "-" + month;
+		    result = String.format("%o4d",Integer.parseInt(year)) + "-" + String.format("%02d",Integer.parseInt(month));
 		}
 		if (year!=null && year.matches("[0-9]{4}") && month!=null && month.matches("[0-9]{1,2}") && day!=null && day.matches("[0-9]{1,2}")) {  
-		    result = year + "-" + month + "-" + day;
+		    result = String.format("%04d",Integer.parseInt(year)) + "-" + 
+                     String.format("%02d",Integer.parseInt(month)) + "-" + 
+                     String.format("%02d",Integer.parseInt(day));
 		}
 		return result;
 	}
