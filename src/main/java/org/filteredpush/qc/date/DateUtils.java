@@ -1619,7 +1619,7 @@ public class DateUtils {
     /**
      * Test to see if an integer is in the range of integers that can be days of the month.
      * 
-     * @param day
+     * @param day the value to test.
      * @return true if day is in the range 1 to 31 inclusive, false otherwise.
      */
     public static boolean isDayInRange(int day) { 
@@ -1666,12 +1666,12 @@ public class DateUtils {
     /**
      * Test to see if an integer is in the range of integers that can be months of the year.
      * 
-     * @param month 
+     * @param month the value to test
      * @return true if month is in the range 1 to 12 inclusive, false otherwise.
      */
-    public static boolean isMonthInRange(int day) { 
+    public static boolean isMonthInRange(int month) { 
     	boolean result = false;
-    	if (day>0 && day <13) { result = true; } 
+    	if (month>0 && month <13) { result = true; } 
     	return result;
     }    
     
