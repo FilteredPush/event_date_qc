@@ -31,6 +31,9 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.filteredpush.qc.date.EventDQValidation.EventDQValidationResult;
+import org.filteredpush.qc.date.EventDQValidation.EventDQValidationState;
+import org.filteredpush.qc.date.EventQCResult.EventQCResultState;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeFieldType;
@@ -45,6 +48,32 @@ import org.joda.time.format.ISODateTimeFormat;
 
 /**
  * Utility functions for working with DarwinCore date concepts.
+ *  
+ *  Provides support for the following draft TDWG DQIG TG2 validations and amendments.  
+ *  
+ *  DAY_IS_FIRST_OF_CENTURY
+ *  DAY_IS_FIRST_OF_YEAR
+ *  DAY_MONTH_TRANSPOSED
+ *  DAY_MONTH_YEAR_FILLED_IN
+ *  EVENTDATE_FILLED_IN_FROM_VERBATIM  extractDateFromVerbatim(String verbatimEventDate)
+ *  START_ENDDAYOFYEAR_FILLED_IN
+ *  EVENT_DATE_DURATION_SECONDS  measureDurationSeconds(String eventDate)
+ *  DAY_IN_RANGE  isDayInRange(String day) 
+ *  MONTH_IN_RANGE isMonthInRange(String month) 
+ *  DAY_POSSIBLE_FOR_MONTH_YEAR
+ *  EVENTDATE_CONSISTENT_WITH_DAY_MONTH_YEAR  isConsistent(String eventDate, String year, String month, String day) 
+ *  EVENTDATE_IN_PAST
+ *  EVENTDATE_PRECISON_MONTH_OR_BETTER specificToMonthScale(String eventDate)
+ *  EVENTDATE_PRECISON_YEAR_OR_BETTER specificToYearScale(String eventDate)
+ *  STARTDATE_CONSISTENT_WITH_ENDDATE
+ *  YEAR_PROVIDED
+ *  EVENTDATE_CONSISTENT_WITH_ATOMIC_PARTS
+ *  
+ *  isConsistent(String eventDate, String startDayOfYear, String endDayOfYear, String year, String month, String day)
+ *  containsTime(String eventDate)
+ *  extractZuluTime(String eventDate) 
+ *  createEventDateFromParts(String verbatimEventDate, String startDayOfYear, String endDayOfYear, String year, String month, String day)
+ *  eventDateValid(String eventDate)
  * 
  * @author mole
  *
@@ -59,6 +88,29 @@ public class DateUtils {
 	 * 
 	 */
 	public static final int YEAR_BEFORE_SUSPECT = 1000;
+	
+	
+	/**
+	 * Test to see whether an eventDate contains a string in an expected ISO format.
+	 * 
+	 * @param eventDate string to test for expected format.
+	 * @return true if eventDate is in an expected format for eventDate, otherwise false.
+	 */
+    public static boolean eventDateValid(String eventDate) {
+    	boolean result = false; 
+    	if (extractDate(eventDate)!=null) { 
+    		result = true;
+    	} else { 
+    		Interval interval = extractInterval(eventDate);
+    		if (interval!=null) { 
+    			if (interval.getStart().isBefore(interval.getEnd())) { 
+    			   result = true;
+    			}
+    		}
+    	}
+    	return result;
+    }
+	
 	
 	/**
 	 * Attempt to construct an ISO formatted date as a string built from atomic parts of the date.
@@ -154,6 +206,8 @@ public class DateUtils {
 	/**
 	 * Attempt to extract a date or date range in standard format from a provided verbatim 
 	 * date string.  
+	 * 
+	 * Provides: EVENTDATE_FILLED_IN_FROM_VERBATIM 
 	 * 
 	 * @param verbatimEventDate a string containing a verbatim event date.
 	 * @return a map with result and resultState as keys
@@ -1078,6 +1132,8 @@ public class DateUtils {
      * interval.  If eventDate is not null and year, month, and day are, then result is false (data is 
      * not consistent with no data).
      * 
+     * Provides: EVENTDATE_CONSISTENT_WITH_DAY_MONTH_YEAR 
+     * 
      * @param eventDate dwc:eventDate
      * @param year dwc:year
      * @param month dwc:month
@@ -1139,12 +1195,15 @@ public class DateUtils {
      * Does a string contain a non-blank value.
      * 
      * @param aString to check
-     * @return true if the string is null, is an empty string, or contains only whitespace.
+     * @return true if the string is null, is an empty string, is equal to the value 'NULL'
+     *     or contains only whitespace.
      */
     public static boolean isEmpty(String aString)  {
     	boolean result = true;
     	if (aString != null && aString.trim().length()>0) { 
-    		result = false;
+    		if (!aString.trim().toUpperCase().equals("NULL")) { 
+    		   result = false;
+    		}
     	}
     	return result;
     }
@@ -1288,6 +1347,8 @@ public class DateUtils {
     /**
      * Test if an event date specifies a duration of 31 days or less.
      * 
+     * Provides: EVENTDATE_PRECISON_MONTH_OR_BETTER
+     * 
      * @param eventDate to test.
      * @return true if duration is 31 days or less.
      */
@@ -1304,6 +1365,8 @@ public class DateUtils {
     
     /**
      * Test if an event date specifies a duration of one year or less.
+     * 
+     * Provides: EVENTDATE_PRECISON_YEAR_OR_BETTER
      * 
      * @param eventDate to test.
      * @return true if duration is 365 days or less.
@@ -1344,6 +1407,8 @@ public class DateUtils {
      * may return one second less than your expectation for the number 
      * of seconds in the interval (e.g. 86399 seconds for the duration of 
      * a day specified as 1980-01-01.
+     * 
+     * Provides: EVENT_DATE_DURATION_SECONDS
      * 
      * Suggested by Alex Thompson in a TDWG data quality task group call.
      * 
@@ -1516,7 +1581,103 @@ public class DateUtils {
     }
   
     /**
-     * Run from the command line, arguments -f to specify a file, -m to show matches.
+     * Test to see whether a provided day is an integer in the range of values that can be 
+     * a day of a month.
+     * 
+     * Provides: DAY_IN_RANGE
+     * 
+     * @param day  a string to test
+     * @return COMPLIANT if day is an integer in the range 1 to 31 inclusive, NOT_COMPLIANT if day is 
+     *     an integer outside this range, INTERNAL_PREREQUSISITES_NOT_MET if day is empty or an integer
+     *     cannot be parsed from day. 
+     */
+    public static EventDQValidation isDayInRange(String day) { 
+    	EventDQValidation result = new EventDQValidation();
+    	if (isEmpty(day)) {
+    		result.addComment("No value provided for day.");
+    		result.setResultState(EventDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
+    	} else { 
+    		try { 
+    			int numericDay = Integer.parseInt(day);
+    			if (isDayInRange(numericDay)) { 
+    				result.setResult(EventDQValidationResult.COMPLIANT);
+    				result.addComment("Provided value for day '" + day + "' is an integer in the range 1 to 31.");
+    			} else { 
+    				result.setResult(EventDQValidationResult.NOT_COMPLIANT);
+    				result.addComment("Provided value for day '" + day + "' is not an integer in the range 1 to 31.");
+    			}
+    			result.setResultState(EventDQValidationState.COMPLETED);
+    		} catch (NumberFormatException e) { 
+    			logger.debug(e.getMessage());
+    			result.setResultState(EventDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
+    			result.addComment(e.getMessage());
+    		}
+    	}
+    	return result;
+    }
+    
+    /**
+     * Test to see if an integer is in the range of integers that can be days of the month.
+     * 
+     * @param day
+     * @return true if day is in the range 1 to 31 inclusive, false otherwise.
+     */
+    public static boolean isDayInRange(int day) { 
+    	boolean result = false;
+    	if (day>0 && day <32) { result = true; } 
+    	return result;
+    }
+    
+    /**
+     * Test to see whether a provided month is in the range of integer values that form months of the year.
+     * 
+     * Provides: MONTH_IN_RANGE
+     * 
+     * @param month  a string to test
+     * @return COMPLIANT if month is an integer in the range 1 to 12 inclusive, NOT_COMPLIANT if month is 
+     *     an integer outside this range, INTERNAL_PREREQUSISITES_NOT_MET if month is empty or an integer
+     *     cannot be parsed from month. 
+     */
+    public static EventDQValidation isMonthInRange(String month) { 
+    	EventDQValidation result = new EventDQValidation();
+    	if (isEmpty(month)) {
+    		result.addComment("No value provided for month.");
+    		result.setResultState(EventDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
+    	} else { 
+    		try { 
+    			int numericMonth = Integer.parseInt(month);
+    			if (isMonthInRange(numericMonth)) { 
+    				result.setResult(EventDQValidationResult.COMPLIANT);
+    				result.addComment("Provided value for month '" + month + "' is an integer in the range 1 to 12.");
+    			} else { 
+    				result.setResult(EventDQValidationResult.NOT_COMPLIANT);
+    				result.addComment("Provided value for month '" + month + "' is not an integer in the range 1 to 12.");
+    			}
+    			result.setResultState(EventDQValidationState.COMPLETED);
+    		} catch (NumberFormatException e) { 
+    			logger.debug(e.getMessage());
+    			result.setResultState(EventDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
+    			result.addComment(e.getMessage());
+    		}
+    	}
+    	return result;
+    }
+    
+    /**
+     * Test to see if an integer is in the range of integers that can be months of the year.
+     * 
+     * @param month 
+     * @return true if month is in the range 1 to 12 inclusive, false otherwise.
+     */
+    public static boolean isMonthInRange(int day) { 
+    	boolean result = false;
+    	if (day>0 && day <13) { result = true; } 
+    	return result;
+    }    
+    
+    /**
+     * Run from the command line, arguments -f to specify a file, -m to show matches. 
+     * Converts dates in a specified input file from verbatim form to format expected by dwc:eventDate.
      * 
      * @param args -f filename to check a file containing a list of dates, one per line.
      *    -m to show matched dates and their interpretations otherwise lists non-matched lines.  
@@ -1567,5 +1728,7 @@ public class DateUtils {
 		}
         
     }
+    
+    
     
 }

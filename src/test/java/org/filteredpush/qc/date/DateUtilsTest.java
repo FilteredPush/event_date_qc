@@ -32,6 +32,23 @@ import org.junit.Test;
  */
 public class DateUtilsTest {
 
+	@Test
+	public void testIsEmpty() { 
+		assertEquals(true,DateUtils.isEmpty(null));
+		assertEquals(true,DateUtils.isEmpty(""));
+		assertEquals(true,DateUtils.isEmpty(" "));
+		assertEquals(true,DateUtils.isEmpty("   "));
+		assertEquals(true,DateUtils.isEmpty("\t"));
+		assertEquals(true,DateUtils.isEmpty("NULL"));
+		assertEquals(true,DateUtils.isEmpty("null"));
+		assertEquals(true,DateUtils.isEmpty(" null "));
+		
+		assertEquals(false,DateUtils.isEmpty("1"));
+		assertEquals(false,DateUtils.isEmpty("A"));
+		assertEquals(false,DateUtils.isEmpty(" 2"));
+		assertEquals(false,DateUtils.isEmpty(" 5 "));
+	}
+	
 	/**
 	 * Test method for {@link org.filteredpush.qc.date.DateUtils#createEventDateFromParts(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
 	 */
@@ -813,4 +830,81 @@ public class DateUtilsTest {
 //    	}
     	
     }
+    
+    @Test
+    public void testIsMonthInRange() { 
+    	for (int i=1; i<=12; i++) { 
+		   assertEquals(true,DateUtils.isMonthInRange(i));
+    	}
+    	
+		assertEquals(false,DateUtils.isMonthInRange(0));
+		assertEquals(false,DateUtils.isMonthInRange(13));
+		assertEquals(false,DateUtils.isMonthInRange(-1));
+		assertEquals(false,DateUtils.isMonthInRange(Integer.MAX_VALUE));
+		assertEquals(false,DateUtils.isMonthInRange(Integer.MIN_VALUE));
+    }
+    
+    @Test
+    public void testIsDayInRange() { 
+    	for (int i=1; i<=31; i++) { 
+		   assertEquals(true,DateUtils.isDayInRange(i));
+    	}
+    	
+		assertEquals(false,DateUtils.isDayInRange(0));
+		assertEquals(false,DateUtils.isDayInRange(32));
+		assertEquals(false,DateUtils.isDayInRange(-1));
+		assertEquals(false,DateUtils.isDayInRange(Integer.MAX_VALUE));
+		assertEquals(false,DateUtils.isDayInRange(Integer.MIN_VALUE));
+    }    
+    
+    @Test
+    public void testEventDateValid() { 
+		assertEquals(true,DateUtils.eventDateValid("1880"));
+		assertEquals(true,DateUtils.eventDateValid("1880-12"));
+		assertEquals(true,DateUtils.eventDateValid("1880-12-31"));
+		assertEquals(true,DateUtils.eventDateValid("1880-12-31/1881"));  
+		assertEquals(true,DateUtils.eventDateValid("1880-12-31/1880"));  // format is valid
+		assertEquals(true,DateUtils.eventDateValid("1880-12-31/1881-01"));
+		assertEquals(true,DateUtils.eventDateValid("1880-12-31/1881-01-04"));
+		
+		assertEquals(true,DateUtils.eventDateValid("1884-01-01T05:05Z/1884-12-05"));
+		assertEquals(true,DateUtils.eventDateValid("1805-09-03/1805-11-04"));
+		
+		assertEquals(true,DateUtils.eventDateValid("5"));  // valid ISO year, not zero padded.
+		
+    	assertEquals(true, DateUtils.eventDateValid("1905-04-08T04"));
+    	assertEquals(true, DateUtils.eventDateValid("1905-04-08T08"));
+    	assertEquals(true, DateUtils.eventDateValid("1905-04-08T04Z"));
+    	assertEquals(true, DateUtils.eventDateValid("1905-04-08T04:06"));
+    	assertEquals(true, DateUtils.eventDateValid("1905-04-08T04:06Z"));
+    	assertEquals(true, DateUtils.eventDateValid("1905-04-08T04:06-05:00"));
+    	assertEquals(true, DateUtils.eventDateValid("1905-04-08T04:06-04:30"));
+    	assertEquals(true, DateUtils.eventDateValid("1905-04-08T01:02:03.004Z"));
+    	assertEquals(true, DateUtils.eventDateValid("1905-04-08T08/1905-06-18T08"));
+    	assertEquals(true, DateUtils.eventDateValid("1905-04-08T21/1905-06-18"));
+    	assertEquals(true, DateUtils.eventDateValid("1905-04-08/1905-06-18T15"));	
+    	
+    	assertEquals(false, DateUtils.eventDateValid(""));
+    	assertEquals(false, DateUtils.eventDateValid(null));
+    	assertEquals(false, DateUtils.eventDateValid(" "));
+    	
+		assertEquals(false,DateUtils.eventDateValid("1880-Jan"));
+		assertEquals(false,DateUtils.eventDateValid("1880-Jan-31"));    	
+		assertEquals(false,DateUtils.eventDateValid("1880/12/31-1880"));
+		assertEquals(false,DateUtils.eventDateValid("1880-12-31/1879"));  
+    	
+		assertEquals(false,DateUtils.eventDateValid("01-1880"));
+		assertEquals(false,DateUtils.eventDateValid("31-01-1880"));    	
+		assertEquals(false,DateUtils.eventDateValid("1880-Jan"));
+		assertEquals(false,DateUtils.eventDateValid("1880/01/31")); 
+		assertEquals(false,DateUtils.eventDateValid("1880/05")); 
+		
+		assertEquals(false,DateUtils.eventDateValid("1880-18")); // Doesn't parse as a date.
+		assertEquals(false,DateUtils.eventDateValid("1880-25-11")); // Doesn't parse as a date.
+		assertEquals(false,DateUtils.eventDateValid("1880-03-32")); // Doesn't parse as a date.
+		assertEquals(false,DateUtils.eventDateValid("1880-02-31")); // Doesn't parse as a date.
+		
+    	assertEquals(false, DateUtils.eventDateValid("1905-04-08T04UTC"));  
+    }
+    
 }
