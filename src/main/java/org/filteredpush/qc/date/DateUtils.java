@@ -33,7 +33,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.filteredpush.qc.date.EventDQValidation.EventDQValidationResult;
 import org.filteredpush.qc.date.EventDQValidation.EventDQValidationState;
-import org.filteredpush.qc.date.EventQCResult.EventQCResultState;
+import org.filteredpush.qc.date.EventDQAmmedment.EventQCAmmendmentState;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeFieldType;
@@ -51,25 +51,26 @@ import org.joda.time.format.ISODateTimeFormat;
  *  
  *  Provides support for the following draft TDWG DQIG TG2 validations and amendments.  
  *  
- *  DAY_IS_FIRST_OF_CENTURY
- *  DAY_IS_FIRST_OF_YEAR
- *  DAY_MONTH_TRANSPOSED
+ *  DAY_MONTH_TRANSPOSED dayMonthTransposition(String month, String day) 
  *  DAY_MONTH_YEAR_FILLED_IN
  *  EVENTDATE_FILLED_IN_FROM_VERBATIM  extractDateFromVerbatim(String verbatimEventDate)
  *  START_ENDDAYOFYEAR_FILLED_IN
+ *  
  *  EVENT_DATE_DURATION_SECONDS  measureDurationSeconds(String eventDate)
+ *  DAY_IS_FIRST_OF_CENTURY
+ *  DAY_IS_FIRST_OF_YEAR
+ *  
  *  DAY_IN_RANGE  isDayInRange(String day) 
  *  MONTH_IN_RANGE isMonthInRange(String month) 
- *  DAY_POSSIBLE_FOR_MONTH_YEAR
+ *  DAY_POSSIBLE_FOR_MONTH_YEAR  isDayPossibleForMonthYear(String year, String month, String day) 
  *  EVENTDATE_CONSISTENT_WITH_DAY_MONTH_YEAR  isConsistent(String eventDate, String year, String month, String day) 
  *  EVENTDATE_IN_PAST
  *  EVENTDATE_PRECISON_MONTH_OR_BETTER specificToMonthScale(String eventDate)
  *  EVENTDATE_PRECISON_YEAR_OR_BETTER specificToYearScale(String eventDate)
  *  STARTDATE_CONSISTENT_WITH_ENDDATE
  *  YEAR_PROVIDED
- *  EVENTDATE_CONSISTENT_WITH_ATOMIC_PARTS
+ *  EVENTDATE_CONSISTENT_WITH_ATOMIC_PARTS isConsistent(String eventDate, String startDayOfYear, String endDayOfYear, String year, String month, String day)
  *  
- *  isConsistent(String eventDate, String startDayOfYear, String endDayOfYear, String year, String month, String day)
  *  containsTime(String eventDate)
  *  extractZuluTime(String eventDate) 
  *  createEventDateFromParts(String verbatimEventDate, String startDayOfYear, String endDayOfYear, String year, String month, String day)
@@ -1674,6 +1675,96 @@ public class DateUtils {
     	if (month>0 && month <13) { result = true; } 
     	return result;
     }    
+ 
+    public static EventDQValidation isDayPossibleForMonthYear(String year, String month, String day) { 
+    	EventDQValidation result = new EventDQValidation();
+    	
+    	EventDQValidation monthResult =  isMonthInRange(month);
+    	EventDQValidation dayResult =  isDayInRange(day);
+    	
+    	if (monthResult.getResultState().equals(EventDQValidationState.COMPLETED)) {
+    		if (monthResult.getResult().equals(EventDQValidationResult.COMPLIANT)) { 
+    	        if (dayResult.getResultState().equals(EventDQValidationState.COMPLETED)) { 
+    	        	if (dayResult.getResult().equals(EventDQValidationResult.COMPLIANT)) {
+    	        		try { 
+    	        		    Integer numericYear = Integer.parseInt(year);
+    	        		    String date = String.format("04d", numericYear) + "-" + month.trim() + "-" + day.trim();
+
+    	        	    	if (eventDateValid(date)) { 
+    	        	    		result.setResult(EventDQValidationResult.COMPLIANT);
+    	        	    		result.addComment("Provided value for year-month-day " + date + " parses to a valid day.");;
+    	        	    	} else { 
+    	        	    		result.setResult(EventDQValidationResult.NOT_COMPLIANT);
+    	        	    		result.addComment("Provided value for year-month-day " + date + " does not parse to a valid day.");;
+    	        	    	}
+    	        		    result.setResultState(EventDQValidationState.COMPLETED);
+    	        		} catch (NumberFormatException e) { 
+    	        			result.setResultState(EventDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
+    	        		    result.addComment("Unable to parse integer from provided value for year " + year + " " + e.getMessage());;
+    	        		}
+    	        	} else { 
+    	        		result.setResultState(EventDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
+    	        		result.addComment("Provided value for day " + day + " is outside the range 1-31.");;
+    	        	}
+    	        } else { 
+    	        	result.setResultState(dayResult.getResultState());
+    	        	result.addComment(dayResult.getComment());
+    	        }
+    		} else { 
+    			result.setResultState(EventDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
+    			result.addComment("Provided value for month " + month + " is outside the range 1-12.");;
+    		}
+    	} else { 
+    		result.setResultState(monthResult.getResultState());
+    		result.addComment(monthResult.getComment());
+    	}
+    	
+    	return result;
+    }
+    
+    /**
+     * Check of month is out of range for months, but day is in range for months, and
+     * propose a transposition of the two if this is the case.
+     * 
+     * Provides: DAY_MONTH_TRANSPOSED
+     * 
+     * @param month the value of dwc:month
+     * @param day  the value of dwc:day
+     * @return an EventDQAmmendment which may contain a proposed ammendment.
+     */
+    public static final EventDQAmmedment dayMonthTransposition(String month, String day) { 
+    	EventDQAmmedment result = new EventDQAmmedment();
+    	if (isEmpty(day) || isEmpty(month)) { 
+    		result.setResultState(EventQCAmmendmentState.INTERNAL_PREREQISITES_NOT_MET);
+    		result.addComment("Either month or day was not provided.");
+    	} else { 
+        	EventDQValidation monthResult =  isMonthInRange(month);
+        	EventDQValidation dayResult =  isDayInRange(day);
+        	if (monthResult.getResultState().equals(EventDQValidationState.COMPLETED)) {
+        		if (monthResult.getResult().equals(EventDQValidationResult.NOT_COMPLIANT)) { 
+        			// month is integer, but out of range
+        	        if (dayResult.getResultState().equals(EventDQValidationState.COMPLETED)) { 
+        	        	// day is also integer
+        	        	int dayNumeric = Integer.parseInt(day);
+        	        	int monthNumeric = Integer.parseInt(month);
+        	        	if (isDayInRange(monthNumeric) && isMonthInRange(dayNumeric)) { 
+        	        		// day is in range for months, and month is in range for days, so transpose.
+        	        	    result.addResult("dwc:month", day);
+        	        	    result.addResult("dwc:day", month);
+        	        	    result.setResultState(EventQCAmmendmentState.TRANSPOSED);
+        	        	}
+        	        } else { 
+    		            result.setResultState(EventQCAmmendmentState.INTERNAL_PREREQISITES_NOT_MET);
+    		            result.addComment("dwc:day " + dayResult.getResultState() + ". " + dayResult.getComment());
+        	        }
+        		}
+        	} else {
+    		   result.setResultState(EventQCAmmendmentState.INTERNAL_PREREQISITES_NOT_MET);
+    		   result.addComment("dwc:month " + monthResult.getResultState() + ". " + monthResult.getComment());
+        	}
+    	}
+    	return result;
+    }
     
     /**
      * Run from the command line, arguments -f to specify a file, -m to show matches. 
