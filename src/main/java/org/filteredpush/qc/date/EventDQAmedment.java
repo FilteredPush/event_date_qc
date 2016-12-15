@@ -13,9 +13,9 @@ import java.util.Map;
  * @author mole
  *
  */
-public class EventDQAmmedment {
+public class EventDQAmedment {
 	
-	public enum EventQCAmmendmentState { 
+	public enum EventQCAmendmentState { 
 	    NOT_RUN, 
 	    INTERNAL_PREREQISITES_NOT_MET, 
 	    AMBIGUOUS, 
@@ -23,12 +23,12 @@ public class EventDQAmmedment {
 	    NO_CHANGE;
 	}
 	
-	private EventQCAmmendmentState resultState;
+	private EventQCAmendmentState resultState;
 	private Map<String,String> result;
 	private StringBuffer resultComment;
 	
-	public EventDQAmmedment() { 
-		setResultState(EventQCAmmendmentState.NOT_RUN);
+	public EventDQAmedment() { 
+		setResultState(EventQCAmendmentState.NOT_RUN);
 		result = new HashMap<String, String>();
 		resultComment = new StringBuffer();
 	}
@@ -47,14 +47,14 @@ public class EventDQAmmedment {
 	/**
 	 * @return the resultState
 	 */
-	public EventQCAmmendmentState getResultState() {
+	public EventQCAmendmentState getResultState() {
 		return resultState;
 	}
 
 	/**
 	 * @param resultState the resultState to set
 	 */
-	public void setResultState(EventQCAmmendmentState resultState) {
+	public void setResultState(EventQCAmendmentState resultState) {
 		this.resultState = resultState;
 	}
 

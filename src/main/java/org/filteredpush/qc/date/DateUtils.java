@@ -33,7 +33,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.filteredpush.qc.date.EventDQValidation.EventDQValidationResult;
 import org.filteredpush.qc.date.EventDQValidation.EventDQValidationState;
-import org.filteredpush.qc.date.EventDQAmmedment.EventQCAmmendmentState;
+import org.filteredpush.qc.date.EventDQAmedment.EventQCAmendmentState;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeFieldType;
@@ -1732,10 +1732,10 @@ public class DateUtils {
      * @param day  the value of dwc:day
      * @return an EventDQAmmendment which may contain a proposed ammendment.
      */
-    public static final EventDQAmmedment dayMonthTransposition(String month, String day) { 
-    	EventDQAmmedment result = new EventDQAmmedment();
+    public static final EventDQAmedment dayMonthTransposition(String month, String day) { 
+    	EventDQAmedment result = new EventDQAmedment();
     	if (isEmpty(day) || isEmpty(month)) { 
-    		result.setResultState(EventQCAmmendmentState.INTERNAL_PREREQISITES_NOT_MET);
+    		result.setResultState(EventQCAmendmentState.INTERNAL_PREREQISITES_NOT_MET);
     		result.addComment("Either month or day was not provided.");
     	} else { 
         	EventDQValidation monthResult =  isMonthInRange(month);
@@ -1751,25 +1751,25 @@ public class DateUtils {
         	        		// day is in range for months, and month is in range for days, so transpose.
         	        	    result.addResult("dwc:month", day);
         	        	    result.addResult("dwc:day", month);
-        	        	    result.setResultState(EventQCAmmendmentState.TRANSPOSED);
+        	        	    result.setResultState(EventQCAmendmentState.TRANSPOSED);
         	        	} else { 
-        	        	    result.setResultState(EventQCAmmendmentState.INTERNAL_PREREQISITES_NOT_MET);
+        	        	    result.setResultState(EventQCAmendmentState.INTERNAL_PREREQISITES_NOT_MET);
         	        	}
         	        } else { 
-    		            result.setResultState(EventQCAmmendmentState.INTERNAL_PREREQISITES_NOT_MET);
+    		            result.setResultState(EventQCAmendmentState.INTERNAL_PREREQISITES_NOT_MET);
     		            result.addComment("dwc:day " + dayResult.getResultState() + ". " + dayResult.getComment());
         	        }
         		} else { 
         	        if (dayResult.getResultState().equals(EventDQValidationState.COMPLETED) &&
         	            dayResult.getResult().equals(EventDQValidationResult.COMPLIANT)) { 
         			    // month is in range for months, so don't try to change.
-        	            result.setResultState(EventQCAmmendmentState.NO_CHANGE);
+        	            result.setResultState(EventQCAmendmentState.NO_CHANGE);
         	        } else { 
-    		            result.setResultState(EventQCAmmendmentState.INTERNAL_PREREQISITES_NOT_MET);
+    		            result.setResultState(EventQCAmendmentState.INTERNAL_PREREQISITES_NOT_MET);
         	        }
         		}
         	} else {
-    		   result.setResultState(EventQCAmmendmentState.INTERNAL_PREREQISITES_NOT_MET);
+    		   result.setResultState(EventQCAmendmentState.INTERNAL_PREREQISITES_NOT_MET);
     		   result.addComment("dwc:month " + monthResult.getResultState() + ". " + monthResult.getComment());
         	}
     	}
