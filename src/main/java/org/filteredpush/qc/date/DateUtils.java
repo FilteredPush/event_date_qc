@@ -1752,10 +1752,20 @@ public class DateUtils {
         	        	    result.addResult("dwc:month", day);
         	        	    result.addResult("dwc:day", month);
         	        	    result.setResultState(EventQCAmmendmentState.TRANSPOSED);
+        	        	} else { 
+        	        	    result.setResultState(EventQCAmmendmentState.INTERNAL_PREREQISITES_NOT_MET);
         	        	}
         	        } else { 
     		            result.setResultState(EventQCAmmendmentState.INTERNAL_PREREQISITES_NOT_MET);
     		            result.addComment("dwc:day " + dayResult.getResultState() + ". " + dayResult.getComment());
+        	        }
+        		} else { 
+        	        if (dayResult.getResultState().equals(EventDQValidationState.COMPLETED) &&
+        	            dayResult.getResult().equals(EventDQValidationResult.COMPLIANT)) { 
+        			    // month is in range for months, so don't try to change.
+        	            result.setResultState(EventQCAmmendmentState.NO_CHANGE);
+        	        } else { 
+    		            result.setResultState(EventQCAmmendmentState.INTERNAL_PREREQISITES_NOT_MET);
         	        }
         		}
         	} else {

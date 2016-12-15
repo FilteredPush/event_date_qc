@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Specific implementation of return values for an F4UF amendment result for org.filteredpush.qc.date
+ * intended to implement an amendment interface from an F4UF api package at some future point.
+ * 
  * @author mole
  *
  */
@@ -69,7 +72,7 @@ public class EventDQAmmedment {
 	 * @param value the value provided for the key.
 	 */
 	public void addResult(String key, String value) {
-		this.result.put(value, value);
+		this.result.put(key, value);
 	}
 
 }

@@ -907,4 +907,50 @@ public class DateUtilsTest {
     	assertEquals(false, DateUtils.eventDateValid("1905-04-08T04UTC"));  
     }
     
+    @Test
+    public void dayMonthTransposedTest() { 
+    	String month = "30";
+    	String day = "11";
+    	EventDQAmmedment result = DateUtils.dayMonthTransposition(month,day);
+    	assertEquals(EventDQAmmedment.EventQCAmmendmentState.TRANSPOSED, result.getResultState());
+    	assertEquals("11",result.getResult().get("dwc:month"));
+    	assertEquals("30",result.getResult().get("dwc:day"));
+    	
+    	result = DateUtils.dayMonthTransposition(day,month);
+    	assertEquals(EventDQAmmedment.EventQCAmmendmentState.NO_CHANGE, result.getResultState());
+    	
+    	day = "5"; 
+    	month = "11";
+    	result = DateUtils.dayMonthTransposition(month,day);
+    	assertEquals(EventDQAmmedment.EventQCAmmendmentState.NO_CHANGE, result.getResultState());   
+    	
+    	day = "15"; 
+    	month = "8";
+    	result = DateUtils.dayMonthTransposition(month,day);
+    	assertEquals(EventDQAmmedment.EventQCAmmendmentState.NO_CHANGE, result.getResultState());  
+    	
+    	day = "15"; 
+    	month = "15";
+    	result = DateUtils.dayMonthTransposition(month,day);
+    	assertEquals(EventDQAmmedment.EventQCAmmendmentState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());    	
+    	
+    	day = "15"; 
+    	month = "34";
+    	result = DateUtils.dayMonthTransposition(month,day);
+    	assertEquals(EventDQAmmedment.EventQCAmmendmentState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());      	
+    	
+    	day = "-1"; 
+    	month = "15";
+    	result = DateUtils.dayMonthTransposition(month,day);
+    	assertEquals(EventDQAmmedment.EventQCAmmendmentState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());      	
+    	
+    	day = "-1"; 
+    	month = "5";
+    	result = DateUtils.dayMonthTransposition(month,day);
+    	assertEquals(EventDQAmmedment.EventQCAmmendmentState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());      	
+    	
+    	result = DateUtils.dayMonthTransposition(day,"");
+    	assertEquals(EventDQAmmedment.EventQCAmmendmentState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
+    }
+    
 }

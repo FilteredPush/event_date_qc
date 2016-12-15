@@ -4,6 +4,9 @@
 package org.filteredpush.qc.date;
 
 /**
+ * Specific implementation of return values for an F4UF validation result for org.filteredpush.qc.date
+ * intended to implement an validation interface from an F4UF api package at some future point.
+ * 
  * @author mole
  *
  */
