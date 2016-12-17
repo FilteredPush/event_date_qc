@@ -18,6 +18,12 @@ package org.filteredpush.qc.date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.datakurator.ffdq.annotations.ActedUpon;
+import org.datakurator.ffdq.annotations.Consulted;
+import org.datakurator.ffdq.annotations.Enhancement;
+import org.datakurator.ffdq.annotations.PostEnhancement;
+import org.datakurator.ffdq.annotations.PreEnhancement;
+import org.datakurator.ffdq.annotations.Provides;
 import org.datakurator.ffdq.api.DQValidationResult;
 import org.datakurator.ffdq.api.DQValidationState;
 import org.filteredpush.qc.date.EventDQAmedment.EventQCAmendmentState;
@@ -28,7 +34,7 @@ import org.filteredpush.qc.date.EventDQAmedment.EventQCAmendmentState;
  * 
  *  Provides support for the following draft TDWG DQIG TG2 validations and amendments.  
  *  
- *  DAY_MONTH_TRANSPOSED 
+ *  DAY_MONTH_TRANSPOSED  dayMonthTransposition(@ActedUpon(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) 
  *  DAY_MONTH_YEAR_FILLED_IN
  *  EVENTDATE_FILLED_IN_FROM_VERBATIM  
  *  START_ENDDAYOFYEAR_FILLED_IN
@@ -37,9 +43,9 @@ import org.filteredpush.qc.date.EventDQAmedment.EventQCAmendmentState;
  *  DAY_IS_FIRST_OF_CENTURY
  *  DAY_IS_FIRST_OF_YEAR
  *  
- *  DAY_IN_RANGE  
- *  MONTH_IN_RANGE 
- *  DAY_POSSIBLE_FOR_MONTH_YEAR  
+ *  DAY_IN_RANGE  isDayInRange(@ActedUpon(value = "dwc:day") String day)   
+ *  MONTH_IN_RANGE  isMonthInRange(@ActedUpon(value = "dwc:month") String month) 
+ *  DAY_POSSIBLE_FOR_MONTH_YEAR  isDayPossibleForMonthYear(@Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) 
  *  EVENTDATE_CONSISTENT_WITH_DAY_MONTH_YEAR  
  *  EVENTDATE_IN_PAST
  *  EVENTDATE_PRECISON_MONTH_OR_BETTER 
@@ -66,7 +72,10 @@ public class DwCEventDQ {
      *     an integer outside this range, INTERNAL_PREREQUSISITES_NOT_MET if day is empty or an integer
      *     cannot be parsed from day. 
      */
-    public static EventDQValidation isDayInRange(String day) { 
+    @Provides(value = "DAY_IN_RANGE")
+    @PreEnhancement
+    @PostEnhancement
+    public static EventDQValidation isDayInRange(@ActedUpon(value = "dwc:day") String day) { 
     	EventDQValidation result = new EventDQValidation();
     	if (DateUtils.isEmpty(day)) {
     		result.addComment("No value provided for day.");
@@ -101,7 +110,10 @@ public class DwCEventDQ {
      *     an integer outside this range, INTERNAL_PREREQUSISITES_NOT_MET if month is empty or an integer
      *     cannot be parsed from month. 
      */
-    public static EventDQValidation isMonthInRange(String month) { 
+    @Provides(value = "MONTH_IN_RANGE")
+    @PreEnhancement
+    @PostEnhancement
+    public static EventDQValidation isMonthInRange(@ActedUpon(value="dwc:month") String month) { 
     	EventDQValidation result = new EventDQValidation();
     	if (DateUtils.isEmpty(month)) {
     		result.addComment("No value provided for month.");
@@ -136,7 +148,10 @@ public class DwCEventDQ {
      * @param day to check 
      * @return an DQValidation object describing whether day exists in year-month-day.
      */
-    public static EventDQValidation isDayPossibleForMonthYear(String year, String month, String day) { 
+    @Provides(value = "DAY_POSSIBLE_FOR_MONTH_YEAR")
+    @PreEnhancement
+    @PostEnhancement
+    public static EventDQValidation isDayPossibleForMonthYear(@Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) { 
     	EventDQValidation result = new EventDQValidation();
     	
     	EventDQValidation monthResult =  isMonthInRange(month);
@@ -192,7 +207,9 @@ public class DwCEventDQ {
      * @param day  the value of dwc:day
      * @return an EventDQAmmendment which may contain a proposed ammendment.
      */
-    public static final EventDQAmedment dayMonthTransposition(String month, String day) { 
+    @Provides(value = "DAY_MONTH_TRANSPOSED")
+    @Enhancement
+    public static final EventDQAmedment dayMonthTransposition(@ActedUpon(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) { 
     	EventDQAmedment result = new EventDQAmedment();
     	if (DateUtils.isEmpty(day) || DateUtils.isEmpty(month)) { 
     		result.setResultState(EventQCAmendmentState.INTERNAL_PREREQISITES_NOT_MET);
