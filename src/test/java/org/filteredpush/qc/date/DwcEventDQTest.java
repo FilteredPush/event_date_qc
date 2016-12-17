@@ -40,54 +40,54 @@ public class DwcEventDQTest {
 	public void testIsDayInRange() {
 		EventDQValidation result = null;
 		for (int i = 1; i<=31; i++) { 
-		    result = DwCEventDQ.isDayInRange(Integer.toString(i));
-		    assertEquals(DQValidationState.COMPLETED, result.getResultState());
-		    assertEquals(DQValidationResult.COMPLIANT, result.getResult());
+			result = DwCEventDQ.isDayInRange(Integer.toString(i));
+			assertEquals(DQValidationState.COMPLETED, result.getResultState());
+			assertEquals(DQValidationResult.COMPLIANT, result.getResult());
 		}
 		result = DwCEventDQ.isDayInRange(" 1 ");
-	    assertEquals(DQValidationState.COMPLETED, result.getResultState());
-	    assertEquals(DQValidationResult.COMPLIANT, result.getResult());
+		assertEquals(DQValidationState.COMPLETED, result.getResultState());
+		assertEquals(DQValidationResult.COMPLIANT, result.getResult());
 		result = DwCEventDQ.isDayInRange("01");
-	    assertEquals(DQValidationState.COMPLETED, result.getResultState());
-	    assertEquals(DQValidationResult.COMPLIANT, result.getResult());
-		
+		assertEquals(DQValidationState.COMPLETED, result.getResultState());
+		assertEquals(DQValidationResult.COMPLIANT, result.getResult());
+
 		int i=0;
 		result = DwCEventDQ.isDayInRange(Integer.toString(i));
-	    assertEquals(DQValidationState.COMPLETED, result.getResultState());
-	    assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());
-	    
-	    i=32;
-	    result = DwCEventDQ.isDayInRange(Integer.toString(i));
-	    assertEquals(DQValidationState.COMPLETED, result.getResultState());
-	    assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());	 
-	    
-	    i=-1;
-	    result = DwCEventDQ.isDayInRange(Integer.toString(i));
-	    assertEquals(DQValidationState.COMPLETED, result.getResultState());
-	    assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());
-	    
-	    i=Integer.MAX_VALUE;
-	    result = DwCEventDQ.isDayInRange(Integer.toString(i));
-	    assertEquals(DQValidationState.COMPLETED, result.getResultState());
-	    assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());
-	    
-	    i=Integer.MIN_VALUE;
-	    result = DwCEventDQ.isDayInRange(Integer.toString(i));
-	    assertEquals(DQValidationState.COMPLETED, result.getResultState());
-	    assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());	
-	    
-	    result = DwCEventDQ.isDayInRange(null);
-	    assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
-	    result = DwCEventDQ.isDayInRange("");
-	    assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
-	    result = DwCEventDQ.isDayInRange(" ");
-	    assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
-	    result = DwCEventDQ.isDayInRange("A");
-	    assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
-	    result = DwCEventDQ.isDayInRange("1.5");
-	    assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
-	    result = DwCEventDQ.isDayInRange("**");
-	    assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
+		assertEquals(DQValidationState.COMPLETED, result.getResultState());
+		assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());
+
+		i=32;
+		result = DwCEventDQ.isDayInRange(Integer.toString(i));
+		assertEquals(DQValidationState.COMPLETED, result.getResultState());
+		assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());	 
+
+		i=-1;
+		result = DwCEventDQ.isDayInRange(Integer.toString(i));
+		assertEquals(DQValidationState.COMPLETED, result.getResultState());
+		assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());
+
+		i=Integer.MAX_VALUE;
+		result = DwCEventDQ.isDayInRange(Integer.toString(i));
+		assertEquals(DQValidationState.COMPLETED, result.getResultState());
+		assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());
+
+		i=Integer.MIN_VALUE;
+		result = DwCEventDQ.isDayInRange(Integer.toString(i));
+		assertEquals(DQValidationState.COMPLETED, result.getResultState());
+		assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());	
+
+		result = DwCEventDQ.isDayInRange(null);
+		assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
+		result = DwCEventDQ.isDayInRange("");
+		assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
+		result = DwCEventDQ.isDayInRange(" ");
+		assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
+		result = DwCEventDQ.isDayInRange("A");
+		assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
+		result = DwCEventDQ.isDayInRange("1.5");
+		assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
+		result = DwCEventDQ.isDayInRange("**");
+		assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
 	}
 
 	/**
@@ -97,54 +97,54 @@ public class DwcEventDQTest {
 	public void testIsMonthInRange() {
 		EventDQValidation result = null;
 		for (int i = 1; i<=12; i++) { 
-		    result = DwCEventDQ.isMonthInRange(Integer.toString(i));
-		    assertEquals(DQValidationState.COMPLETED, result.getResultState());
-		    assertEquals(DQValidationResult.COMPLIANT, result.getResult());
+			result = DwCEventDQ.isMonthInRange(Integer.toString(i));
+			assertEquals(DQValidationState.COMPLETED, result.getResultState());
+			assertEquals(DQValidationResult.COMPLIANT, result.getResult());
 		}
 		result = DwCEventDQ.isMonthInRange(" 1 ");
-	    assertEquals(DQValidationState.COMPLETED, result.getResultState());
-	    assertEquals(DQValidationResult.COMPLIANT, result.getResult());
+		assertEquals(DQValidationState.COMPLETED, result.getResultState());
+		assertEquals(DQValidationResult.COMPLIANT, result.getResult());
 		result = DwCEventDQ.isMonthInRange("01");
-	    assertEquals(DQValidationState.COMPLETED, result.getResultState());
-	    assertEquals(DQValidationResult.COMPLIANT, result.getResult());
-		
+		assertEquals(DQValidationState.COMPLETED, result.getResultState());
+		assertEquals(DQValidationResult.COMPLIANT, result.getResult());
+
 		int i=0;
 		result = DwCEventDQ.isMonthInRange(Integer.toString(i));
-	    assertEquals(DQValidationState.COMPLETED, result.getResultState());
-	    assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());
-	    
-	    i=13;
-	    result = DwCEventDQ.isMonthInRange(Integer.toString(i));
-	    assertEquals(DQValidationState.COMPLETED, result.getResultState());
-	    assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());	 
-	    
-	    i=-1;
-	    result = DwCEventDQ.isMonthInRange(Integer.toString(i));
-	    assertEquals(DQValidationState.COMPLETED, result.getResultState());
-	    assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());
-	    
-	    i=Integer.MAX_VALUE;
-	    result = DwCEventDQ.isMonthInRange(Integer.toString(i));
-	    assertEquals(DQValidationState.COMPLETED, result.getResultState());
-	    assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());
-	    
-	    i=Integer.MIN_VALUE;
-	    result = DwCEventDQ.isMonthInRange(Integer.toString(i));
-	    assertEquals(DQValidationState.COMPLETED, result.getResultState());
-	    assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());	
-	    
-	    result = DwCEventDQ.isMonthInRange(null);
-	    assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
-	    result = DwCEventDQ.isMonthInRange("");
-	    assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
-	    result = DwCEventDQ.isMonthInRange(" ");
-	    assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
-	    result = DwCEventDQ.isMonthInRange("A");
-	    assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
-	    result = DwCEventDQ.isMonthInRange("1.5");
-	    assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
-	    result = DwCEventDQ.isMonthInRange("**");
-	    assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
+		assertEquals(DQValidationState.COMPLETED, result.getResultState());
+		assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());
+
+		i=13;
+		result = DwCEventDQ.isMonthInRange(Integer.toString(i));
+		assertEquals(DQValidationState.COMPLETED, result.getResultState());
+		assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());	 
+
+		i=-1;
+		result = DwCEventDQ.isMonthInRange(Integer.toString(i));
+		assertEquals(DQValidationState.COMPLETED, result.getResultState());
+		assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());
+
+		i=Integer.MAX_VALUE;
+		result = DwCEventDQ.isMonthInRange(Integer.toString(i));
+		assertEquals(DQValidationState.COMPLETED, result.getResultState());
+		assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());
+
+		i=Integer.MIN_VALUE;
+		result = DwCEventDQ.isMonthInRange(Integer.toString(i));
+		assertEquals(DQValidationState.COMPLETED, result.getResultState());
+		assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());	
+
+		result = DwCEventDQ.isMonthInRange(null);
+		assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
+		result = DwCEventDQ.isMonthInRange("");
+		assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
+		result = DwCEventDQ.isMonthInRange(" ");
+		assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
+		result = DwCEventDQ.isMonthInRange("A");
+		assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
+		result = DwCEventDQ.isMonthInRange("1.5");
+		assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
+		result = DwCEventDQ.isMonthInRange("**");
+		assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
 	}
 
 	/**
@@ -163,14 +163,14 @@ public class DwcEventDQTest {
 				}
 			}
 		}
-		
+
 		int year = 2000;
 		int month = 2;
 		int day = 31;
 		result = DwCEventDQ.isDayPossibleForMonthYear(Integer.toString(year), Integer.toString(month), Integer.toString(day));
 		assertEquals(DQValidationState.COMPLETED, result.getResultState());
 		assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());
-		
+
 	}
 
 	/**
@@ -178,47 +178,47 @@ public class DwcEventDQTest {
 	 */
 	@Test
 	public void testDayMonthTransposition() {
-	    	String month = "30";
-	    	String day = "11";
-	    	EventDQAmedment result = DwCEventDQ.dayMonthTransposition(month,day);
-	    	assertEquals(EventDQAmedment.EventQCAmendmentState.TRANSPOSED, result.getResultState());
-	    	assertEquals("11",result.getResult().get("dwc:month"));
-	    	assertEquals("30",result.getResult().get("dwc:day"));
-	    	
-	    	result = DwCEventDQ.dayMonthTransposition(day,month);
-	    	assertEquals(EventDQAmedment.EventQCAmendmentState.NO_CHANGE, result.getResultState());
-	    	
-	    	day = "5"; 
-	    	month = "11";
-	    	result = DwCEventDQ.dayMonthTransposition(month,day);
-	    	assertEquals(EventDQAmedment.EventQCAmendmentState.NO_CHANGE, result.getResultState());   
-	    	
-	    	day = "15"; 
-	    	month = "8";
-	    	result = DwCEventDQ.dayMonthTransposition(month,day);
-	    	assertEquals(EventDQAmedment.EventQCAmendmentState.NO_CHANGE, result.getResultState());  
-	    	
-	    	day = "15"; 
-	    	month = "15";
-	    	result = DwCEventDQ.dayMonthTransposition(month,day);
-	    	assertEquals(EventDQAmedment.EventQCAmendmentState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());    	
-	    	
-	    	day = "15"; 
-	    	month = "34";
-	    	result = DwCEventDQ.dayMonthTransposition(month,day);
-	    	assertEquals(EventDQAmedment.EventQCAmendmentState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());      	
-	    	
-	    	day = "-1"; 
-	    	month = "15";
-	    	result = DwCEventDQ.dayMonthTransposition(month,day);
-	    	assertEquals(EventDQAmedment.EventQCAmendmentState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());      	
-	    	
-	    	day = "-1"; 
-	    	month = "5";
-	    	result = DwCEventDQ.dayMonthTransposition(month,day);
-	    	assertEquals(EventDQAmedment.EventQCAmendmentState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());      	
-	    	
-	    	result = DwCEventDQ.dayMonthTransposition(day,"");
-	    	assertEquals(EventDQAmedment.EventQCAmendmentState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
+		String month = "30";
+		String day = "11";
+		EventDQAmedment result = DwCEventDQ.dayMonthTransposition(month,day);
+		assertEquals(EventDQAmedment.EventQCAmendmentState.TRANSPOSED, result.getResultState());
+		assertEquals("11",result.getResult().get("dwc:month"));
+		assertEquals("30",result.getResult().get("dwc:day"));
+
+		result = DwCEventDQ.dayMonthTransposition(day,month);
+		assertEquals(EventDQAmedment.EventQCAmendmentState.NO_CHANGE, result.getResultState());
+
+		day = "5"; 
+		month = "11";
+		result = DwCEventDQ.dayMonthTransposition(month,day);
+		assertEquals(EventDQAmedment.EventQCAmendmentState.NO_CHANGE, result.getResultState());   
+
+		day = "15"; 
+		month = "8";
+		result = DwCEventDQ.dayMonthTransposition(month,day);
+		assertEquals(EventDQAmedment.EventQCAmendmentState.NO_CHANGE, result.getResultState());  
+
+		day = "15"; 
+		month = "15";
+		result = DwCEventDQ.dayMonthTransposition(month,day);
+		assertEquals(EventDQAmedment.EventQCAmendmentState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());    	
+
+		day = "15"; 
+		month = "34";
+		result = DwCEventDQ.dayMonthTransposition(month,day);
+		assertEquals(EventDQAmedment.EventQCAmendmentState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());      	
+
+		day = "-1"; 
+		month = "15";
+		result = DwCEventDQ.dayMonthTransposition(month,day);
+		assertEquals(EventDQAmedment.EventQCAmendmentState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());      	
+
+		day = "-1"; 
+		month = "5";
+		result = DwCEventDQ.dayMonthTransposition(month,day);
+		assertEquals(EventDQAmedment.EventQCAmendmentState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());      	
+
+		result = DwCEventDQ.dayMonthTransposition(day,"");
+		assertEquals(EventDQAmedment.EventQCAmendmentState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
 	}
 }
