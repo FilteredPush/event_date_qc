@@ -88,6 +88,11 @@ public class DwcEventDQTest {
 		assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
 		result = DwCEventDQ.isDayInRange("**");
 		assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
+		
+		result = DwCEventDQ.isDayInRange("1st");
+		assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
+		result = DwCEventDQ.isDayInRange("2nd");
+		assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
 	}
 
 	/**
@@ -145,6 +150,11 @@ public class DwcEventDQTest {
 		assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
 		result = DwCEventDQ.isMonthInRange("**");
 		assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
+		
+		result = DwCEventDQ.isMonthInRange("Jan");
+		assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
+		result = DwCEventDQ.isMonthInRange("January");
+		assertEquals(DQValidationState.INTERNAL_PREREQISITES_NOT_MET, result.getResultState());
 	}
 
 	/**
@@ -164,9 +174,46 @@ public class DwcEventDQTest {
 			}
 		}
 
-		int year = 2000;
+		// Not a leap year
+		int year = 2001;
 		int month = 2;
-		int day = 31;
+		int day = 28;
+		result = DwCEventDQ.isDayPossibleForMonthYear(Integer.toString(year), Integer.toString(month), Integer.toString(day));
+		assertEquals(DQValidationState.COMPLETED, result.getResultState());
+		assertEquals(DQValidationResult.COMPLIANT, result.getResult());
+		
+		year = 2001;
+		month = 2;
+		day = 29;  
+		result = DwCEventDQ.isDayPossibleForMonthYear(Integer.toString(year), Integer.toString(month), Integer.toString(day));
+		assertEquals(DQValidationState.COMPLETED, result.getResultState());
+		assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());
+		
+		year = 2001;
+		month = 2;
+		day = 30;  
+		result = DwCEventDQ.isDayPossibleForMonthYear(Integer.toString(year), Integer.toString(month), Integer.toString(day));
+		assertEquals(DQValidationState.COMPLETED, result.getResultState());
+		assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());
+		
+		// Leap year
+		year = 2000;
+		month = 2;
+		day = 29;  
+		result = DwCEventDQ.isDayPossibleForMonthYear(Integer.toString(year), Integer.toString(month), Integer.toString(day));
+		assertEquals(DQValidationState.COMPLETED, result.getResultState());
+		assertEquals(DQValidationResult.COMPLIANT, result.getResult());
+		
+		year = 2000;
+		month = 2;
+		day = 30;
+		result = DwCEventDQ.isDayPossibleForMonthYear(Integer.toString(year), Integer.toString(month), Integer.toString(day));
+		assertEquals(DQValidationState.COMPLETED, result.getResultState());
+		assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());
+		
+		year = 2000;
+		month = 2;
+		day = 31;
 		result = DwCEventDQ.isDayPossibleForMonthYear(Integer.toString(year), Integer.toString(month), Integer.toString(day));
 		assertEquals(DQValidationState.COMPLETED, result.getResultState());
 		assertEquals(DQValidationResult.NOT_COMPLIANT, result.getResult());
