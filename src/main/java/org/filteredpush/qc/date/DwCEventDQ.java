@@ -24,8 +24,8 @@ import org.datakurator.ffdq.annotations.Enhancement;
 import org.datakurator.ffdq.annotations.PostEnhancement;
 import org.datakurator.ffdq.annotations.PreEnhancement;
 import org.datakurator.ffdq.annotations.Provides;
-import org.datakurator.ffdq.api.DQValidationResult;
-import org.datakurator.ffdq.api.DQValidationState;
+import org.datakurator.ffdq.api.EnumDQValidationResult;
+import org.datakurator.ffdq.api.EnumDQValidationState;
 import org.filteredpush.qc.date.EventDQAmedment.EventQCAmendmentState;
 
 
@@ -79,21 +79,21 @@ public class DwCEventDQ {
     	EventDQValidation result = new EventDQValidation();
     	if (DateUtils.isEmpty(day)) {
     		result.addComment("No value provided for day.");
-    		result.setResultState(DQValidationState.INTERNAL_PREREQISITES_NOT_MET);
+    		result.setResultState(EnumDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
     	} else { 
     		try { 
     			int numericDay = Integer.parseInt(day.trim());
     			if (DateUtils.isDayInRange(numericDay)) { 
-    				result.setResult(DQValidationResult.COMPLIANT);
+    				result.setResult(EnumDQValidationResult.COMPLIANT);
     				result.addComment("Provided value for day '" + day + "' is an integer in the range 1 to 31.");
     			} else { 
-    				result.setResult(DQValidationResult.NOT_COMPLIANT);
+    				result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
     				result.addComment("Provided value for day '" + day + "' is not an integer in the range 1 to 31.");
     			}
-    			result.setResultState(DQValidationState.COMPLETED);
+    			result.setResultState(EnumDQValidationState.COMPLETED);
     		} catch (NumberFormatException e) { 
     			logger.debug(e.getMessage());
-    			result.setResultState(DQValidationState.INTERNAL_PREREQISITES_NOT_MET);
+    			result.setResultState(EnumDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
     			result.addComment(e.getMessage());
     		}
     	}
@@ -117,21 +117,21 @@ public class DwCEventDQ {
     	EventDQValidation result = new EventDQValidation();
     	if (DateUtils.isEmpty(month)) {
     		result.addComment("No value provided for month.");
-    		result.setResultState(DQValidationState.INTERNAL_PREREQISITES_NOT_MET);
+    		result.setResultState(EnumDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
     	} else { 
     		try { 
     			int numericMonth = Integer.parseInt(month.trim());
     			if (DateUtils.isMonthInRange(numericMonth)) { 
-    				result.setResult(DQValidationResult.COMPLIANT);
+    				result.setResult(EnumDQValidationResult.COMPLIANT);
     				result.addComment("Provided value for month '" + month + "' is an integer in the range 1 to 12.");
     			} else { 
-    				result.setResult(DQValidationResult.NOT_COMPLIANT);
+    				result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
     				result.addComment("Provided value for month '" + month + "' is not an integer in the range 1 to 12.");
     			}
-    			result.setResultState(DQValidationState.COMPLETED);
+    			result.setResultState(EnumDQValidationState.COMPLETED);
     		} catch (NumberFormatException e) { 
     			logger.debug(e.getMessage());
-    			result.setResultState(DQValidationState.INTERNAL_PREREQISITES_NOT_MET);
+    			result.setResultState(EnumDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
     			result.addComment(e.getMessage());
     		}
     	}
@@ -157,28 +157,28 @@ public class DwCEventDQ {
     	EventDQValidation monthResult =  isMonthInRange(month);
     	EventDQValidation dayResult =  isDayInRange(day);
     	
-    	if (monthResult.getResultState().equals(DQValidationState.COMPLETED)) {
-    		if (monthResult.getResult().equals(DQValidationResult.COMPLIANT)) { 
-    	        if (dayResult.getResultState().equals(DQValidationState.COMPLETED)) { 
-    	        	if (dayResult.getResult().equals(DQValidationResult.COMPLIANT)) {
+    	if (monthResult.getResultState().equals(EnumDQValidationState.COMPLETED)) {
+    		if (monthResult.getResult().equals(EnumDQValidationResult.COMPLIANT)) { 
+    	        if (dayResult.getResultState().equals(EnumDQValidationState.COMPLETED)) { 
+    	        	if (dayResult.getResult().equals(EnumDQValidationResult.COMPLIANT)) {
     	        		try { 
     	        		    Integer numericYear = Integer.parseInt(year);
     	        		    String date = String.format("%04d", numericYear) + "-" + month.trim() + "-" + day.trim();
 
     	        	    	if (DateUtils.eventDateValid(date)) { 
-    	        	    		result.setResult(DQValidationResult.COMPLIANT);
+    	        	    		result.setResult(EnumDQValidationResult.COMPLIANT);
     	        	    		result.addComment("Provided value for year-month-day " + date + " parses to a valid day.");;
     	        	    	} else { 
-    	        	    		result.setResult(DQValidationResult.NOT_COMPLIANT);
+    	        	    		result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
     	        	    		result.addComment("Provided value for year-month-day " + date + " does not parse to a valid day.");;
     	        	    	}
-    	        		    result.setResultState(DQValidationState.COMPLETED);
+    	        		    result.setResultState(EnumDQValidationState.COMPLETED);
     	        		} catch (NumberFormatException e) { 
-    	        			result.setResultState(DQValidationState.INTERNAL_PREREQISITES_NOT_MET);
+    	        			result.setResultState(EnumDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
     	        		    result.addComment("Unable to parse integer from provided value for year " + year + " " + e.getMessage());;
     	        		}
     	        	} else { 
-    	        		result.setResultState(DQValidationState.INTERNAL_PREREQISITES_NOT_MET);
+    	        		result.setResultState(EnumDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
     	        		result.addComment("Provided value for day " + day + " is outside the range 1-31.");;
     	        	}
     	        } else { 
@@ -186,7 +186,7 @@ public class DwCEventDQ {
     	        	result.addComment(dayResult.getComment());
     	        }
     		} else { 
-    			result.setResultState(DQValidationState.INTERNAL_PREREQISITES_NOT_MET);
+    			result.setResultState(EnumDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
     			result.addComment("Provided value for month " + month + " is outside the range 1-12.");;
     		}
     	} else { 
@@ -217,10 +217,10 @@ public class DwCEventDQ {
     	} else { 
         	EventDQValidation monthResult =  isMonthInRange(month);
         	EventDQValidation dayResult =  isDayInRange(day);
-        	if (monthResult.getResultState().equals(DQValidationState.COMPLETED)) {
-        		if (monthResult.getResult().equals(DQValidationResult.NOT_COMPLIANT)) { 
+        	if (monthResult.getResultState().equals(EnumDQValidationState.COMPLETED)) {
+        		if (monthResult.getResult().equals(EnumDQValidationResult.NOT_COMPLIANT)) { 
         			// month is integer, but out of range
-        	        if (dayResult.getResultState().equals(DQValidationState.COMPLETED)) { 
+        	        if (dayResult.getResultState().equals(EnumDQValidationState.COMPLETED)) { 
         	        	// day is also integer
         	        	int dayNumeric = Integer.parseInt(day);
         	        	int monthNumeric = Integer.parseInt(month);
@@ -237,8 +237,8 @@ public class DwCEventDQ {
     		            result.addComment("dwc:day " + dayResult.getResultState() + ". " + dayResult.getComment());
         	        }
         		} else { 
-        	        if (dayResult.getResultState().equals(DQValidationState.COMPLETED) &&
-        	            dayResult.getResult().equals(DQValidationResult.COMPLIANT)) { 
+        	        if (dayResult.getResultState().equals(EnumDQValidationState.COMPLETED) &&
+        	            dayResult.getResult().equals(EnumDQValidationResult.COMPLIANT)) { 
         			    // month is in range for months, so don't try to change.
         	            result.setResultState(EventQCAmendmentState.NO_CHANGE);
         	        } else { 

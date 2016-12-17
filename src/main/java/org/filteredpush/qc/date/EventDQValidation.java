@@ -17,8 +17,8 @@
 package org.filteredpush.qc.date;
 
 import org.datakurator.ffdq.api.DQValidation;
-import org.datakurator.ffdq.api.DQValidationResult;
-import org.datakurator.ffdq.api.DQValidationState;
+import org.datakurator.ffdq.api.EnumDQValidationResult;
+import org.datakurator.ffdq.api.EnumDQValidationState;
 
 /**
  * Specific implementation of return values for an F4UF validation result for org.filteredpush.qc.date
@@ -29,12 +29,12 @@ import org.datakurator.ffdq.api.DQValidationState;
  */
 public class EventDQValidation implements DQValidation {
 	
-	private DQValidationState resultState;
-	private DQValidationResult result;
+	private EnumDQValidationState resultState;
+	private EnumDQValidationResult result;
 	private StringBuffer resultComment;
 	
 	public EventDQValidation() { 
-		setResultState(DQValidationState.NOT_RUN);
+		setResultState(EnumDQValidationState.NOT_RUN);
 		setResult(null);
 		resultComment = new StringBuffer();
 	}
@@ -53,14 +53,14 @@ public class EventDQValidation implements DQValidation {
 	/**
 	 * @return the resultState
 	 */
-	public DQValidationState getResultState() {
+	public EnumDQValidationState getResultState() {
 		return resultState;
 	}
 
 	/**
 	 * @param resultState the resultState to set
 	 */
-	public void setResultState(DQValidationState resultState) {
+	public void setResultState(EnumDQValidationState resultState) {
 		this.resultState = resultState;
 	}
 
@@ -68,14 +68,14 @@ public class EventDQValidation implements DQValidation {
 	/**
 	 * @return the result
 	 */
-	public DQValidationResult getResult() {
+	public EnumDQValidationResult getResult() {
 		return result;
 	}
 
 	/**
 	 * @param result the result to set
 	 */
-	public void setResult(DQValidationResult result) {
+	public void setResult(EnumDQValidationResult result) {
 		this.result = result;
 	}
 
