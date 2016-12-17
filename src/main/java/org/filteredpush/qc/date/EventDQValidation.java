@@ -16,6 +16,10 @@
  */
 package org.filteredpush.qc.date;
 
+import org.datakurator.ffdq.api.DQValidation;
+import org.datakurator.ffdq.api.DQValidationResult;
+import org.datakurator.ffdq.api.DQValidationState;
+
 /**
  * Specific implementation of return values for an F4UF validation result for org.filteredpush.qc.date
  * intended to implement an validation interface from an F4UF api package at some future point.
@@ -23,26 +27,14 @@ package org.filteredpush.qc.date;
  * @author mole
  *
  */
-public class EventDQValidation {
+public class EventDQValidation implements DQValidation {
 	
-	public enum EventDQValidationState { 
-	    NOT_RUN, 
-	    AMBIGUOUS,
-	    INTERNAL_PREREQISITES_NOT_MET, 
-	    COMPLETED;
-	}
-	
-	public enum EventDQValidationResult {
-	   COMPLIANT, 
-	   NOT_COMPLIANT;
-	}
-	
-	private EventDQValidationState resultState;
-	private EventDQValidationResult result;
+	private DQValidationState resultState;
+	private DQValidationResult result;
 	private StringBuffer resultComment;
 	
 	public EventDQValidation() { 
-		setResultState(EventDQValidationState.NOT_RUN);
+		setResultState(DQValidationState.NOT_RUN);
 		setResult(null);
 		resultComment = new StringBuffer();
 	}
@@ -61,14 +53,14 @@ public class EventDQValidation {
 	/**
 	 * @return the resultState
 	 */
-	public EventDQValidationState getResultState() {
+	public DQValidationState getResultState() {
 		return resultState;
 	}
 
 	/**
 	 * @param resultState the resultState to set
 	 */
-	public void setResultState(EventDQValidationState resultState) {
+	public void setResultState(DQValidationState resultState) {
 		this.resultState = resultState;
 	}
 
@@ -76,14 +68,14 @@ public class EventDQValidation {
 	/**
 	 * @return the result
 	 */
-	public EventDQValidationResult getResult() {
+	public DQValidationResult getResult() {
 		return result;
 	}
 
 	/**
 	 * @param result the result to set
 	 */
-	public void setResult(EventDQValidationResult result) {
+	public void setResult(DQValidationResult result) {
 		this.result = result;
 	}
 

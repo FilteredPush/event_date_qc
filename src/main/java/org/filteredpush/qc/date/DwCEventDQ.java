@@ -18,9 +18,9 @@ package org.filteredpush.qc.date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.datakurator.ffdq.api.DQValidationResult;
+import org.datakurator.ffdq.api.DQValidationState;
 import org.filteredpush.qc.date.EventDQAmedment.EventQCAmendmentState;
-import org.filteredpush.qc.date.EventDQValidation.EventDQValidationResult;
-import org.filteredpush.qc.date.EventDQValidation.EventDQValidationState;
 
 
 /**
@@ -70,21 +70,21 @@ public class DwCEventDQ {
     	EventDQValidation result = new EventDQValidation();
     	if (DateUtils.isEmpty(day)) {
     		result.addComment("No value provided for day.");
-    		result.setResultState(EventDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
+    		result.setResultState(DQValidationState.INTERNAL_PREREQISITES_NOT_MET);
     	} else { 
     		try { 
     			int numericDay = Integer.parseInt(day.trim());
     			if (DateUtils.isDayInRange(numericDay)) { 
-    				result.setResult(EventDQValidationResult.COMPLIANT);
+    				result.setResult(DQValidationResult.COMPLIANT);
     				result.addComment("Provided value for day '" + day + "' is an integer in the range 1 to 31.");
     			} else { 
-    				result.setResult(EventDQValidationResult.NOT_COMPLIANT);
+    				result.setResult(DQValidationResult.NOT_COMPLIANT);
     				result.addComment("Provided value for day '" + day + "' is not an integer in the range 1 to 31.");
     			}
-    			result.setResultState(EventDQValidationState.COMPLETED);
+    			result.setResultState(DQValidationState.COMPLETED);
     		} catch (NumberFormatException e) { 
     			logger.debug(e.getMessage());
-    			result.setResultState(EventDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
+    			result.setResultState(DQValidationState.INTERNAL_PREREQISITES_NOT_MET);
     			result.addComment(e.getMessage());
     		}
     	}
@@ -105,21 +105,21 @@ public class DwCEventDQ {
     	EventDQValidation result = new EventDQValidation();
     	if (DateUtils.isEmpty(month)) {
     		result.addComment("No value provided for month.");
-    		result.setResultState(EventDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
+    		result.setResultState(DQValidationState.INTERNAL_PREREQISITES_NOT_MET);
     	} else { 
     		try { 
     			int numericMonth = Integer.parseInt(month.trim());
     			if (DateUtils.isMonthInRange(numericMonth)) { 
-    				result.setResult(EventDQValidationResult.COMPLIANT);
+    				result.setResult(DQValidationResult.COMPLIANT);
     				result.addComment("Provided value for month '" + month + "' is an integer in the range 1 to 12.");
     			} else { 
-    				result.setResult(EventDQValidationResult.NOT_COMPLIANT);
+    				result.setResult(DQValidationResult.NOT_COMPLIANT);
     				result.addComment("Provided value for month '" + month + "' is not an integer in the range 1 to 12.");
     			}
-    			result.setResultState(EventDQValidationState.COMPLETED);
+    			result.setResultState(DQValidationState.COMPLETED);
     		} catch (NumberFormatException e) { 
     			logger.debug(e.getMessage());
-    			result.setResultState(EventDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
+    			result.setResultState(DQValidationState.INTERNAL_PREREQISITES_NOT_MET);
     			result.addComment(e.getMessage());
     		}
     	}
@@ -134,7 +134,7 @@ public class DwCEventDQ {
      * @param year for month and day
      * @param month for day
      * @param day to check 
-     * @return an EventDQValidation object describing whether day exists in year-month-day.
+     * @return an DQValidation object describing whether day exists in year-month-day.
      */
     public static EventDQValidation isDayPossibleForMonthYear(String year, String month, String day) { 
     	EventDQValidation result = new EventDQValidation();
@@ -142,28 +142,28 @@ public class DwCEventDQ {
     	EventDQValidation monthResult =  isMonthInRange(month);
     	EventDQValidation dayResult =  isDayInRange(day);
     	
-    	if (monthResult.getResultState().equals(EventDQValidationState.COMPLETED)) {
-    		if (monthResult.getResult().equals(EventDQValidationResult.COMPLIANT)) { 
-    	        if (dayResult.getResultState().equals(EventDQValidationState.COMPLETED)) { 
-    	        	if (dayResult.getResult().equals(EventDQValidationResult.COMPLIANT)) {
+    	if (monthResult.getResultState().equals(DQValidationState.COMPLETED)) {
+    		if (monthResult.getResult().equals(DQValidationResult.COMPLIANT)) { 
+    	        if (dayResult.getResultState().equals(DQValidationState.COMPLETED)) { 
+    	        	if (dayResult.getResult().equals(DQValidationResult.COMPLIANT)) {
     	        		try { 
     	        		    Integer numericYear = Integer.parseInt(year);
     	        		    String date = String.format("%04d", numericYear) + "-" + month.trim() + "-" + day.trim();
 
     	        	    	if (DateUtils.eventDateValid(date)) { 
-    	        	    		result.setResult(EventDQValidationResult.COMPLIANT);
+    	        	    		result.setResult(DQValidationResult.COMPLIANT);
     	        	    		result.addComment("Provided value for year-month-day " + date + " parses to a valid day.");;
     	        	    	} else { 
-    	        	    		result.setResult(EventDQValidationResult.NOT_COMPLIANT);
+    	        	    		result.setResult(DQValidationResult.NOT_COMPLIANT);
     	        	    		result.addComment("Provided value for year-month-day " + date + " does not parse to a valid day.");;
     	        	    	}
-    	        		    result.setResultState(EventDQValidationState.COMPLETED);
+    	        		    result.setResultState(DQValidationState.COMPLETED);
     	        		} catch (NumberFormatException e) { 
-    	        			result.setResultState(EventDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
+    	        			result.setResultState(DQValidationState.INTERNAL_PREREQISITES_NOT_MET);
     	        		    result.addComment("Unable to parse integer from provided value for year " + year + " " + e.getMessage());;
     	        		}
     	        	} else { 
-    	        		result.setResultState(EventDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
+    	        		result.setResultState(DQValidationState.INTERNAL_PREREQISITES_NOT_MET);
     	        		result.addComment("Provided value for day " + day + " is outside the range 1-31.");;
     	        	}
     	        } else { 
@@ -171,7 +171,7 @@ public class DwCEventDQ {
     	        	result.addComment(dayResult.getComment());
     	        }
     		} else { 
-    			result.setResultState(EventDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
+    			result.setResultState(DQValidationState.INTERNAL_PREREQISITES_NOT_MET);
     			result.addComment("Provided value for month " + month + " is outside the range 1-12.");;
     		}
     	} else { 
@@ -200,10 +200,10 @@ public class DwCEventDQ {
     	} else { 
         	EventDQValidation monthResult =  isMonthInRange(month);
         	EventDQValidation dayResult =  isDayInRange(day);
-        	if (monthResult.getResultState().equals(EventDQValidationState.COMPLETED)) {
-        		if (monthResult.getResult().equals(EventDQValidationResult.NOT_COMPLIANT)) { 
+        	if (monthResult.getResultState().equals(DQValidationState.COMPLETED)) {
+        		if (monthResult.getResult().equals(DQValidationResult.NOT_COMPLIANT)) { 
         			// month is integer, but out of range
-        	        if (dayResult.getResultState().equals(EventDQValidationState.COMPLETED)) { 
+        	        if (dayResult.getResultState().equals(DQValidationState.COMPLETED)) { 
         	        	// day is also integer
         	        	int dayNumeric = Integer.parseInt(day);
         	        	int monthNumeric = Integer.parseInt(month);
@@ -220,8 +220,8 @@ public class DwCEventDQ {
     		            result.addComment("dwc:day " + dayResult.getResultState() + ". " + dayResult.getComment());
         	        }
         		} else { 
-        	        if (dayResult.getResultState().equals(EventDQValidationState.COMPLETED) &&
-        	            dayResult.getResult().equals(EventDQValidationResult.COMPLIANT)) { 
+        	        if (dayResult.getResultState().equals(DQValidationState.COMPLETED) &&
+        	            dayResult.getResult().equals(DQValidationResult.COMPLIANT)) { 
         			    // month is in range for months, so don't try to change.
         	            result.setResultState(EventQCAmendmentState.NO_CHANGE);
         	        } else { 

@@ -31,9 +31,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-// import org.filteredpush.qc.date.EventDQValidation.EventDQValidationResult;
-import org.filteredpush.qc.date.EventDQValidation.EventDQValidationState;
-import org.filteredpush.qc.date.EventDQAmedment.EventQCAmendmentState;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeFieldType;
