@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.filteredpush.qc.date.EventDQValidation.EventDQValidationResult;
+// import org.filteredpush.qc.date.EventDQValidation.EventDQValidationResult;
 import org.filteredpush.qc.date.EventDQValidation.EventDQValidationState;
 import org.filteredpush.qc.date.EventDQAmedment.EventQCAmendmentState;
 import org.joda.time.DateMidnight;
@@ -49,7 +49,8 @@ import org.joda.time.format.ISODateTimeFormat;
 /**
  * Utility functions for working with DarwinCore date concepts.
  *  
- *  Provides support for the following draft TDWG DQIG TG2 validations and amendments.  
+ *  Provides support for the following draft TDWG DQIG TG2 validations and amendments. 
+ *  (Note: Moving all these to DwCEventDQ) 
  *  
  *  DAY_MONTH_TRANSPOSED dayMonthTransposition(String month, String day) 
  *  DAY_MONTH_YEAR_FILLED_IN
@@ -71,9 +72,10 @@ import org.joda.time.format.ISODateTimeFormat;
  *  YEAR_PROVIDED
  *  EVENTDATE_CONSISTENT_WITH_ATOMIC_PARTS isConsistent(String eventDate, String startDayOfYear, String endDayOfYear, String year, String month, String day)
  *  
- *  containsTime(String eventDate)
  *  extractZuluTime(String eventDate) 
  *  createEventDateFromParts(String verbatimEventDate, String startDayOfYear, String endDayOfYear, String year, String month, String day)
+ *  
+ *  containsTime(String eventDate)
  *  eventDateValid(String eventDate)
  * 
  * @author mole
@@ -1032,7 +1034,6 @@ public class DateUtils {
                }
     		} catch (Exception e) { 
     			// not a date
-    			e.printStackTrace();
                logger.error(e.getMessage());
     		}
     	}
@@ -1580,42 +1581,6 @@ public class DateUtils {
     	}
     	return cleaned;
     }
-  
-    /**
-     * Test to see whether a provided day is an integer in the range of values that can be 
-     * a day of a month.
-     * 
-     * Provides: DAY_IN_RANGE
-     * 
-     * @param day  a string to test
-     * @return COMPLIANT if day is an integer in the range 1 to 31 inclusive, NOT_COMPLIANT if day is 
-     *     an integer outside this range, INTERNAL_PREREQUSISITES_NOT_MET if day is empty or an integer
-     *     cannot be parsed from day. 
-     */
-    public static EventDQValidation isDayInRange(String day) { 
-    	EventDQValidation result = new EventDQValidation();
-    	if (isEmpty(day)) {
-    		result.addComment("No value provided for day.");
-    		result.setResultState(EventDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
-    	} else { 
-    		try { 
-    			int numericDay = Integer.parseInt(day);
-    			if (isDayInRange(numericDay)) { 
-    				result.setResult(EventDQValidationResult.COMPLIANT);
-    				result.addComment("Provided value for day '" + day + "' is an integer in the range 1 to 31.");
-    			} else { 
-    				result.setResult(EventDQValidationResult.NOT_COMPLIANT);
-    				result.addComment("Provided value for day '" + day + "' is not an integer in the range 1 to 31.");
-    			}
-    			result.setResultState(EventDQValidationState.COMPLETED);
-    		} catch (NumberFormatException e) { 
-    			logger.debug(e.getMessage());
-    			result.setResultState(EventDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
-    			result.addComment(e.getMessage());
-    		}
-    	}
-    	return result;
-    }
     
     /**
      * Test to see if an integer is in the range of integers that can be days of the month.
@@ -1629,40 +1594,7 @@ public class DateUtils {
     	return result;
     }
     
-    /**
-     * Test to see whether a provided month is in the range of integer values that form months of the year.
-     * 
-     * Provides: MONTH_IN_RANGE
-     * 
-     * @param month  a string to test
-     * @return COMPLIANT if month is an integer in the range 1 to 12 inclusive, NOT_COMPLIANT if month is 
-     *     an integer outside this range, INTERNAL_PREREQUSISITES_NOT_MET if month is empty or an integer
-     *     cannot be parsed from month. 
-     */
-    public static EventDQValidation isMonthInRange(String month) { 
-    	EventDQValidation result = new EventDQValidation();
-    	if (isEmpty(month)) {
-    		result.addComment("No value provided for month.");
-    		result.setResultState(EventDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
-    	} else { 
-    		try { 
-    			int numericMonth = Integer.parseInt(month);
-    			if (isMonthInRange(numericMonth)) { 
-    				result.setResult(EventDQValidationResult.COMPLIANT);
-    				result.addComment("Provided value for month '" + month + "' is an integer in the range 1 to 12.");
-    			} else { 
-    				result.setResult(EventDQValidationResult.NOT_COMPLIANT);
-    				result.addComment("Provided value for month '" + month + "' is not an integer in the range 1 to 12.");
-    			}
-    			result.setResultState(EventDQValidationState.COMPLETED);
-    		} catch (NumberFormatException e) { 
-    			logger.debug(e.getMessage());
-    			result.setResultState(EventDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
-    			result.addComment(e.getMessage());
-    		}
-    	}
-    	return result;
-    }
+
     
     /**
      * Test to see if an integer is in the range of integers that can be months of the year.
@@ -1676,106 +1608,6 @@ public class DateUtils {
     	return result;
     }    
  
-    public static EventDQValidation isDayPossibleForMonthYear(String year, String month, String day) { 
-    	EventDQValidation result = new EventDQValidation();
-    	
-    	EventDQValidation monthResult =  isMonthInRange(month);
-    	EventDQValidation dayResult =  isDayInRange(day);
-    	
-    	if (monthResult.getResultState().equals(EventDQValidationState.COMPLETED)) {
-    		if (monthResult.getResult().equals(EventDQValidationResult.COMPLIANT)) { 
-    	        if (dayResult.getResultState().equals(EventDQValidationState.COMPLETED)) { 
-    	        	if (dayResult.getResult().equals(EventDQValidationResult.COMPLIANT)) {
-    	        		try { 
-    	        		    Integer numericYear = Integer.parseInt(year);
-    	        		    String date = String.format("04d", numericYear) + "-" + month.trim() + "-" + day.trim();
-
-    	        	    	if (eventDateValid(date)) { 
-    	        	    		result.setResult(EventDQValidationResult.COMPLIANT);
-    	        	    		result.addComment("Provided value for year-month-day " + date + " parses to a valid day.");;
-    	        	    	} else { 
-    	        	    		result.setResult(EventDQValidationResult.NOT_COMPLIANT);
-    	        	    		result.addComment("Provided value for year-month-day " + date + " does not parse to a valid day.");;
-    	        	    	}
-    	        		    result.setResultState(EventDQValidationState.COMPLETED);
-    	        		} catch (NumberFormatException e) { 
-    	        			result.setResultState(EventDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
-    	        		    result.addComment("Unable to parse integer from provided value for year " + year + " " + e.getMessage());;
-    	        		}
-    	        	} else { 
-    	        		result.setResultState(EventDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
-    	        		result.addComment("Provided value for day " + day + " is outside the range 1-31.");;
-    	        	}
-    	        } else { 
-    	        	result.setResultState(dayResult.getResultState());
-    	        	result.addComment(dayResult.getComment());
-    	        }
-    		} else { 
-    			result.setResultState(EventDQValidationState.INTERNAL_PREREQISITES_NOT_MET);
-    			result.addComment("Provided value for month " + month + " is outside the range 1-12.");;
-    		}
-    	} else { 
-    		result.setResultState(monthResult.getResultState());
-    		result.addComment(monthResult.getComment());
-    	}
-    	
-    	return result;
-    }
-    
-    /**
-     * Check of month is out of range for months, but day is in range for months, and
-     * propose a transposition of the two if this is the case.
-     * 
-     * Provides: DAY_MONTH_TRANSPOSED
-     * 
-     * @param month the value of dwc:month
-     * @param day  the value of dwc:day
-     * @return an EventDQAmmendment which may contain a proposed ammendment.
-     */
-    public static final EventDQAmedment dayMonthTransposition(String month, String day) { 
-    	EventDQAmedment result = new EventDQAmedment();
-    	if (isEmpty(day) || isEmpty(month)) { 
-    		result.setResultState(EventQCAmendmentState.INTERNAL_PREREQISITES_NOT_MET);
-    		result.addComment("Either month or day was not provided.");
-    	} else { 
-        	EventDQValidation monthResult =  isMonthInRange(month);
-        	EventDQValidation dayResult =  isDayInRange(day);
-        	if (monthResult.getResultState().equals(EventDQValidationState.COMPLETED)) {
-        		if (monthResult.getResult().equals(EventDQValidationResult.NOT_COMPLIANT)) { 
-        			// month is integer, but out of range
-        	        if (dayResult.getResultState().equals(EventDQValidationState.COMPLETED)) { 
-        	        	// day is also integer
-        	        	int dayNumeric = Integer.parseInt(day);
-        	        	int monthNumeric = Integer.parseInt(month);
-        	        	if (isDayInRange(monthNumeric) && isMonthInRange(dayNumeric)) { 
-        	        		// day is in range for months, and month is in range for days, so transpose.
-        	        	    result.addResult("dwc:month", day);
-        	        	    result.addResult("dwc:day", month);
-        	        	    result.setResultState(EventQCAmendmentState.TRANSPOSED);
-        	        	} else { 
-        	        	    result.setResultState(EventQCAmendmentState.INTERNAL_PREREQISITES_NOT_MET);
-        	        	}
-        	        } else { 
-    		            result.setResultState(EventQCAmendmentState.INTERNAL_PREREQISITES_NOT_MET);
-    		            result.addComment("dwc:day " + dayResult.getResultState() + ". " + dayResult.getComment());
-        	        }
-        		} else { 
-        	        if (dayResult.getResultState().equals(EventDQValidationState.COMPLETED) &&
-        	            dayResult.getResult().equals(EventDQValidationResult.COMPLIANT)) { 
-        			    // month is in range for months, so don't try to change.
-        	            result.setResultState(EventQCAmendmentState.NO_CHANGE);
-        	        } else { 
-    		            result.setResultState(EventQCAmendmentState.INTERNAL_PREREQISITES_NOT_MET);
-        	        }
-        		}
-        	} else {
-    		   result.setResultState(EventQCAmendmentState.INTERNAL_PREREQISITES_NOT_MET);
-    		   result.addComment("dwc:month " + monthResult.getResultState() + ". " + monthResult.getComment());
-        	}
-    	}
-    	return result;
-    }
-    
     /**
      * Run from the command line, arguments -f to specify a file, -m to show matches. 
      * Converts dates in a specified input file from verbatim form to format expected by dwc:eventDate.
