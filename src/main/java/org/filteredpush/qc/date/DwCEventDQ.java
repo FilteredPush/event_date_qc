@@ -134,7 +134,7 @@ public class DwCEventDQ {
      * @param year for month and day
      * @param month for day
      * @param day to check 
-     * @return
+     * @return an EventDQValidation object describing whether day exists in year-month-day.
      */
     public static EventDQValidation isDayPossibleForMonthYear(String year, String month, String day) { 
     	EventDQValidation result = new EventDQValidation();
