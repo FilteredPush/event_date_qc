@@ -19,6 +19,10 @@ package org.filteredpush.qc.date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.datakurator.ffdq.api.DQAmendmentResponse;
+import org.datakurator.ffdq.api.EnumDQResultState;
+import org.datakurator.ffdq.api.ResultState;
+
 /**
  * Specific implementation of return values for an F4UF amendment result for org.filteredpush.qc.date
  * intended to implement an amendment interface from an F4UF api package at some future point.
@@ -26,22 +30,14 @@ import java.util.Map;
  * @author mole
  *
  */
-public class EventDQAmedment {
+public class EventDQAmedment implements DQAmendmentResponse {
 	
-	public enum EventQCAmendmentState { 
-	    NOT_RUN, 
-	    INTERNAL_PREREQISITES_NOT_MET, 
-	    AMBIGUOUS, 
-	    TRANSPOSED,
-	    NO_CHANGE;
-	}
-	
-	private EventQCAmendmentState resultState;
+	private ResultState resultState;
 	private Map<String,String> result;
 	private StringBuffer resultComment;
 	
 	public EventDQAmedment() { 
-		setResultState(EventQCAmendmentState.NOT_RUN);
+		setResultState(EnumDQResultState.NOT_RUN);
 		result = new HashMap<String, String>();
 		resultComment = new StringBuffer();
 	}
@@ -60,14 +56,14 @@ public class EventDQAmedment {
 	/**
 	 * @return the resultState
 	 */
-	public EventQCAmendmentState getResultState() {
+	public ResultState getResultState() {
 		return resultState;
 	}
 
 	/**
 	 * @param resultState the resultState to set
 	 */
-	public void setResultState(EventQCAmendmentState resultState) {
+	public void setResultState(ResultState resultState) {
 		this.resultState = resultState;
 	}
 
