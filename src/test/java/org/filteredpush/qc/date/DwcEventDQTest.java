@@ -226,7 +226,7 @@ public class DwcEventDQTest {
 	public void testDayMonthTransposition() {
 		String month = "30";
 		String day = "11";
-		EventDQAmedment result = DwCEventDQ.dayMonthTransposition(month,day);
+		EventDQAmendment result = DwCEventDQ.dayMonthTransposition(month,day);
 		assertEquals(EnumDQAmendmentResultState.TRANSPOSED, result.getResultState());
 		assertEquals("11",result.getResult().get("dwc:month"));
 		assertEquals("30",result.getResult().get("dwc:day"));

@@ -38,8 +38,8 @@ import org.datakurator.ffdq.api.EnumDQAmendmentResultState;
  *  DAY_MONTH_YEAR_FILLED_IN
  *  EVENTDATE_FILLED_IN_FROM_VERBATIM  
  *  START_ENDDAYOFYEAR_FILLED_IN
- *  
- *  EVENT_DATE_DURATION_SECONDS  
+ *
+ *  EVENT_DATE_DURATION_SECONDS  measureDurationSeconds(String eventDate)
  *  DAY_IS_FIRST_OF_CENTURY
  *  DAY_IS_FIRST_OF_YEAR
  *  
@@ -60,6 +60,34 @@ import org.datakurator.ffdq.api.EnumDQAmendmentResultState;
 public class DwCEventDQ {
 	
 	private static final Log logger = LogFactory.getLog(DwCEventDQ.class);
+	
+	/**
+	 * Measure the duration of an event date in seconds.
+	 * 
+	 * @param eventDate to measure duration in seconds
+	 * @return EventDQMeasuremnt object, which if state is COMPLETE has a value of type Long.
+	 */
+    @Provides(value = "DAY_IN_RANGE")
+    @PreEnhancement
+    @PostEnhancement
+	public static EventDQMeasurement measureDurationSeconds(@ActedUpon(value = "dwc:eventDate") String eventDate) { 
+		EventDQMeasurement result = new EventDQMeasurement();
+    	if (DateUtils.isEmpty(eventDate)) {
+    		result.addComment("No value provided for eventDate.");
+    		result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    	} else { 
+    		try { 
+    			long seconds = DateUtils.measureDurationSeconds(eventDate);
+    			result.setValue(new Long(seconds));
+    			result.setResultState(EnumDQResultState.COMPLETED);
+    		} catch (Exception e) { 
+    			logger.debug(e.getMessage());
+    			result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    			result.addComment(e.getMessage());
+    		}
+    	}
+    	return result;
+	}
 
     /**
      * Test to see whether a provided day is an integer in the range of values that can be 
@@ -209,8 +237,8 @@ public class DwCEventDQ {
      */
     @Provides(value = "DAY_MONTH_TRANSPOSED")
     @Enhancement
-    public static final EventDQAmedment dayMonthTransposition(@ActedUpon(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) { 
-    	EventDQAmedment result = new EventDQAmedment();
+    public static final EventDQAmendment dayMonthTransposition(@ActedUpon(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) { 
+    	EventDQAmendment result = new EventDQAmendment();
     	if (DateUtils.isEmpty(day) || DateUtils.isEmpty(month)) { 
     		result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		result.addComment("Either month or day was not provided.");

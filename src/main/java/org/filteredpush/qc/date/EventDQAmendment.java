@@ -30,13 +30,13 @@ import org.datakurator.ffdq.api.ResultState;
  * @author mole
  *
  */
-public class EventDQAmedment implements DQAmendmentResponse {
+public class EventDQAmendment implements DQAmendmentResponse {
 	
 	private ResultState resultState;
 	private Map<String,String> result;
 	private StringBuffer resultComment;
 	
-	public EventDQAmedment() { 
+	public EventDQAmendment() { 
 		setResultState(EnumDQResultState.NOT_RUN);
 		result = new HashMap<String, String>();
 		resultComment = new StringBuffer();
