@@ -210,7 +210,24 @@ public class DateUtils {
 	 * Provides: EVENTDATE_FILLED_IN_FROM_VERBATIM 
 	 * 
 	 * @param verbatimEventDate a string containing a verbatim event date.
+	 * @return a result object with a resultState and the extracted value in result.
+	 * 
+	 */
+	public static EventResult extractDateFromVerbatimER(String verbatimEventDate) {
+		return extractDateFromVerbatimER(verbatimEventDate, DateUtils.YEAR_BEFORE_SUSPECT);
+	}	
+	
+	/**
+	 * Attempt to extract a date or date range in standard format from a provided verbatim 
+	 * date string.  
+	 * 
+	 * Provides: EVENTDATE_FILLED_IN_FROM_VERBATIM 
+	 * 
+	 * @param verbatimEventDate a string containing a verbatim event date.
 	 * @return a map with result and resultState as keys
+	 * 
+	 * @deprecated
+	 * @see #extractDateFromVerbatimER(String) replacement method.
 	 */
 	public static Map<String,String> extractDateFromVerbatim(String verbatimEventDate) {
 		return extractDateFromVerbatim(verbatimEventDate, DateUtils.YEAR_BEFORE_SUSPECT);
@@ -221,7 +238,37 @@ public class DateUtils {
 	 * 
 	 * @param verbatimEventDate a string containing a verbatim event date.
 	 * @param yearsBeforeSuspect the value for a year before which parsed years should be considered suspect.
+	 * @return an EventResult object containing the extracted date. 
+	 */
+	public static EventResult extractDateToDayFromVerbatimER(String verbatimEventDate, int yearsBeforeSuspect) {
+		EventResult result =  extractDateFromVerbatimER(verbatimEventDate, yearsBeforeSuspect);
+        logger.debug(result.getResultState());
+        logger.debug(result.getResult());
+		if (result!=null && result.getResultState().equals(EventResult.EventQCResultState.RANGE)) {
+			String dateRange = result.getResult();
+			try { 
+				   Interval parseDate = extractDateInterval(dateRange);
+				   logger.debug(parseDate);
+				   String resultDate =  parseDate.getStart().toString("yyyy-MM-dd") + "/" + parseDate.getEnd().toString("yyyy-MM-dd");
+				   result.setResult(resultDate);
+			} catch (Exception e) { 
+				logger.debug(e.getMessage());
+				result.setResultState(EventResult.EventQCResultState.INTERNAL_PREREQISITES_NOT_MET);
+				result.addComment(e.getMessage());
+			}
+		}
+		return result;
+	}	
+	
+	/**
+	 * Extract a date from a verbatim date, returning ranges specified to day.
+	 * 
+	 * @param verbatimEventDate a string containing a verbatim event date.
+	 * @param yearsBeforeSuspect the value for a year before which parsed years should be considered suspect.
 	 * @return  a map with result and resultState as keys
+	 * 
+	 * @deprecated
+	 * @see #extractDateToDayFromVerbatimER(String, int) replacement method
 	 */
 	public static Map<String,String> extractDateToDayFromVerbatim(String verbatimEventDate, int yearsBeforeSuspect) {
 		Map<String,String> result =  extractDateFromVerbatim(verbatimEventDate, yearsBeforeSuspect);
@@ -250,6 +297,27 @@ public class DateUtils {
 	 */
 	public static Map<String,String> extractDateFromVerbatim(String verbatimEventDate, int yearsBeforeSuspect) {		
 		Map result = new HashMap<String,String>();
+	    EventResult eresult = extractDateFromVerbatimER(verbatimEventDate, yearsBeforeSuspect);
+	    if (eresult!=null) { 
+	    	if (!eresult.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) { 
+	            result.put("resultState", eresult.getResultState().toString().toLowerCase());
+	            result.put("result", eresult.getResult());
+	    	}
+	    }
+	    return result;
+	}
+	
+	/**
+	 * Given a string that may represent a date or range of dates, or date time or range of date times,
+	 * attempt to extract a standard date from that string.
+	 * 
+	 * @param verbatimEventDate a string containing a verbatim event date.
+	 * @param yearsBeforeSuspect  Dates that parse to a year prior to this year are marked as suspect.
+	 * 
+	 * @return an EventResult with a resultState for the nature of the match and result for the resulting date. 
+	 */
+	public static EventResult extractDateFromVerbatimER(String verbatimEventDate, int yearsBeforeSuspect) {
+		EventResult result = new EventResult();
 		String resultDate = null;
 		
 		// Strip off leading and trailing []
@@ -290,8 +358,8 @@ public class DateUtils {
 				DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
 				DateMidnight parseDate = LocalDate.parse(verbatimEventDate,formatter).toDateMidnight();
 				resultDate = parseDate.toString("yyyy-MM-dd");
-				result.put("resultState", "date");
-				result.put("result",resultDate);
+				result.setResultState(EventResult.EventQCResultState.DATE);
+				result.setResult(resultDate);
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
 			}
@@ -306,8 +374,8 @@ public class DateUtils {
 				DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
 				DateMidnight parseDate = LocalDate.parse(verbatimEventDate,formatter).toDateMidnight();
 				resultDate = parseDate.toString("yyyy-MM");
-				result.put("resultState", "range");
-				result.put("result",resultDate);
+				result.setResultState(EventResult.EventQCResultState.RANGE);
+				result.setResult(resultDate);
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
 			}
@@ -322,8 +390,8 @@ public class DateUtils {
 				DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter().withLocale(Locale.CHINESE);
 				DateMidnight parseDate = LocalDate.parse(verbatimEventDate,formatter).toDateMidnight();
 				resultDate = parseDate.toString("yyyy-MM-dd");
-				result.put("resultState", "date");
-				result.put("result",resultDate);
+				result.setResultState(EventResult.EventQCResultState.DATE);
+				result.setResult(resultDate);
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
 			}
@@ -339,14 +407,13 @@ public class DateUtils {
 				LocalDate parseEndDate = LocalDate.parse(bits[1],formatter);
 				resultDate =  parseStartDate.toString("yyyy-MM-dd") + "/" + parseEndDate.toString("yyyy-MM-dd");
 				logger.debug(resultDate);
-			    result.clear();
-				result.put("resultState", "range");
-				result.put("result",resultDate);
+				result.setResultState(EventResult.EventQCResultState.RANGE);
+				result.setResult(resultDate);
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
 			}			
 		}		
-		if (result.size()==0 && verbatimEventDate.matches("^[A-Za-z]{3,9}[.]{0,1}[-/ ][0-9]{4}$")) { 
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && verbatimEventDate.matches("^[A-Za-z]{3,9}[.]{0,1}[-/ ][0-9]{4}$")) { 
 			try { 
 				DateTimeParser[] parsers = { 
 						DateTimeFormat.forPattern("MMM-yyyy").getParser(),
@@ -357,13 +424,13 @@ public class DateUtils {
 				String cleaned = verbatimEventDate.replace(".", "");
 				DateMidnight parseDate = LocalDate.parse(cleaned,formatter).toDateMidnight();
 				resultDate = parseDate.toString("yyyy-MM");
-				result.put("resultState", "range");
-				result.put("result",resultDate);
+				result.setResultState(EventResult.EventQCResultState.RANGE);
+				result.setResult(resultDate);
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
 			}
 		}
-		if (result.size()==0) {
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
 			String resultDateMD = null;
 			String resultDateDM = null;
 			DateMidnight parseDate1 = null;
@@ -395,27 +462,27 @@ public class DateUtils {
 				logger.debug(e.getMessage());
 			}			
 			if (resultDateMD!=null && resultDateDM==null) {
-				result.put("resultState", "date");
-				result.put("result",resultDateMD);
+				result.setResultState(EventResult.EventQCResultState.DATE);
+				result.setResult(resultDateMD);
 			} else if (resultDateMD==null && resultDateDM!=null) { 
-				result.put("resultState", "date");
-				result.put("result",resultDateDM);
+				result.setResultState(EventResult.EventQCResultState.DATE);
+				result.setResult(resultDateDM);
 			} else if (resultDateMD!=null && resultDateDM!=null) { 
 				if (resultDateMD.equals(resultDateDM)) { 
-					result.put("resultState", "date");
-					result.put("result",resultDateDM);
+					result.setResultState(EventResult.EventQCResultState.DATE);
+				    result.setResult(resultDateDM);
 				} else { 
-				    result.put("resultState", "ambiguous");
+					result.setResultState(EventResult.EventQCResultState.AMBIGUOUS);
 				    Interval range = null;
 				    if (parseDate1.isBefore(parseDate2)) { 
-				        result.put("result", resultDateMD + "/" + resultDateDM);
+				        result.setResult(resultDateMD + "/" + resultDateDM);
 				    } else { 
-				        result.put("result", resultDateDM + "/" + resultDateMD);
+				        result.setResult(resultDateDM + "/" + resultDateMD);
 				    }
 				}
 			} 
 		}
-		if (result.size()==0 && verbatimEventDate.matches("^([0-9]{1,2}|[A-Za-z]+)[-/.]([0-9]{1,2}|[A-Za-z]+)[-/. ][0-9]{4}$")) { 
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && verbatimEventDate.matches("^([0-9]{1,2}|[A-Za-z]+)[-/.]([0-9]{1,2}|[A-Za-z]+)[-/. ][0-9]{4}$")) { 
 			try { 
 				DateTimeParser[] parsers = { 
 						DateTimeFormat.forPattern("MMM/dd/yyyy").getParser(),
@@ -435,15 +502,14 @@ public class DateUtils {
 				
 				DateMidnight parseDate = LocalDate.parse(verbatimEventDate,formatter.withLocale(Locale.ENGLISH)).toDateMidnight();
 				resultDate = parseDate.toString("yyyy-MM-dd");
-			    result.clear();
-				result.put("resultState", "date");
-				result.put("result",resultDate);
+				result.setResultState(EventResult.EventQCResultState.DATE);
+				result.setResult(resultDate);
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
 			}
 		}		
 		if (verbatimEventDate.matches("^[0-9]{4}[-][0-9]{3}$")) { 
-			if (result.size()==0) {
+			if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
 				try { 
 					DateTimeParser[] parsers = { 
 							DateTimeFormat.forPattern("yyyy-D").getParser()
@@ -452,8 +518,8 @@ public class DateUtils {
 					LocalDate parseDate = LocalDate.parse(verbatimEventDate,formatter);
 					resultDate =  parseDate.toString("yyyy-MM-dd");
 					logger.debug(resultDate);
-					result.put("resultState", "date");
-					result.put("result",resultDate);
+					result.setResultState(EventResult.EventQCResultState.DATE);
+					result.setResult(resultDate);
 				} catch (Exception e) { 
 					logger.debug(e.getMessage());
 				}			
@@ -461,7 +527,7 @@ public class DateUtils {
 			}	
 		}
 		
-		if (result.size()==0) {
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
 			try { 
 				DateTimeParser[] parsers = { 
 					DateTimeFormat.forPattern("yyyy/M").getParser(),
@@ -482,21 +548,21 @@ public class DateUtils {
 				   // 1805-06  could be month or abbreviated year
 				   // 1805-03  should to be month
 				   if (Integer.parseInt(startBit)>=Integer.parseInt(century+endBit)) { 
-				      result.put("resultState", "range");
-				      result.put("result",resultDate);
+					  result.setResultState(EventResult.EventQCResultState.RANGE);
+				      result.setResult(resultDate);
 				   } else { 
-					  result.put("resultState", "suspect");
-				      result.put("result",resultDate);
+					  result.setResultState(EventResult.EventQCResultState.SUSPECT);
+				      result.setResult(resultDate);
 				   }
 				} else {
-				   result.put("resultState", "range");
-				   result.put("result",resultDate);
+				   result.setResultState(EventResult.EventQCResultState.RANGE);
+				   result.setResult(resultDate);
 				}
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
 			}			
 		}
-		if (result.size()==0 && verbatimEventDate.matches("^[0-9]{4}[-][0-9]{2}$")) {
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && verbatimEventDate.matches("^[0-9]{4}[-][0-9]{2}$")) {
 			try { 
 				String century = verbatimEventDate.substring(0,2);
 				String startBit = verbatimEventDate.substring(0,4);
@@ -506,13 +572,13 @@ public class DateUtils {
 				Interval parseDate = Interval.parse(assembly);
 				logger.debug(parseDate);
 				resultDate =  parseDate.getStart().toString("yyyy") + "/" + parseDate.getEnd().toString("yyyy");
-				result.put("resultState", "range");
-				result.put("result",resultDate);
+				result.setResultState(EventResult.EventQCResultState.RANGE);
+				result.setResult(resultDate);
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
 			}					
 		}
-		if (result.size()==0) {
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
 			try { 
 				DateTimeParser[] parsers = { 
 					DateTimeFormat.forPattern("yyyy").getParser()
@@ -521,13 +587,13 @@ public class DateUtils {
 				LocalDate parseDate = LocalDate.parse(verbatimEventDate,formatter);
 				resultDate =  parseDate.dayOfYear().withMinimumValue() + "/" + parseDate.dayOfYear().withMaximumValue();
 				logger.debug(resultDate);
-				result.put("resultState", "range");
-				result.put("result",resultDate);
+				result.setResultState(EventResult.EventQCResultState.RANGE);
+				result.setResult(resultDate);
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
 			}			
 		}	
-		if (result.size()==0) {
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
 			try { 
 				DateTimeParser[] parsers = { 
 					DateTimeFormat.forPattern("yyyy MMM dd").getParser(),
@@ -706,13 +772,14 @@ public class DateUtils {
 					}
 				}	
 				logger.debug(resultDate);
-				result.put("resultState", "date");
-				result.put("result",resultDate);
+				result.setResultState(EventResult.EventQCResultState.DATE);
+				result.setResult(resultDate);
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
 			}			
 		}		
-		if (result.size()==0) {
+		logger.debug(result.getResultState());
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
 			if (verbatimEventDate.matches(".*[0-9]{4}.*")) { 
 				try { 
 					DateTimeParser[] parsers = { 
@@ -735,14 +802,14 @@ public class DateUtils {
 					LocalDate parseDate = LocalDate.parse(cleaned,formatter.withLocale(Locale.ENGLISH));
 					resultDate =  parseDate.toString("yyyy-MM");
 					logger.debug(resultDate);
-					result.put("resultState", "range");
-					result.put("result",resultDate);
+				    result.setResultState(EventResult.EventQCResultState.RANGE);
+					result.setResult(resultDate);
 				} catch (Exception e) { 
 					logger.debug(e.getMessage());
 				}
 			}
 		}
-		if (result.size()==0 &&  verbatimEventDate.matches("^[0-9]{4}([- ]+| to |[/ ]+)[0-9]{4}$")) {
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&  verbatimEventDate.matches("^[0-9]{4}([- ]+| to |[/ ]+)[0-9]{4}$")) {
 			try { 
 				String cleaned = verbatimEventDate.replace(" ", "");
 				cleaned = cleaned.replace("-", "/");
@@ -755,13 +822,13 @@ public class DateUtils {
 				Interval parseDate = Interval.parse(cleaned);
 				logger.debug(parseDate);
 				resultDate =  parseDate.getStart().toString("yyyy") + "/" + parseDate.getEnd().toString("yyyy");
-				result.put("resultState", "range");
-				result.put("result",resultDate);
+				result.setResultState(EventResult.EventQCResultState.RANGE);
+				result.setResult(resultDate);
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
 			}			
 		}	
-		if (result.size()==0 && verbatimEventDate.matches("^[A-Za-z]+[-][A-Za-z]+[/ ][0-9]{4}$")) { 
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && verbatimEventDate.matches("^[A-Za-z]+[-][A-Za-z]+[/ ][0-9]{4}$")) { 
 			try { 
 				String[] bits = verbatimEventDate.replace(" ", "/").split("-");
 				if (bits!=null && bits.length==2) { 
@@ -775,26 +842,25 @@ public class DateUtils {
 					LocalDate parseEndDate = LocalDate.parse(bits[1],formatter.withLocale(Locale.ENGLISH));
 					resultDate =  parseStartDate.toString("yyyy-MM") + "/" + parseEndDate.toString("yyyy-MM");
 					logger.debug(resultDate);
-					result.clear();
-					result.put("resultState", "range");
-					result.put("result",resultDate);
+				    result.setResultState(EventResult.EventQCResultState.RANGE);
+					result.setResult(resultDate);
 				}
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
 			}			
 		}
-		if (result.size()==0) {
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
 			try { 
 				Interval parseDate = Interval.parse(verbatimEventDate);
 				logger.debug(parseDate);
 				resultDate =  parseDate.getStart().toString("yyyy-MM-dd") + "/" + parseDate.getEnd().toString("yyyy-MM-dd");
-				result.put("resultState", "range");
-				result.put("result",resultDate);
+				result.setResultState(EventResult.EventQCResultState.RANGE);
+				result.setResult(resultDate);
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
 			}			
 		}	
-		if (result.size()==0) {
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
 			String cleaned = verbatimEventDate.trim();
 			if (verbatimEventDate.matches("^[A-Za-z.]+[ ,]+[0-9]{1,2}-[0-9]{0,2}[ ,]+[0-9]{4}$")) { 
 				cleaned = cleaned.replace("-", " to ");
@@ -822,8 +888,8 @@ public class DateUtils {
 				        	if (resultBit0.size()>0 && resultBit0.get("resultState").equals("date")) {
 				        	    Map<String,String> resultBit1 = DateUtils.extractDateFromVerbatim(bits[1]);
 				        	    if (resultBit1.size()>0 && resultBit1.get("resultState").equals("date")) {
-				    				result.put("resultState", "range");
-				    				result.put("result",resultBit0.get("result")+ "/" + resultBit1.get("result"));
+				                    result.setResultState(EventResult.EventQCResultState.RANGE);
+				    				result.setResult(resultBit0.get("result")+ "/" + resultBit1.get("result"));
 				        	    }
 				        	}
 				        	logger.debug(bits[0]);
@@ -832,15 +898,15 @@ public class DateUtils {
 				}
 			}
 		}		
-		if (result!=null && result.size()>0) {
-			Interval testExtract = DateUtils.extractDateInterval(result.get("result").toString());
+		if (result!=null && !result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
+			Interval testExtract = DateUtils.extractDateInterval(result.getResult());
 			if(testExtract==null || testExtract.getStart().getYear()< yearsBeforeSuspect) { 
-				result.put("resultState", "suspect");
-				logger.debug(result.get("result"));
+				result.setResultState(EventResult.EventQCResultState.SUSPECT);
+				logger.debug(result.getResult());
 				logger.debug(testExtract);
 			}
 			if (!verbatimEventDate.matches(".*[0-9]{4}.*")) { 
-				result.clear();
+				result = new EventResult();
 			}
 		}
 		
@@ -956,6 +1022,7 @@ public class DateUtils {
     	} else {
     		try { 
                DateMidnight startDate = DateMidnight.parse(eventDate, formatter);
+               logger.debug(eventDate);
                logger.debug(startDate);
                if (eventDate.length()==4) { 
                   result = new Interval(startDate,startDate.plusMonths(12).minusDays(1));

@@ -27,6 +27,7 @@ public class EventResult {
 	public enum EventQCResultState { 
 	    NOT_RUN, 
 	    AMBIGUOUS, 
+	    SUSPECT,
 	    DATE, 
 	    RANGE,
 	    INTERNAL_PREREQISITES_NOT_MET;

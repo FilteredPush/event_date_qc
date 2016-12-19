@@ -98,7 +98,7 @@ public class DwCEventDQ {
      * @param eventDate to check for emptyness
      * @param verbatimEventDate to try to replace a non-empty event date.
      * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
-     *    if resultState is CHANGED.
+     *    resultState is CHANGED if a new value is proposed.
      */
     @Provides(value = "EVENTDATE_FILLED_IN_FROM_VERBATIM")
     @PreEnhancement
@@ -107,23 +107,29 @@ public class DwCEventDQ {
     	EventDQAmendment result = new EventDQAmendment();
     	if (DateUtils.isEmpty(eventDate)) { 
     		if (!DateUtils.isEmpty(verbatimEventDate)) { 
-    		    Map<String,String> extractResponse = DateUtils.extractDateFromVerbatim(verbatimEventDate);
-    		    if (extractResponse.size()>0 && 
-    		    		(extractResponse.get("resultState").equals("range") || 
-    		    	      extractResponse.get("resultState").equals("date") ||
-    		    	      extractResponse.get("resultState").equals("ambiguous")
+    		    EventResult extractResponse = DateUtils.extractDateFromVerbatimER(verbatimEventDate);
+    		    if (!extractResponse.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
+    		    		(extractResponse.getResultState().equals(EventResult.EventQCResultState.RANGE) || 
+    		    	      extractResponse.getResultState().equals(EventResult.EventQCResultState.DATE) ||
+    		    	      extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS) ||
+    		    	      extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)
     		    	     ) 
     		    	) 
     		    { 
-    		        result.addResult("dwc:eventDate", extractResponse.get("result"));
-    		        if (extractResponse.get("resultState").equals("ambiguous")) {
+    		        result.addResult("dwc:eventDate", extractResponse.getResult());
+    		        if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
     		        	result.setResultState(EnumDQAmendmentResultState.AMBIGUOUS);
+    		        	result.addComment(extractResponse.getComment());
     		        } else { 
+    		        	if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
+    		        		result.addComment("Interpretation of verbatimEventDate [" + verbatimEventDate + "] is suspect.");
+    		        		result.addComment(extractResponse.getComment());
+    		        	}
     		        	result.setResultState(EnumDQAmendmentResultState.CHANGED);
     		        }
     		    } else { 
     		        result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
-    		        result.addComment("Unable to extract a date from ");
+    		        result.addComment("Unable to extract a date from " + verbatimEventDate);
     		    }
     		} else { 
     		    result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
