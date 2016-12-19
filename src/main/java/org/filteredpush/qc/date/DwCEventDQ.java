@@ -16,6 +16,8 @@
  */
 package org.filteredpush.qc.date;
 
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.datakurator.ffdq.annotations.ActedUpon;
@@ -36,10 +38,10 @@ import org.datakurator.ffdq.api.EnumDQAmendmentResultState;
  *  
  *  DAY_MONTH_TRANSPOSED  dayMonthTransposition(@ActedUpon(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) 
  *  DAY_MONTH_YEAR_FILLED_IN
- *  EVENTDATE_FILLED_IN_FROM_VERBATIM  
+ *  EVENTDATE_FILLED_IN_FROM_VERBATIM extractDateFromVerbatim(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "dwc:verbatimEventDate") String verbatimEventDate)
  *  START_ENDDAYOFYEAR_FILLED_IN
  *
- *  EVENT_DATE_DURATION_SECONDS  measureDurationSeconds(String eventDate)
+ *  EVENT_DATE_DURATION_SECONDS  measureDurationSeconds(@ActedUpon(value = "dwc:eventDate") String eventDate)
  *  DAY_IS_FIRST_OF_CENTURY
  *  DAY_IS_FIRST_OF_YEAR
  *  
@@ -67,7 +69,7 @@ public class DwCEventDQ {
 	 * @param eventDate to measure duration in seconds
 	 * @return EventDQMeasuremnt object, which if state is COMPLETE has a value of type Long.
 	 */
-    @Provides(value = "DAY_IN_RANGE")
+    @Provides(value = "EVENT_DATE_DURATION_SECONDS")
     @PreEnhancement
     @PostEnhancement
 	public static EventDQMeasurement measureDurationSeconds(@ActedUpon(value = "dwc:eventDate") String eventDate) { 
@@ -88,6 +90,51 @@ public class DwCEventDQ {
     	}
     	return result;
 	}
+    
+    /**
+     * If a dwc:eventDate is empty and the verbatimEventDate is not empty, try to populate the 
+     * eventDate from the verbatim value.
+     * 
+     * @param eventDate to check for emptyness
+     * @param verbatimEventDate to try to replace a non-empty event date.
+     * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
+     *    if resultState is CHANGED.
+     */
+    @Provides(value = "EVENTDATE_FILLED_IN_FROM_VERBATIM")
+    @PreEnhancement
+    @PostEnhancement
+    public static EventDQAmendment extractDateFromVerbatim(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "dwc:verbatimEventDate") String verbatimEventDate) { 
+    	EventDQAmendment result = new EventDQAmendment();
+    	if (DateUtils.isEmpty(eventDate)) { 
+    		if (!DateUtils.isEmpty(verbatimEventDate)) { 
+    		    Map<String,String> extractResponse = DateUtils.extractDateFromVerbatim(verbatimEventDate);
+    		    if (extractResponse.size()>0 && 
+    		    		(extractResponse.get("resultState").equals("range") || 
+    		    	      extractResponse.get("resultState").equals("date") ||
+    		    	      extractResponse.get("resultState").equals("ambiguous")
+    		    	     ) 
+    		    	) 
+    		    { 
+    		        result.addResult("dwc:eventDate", extractResponse.get("result"));
+    		        if (extractResponse.get("resultState").equals("ambiguous")) {
+    		        	result.setResultState(EnumDQAmendmentResultState.AMBIGUOUS);
+    		        } else { 
+    		        	result.setResultState(EnumDQAmendmentResultState.CHANGED);
+    		        }
+    		    } else { 
+    		        result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		        result.addComment("Unable to extract a date from ");
+    		    }
+    		} else { 
+    		    result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		    result.addComment("verbatimEventDate does not contains a value.");
+    		}
+    	} else { 
+    		result.setResultState(EnumDQAmendmentResultState.NO_CHANGE);
+    		result.addComment("eventDate contains a value, not changing.");
+    	}
+    	return result;
+    }
 
     /**
      * Test to see whether a provided day is an integer in the range of values that can be 
