@@ -67,13 +67,13 @@ public class DwCEventDQ {
 	 * Measure the duration of an event date in seconds.
 	 * 
 	 * @param eventDate to measure duration in seconds
-	 * @return EventDQMeasuremnt object, which if state is COMPLETE has a value of type Long.
+	 * @return EventDQMeasurement object, which if state is COMPLETE has a value of type Long.
 	 */
     @Provides(value = "EVENT_DATE_DURATION_SECONDS")
     @PreEnhancement
     @PostEnhancement
-	public static EventDQMeasurement measureDurationSeconds(@ActedUpon(value = "dwc:eventDate") String eventDate) { 
-		EventDQMeasurement result = new EventDQMeasurement();
+	public static EventDQMeasurement<Long> measureDurationSeconds(@ActedUpon(value = "dwc:eventDate") String eventDate) { 
+		EventDQMeasurement<Long> result = new EventDQMeasurement<Long>();
     	if (DateUtils.isEmpty(eventDate)) {
     		result.addComment("No value provided for eventDate.");
     		result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);

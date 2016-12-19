@@ -214,7 +214,7 @@ public class DateUtils {
 	 * 
 	 */
 	public static EventResult extractDateFromVerbatimER(String verbatimEventDate) {
-		return extractDateFromVerbatimER(verbatimEventDate, DateUtils.YEAR_BEFORE_SUSPECT);
+		return extractDateFromVerbatimER(verbatimEventDate, DateUtils.YEAR_BEFORE_SUSPECT, null);
 	}	
 	
 	/**
@@ -241,7 +241,7 @@ public class DateUtils {
 	 * @return an EventResult object containing the extracted date. 
 	 */
 	public static EventResult extractDateToDayFromVerbatimER(String verbatimEventDate, int yearsBeforeSuspect) {
-		EventResult result =  extractDateFromVerbatimER(verbatimEventDate, yearsBeforeSuspect);
+		EventResult result =  extractDateFromVerbatimER(verbatimEventDate, yearsBeforeSuspect, null);
         logger.debug(result.getResultState());
         logger.debug(result.getResult());
 		if (result!=null && result.getResultState().equals(EventResult.EventQCResultState.RANGE)) {
@@ -297,7 +297,7 @@ public class DateUtils {
 	 */
 	public static Map<String,String> extractDateFromVerbatim(String verbatimEventDate, int yearsBeforeSuspect) {		
 		Map result = new HashMap<String,String>();
-	    EventResult eresult = extractDateFromVerbatimER(verbatimEventDate, yearsBeforeSuspect);
+	    EventResult eresult = extractDateFromVerbatimER(verbatimEventDate, yearsBeforeSuspect, null);
 	    if (eresult!=null) { 
 	    	if (!eresult.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) { 
 	            result.put("resultState", eresult.getResultState().toString().toLowerCase());
@@ -313,10 +313,12 @@ public class DateUtils {
 	 * 
 	 * @param verbatimEventDate a string containing a verbatim event date.
 	 * @param yearsBeforeSuspect  Dates that parse to a year prior to this year are marked as suspect.
+	 * @param assumemmddyyyy if true, assume that dates in the form nn-nn-nnnn are mm-dd-yyyy, if false, assume 
+	 *       that these are dd-mm-yyyy, if null, such dates are tested for ambiguity.  
 	 * 
 	 * @return an EventResult with a resultState for the nature of the match and result for the resulting date. 
 	 */
-	public static EventResult extractDateFromVerbatimER(String verbatimEventDate, int yearsBeforeSuspect) {
+	public static EventResult extractDateFromVerbatimER(String verbatimEventDate, int yearsBeforeSuspect, Boolean assumemmddyyyy) {
 		EventResult result = new EventResult();
 		String resultDate = null;
 		
@@ -435,10 +437,12 @@ public class DateUtils {
 			String resultDateDM = null;
 			DateMidnight parseDate1 = null;
 			DateMidnight parseDate2 = null;
+			if (assumemmddyyyy==null || assumemmddyyyy) { 
 			try { 
 				DateTimeParser[] parsers = { 
 					DateTimeFormat.forPattern("MM/dd/yyyy").getParser(),
 					DateTimeFormat.forPattern("MM/dd yyyy").getParser(),
+					DateTimeFormat.forPattern("MM dd yyyy").getParser(),
 					DateTimeFormat.forPattern("MM-dd-yyyy").getParser(),
 					DateTimeFormat.forPattern("MM.dd.yyyy").getParser()
 				};
@@ -448,10 +452,13 @@ public class DateUtils {
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
 			}
+			} 
+			if (assumemmddyyyy==null || !assumemmddyyyy) { 
 			try { 
 				DateTimeParser[] parsers = { 
 					DateTimeFormat.forPattern("dd/MM/yyyy").getParser(),
 					DateTimeFormat.forPattern("dd/MM yyyy").getParser(),
+					DateTimeFormat.forPattern("dd MM yyyy").getParser(),
 					DateTimeFormat.forPattern("dd-MM-yyyy").getParser(),
 					DateTimeFormat.forPattern("dd.MM.yyyy").getParser()
 				};
@@ -461,6 +468,7 @@ public class DateUtils {
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
 			}			
+			}
 			if (resultDateMD!=null && resultDateDM==null) {
 				result.setResultState(EventResult.EventQCResultState.DATE);
 				result.setResult(resultDateMD);

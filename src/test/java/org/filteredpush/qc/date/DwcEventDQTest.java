@@ -32,6 +32,22 @@ import org.junit.Test;
 public class DwcEventDQTest {
 	private static final Log logger = LogFactory.getLog(DwcEventDQTest.class);
 
+	@Test
+	public void testMeasureDuration() { 
+		EventDQMeasurement<Long> measure = DwCEventDQ.measureDurationSeconds("1880-05-08");
+		Long seconds = (60l*60l*24l)-1l; 
+		assertEquals(seconds, measure.getValue());
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, measure.getResultState());
+		
+		measure = DwCEventDQ.measureDurationSeconds("1880-05");
+		seconds = (60l*60l*24l*31)-1l; 
+		assertEquals(seconds, measure.getValue());		
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, measure.getResultState());
+		
+		measure = DwCEventDQ.measureDurationSeconds("");
+		assertEquals(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET, measure.getResultState());
+	}
+	
 	/**
 	 * Test method for {@link org.filteredpush.qc.date.DwCEventDQ#isDayInRange(java.lang.String)}.
 	 */

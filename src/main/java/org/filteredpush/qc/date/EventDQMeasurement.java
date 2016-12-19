@@ -27,10 +27,10 @@ import org.datakurator.ffdq.api.ResultState;
  * @author mole
  *
  */
-public class EventDQMeasurement implements DQMeasurementResponse {
+public class EventDQMeasurement<T> implements DQMeasurementResponse<T> {
 	
 	private ResultState resultState;
-	private Object value;
+	private T value;
 	private StringBuffer resultComment;
 	
 	public EventDQMeasurement() { 
@@ -65,11 +65,11 @@ public class EventDQMeasurement implements DQMeasurementResponse {
 	}
 
 	@Override
-	public Object getValue() {
+	public T getValue() {
 		return value;
 	}
 	
-	public void setValue(Object value) { 
+	public void setValue(T value) { 
 		this.value = value;
 	}
 
