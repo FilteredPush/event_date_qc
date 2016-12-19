@@ -7,6 +7,8 @@ DOI: 10.5281/zenodo.166329
 
 [![DOI](https://zenodo.org/badge/70093157.svg)](https://zenodo.org/badge/latestdoi/70093157)
 
+## DateUtils - primitives
+
 This library provides the class org.filteredpush.qc.date.DateUtils
 
 DateUtils provides a set of static methods for working with dwc:Event terms, including the following (see DateUtilsTest for examples):
@@ -36,6 +38,33 @@ Verbatim event dates in a variety of forms typical of natural science collection
 * Jan-Feb/1964 -> 1964-01-01/1964-02-29
 * 5.4.1927 -> 1927-04-05/1927-05-04 (ambiguous)
 
+## DwCEventQC - for Fit4U Framework
+
+This library provides the class org.filteredpush.qc.date.DwCEventDQ
+
+DwCEventDQ provides a set of static methods for working with dwc:Event terms wrapping the static methods in DateUtils and returning objects that implement the API provided by ffdq-api for reporting data quality assertions in terms of the Fit4U Framework.  
+
+Not all of the relevant methods in DateUtils are yet implemented in DwCEventDQ.
+
+The unit test below shows an example of a call on DwCEventDQ.measureDurationSeconds to perform a measurement of the duration of a dwc:eventDate in seconds, and invocations of getResultState(), getValue(), and getComment() on the returned implementation of the DQMeasurementResult interface.
+
+    @Test
+    public void testMeasureDuration() { 
+        EventDQMeasurement<Long> measure = DwCEventDQ.measureDurationSeconds("1880-05-08");
+        Long seconds = (60l*60l*24l)-1l; 
+        assertEquals(seconds, measure.getValue());
+        assertEquals(EnumDQResultState.RUN_HAS_RESULT, measure.getResultState());
+        
+        measure = DwCEventDQ.measureDurationSeconds("1880-05");
+        seconds = (60l*60l*24l*31)-1l; 
+        assertEquals(seconds, measure.getValue());      
+        assertEquals(EnumDQResultState.RUN_HAS_RESULT, measure.getResultState());
+        
+        measure = DwCEventDQ.measureDurationSeconds("");
+        assertEquals(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET, measure.getResultState());
+        System.out.println(measure.getComment());
+    }
+
 # Include using maven
 
 Available in Maven Central.
@@ -43,7 +72,7 @@ Available in Maven Central.
     <dependency>
         <groupId>org.filteredpush</groupId>
         <artifactId>event_date_qc</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
     </dependency>
 
 # Building
