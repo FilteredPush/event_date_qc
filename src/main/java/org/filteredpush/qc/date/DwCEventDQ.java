@@ -20,12 +20,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.datakurator.ffdq.annotations.ActedUpon;
-import org.datakurator.ffdq.annotations.Consulted;
-import org.datakurator.ffdq.annotations.Enhancement;
-import org.datakurator.ffdq.annotations.PostEnhancement;
-import org.datakurator.ffdq.annotations.PreEnhancement;
-import org.datakurator.ffdq.annotations.Provides;
+import org.datakurator.ffdq.annotations.*;
 import org.datakurator.ffdq.api.EnumDQResultState;
 import org.datakurator.ffdq.api.EnumDQValidationResult;
 import org.datakurator.ffdq.api.EnumDQAmendmentResultState;
@@ -70,6 +65,7 @@ public class DwCEventDQ {
 	 * @return EventDQMeasurement object, which if state is COMPLETE has a value of type Long.
 	 */
     @Provides(value = "EVENT_DATE_DURATION_SECONDS")
+	@Measure
     @PreEnhancement
     @PostEnhancement
 	public static EventDQMeasurement<Long> measureDurationSeconds(@ActedUpon(value = "dwc:eventDate") String eventDate) { 
@@ -101,6 +97,7 @@ public class DwCEventDQ {
      *    resultState is CHANGED if a new value is proposed.
      */
     @Provides(value = "EVENTDATE_FILLED_IN_FROM_VERBATIM")
+	@Amendment
     @PreEnhancement
     @PostEnhancement
     public static EventDQAmendment extractDateFromVerbatim(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "dwc:verbatimEventDate") String verbatimEventDate) { 
@@ -154,6 +151,7 @@ public class DwCEventDQ {
      *     cannot be parsed from day. 
      */
     @Provides(value = "DAY_IN_RANGE")
+	@Validation
     @PreEnhancement
     @PostEnhancement
     public static EventDQValidation isDayInRange(@ActedUpon(value = "dwc:day") String day) { 
@@ -192,6 +190,7 @@ public class DwCEventDQ {
      *     cannot be parsed from month. 
      */
     @Provides(value = "MONTH_IN_RANGE")
+	@Validation
     @PreEnhancement
     @PostEnhancement
     public static EventDQValidation isMonthInRange(@ActedUpon(value="dwc:month") String month) { 
@@ -230,6 +229,7 @@ public class DwCEventDQ {
      * @return an DQValidationResponse object describing whether day exists in year-month-day.
      */
     @Provides(value = "DAY_POSSIBLE_FOR_MONTH_YEAR")
+	@Validation
     @PreEnhancement
     @PostEnhancement
     public static EventDQValidation isDayPossibleForMonthYear(@Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) { 
@@ -289,6 +289,7 @@ public class DwCEventDQ {
      * @return an EventDQAmmendment which may contain a proposed ammendment.
      */
     @Provides(value = "DAY_MONTH_TRANSPOSED")
+	@Amendment
     @Enhancement
     public static final EventDQAmendment dayMonthTransposition(@ActedUpon(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) { 
     	EventDQAmendment result = new EventDQAmendment();
