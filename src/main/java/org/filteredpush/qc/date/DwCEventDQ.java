@@ -81,7 +81,7 @@ public class DwCEventDQ {
     		try { 
     			long seconds = DateUtils.measureDurationSeconds(eventDate);
     			result.setValue(new Long(seconds));
-    			result.setResultState(EnumDQResultState.COMPLETED);
+    			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
     		} catch (Exception e) { 
     			logger.debug(e.getMessage());
     			result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -171,7 +171,7 @@ public class DwCEventDQ {
     				result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
     				result.addComment("Provided value for day '" + day + "' is not an integer in the range 1 to 31.");
     			}
-    			result.setResultState(EnumDQResultState.COMPLETED);
+    			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
     		} catch (NumberFormatException e) { 
     			logger.debug(e.getMessage());
     			result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -209,7 +209,7 @@ public class DwCEventDQ {
     				result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
     				result.addComment("Provided value for month '" + month + "' is not an integer in the range 1 to 12.");
     			}
-    			result.setResultState(EnumDQResultState.COMPLETED);
+    			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
     		} catch (NumberFormatException e) { 
     			logger.debug(e.getMessage());
     			result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -238,9 +238,9 @@ public class DwCEventDQ {
     	EventDQValidation monthResult =  isMonthInRange(month);
     	EventDQValidation dayResult =  isDayInRange(day);
     	
-    	if (monthResult.getResultState().equals(EnumDQResultState.COMPLETED)) {
+    	if (monthResult.getResultState().equals(EnumDQResultState.RUN_HAS_RESULT)) {
     		if (monthResult.getResult().equals(EnumDQValidationResult.COMPLIANT)) { 
-    	        if (dayResult.getResultState().equals(EnumDQResultState.COMPLETED)) { 
+    	        if (dayResult.getResultState().equals(EnumDQResultState.RUN_HAS_RESULT)) { 
     	        	if (dayResult.getResult().equals(EnumDQValidationResult.COMPLIANT)) {
     	        		try { 
     	        		    Integer numericYear = Integer.parseInt(year);
@@ -253,7 +253,7 @@ public class DwCEventDQ {
     	        	    		result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
     	        	    		result.addComment("Provided value for year-month-day " + date + " does not parse to a valid day.");;
     	        	    	}
-    	        		    result.setResultState(EnumDQResultState.COMPLETED);
+    	        		    result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
     	        		} catch (NumberFormatException e) { 
     	        			result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
     	        		    result.addComment("Unable to parse integer from provided value for year " + year + " " + e.getMessage());;
@@ -298,10 +298,10 @@ public class DwCEventDQ {
     	} else { 
         	EventDQValidation monthResult =  isMonthInRange(month);
         	EventDQValidation dayResult =  isDayInRange(day);
-        	if (monthResult.getResultState().equals(EnumDQResultState.COMPLETED)) {
+        	if (monthResult.getResultState().equals(EnumDQResultState.RUN_HAS_RESULT)) {
         		if (monthResult.getResult().equals(EnumDQValidationResult.NOT_COMPLIANT)) { 
         			// month is integer, but out of range
-        	        if (dayResult.getResultState().equals(EnumDQResultState.COMPLETED)) { 
+        	        if (dayResult.getResultState().equals(EnumDQResultState.RUN_HAS_RESULT)) { 
         	        	// day is also integer
         	        	int dayNumeric = Integer.parseInt(day);
         	        	int monthNumeric = Integer.parseInt(month);
@@ -318,7 +318,7 @@ public class DwCEventDQ {
     		            result.addComment("dwc:day " + dayResult.getResultState() + ". " + dayResult.getComment());
         	        }
         		} else { 
-        	        if (dayResult.getResultState().equals(EnumDQResultState.COMPLETED) &&
+        	        if (dayResult.getResultState().equals(EnumDQResultState.RUN_HAS_RESULT) &&
         	            dayResult.getResult().equals(EnumDQValidationResult.COMPLIANT)) { 
         			    // month is in range for months, so don't try to change.
         	            result.setResultState(EnumDQAmendmentResultState.NO_CHANGE);
