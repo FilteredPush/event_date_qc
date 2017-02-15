@@ -331,4 +331,48 @@ public class DwcEventDQTest {
 		
 	}
 	
+	@Test
+	public void testCorrectEventDateFormat() { 
+		String eventDate = "Jan 1884";
+		EventDQAmendment result = DwCEventDQ.correctEventDateFormat(eventDate);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("1884-01",result.getResult().get("dwc:eventDate"));
+		assertEquals(1,result.getResult().size());	
+		
+		eventDate = "1 Jan 1884";
+		result = DwCEventDQ.correctEventDateFormat(eventDate);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("1884-01-01",result.getResult().get("dwc:eventDate"));
+		assertEquals(1,result.getResult().size());		
+		
+		/* Case that inspired adding this method, typical use of / instead of - in dates. 
+		 */
+		eventDate = "1884/01/02";
+		result = DwCEventDQ.correctEventDateFormat(eventDate);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("1884-01-02",result.getResult().get("dwc:eventDate"));
+		assertEquals(1,result.getResult().size());		
+		
+		eventDate = "1884-01-02";
+		result = DwCEventDQ.correctEventDateFormat(eventDate);
+		assertEquals(EnumDQAmendmentResultState.NO_CHANGE, result.getResultState());		
+	
+		eventDate = "";
+		result = DwCEventDQ.correctEventDateFormat(eventDate);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());		
+		
+		result = DwCEventDQ.correctEventDateFormat(null);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		
+		eventDate = "2305345ifo342fd,cofaga";
+		result = DwCEventDQ.correctEventDateFormat(eventDate);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		
+		eventDate = "02/03/1884";
+		result = DwCEventDQ.correctEventDateFormat(eventDate);
+		assertEquals(EnumDQAmendmentResultState.AMBIGUOUS, result.getResultState());	
+		assertEquals("1884-02-03/1884-03-02",result.getResult().get("dwc:eventDate"));
+		assertEquals(1,result.getResult().size());				
+		
+	}
 }

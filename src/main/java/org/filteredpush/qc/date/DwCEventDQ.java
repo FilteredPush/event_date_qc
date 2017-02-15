@@ -138,6 +138,57 @@ public class DwCEventDQ {
     	}
     	return result;
     }
+    
+    /**
+     * Given an event date, check to see if it is empty or contains a valid date value.  If it contains
+     * a value that is not a valid date, propose a properly formatted eventDate as an amendment.
+     * 
+     * @param eventDate to check
+     * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
+     *    resultState is CHANGED if a new value is proposed.
+     */
+    @Provides(value = "EVENTDATE_FORMAT_CORRECTION")
+	@Amendment
+    @PreEnhancement
+    @PostEnhancement
+    public static EventDQAmendment correctEventDateFormat(@ActedUpon(value = "dwc:eventDate") String eventDate) { 
+    	EventDQAmendment result = new EventDQAmendment();
+    	if (DateUtils.eventDateValid(eventDate)) {
+    		result.setResultState(EnumDQAmendmentResultState.NO_CHANGE);
+    		result.addComment("eventDate contains a correctly formatted date, not changing.");
+    	} else {
+    		if (DateUtils.isEmpty(eventDate)) {
+    		    result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		    result.addComment("eventDate does not contains a value.");
+    		} else { 
+    		    EventResult extractResponse = DateUtils.extractDateFromVerbatimER(eventDate);
+    		    if (!extractResponse.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
+    		    		(extractResponse.getResultState().equals(EventResult.EventQCResultState.RANGE) || 
+    		    	      extractResponse.getResultState().equals(EventResult.EventQCResultState.DATE) ||
+    		    	      extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS) ||
+    		    	      extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)
+    		    	     ) 
+    		    	) 
+    		    { 
+    		        result.addResult("dwc:eventDate", extractResponse.getResult());
+    		        if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
+    		        	result.setResultState(EnumDQAmendmentResultState.AMBIGUOUS);
+    		        	result.addComment(extractResponse.getComment());
+    		        } else { 
+    		        	if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
+    		        		result.addComment("Interpretation of eventDate [" + eventDate + "] is suspect.");
+    		        		result.addComment(extractResponse.getComment());
+    		        	}
+    		        	result.setResultState(EnumDQAmendmentResultState.CHANGED);
+    		        }
+    		    } else { 
+    		        result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		        result.addComment("Unable to extract a date from " + eventDate);
+    		    }
+    		}
+    	}
+    	return result;
+    }    
 
     /**
      * Test to see whether a provided day is an integer in the range of values that can be 
