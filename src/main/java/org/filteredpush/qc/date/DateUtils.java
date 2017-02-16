@@ -322,6 +322,14 @@ public class DateUtils {
 		EventResult result = new EventResult();
 		String resultDate = null;
 		
+		// Remove some common no data comments
+		if (verbatimEventDate!=null && verbatimEventDate.contains("[no date]")) { 
+			verbatimEventDate = verbatimEventDate.replace("[no date]", "");
+		}
+		if (verbatimEventDate!=null && verbatimEventDate.contains("[no year]")) { 
+			verbatimEventDate = verbatimEventDate.replace("[no year]", "");
+		}		
+		
 		// Strip off leading and trailing []
 		if (verbatimEventDate!=null && verbatimEventDate.startsWith("[")) { 
 			verbatimEventDate = verbatimEventDate.substring(1);
@@ -329,6 +337,12 @@ public class DateUtils {
 		if (verbatimEventDate!=null && verbatimEventDate.endsWith("]")) { 
 			verbatimEventDate = verbatimEventDate.substring(0,verbatimEventDate.length()-1);
 		}
+		
+		// strip off leading and trailing whitespace
+		if (verbatimEventDate!=null && (verbatimEventDate.startsWith(" ") || verbatimEventDate.endsWith(" "))) { 
+			verbatimEventDate = verbatimEventDate.trim();
+		}
+		
 		
 		// Stop before doing work if provided verbatim string is null.
 		if (isEmpty(verbatimEventDate)) { 
@@ -415,6 +429,11 @@ public class DateUtils {
 				logger.debug(e.getMessage());
 			}			
 		}		
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
+				verbatimEventDate.matches("^[0-9]{4}0000$")) { 
+			// case 19800000
+			verbatimEventDate = verbatimEventDate.substring(0, 4);
+		}
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
 				verbatimEventDate.matches("^[0-9]{4}$")) { 
 			try { 
@@ -619,6 +638,22 @@ public class DateUtils {
 				logger.debug(e.getMessage());
 			}					
 		}
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
+				verbatimEventDate.matches("^[0-9]{4}[0-9]{2}[0-9]{2}$") && 
+				!verbatimEventDate.endsWith("0000")) {
+			try { 
+				DateTimeParser[] parsers = { 
+					DateTimeFormat.forPattern("yyyyMMdd").getParser()
+				};
+				DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
+				DateMidnight parseDate = LocalDate.parse(verbatimEventDate,formatter.withLocale(Locale.ENGLISH)).toDateMidnight();
+				resultDate = parseDate.toString("yyyy-MM-dd");
+				result.setResultState(EventResult.EventQCResultState.DATE);
+				result.setResult(resultDate);
+			} catch (Exception e) { 
+				logger.debug(e.getMessage());
+			}			
+		}			
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
 			try { 
 				DateTimeParser[] parsers = { 

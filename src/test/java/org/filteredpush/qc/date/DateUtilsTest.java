@@ -858,11 +858,11 @@ public class DateUtilsTest {
     	
         result = DateUtils.extractDateFromVerbatimER("19010000");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	// assertEquals("1901", result.getResult());
+    	assertEquals("1901", result.getResult());
     	
         result = DateUtils.extractDateFromVerbatimER("19630308");
-    	// assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
-    	// assertEquals("1963-03-08", result.getResult());
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1963-03-08", result.getResult());
     	
         result = DateUtils.extractDateFromVerbatimER("XX NOV 1947");
     	// assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
@@ -916,10 +916,11 @@ public class DateUtilsTest {
     	//assertEquals("2001-06-29/2001-07-13", result.getResult());
     	
         result = DateUtils.extractDateFromVerbatimER("[no date] 1988");
-    	// assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	// assertEquals("1988", result.getResult());
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1988", result.getResult());
     	
         result = DateUtils.extractDateFromVerbatimER("purchased Dec 1997");
+        // Semantics here differ if this is a collecting event date (1700/1997-12-31) or just a date (1997/12)
     	//assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	//assertEquals("1997-12", result.getResult());
     	
