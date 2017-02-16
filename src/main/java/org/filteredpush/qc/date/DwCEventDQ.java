@@ -54,6 +54,7 @@ import org.datakurator.ffdq.api.EnumDQAmendmentResultState;
  * @author mole
  *
  */
+@Mechanism("Kurator: Date Validator - DwCEventDQ")
 public class DwCEventDQ {
 	
 	private static final Log logger = LogFactory.getLog(DwCEventDQ.class);
@@ -65,7 +66,8 @@ public class DwCEventDQ {
 	 * @return EventDQMeasurement object, which if state is COMPLETE has a value of type Long.
 	 */
     @Provides(value = "EVENT_DATE_DURATION_SECONDS")
-	@Measure
+	@Measure(label = "Event Date Duration In Seconds", description = "Measure the duration of an event date in seconds.")
+	@Specification(value = "For values of dwc:eventDate specified as a date range, calculate the duration in seconds.")
     @PreEnhancement
     @PostEnhancement
 	public static EventDQMeasurement<Long> measureDurationSeconds(@ActedUpon(value = "dwc:eventDate") String eventDate) { 
@@ -97,7 +99,9 @@ public class DwCEventDQ {
      *    resultState is CHANGED if a new value is proposed.
      */
     @Provides(value = "EVENTDATE_FILLED_IN_FROM_VERBATIM")
-	@Amendment
+	@Amendment(label = "Event Date From Verbatim", description = "Try to populate the event date from the verbatim value.")
+	@Specification(value = "If a dwc:eventDate is empty and the verbatimEventDate is not empty fill in dwc:eventDate " +
+			"based on value from dwc:verbatimEventDate")
     @PreEnhancement
     @PostEnhancement
     public static EventDQAmendment extractDateFromVerbatim(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "dwc:verbatimEventDate") String verbatimEventDate) { 
@@ -148,7 +152,9 @@ public class DwCEventDQ {
      *    resultState is CHANGED if a new value is proposed.
      */
     @Provides(value = "EVENTDATE_FORMAT_CORRECTION")
-	@Amendment
+	@Amendment(label = "Event Date Format Correction", description = "Try to propose a correction for an event date")
+	@Specification(value = "Check dwc:eventDate to see if it is empty or contains a valid date value. If it contains a " +
+			"value that is not a valid date, propose a properly formatted eventDate as an amendment.")
     @PreEnhancement
     @PostEnhancement
     public static EventDQAmendment correctEventDateFormat(@ActedUpon(value = "dwc:eventDate") String eventDate) { 
@@ -202,7 +208,10 @@ public class DwCEventDQ {
      *     cannot be parsed from day. 
      */
     @Provides(value = "DAY_IN_RANGE")
-	@Validation
+	@Validation(label = "Day In Range", description = "Test to see whether a provided day is an integer in the range " +
+			"of values that can be a day of a month.")
+	@Specification(value = "Compliant if dwc:day is an integer in the range 1 to 31 inclusive, not compliant otherwise. " +
+			"Internal prerequisites not met if day is empty or an integer cannot be parsed from day.")
     @PreEnhancement
     @PostEnhancement
     public static EventDQValidation isDayInRange(@ActedUpon(value = "dwc:day") String day) { 
@@ -241,7 +250,10 @@ public class DwCEventDQ {
      *     cannot be parsed from month. 
      */
     @Provides(value = "MONTH_IN_RANGE")
-	@Validation
+	@Validation(label = "Month In Range", description = "Test to see whether a provided month is in the range of " +
+			"integer values that form months of the year.")
+	@Specification(value = "Compliant if month is an integer in the range 1 to 12 inclusive, otherwise not compliant. " +
+			"Internal prerequisites not met if month is empty or an integer cannot be parsed from month.")
     @PreEnhancement
     @PostEnhancement
     public static EventDQValidation isMonthInRange(@ActedUpon(value="dwc:month") String month) { 
@@ -280,7 +292,10 @@ public class DwCEventDQ {
      * @return an DQValidationResponse object describing whether day exists in year-month-day.
      */
     @Provides(value = "DAY_POSSIBLE_FOR_MONTH_YEAR")
-	@Validation
+	@Validation(label = "Day Consistent With Month/Year", description = "Check if a value for day is consistent with a " +
+			"provided month and year.")
+	@Specification("Check that the value of dwc:eventDate is consistent with the values for dwc:month and dwc:year. " +
+			"Requires valid values for month and year.")
     @PreEnhancement
     @PostEnhancement
     public static EventDQValidation isDayPossibleForMonthYear(@Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) { 
@@ -340,8 +355,10 @@ public class DwCEventDQ {
      * @return an EventDQAmmendment which may contain a proposed ammendment.
      */
     @Provides(value = "DAY_MONTH_TRANSPOSED")
-	@Amendment
-    @Enhancement
+	@Amendment(label = "Day Month Transposition", description = "Check of month is out of range for months, but day is " +
+			"in range for months, and propose a transposition of the two if this is the case.")
+	@Specification("If dwc:month and dwc:day are provided, propose a transposition if day is in range for months, and " +
+			"month is in range for days")
     public static final EventDQAmendment dayMonthTransposition(@ActedUpon(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) { 
     	EventDQAmendment result = new EventDQAmendment();
     	if (DateUtils.isEmpty(day) || DateUtils.isEmpty(month)) { 
