@@ -67,7 +67,7 @@ public class DwCEventDQ {
 	 */
     @Provides(value = "EVENT_DATE_DURATION_SECONDS")
 	@Measure(label = "Event Date Duration In Seconds", description = "Measure the duration of an event date in seconds.")
-	@Specification(value = "For values of dwc:eventDate specified as a date range, calculate the duration in seconds.")
+	@Specification(value = "For values of dwc:eventDate, calculate the duration in seconds.")
     @PreEnhancement
     @PostEnhancement
 	public static EventDQMeasurement<Long> measureDurationSeconds(@ActedUpon(value = "dwc:eventDate") String eventDate) { 
