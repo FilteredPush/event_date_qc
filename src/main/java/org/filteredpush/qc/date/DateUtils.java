@@ -541,7 +541,8 @@ public class DateUtils {
 				}
 			} 
 		}
-		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && verbatimEventDate.matches("^([0-9]{1,2}|[A-Za-z]+)[-/.]([0-9]{1,2}|[A-Za-z]+)[-/. ][0-9]{4}$")) { 
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
+				verbatimEventDate.matches("^([0-9]{1,2}|[A-Za-z]+)[-/.]([0-9]{1,2}|[A-Za-z]+)[-/. ][0-9]{4}$")) { 
 			try { 
 				DateTimeParser[] parsers = { 
 						DateTimeFormat.forPattern("MMM/dd/yyyy").getParser(),
@@ -566,7 +567,44 @@ public class DateUtils {
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
 			}
+		}	
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
+				verbatimEventDate.matches("^XX[-/. ]([0-9]{1,2}|[A-Za-z]+)[-/. ][0-9]{4}$")) { 
+			try { 
+				DateTimeParser[] parsers = { 
+						DateTimeFormat.forPattern("MMM/yyyy").getParser(),
+						DateTimeFormat.forPattern("MMM yyyy").getParser(),
+						DateTimeFormat.forPattern("MMM-yyyy").getParser(),
+						DateTimeFormat.forPattern("MMM yyyy").getParser(),
+						DateTimeFormat.forPattern("MMM.yyyy").getParser(),
+						DateTimeFormat.forPattern("MM.yyyy").getParser()						
+				};
+				DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
+				
+				DateMidnight parseDate = LocalDate.parse(verbatimEventDate.substring(3),formatter.withLocale(Locale.ENGLISH)).toDateMidnight();
+				resultDate = parseDate.toString("yyyy-MM");
+				result.setResultState(EventResult.EventQCResultState.RANGE);
+				result.setResult(resultDate);
+			} catch (Exception e) { 
+				logger.debug(e.getMessage());
+			}
 		}		
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
+				verbatimEventDate.matches("^XX[-/. ]XX(X){0,1}[-/. ][0-9]{4}$")) { 
+			try { 
+				DateTimeParser[] parsers = { 
+						DateTimeFormat.forPattern("yyyy").getParser(),
+				};
+				DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
+				String yearBit = verbatimEventDate.substring(verbatimEventDate.length()-4);
+				DateMidnight parseDate = LocalDate.parse(yearBit,formatter.withLocale(Locale.ENGLISH)).toDateMidnight();
+				resultDate = parseDate.toString("yyyy");
+				result.setResultState(EventResult.EventQCResultState.RANGE);
+				result.setResult(resultDate);
+			} catch (Exception e) { 
+				logger.debug(e.getMessage());
+			}
+		}			
 		if (verbatimEventDate.matches("^[0-9]{4}[-][0-9]{3}$")) { 
 			if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
 				try { 
@@ -885,7 +923,8 @@ public class DateUtils {
 				}
 			}
 		}
-		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&  verbatimEventDate.matches("^[0-9]{4}([- ]+| to |[/ ]+)[0-9]{4}$")) {
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
+				verbatimEventDate.matches("^[0-9]{4}([- ]+| to |[/ ]+)[0-9]{4}$")) {
 			try { 
 				String cleaned = verbatimEventDate.replace(" ", "");
 				cleaned = cleaned.replace("-", "/");
