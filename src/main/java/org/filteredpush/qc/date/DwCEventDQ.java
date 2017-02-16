@@ -102,8 +102,7 @@ public class DwCEventDQ {
 	@Amendment(label = "Event Date From Verbatim", description = "Try to populate the event date from the verbatim value.")
 	@Specification(value = "If a dwc:eventDate is empty and the verbatimEventDate is not empty fill in dwc:eventDate " +
 			"based on value from dwc:verbatimEventDate")
-    @PreEnhancement
-    @PostEnhancement
+    @Enhancement
     public static EventDQAmendment extractDateFromVerbatim(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "dwc:verbatimEventDate") String verbatimEventDate) { 
     	EventDQAmendment result = new EventDQAmendment();
     	if (DateUtils.isEmpty(eventDate)) { 
@@ -155,8 +154,7 @@ public class DwCEventDQ {
 	@Amendment(label = "Event Date Format Correction", description = "Try to propose a correction for an event date")
 	@Specification(value = "Check dwc:eventDate to see if it is empty or contains a valid date value. If it contains a " +
 			"value that is not a valid date, propose a properly formatted eventDate as an amendment.")
-    @PreEnhancement
-    @PostEnhancement
+    @Enhancement
     public static EventDQAmendment correctEventDateFormat(@ActedUpon(value = "dwc:eventDate") String eventDate) { 
     	EventDQAmendment result = new EventDQAmendment();
     	if (DateUtils.eventDateValid(eventDate)) {
@@ -359,6 +357,7 @@ public class DwCEventDQ {
 			"in range for months, and propose a transposition of the two if this is the case.")
 	@Specification("If dwc:month and dwc:day are provided, propose a transposition if day is in range for months, and " +
 			"month is in range for days")
+	@Enhancement
     public static final EventDQAmendment dayMonthTransposition(@ActedUpon(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) { 
     	EventDQAmendment result = new EventDQAmendment();
     	if (DateUtils.isEmpty(day) || DateUtils.isEmpty(month)) { 
