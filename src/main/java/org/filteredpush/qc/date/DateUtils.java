@@ -1679,6 +1679,12 @@ public class DateUtils {
     	if (month>0 && month <13) { result = true; } 
     	return result;
     }    
+    
+	public static String createEventDateFromStartEnd(String startDate, String endDate) {
+		String result = null;
+      
+		return result;
+	}
  
     /**
      * Run from the command line, arguments -f to specify a file, -m to show matches. 
