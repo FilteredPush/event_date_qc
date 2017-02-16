@@ -1495,4 +1495,11 @@ public class DateUtilsTest {
     	assertEquals(false, DateUtils.eventDateValid("1905-04-08T04UTC"));  
     }
     
+    @Test 
+    public void testCreateEventDateFromStartEnd() { 
+    	
+    	assertEquals(null,DateUtils.createEventDateFromStartEnd(null,null));
+    	
+    }
+    
 }
