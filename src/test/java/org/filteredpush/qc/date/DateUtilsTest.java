@@ -877,8 +877,8 @@ public class DateUtilsTest {
     	// assertEquals("1974", result.getResult());
     	
         result = DateUtils.extractDateFromVerbatimER("1980s");
-    	//assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	//assertEquals("1980-01-01/1989-12-31", result.getResult());
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1980-01-01/1989-12-31", result.getResult());
     	
         result = DateUtils.extractDateFromVerbatimER("19-21.vii.1990");
     	//assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
@@ -932,7 +932,7 @@ public class DateUtilsTest {
     	
     	result = DateUtils.extractDateFromVerbatimER("1930");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	// assertEquals("1930", result.getResult());
+    	assertEquals("1930", result.getResult());
     	
         result = DateUtils.extractDateFromVerbatimER("17 Oct., 1993");
     	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());

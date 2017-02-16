@@ -415,7 +415,39 @@ public class DateUtils {
 				logger.debug(e.getMessage());
 			}			
 		}		
-		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && verbatimEventDate.matches("^[A-Za-z]{3,9}[.]{0,1}[-/ ][0-9]{4}$")) { 
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
+				verbatimEventDate.matches("^[0-9]{4}$")) { 
+			try { 
+				DateTimeParser[] parsers = { 
+						DateTimeFormat.forPattern("yyyy").getParser(),
+				};
+				DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
+				DateMidnight parseDate = LocalDate.parse(verbatimEventDate,formatter).toDateMidnight();
+				resultDate = parseDate.toString("yyyy");
+				result.setResultState(EventResult.EventQCResultState.RANGE);
+				result.setResult(resultDate);
+			} catch (Exception e) { 
+				logger.debug(e.getMessage());
+			}
+		}		
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
+				verbatimEventDate.matches("^[12][0-9]{2}0s$")) { 
+			try { 
+				DateTimeParser[] parsers = { 
+						DateTimeFormat.forPattern("yyyy's").getParser(),
+				};
+				DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
+				DateMidnight parseDate = LocalDate.parse(verbatimEventDate,formatter).toDateMidnight();
+				DateMidnight endDate = parseDate.plusYears(10).minusDays(1);
+				resultDate = parseDate.toString("yyyy") + "-01-01/" + endDate.toString("yyyy") + "-12-31";
+				result.setResultState(EventResult.EventQCResultState.RANGE);
+				result.setResult(resultDate);
+			} catch (Exception e) { 
+				logger.debug(e.getMessage());
+			}
+		}		
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
+				verbatimEventDate.matches("^[A-Za-z]{3,9}[.]{0,1}[-/ ][0-9]{4}$")) { 
 			try { 
 				DateTimeParser[] parsers = { 
 						DateTimeFormat.forPattern("MMM-yyyy").getParser(),
@@ -570,7 +602,8 @@ public class DateUtils {
 				logger.debug(e.getMessage());
 			}			
 		}
-		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && verbatimEventDate.matches("^[0-9]{4}[-][0-9]{2}$")) {
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
+				verbatimEventDate.matches("^[0-9]{4}[-][0-9]{2}$")) {
 			try { 
 				String century = verbatimEventDate.substring(0,2);
 				String startBit = verbatimEventDate.substring(0,4);
