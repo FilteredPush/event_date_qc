@@ -925,11 +925,11 @@ public class DateUtilsTest {
     	//assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	//assertEquals("1997-12", result.getResult());
     	
+        // **** Has a date range, but not supported. ****
         result = DateUtils.extractDateFromVerbatimER("18 x 1984,em 5 xi 84");
         // Problematic, special? case, "em" and mix of 2 and 4 digit years.  
         // "em" looks like bad character decoding for an encoding of an em-dash. 
-    	//assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	//assertEquals("1984-10-18/1984-11-05", result.getResult());
+    	assertEquals(EventResult.EventQCResultState.NOT_RUN, result.getResultState());
     	
         result = DateUtils.extractDateFromVerbatimER("4 May");
     	assertEquals(EventResult.EventQCResultState.NOT_RUN, result.getResultState());
