@@ -881,8 +881,8 @@ public class DateUtilsTest {
     	assertEquals("1980-01-01/1989-12-31", result.getResult());
     	
         result = DateUtils.extractDateFromVerbatimER("19-21.vii.1990");
-    	//assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	//assertEquals("1990-07-19/1990-07-21", result.getResult());
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1990-07-19/1990-07-21", result.getResult());
     	
         result = DateUtils.extractDateFromVerbatimER("9.ii-10.iii.2000");
     	//assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
@@ -926,6 +926,8 @@ public class DateUtilsTest {
     	//assertEquals("1997-12", result.getResult());
     	
         result = DateUtils.extractDateFromVerbatimER("18 x 1984,em 5 xi 84");
+        // Problematic, special? case, "em" and mix of 2 and 4 digit years.  
+        // "em" looks like bad character decoding for an encoding of an em-dash. 
     	//assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	//assertEquals("1984-10-18/1984-11-05", result.getResult());
     	
