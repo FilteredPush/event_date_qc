@@ -1163,6 +1163,18 @@ public class DateUtilsTest {
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	assertEquals("1910-01-01/1911-12-31", result.getResult());      	
 
+    	result = DateUtils.extractDateFromVerbatimER("**-Nov-1910");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1910-11", result.getResult());      	
+    	
+    	result = DateUtils.extractDateFromVerbatimER("**-***-1910");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1910", result.getResult()); 
+    	
+    	result = DateUtils.extractDateFromVerbatimER("**-**-1910");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1910", result.getResult()); 
+    	
     	result = DateUtils.extractDateFromVerbatimER("April 1871");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	assertEquals("1871-04", result.getResult());  

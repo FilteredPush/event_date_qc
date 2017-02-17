@@ -569,7 +569,7 @@ public class DateUtils {
 			}
 		}	
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
-				verbatimEventDate.matches("^XX[-/. ]([0-9]{1,2}|[A-Za-z]+)[-/. ][0-9]{4}$")) { 
+				verbatimEventDate.matches("^[X*]{2}[-/. ]([0-9]{1,2}|[A-Za-z]+)[-/. ][0-9]{4}$")) { 
 			try { 
 				DateTimeParser[] parsers = { 
 						DateTimeFormat.forPattern("MMM/yyyy").getParser(),
@@ -590,7 +590,7 @@ public class DateUtils {
 			}
 		}		
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
-				verbatimEventDate.matches("^XX[-/. ]XX(X){0,1}[-/. ][0-9]{4}$")) { 
+				verbatimEventDate.matches("^[X*]{2}[-/. ][X*]{2,3}[-/. ][0-9]{4}$")) { 
 			try { 
 				DateTimeParser[] parsers = { 
 						DateTimeFormat.forPattern("yyyy").getParser(),
