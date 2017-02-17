@@ -943,7 +943,8 @@ public class DateUtils {
 				logger.debug(e.getMessage());
 			}			
 		}	
-		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && verbatimEventDate.matches("^[A-Za-z]+[-][A-Za-z]+[/ ][0-9]{4}$")) { 
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
+				verbatimEventDate.matches("^[A-Za-z]+[-][A-Za-z]+[/ ][0-9]{4}$")) { 
 			try { 
 				String[] bits = verbatimEventDate.replace(" ", "/").split("-");
 				if (bits!=null && bits.length==2) { 
@@ -1692,6 +1693,7 @@ public class DateUtils {
     		cleaned = cleaned.replace("XII", "December");
     		cleaned = cleaned.replace("xii", "December");
     		cleaned = cleaned.replace("XI", "November");
+    		cleaned = cleaned.replace("xi", "November");
     		cleaned = cleaned.replace("IX", "September");
     		cleaned = cleaned.replace("X", "October");
     		cleaned = cleaned.replace("VIII", "August");
