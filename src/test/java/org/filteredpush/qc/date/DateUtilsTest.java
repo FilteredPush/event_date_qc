@@ -913,8 +913,8 @@ public class DateUtilsTest {
     	assertEquals(EventResult.EventQCResultState.NOT_RUN, result.getResultState());
     	
         result = DateUtils.extractDateFromVerbatimER("29 vi-13 vii-2001");
-    	//assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	//assertEquals("2001-06-29/2001-07-13", result.getResult());
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("2001-06-29/2001-07-13", result.getResult());
     	
         result = DateUtils.extractDateFromVerbatimER("[no date] 1988");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());

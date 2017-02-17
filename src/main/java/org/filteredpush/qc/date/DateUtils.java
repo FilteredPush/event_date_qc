@@ -967,6 +967,43 @@ public class DateUtils {
 			}			
 		}
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
+				verbatimEventDate.matches("^[0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[-][0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[/ -][0-9]{4}$")) 
+		{ 
+		    if (verbatimEventDate.matches("^[0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[-][0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[-][0-9]{4}$")) { 
+		    	// transform case with multiple dashes to slash before year.
+			    verbatimEventDate = verbatimEventDate.substring(0,verbatimEventDate.length()-5) + "/" + verbatimEventDate.substring(verbatimEventDate.length()-4);
+			   logger.debug(verbatimEventDate);
+		    }
+			try { 
+				String[] bits = verbatimEventDate.replace(" ", "/").split("-");
+				if (bits!=null && bits.length==2) { 
+					String year = verbatimEventDate.substring(verbatimEventDate.length()-4,verbatimEventDate.length());
+					String startBit = bits[0]+"/"+year;
+					logger.debug(cleanMonth(startBit));
+					logger.debug(cleanMonth(bits[1]));
+					DateTimeParser[] parsers = { 
+							DateTimeFormat.forPattern("dd MMM/yyyy").getParser(),
+							DateTimeFormat.forPattern("dd.MMM/yyyy").getParser(),
+							DateTimeFormat.forPattern("dd/MMM/yyyy").getParser(),
+							DateTimeFormat.forPattern("ddMMM/yyyy").getParser(),
+							DateTimeFormat.forPattern("dd MMM./yyyy").getParser(),
+							DateTimeFormat.forPattern("dd.MMM./yyyy").getParser(),
+							DateTimeFormat.forPattern("dd/MMM./yyyy").getParser(),
+							DateTimeFormat.forPattern("ddMMM./yyyy").getParser()
+					};
+					DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
+					LocalDate parseStartDate = LocalDate.parse(cleanMonth(startBit),formatter.withLocale(Locale.ENGLISH));
+					LocalDate parseEndDate = LocalDate.parse(cleanMonth(bits[1]),formatter.withLocale(Locale.ENGLISH));
+					resultDate =  parseStartDate.toString("yyyy-MM-dd") + "/" + parseEndDate.toString("yyyy-MM-dd");
+					logger.debug(resultDate);
+				    result.setResultState(EventResult.EventQCResultState.RANGE);
+					result.setResult(resultDate);
+				}
+			} catch (Exception e) { 
+				logger.debug(e.getMessage());
+			}			
+		}		
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
 				verbatimEventDate.matches("^[0-9]{2}[-. ]XXX[-. ][0-9]{4}$")) { 
 			try { 
 				String start = verbatimEventDate.substring(verbatimEventDate.length()-4) + "-01-" + verbatimEventDate.substring(0,2);
@@ -1676,19 +1713,27 @@ public class DateUtils {
     			cleaned = cleaned.replaceAll("[.]$", "");
     		}
     		cleaned = cleaned.replace(".i.", ".January.");
+    		cleaned = cleaned.replace("/i/", "/January/");
     		cleaned = cleaned.replace(" i ", " January ");
     		cleaned = cleaned.replace(".ii.", ".February.");
+    		cleaned = cleaned.replace("/ii/", "/February/");
     		cleaned = cleaned.replace(" ii ", " February ");	
     		cleaned = cleaned.replace(".v.", ".May.");
+    		cleaned = cleaned.replace("/v/", "/May/");
     		cleaned = cleaned.replace(" v ", " May ");
     		cleaned = cleaned.replace(".iv.", ".April.");
+    		cleaned = cleaned.replace("/iv/", "/April/");
     		cleaned = cleaned.replace(" iv ", " April ");	
     		cleaned = cleaned.replace(".vi.", ".June.");
+    		cleaned = cleaned.replace("/vi/", "/June/");
     		cleaned = cleaned.replace(" vi ", " June ");	
     		cleaned = cleaned.replace(".x.", ".October.");
+    		cleaned = cleaned.replace("/x/", "/October/");
     		cleaned = cleaned.replace(" x ", " October ");
     		cleaned = cleaned.replace(".ix.", ".September.");
+    		cleaned = cleaned.replace("/ix/", "/September/");
     		cleaned = cleaned.replace(" ix ", " September ");	
+    		cleaned = cleaned.replace("/xi/", "/November/");
     		cleaned = cleaned.replace(".xi.", ".November.");
     		cleaned = cleaned.replace(" xi ", " November ");		
     		cleaned = cleaned.replace(",i,", ".January.");
