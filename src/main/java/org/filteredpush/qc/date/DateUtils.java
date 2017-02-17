@@ -965,6 +965,22 @@ public class DateUtils {
 				logger.debug(e.getMessage());
 			}			
 		}
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
+				verbatimEventDate.matches("^[0-9]{2}[-. ]XXX[-. ][0-9]{4}$")) { 
+			try { 
+				String start = verbatimEventDate.substring(verbatimEventDate.length()-4) + "-01-" + verbatimEventDate.substring(0,2);
+				String end = verbatimEventDate.substring(verbatimEventDate.length()-4) + "-12-" + verbatimEventDate.substring(0,2);
+				EventResult compositeResult = DateUtils.extractDateFromVerbatimER(start + "/" + end, yearsBeforeSuspect, assumemmddyyyy);
+				logger.debug(compositeResult.getResultState());
+				if (compositeResult.getResultState().equals(EventResult.EventQCResultState.RANGE)) { 
+				   result.setResultState(EventResult.EventQCResultState.RANGE);
+				   result.setResult(compositeResult.getResult());
+				   logger.debug(result.getResult());
+				}
+			} catch (Exception e) { 
+				logger.debug(e.getMessage());
+			}			
+		}		
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
 			try { 
 				Interval parseDate = Interval.parse(verbatimEventDate);
