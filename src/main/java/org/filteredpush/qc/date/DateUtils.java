@@ -1766,63 +1766,6 @@ public class DateUtils {
     		if (cleaned.matches("^.*[0-9]{4}[.]$")) { 
     			cleaned = cleaned.replaceAll("[.]$", "");
     		}
-    		cleaned = cleaned.replace(".i.", ".January.");
-    		cleaned = cleaned.replace("/i/", "/January/");
-    		cleaned = cleaned.replace(" i ", " January ");
-    		cleaned = cleaned.replace(".ii.", ".February.");
-    		cleaned = cleaned.replace("/ii/", "/February/");
-    		cleaned = cleaned.replace(" ii ", " February ");	
-    		cleaned = cleaned.replace(".v.", ".May.");
-    		cleaned = cleaned.replace("/v/", "/May/");
-    		cleaned = cleaned.replace(" v ", " May ");
-    		cleaned = cleaned.replace(".iv.", ".April.");
-    		cleaned = cleaned.replace("/iv/", "/April/");
-    		cleaned = cleaned.replace(" iv ", " April ");	
-    		cleaned = cleaned.replace(".vi.", ".June.");
-    		cleaned = cleaned.replace("/vi/", "/June/");
-    		cleaned = cleaned.replace(" vi ", " June ");	
-    		cleaned = cleaned.replace(".x.", ".October.");
-    		cleaned = cleaned.replace("/x/", "/October/");
-    		cleaned = cleaned.replace(" x ", " October ");
-    		cleaned = cleaned.replace(".ix.", ".September.");
-    		cleaned = cleaned.replace("/ix/", "/September/");
-    		cleaned = cleaned.replace(" ix ", " September ");	
-    		cleaned = cleaned.replace("/xi/", "/November/");
-    		cleaned = cleaned.replace(".xi.", ".November.");
-    		cleaned = cleaned.replace(" xi ", " November ");		
-    		cleaned = cleaned.replace(",i,", ".January.");
-    		cleaned = cleaned.replace("-i-", " January ");
-    		cleaned = cleaned.replace(",ii,", ".February.");
-    		cleaned = cleaned.replace("-ii-", " February ");	
-    		cleaned = cleaned.replace(",v,", ".May.");
-    		cleaned = cleaned.replace("-v-", " May ");
-    		cleaned = cleaned.replace(",iv,", ".April.");
-    		cleaned = cleaned.replace("-iv-", " April ");	
-    		cleaned = cleaned.replace(",vi,", ".June.");
-    		cleaned = cleaned.replace("-vi-", " June ");	
-    		cleaned = cleaned.replace(",x,", ".October.");
-    		cleaned = cleaned.replace("-x-", " October ");
-    		cleaned = cleaned.replace(",ix,", ".September.");
-    		cleaned = cleaned.replace("-ix-", " September ");	
-    		cleaned = cleaned.replace(",xi,", ".November.");
-    		cleaned = cleaned.replace("-xi-", " November ");				
-    		cleaned = cleaned.replace("XII", "December");
-    		cleaned = cleaned.replace("xii", "December");
-    		cleaned = cleaned.replace("XI", "November");
-    		cleaned = cleaned.replace("xi", "November");
-    		cleaned = cleaned.replace("IX", "September");
-    		cleaned = cleaned.replace("X", "October");
-    		cleaned = cleaned.replace("VIII", "August");
-    		cleaned = cleaned.replace("viii", "August");
-    		cleaned = cleaned.replace("VII", "July");
-    		cleaned = cleaned.replace("vii", "July");
-    		cleaned = cleaned.replace("VI", "June");
-    		cleaned = cleaned.replace("IV", "April");
-    		cleaned = cleaned.replace("V", "May");
-    		cleaned = cleaned.replace("III", "March");
-    		cleaned = cleaned.replace("iii", "March");
-    		cleaned = cleaned.replace("II", "February");
-    		cleaned = cleaned.replace("I", "January");
 
     		// Joda date time parsing as used here, is case sensitive for months.
     		// Put cases of alternative spellings, missing accents, and capitalization into
@@ -1875,6 +1818,85 @@ public class DateUtils {
     		cleaned = cleaned.replace("Octubre", "October");
     		cleaned = cleaned.replace("Noviembre", "November");
     		cleaned = cleaned.replace("Diciembre", "December");
+    		
+    		// Translate roman numerals to months, with care not to modify month names.
+    		
+    		cleaned = cleaned.replace(".i.", ".January.");
+    		cleaned = cleaned.replace("/i/", "/January/");
+    		cleaned = cleaned.replace(" i ", " January ");
+    		cleaned = cleaned.replace(".ii.", ".February.");
+    		cleaned = cleaned.replace("/ii/", "/February/");
+    		cleaned = cleaned.replace(" ii ", " February ");	
+    		cleaned = cleaned.replace(".v.", ".May.");
+    		cleaned = cleaned.replace("/v/", "/May/");
+    		cleaned = cleaned.replace(" v ", " May ");
+    		cleaned = cleaned.replace(".iv.", ".April.");
+    		cleaned = cleaned.replace("/iv/", "/April/");
+    		cleaned = cleaned.replace(" iv ", " April ");	
+    		cleaned = cleaned.replace(".vi.", ".June.");
+    		cleaned = cleaned.replace("/vi/", "/June/");
+    		cleaned = cleaned.replace(" vi ", " June ");	
+    		cleaned = cleaned.replace(".x.", ".October.");
+    		cleaned = cleaned.replace("/x/", "/October/");
+    		cleaned = cleaned.replace(" x ", " October ");
+    		cleaned = cleaned.replace(".ix.", ".September.");
+    		cleaned = cleaned.replace("/ix/", "/September/");
+    		cleaned = cleaned.replace(" ix ", " September ");	
+    		cleaned = cleaned.replace("/xi/", "/November/");
+    		cleaned = cleaned.replace(".xi.", ".November.");
+    		cleaned = cleaned.replace(" xi ", " November ");		
+    		cleaned = cleaned.replace(",i,", ".January.");
+    		cleaned = cleaned.replace("-i-", " January ");
+    		cleaned = cleaned.replace(",ii,", ".February.");
+    		cleaned = cleaned.replace("-ii-", " February ");	
+    		cleaned = cleaned.replace(",v,", ".May.");
+    		cleaned = cleaned.replace("-v-", " May ");
+    		cleaned = cleaned.replace(",iv,", ".April.");
+    		cleaned = cleaned.replace("-iv-", " April ");	
+    		cleaned = cleaned.replace(",vi,", ".June.");
+    		cleaned = cleaned.replace("-vi-", " June ");	
+    		cleaned = cleaned.replace(",x,", ".October.");
+    		cleaned = cleaned.replace("-x-", " October ");
+    		cleaned = cleaned.replace(",ix,", ".September.");
+    		cleaned = cleaned.replace("-ix-", " September ");	
+    		cleaned = cleaned.replace(",xi,", ".November.");
+    		cleaned = cleaned.replace("-xi-", " November ");		
+    		
+    		// many cases below here are potentially problematic and should probably be 
+    		// replaced by regular expressions instead of simple replace (order matters).
+    		cleaned = cleaned.replace("XII", "December");
+    		cleaned = cleaned.replace("xii", "December");
+    		cleaned = cleaned.replace("XI", "November");
+    		cleaned = cleaned.replace("xi", "November");
+    		cleaned = cleaned.replace("IX", "September");
+    		cleaned = cleaned.replace("X", "October");
+    		cleaned = cleaned.replace("VIII", "August");
+    		cleaned = cleaned.replace("viii", "August");
+    		cleaned = cleaned.replace("VII", "July");
+    		cleaned = cleaned.replace("vii", "July");
+    		cleaned = cleaned.replace("VI", "June");
+    		if (!cleaned.contains("janvier")) { 
+    		    cleaned = cleaned.replace("vi", "June");
+    		}
+    		cleaned = cleaned.replace("IV", "April");
+    		cleaned = cleaned.replace("iv", "April");
+    		cleaned = cleaned.replace("V", "May");
+    		cleaned = cleaned.replace("III", "March");
+    		cleaned = cleaned.replace("iii", "March");
+    		cleaned = cleaned.replace("II", "February");
+    		cleaned = cleaned.replace("ii", "February");
+    		cleaned = cleaned.replace("I", "January");
+    		cleaned = cleaned.replace(".vi", ".June");
+    		cleaned = cleaned.replace(".ix", ".September");
+    		cleaned = cleaned.replace(".i", ".January");
+    		cleaned = cleaned.replace(".v", ".May");
+    		cleaned = cleaned.replace(".x", ".October");
+    		cleaned = cleaned.replace(" vi", " June");
+    		cleaned = cleaned.replace(" ix", " September");
+    		cleaned = cleaned.replace(" i", " January");
+    		cleaned = cleaned.replace(" v", " May");
+    		cleaned = cleaned.replace(" x", " October");
+
     	}
     	return cleaned;
     }

@@ -885,8 +885,8 @@ public class DateUtilsTest {
     	assertEquals("1990-07-19/1990-07-21", result.getResult());
     	
         result = DateUtils.extractDateFromVerbatimER("9.ii-10.iii.2000");
-    	//assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	//assertEquals("2000-02-09/2000-03-10", result.getResult());
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("2000-02-09/2000-03-10", result.getResult());
     	
         result = DateUtils.extractDateFromVerbatimER("xi.1996");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
@@ -1414,6 +1414,44 @@ public class DateUtilsTest {
     	result = DateUtils.extractDateFromVerbatimER("1934 - 1936");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	assertEquals("1934/1936", result.getResult());
+    	
+    	// Checking translation of all roman numberal months
+        result = DateUtils.extractDateFromVerbatimER("9.i-10.xii.2000");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("2000-01-09/2000-12-10", result.getResult());    	
+        result = DateUtils.extractDateFromVerbatimER("9.ii-10.xii.2000");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("2000-02-09/2000-12-10", result.getResult());    	
+        result = DateUtils.extractDateFromVerbatimER("9.iii-10.xii.2000");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("2000-03-09/2000-12-10", result.getResult());    	
+        result = DateUtils.extractDateFromVerbatimER("9.iv-10.xii.2000");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("2000-04-09/2000-12-10", result.getResult());    	
+        result = DateUtils.extractDateFromVerbatimER("9.v-10.xii.2000");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("2000-05-09/2000-12-10", result.getResult());    	
+        result = DateUtils.extractDateFromVerbatimER("9.vi-10.xii.2000");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("2000-06-09/2000-12-10", result.getResult());    	
+        result = DateUtils.extractDateFromVerbatimER("9.vii-10.xii.2000");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("2000-07-09/2000-12-10", result.getResult());    	
+        result = DateUtils.extractDateFromVerbatimER("9.viii-10.xii.2000");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("2000-08-09/2000-12-10", result.getResult());    	
+        result = DateUtils.extractDateFromVerbatimER("9.ix-10.xii.2000");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("2000-09-09/2000-12-10", result.getResult());    	
+        result = DateUtils.extractDateFromVerbatimER("9.x-10.xii.2000");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("2000-10-09/2000-12-10", result.getResult());    	
+        result = DateUtils.extractDateFromVerbatimER("9.xi-10.xii.2000");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("2000-11-09/2000-12-10", result.getResult());    	
+        result = DateUtils.extractDateFromVerbatimER("9.xii-10.xii.2000");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("2000-12-09/2000-12-10", result.getResult());    	
     	
     	/*
     	 May and June 1899
