@@ -1105,6 +1105,9 @@ public class DateUtils {
 		}	
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
 			String cleaned = verbatimEventDate.trim();
+			if (verbatimEventDate.matches("^[A-Za-z.]+[ ,]+[0-9]{1,2} and [0-9]{0,2}[ ,]+[0-9]{4}$")) { 
+				cleaned = cleaned.replace(" and ", " to ");
+			}			
 			if (verbatimEventDate.matches("^[A-Za-z.]+[ ,]+[0-9]{1,2}-[0-9]{0,2}[ ,]+[0-9]{4}$")) { 
 				cleaned = cleaned.replace("-", " to ");
 			}

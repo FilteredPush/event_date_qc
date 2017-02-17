@@ -1475,8 +1475,8 @@ public class DateUtilsTest {
     	assertEquals("1963-01/1963-02", result.getResult());     	
     	
     	result = DateUtils.extractDateFromVerbatimER("July 17 and 18, 1914");
-    	//assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	//assertEquals("1914-07-17/1914-07-18", result.getResult());
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1914-07-17/1914-07-18", result.getResult());
     	
     	result = DateUtils.extractDateFromVerbatimER("8-15 to 20, 1884");
     	//assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
@@ -1501,7 +1501,6 @@ public class DateUtilsTest {
     	 May and June 1899
     	 August 29 - September 2, 2006
     	 8-15 to 20, 1884
-    	 July 17 and 18, 1914
     	 
     	*/  
     	
