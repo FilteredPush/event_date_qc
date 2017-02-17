@@ -1946,9 +1946,91 @@ public class DateUtils {
     	return result;
     }    
     
+    /**
+     * Given a start date and end date (which could be in verbatim forms) construct an 
+     * event date representing the range from start of start date to end of end date.
+     * If either startDate or endDate cannot be interpreted as a date, that bit will be
+     * omitted from the result.  If no dates are provided or none can be recognized, 
+     * returns null.
+     * 
+     * @param startDate to concatenate with end date. 
+     * @param endDate to add after start date.
+     * 
+     * @return eventDate representing startDate to endDate, null if no dates were found.
+     */
 	public static String createEventDateFromStartEnd(String startDate, String endDate) {
 		String result = null;
-      
+        boolean startIsRange = false; 
+        String separator = "";
+		
+		if (!DateUtils.isEmpty(startDate)) {
+			separator = "/";
+			if (DateUtils.eventDateValid(startDate)) { 
+			    result = startDate;
+			    if (DateUtils.isRange(result)) { 
+			    	startIsRange = true;
+			    }
+			} else { 
+				EventResult startResult = DateUtils.extractDateFromVerbatimER(startDate);
+				if (startResult.getResultState().equals(EventResult.EventQCResultState.DATE)) { 
+					result = startResult.getResult();
+				}
+				if (startResult.getResultState().equals(EventResult.EventQCResultState.RANGE)) {
+					result = startResult.getResult();
+					startIsRange = true;
+				}
+			}
+		} 
+		
+		boolean startDateFound = !DateUtils.isEmpty(result);
+		
+		logger.debug(result);
+		
+		if (!DateUtils.isEmpty(endDate)) { 
+			if (startIsRange && result.contains("/")) {
+				// we need just the start of the range
+				result = result.substring(0, result.indexOf('/'));
+			} 
+			logger.debug(result);
+
+			if (DateUtils.eventDateValid(endDate)) { 
+				if (startDateFound) { 
+					if (DateUtils.isRange(endDate) && endDate.contains("/")) { 
+						endDate = endDate.substring(endDate.indexOf('/')+1);
+					}
+				   result = result + separator + endDate;
+				} else { 
+					result = endDate;
+				}
+				logger.debug(result);
+			} else { 
+				String endBit = "";
+				EventResult endResult = DateUtils.extractDateFromVerbatimER(endDate);
+				logger.debug(endResult.getResultState());
+				if (endResult.getResultState().equals(EventResult.EventQCResultState.DATE)) { 
+					endBit = endResult.getResult();
+				}
+				if (endResult.getResultState().equals(EventResult.EventQCResultState.RANGE)) {
+					endBit = endResult.getResult();
+					if (endBit.contains("/")) { 
+						endBit = endBit.substring(endBit.indexOf('/')+1);
+					}
+				}
+				if (!DateUtils.isEmpty(endBit)) { 
+					if (startDateFound) { 
+					    result = result + separator + endBit;
+					} else { 
+						result = endBit;
+					}
+				}
+			}
+		}
+		
+		if (!DateUtils.isEmpty(result) && !DateUtils.eventDateValid(result)) {
+			logger.error(result);
+			result = null;
+		}
+		
 		return result;
 	}
  

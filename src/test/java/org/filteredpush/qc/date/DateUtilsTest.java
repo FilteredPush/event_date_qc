@@ -1592,7 +1592,35 @@ public class DateUtilsTest {
     public void testCreateEventDateFromStartEnd() { 
     	
     	assertEquals(null,DateUtils.createEventDateFromStartEnd(null,null));
+    	assertEquals(null,DateUtils.createEventDateFromStartEnd("zzzzz",null));
+    	assertEquals(null,DateUtils.createEventDateFromStartEnd("zzzzz","ZZZZ"));
     	
+    	assertEquals("1964-03-05",DateUtils.createEventDateFromStartEnd("zzzzz","1964-03-05"));
+    	assertEquals("1964-03-05",DateUtils.createEventDateFromStartEnd("1964-03-05","zzzz"));
+    	
+    	assertEquals("1960",DateUtils.createEventDateFromStartEnd("1960",null));
+    	assertEquals("1960-01",DateUtils.createEventDateFromStartEnd("1960-01",null));
+    	assertEquals("1960-01-04",DateUtils.createEventDateFromStartEnd("1960-01-04",null));
+    	
+    	assertEquals("1960",DateUtils.createEventDateFromStartEnd(null,"1960"));
+    	assertEquals("1960/1964",DateUtils.createEventDateFromStartEnd(null,"1960/1964"));
+    	
+    	assertEquals("1960/1965",DateUtils.createEventDateFromStartEnd("1960","1965"));
+    	assertEquals("1960-01/1965-04",DateUtils.createEventDateFromStartEnd("1960-01","1965-04"));
+    	assertEquals("1960-01-04/1961-02-03",DateUtils.createEventDateFromStartEnd("1960-01-04","1961-02-03"));    	
+    	
+    	assertEquals("1960/1965-02",DateUtils.createEventDateFromStartEnd("1960","1965-02"));
+    	assertEquals("1960-01/1965-04-08",DateUtils.createEventDateFromStartEnd("1960-01","1965-04-08"));
+    	assertEquals("1960-01-08/1965-04",DateUtils.createEventDateFromStartEnd("1960-01-08","1965-04"));
+    	
+    	assertEquals("1960-01-04/1961-02-03",DateUtils.createEventDateFromStartEnd("1960-01-04","1961-Feb-03"));    	
+    	assertEquals("1960-01-04/1961-02-03",DateUtils.createEventDateFromStartEnd("1960-01-04","3 Feb,1961")); 
+    	
+    	assertEquals("1960-01-04/1961-02-03",DateUtils.createEventDateFromStartEnd("1960-01-04/1960-01-08","1961-Feb-03"));    	
+    	assertEquals("1960-01-04/1961-02-04",DateUtils.createEventDateFromStartEnd("1960-01-04/1960-01-08","1961-02-03/1961-02-04"));    	
+    	
+    	assertEquals("1961-02-03T04:05",DateUtils.createEventDateFromStartEnd("1961-02-03T04:05",null));
+    	assertEquals("1961-02-03T04:05/1961-02-03T08:15",DateUtils.createEventDateFromStartEnd("1961-02-03T04:05","1961-02-03T08:15"));
     }
     
 }
