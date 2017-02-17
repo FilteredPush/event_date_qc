@@ -905,6 +905,7 @@ public class DateUtilsTest {
     	assertEquals("1993-10-15", result.getResult());
     	
         result = DateUtils.extractDateFromVerbatimER("193-");
+        // problematic case, could be 1930/1939, or day 193 without a year, or year 193 without a month.
     	//assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	//assertEquals("1930-01-01/1939-12-31", result.getResult());
     	
@@ -956,8 +957,8 @@ public class DateUtilsTest {
     	assertEquals("1984-12-02", result.getResult());
     	
     	result = DateUtils.extractDateFromVerbatimER("Sept.-Oct. 1982");
-    	//assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	//assertEquals("1982-10-01/1982-11-31", result.getResult()); 
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1982-09/1982-10", result.getResult()); 
     	
     	result = DateUtils.extractDateFromVerbatimER("2011-08/2012-06");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());

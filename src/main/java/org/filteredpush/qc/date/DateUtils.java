@@ -944,18 +944,19 @@ public class DateUtils {
 			}			
 		}	
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
-				verbatimEventDate.matches("^[A-Za-z]+[-][A-Za-z]+[/ ][0-9]{4}$")) { 
+				verbatimEventDate.matches("^[A-Za-z]+[.]{0,1}[-][A-Za-z]+[.]{0,1}[/ ][0-9]{4}$")) { 
 			try { 
 				String[] bits = verbatimEventDate.replace(" ", "/").split("-");
 				if (bits!=null && bits.length==2) { 
 					String year = verbatimEventDate.substring(verbatimEventDate.length()-4,verbatimEventDate.length());
 					String startBit = bits[0]+"/"+year;
 					DateTimeParser[] parsers = { 
-							DateTimeFormat.forPattern("MMM/yyyy").getParser()
+							DateTimeFormat.forPattern("MMM/yyyy").getParser(),
+							DateTimeFormat.forPattern("MMM./yyyy").getParser()
 					};
 					DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
-					LocalDate parseStartDate = LocalDate.parse(startBit,formatter.withLocale(Locale.ENGLISH));
-					LocalDate parseEndDate = LocalDate.parse(bits[1],formatter.withLocale(Locale.ENGLISH));
+					LocalDate parseStartDate = LocalDate.parse(cleanMonth(startBit),formatter.withLocale(Locale.ENGLISH));
+					LocalDate parseEndDate = LocalDate.parse(cleanMonth(bits[1]),formatter.withLocale(Locale.ENGLISH));
 					resultDate =  parseStartDate.toString("yyyy-MM") + "/" + parseEndDate.toString("yyyy-MM");
 					logger.debug(resultDate);
 				    result.setResultState(EventResult.EventQCResultState.RANGE);
