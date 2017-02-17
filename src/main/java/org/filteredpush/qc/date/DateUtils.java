@@ -944,13 +944,19 @@ public class DateUtils {
 			}			
 		}	
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
-				verbatimEventDate.matches("^[A-Za-z]+[.]{0,1}[-][A-Za-z]+[.]{0,1}[/ .][0-9]{4}$")) { 
+				verbatimEventDate.matches("^[A-Za-z]+[.]{0,1}[-][ ]{0,1}[A-Za-z]+[.]{0,1}[/ .][0-9]{4}$")) { 
 		    if ( verbatimEventDate.matches("^[A-Za-z]+[.]{0,1}[-][A-Za-z]+[.]{0,1}[.][0-9]{4}$"))
 		    { 
 		    	// transform case with multiple periods to slash before year.
 			    verbatimEventDate = verbatimEventDate.substring(0,verbatimEventDate.length()-5) + "/" + verbatimEventDate.substring(verbatimEventDate.length()-4);
 			   logger.debug(verbatimEventDate);
 		    }
+		    if ( verbatimEventDate.matches("^[A-Za-z]+[.]{0,1}[-][ ]{1}[A-Za-z]+[.]{0,1}[/ .][0-9]{4}$"))
+		    { 
+		    	// remove space trailing after dash.
+			    verbatimEventDate = verbatimEventDate.replace("- ", "-");
+			   logger.debug(verbatimEventDate);
+		    }		    
 			try { 
 				String[] bits = verbatimEventDate.replace(" ", "/").split("-");
 				if (bits!=null && bits.length==2) { 
