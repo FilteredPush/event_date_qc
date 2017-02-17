@@ -837,7 +837,7 @@ public class DateUtilsTest {
         33  29 vi-13 vii-2001
         34  [no date] 1988
         35  purchased Dec 1997
-        36  18 x 1984,em 5 xi 84
+        36  18 x 1984,em 5 xi 84  *** Not supported.
         37  21 vii
         38  4 May
           
@@ -964,7 +964,7 @@ public class DateUtilsTest {
     	
     	result = DateUtils.extractDateFromVerbatimER("2011-08/2012-06");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	// assertEquals("2011-08-01/2012-06-30", result.getResult());    	
+    	assertEquals("2011-08/2012-06", result.getResult());    	
     	
     	result = DateUtils.extractDateFromVerbatimER("5/9/1985");
     	assertEquals(EventResult.EventQCResultState.AMBIGUOUS, result.getResultState());

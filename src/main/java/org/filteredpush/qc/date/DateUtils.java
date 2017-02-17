@@ -1073,6 +1073,19 @@ public class DateUtils {
 				logger.debug(e.getMessage());
 			}			
 		}		
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
+				verbatimEventDate.matches("^[0-9]{4}-[0-9]{2}/[0-9]{4}-[0-9]{2}$")
+			) {
+			try { 
+				Interval parseDate = Interval.parse(verbatimEventDate);
+				logger.debug(parseDate);
+				resultDate =  parseDate.getStart().toString("yyyy-MM") + "/" + parseDate.getEnd().toString("yyyy-MM");
+				result.setResultState(EventResult.EventQCResultState.RANGE);
+				result.setResult(resultDate);
+			} catch (Exception e) { 
+				logger.debug(e.getMessage());
+			}			
+		}		
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
 			try { 
 				Interval parseDate = Interval.parse(verbatimEventDate);
