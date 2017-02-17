@@ -1470,6 +1470,10 @@ public class DateUtilsTest {
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	assertEquals("1963-01/1963-02", result.getResult());    
     	
+    	result = DateUtils.extractDateFromVerbatimER("Jan- Feb/1963");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1963-01/1963-02", result.getResult());     	
+    	
     	result = DateUtils.extractDateFromVerbatimER("July 17 and 18, 1914");
     	//assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	//assertEquals("1914-07-17/1914-07-18", result.getResult());
@@ -1486,10 +1490,6 @@ public class DateUtilsTest {
     	//assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	//assertEquals("1889-05/1889-06", result.getResult());    	
     	
-    	result = DateUtils.extractDateFromVerbatimER("Jan- Feb/1963");
-    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	assertEquals("1963-01/1963-02", result.getResult());     	
-    	
     	result = DateUtils.extractDateFromVerbatimER("[29 Apr - 24 May 1847]");
     	//assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	//assertEquals("1847-04-29/1847-05-24", result.getResult());    	
@@ -1498,7 +1498,6 @@ public class DateUtilsTest {
     	 Not yet supported cases: 
     	 
     	 [29 Apr - 24 May 1847]
-    	 Jan- Feb/1963
     	 May and June 1899
     	 August 29 - September 2, 2006
     	 8-15 to 20, 1884
