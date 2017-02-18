@@ -46,7 +46,8 @@ import org.datakurator.ffdq.api.EnumDQAmendmentResultState;
  *  EVENTDATE_CONSISTENT_WITH_DAY_MONTH_YEAR  
  *  EVENTDATE_IN_PAST
  *  EVENTDATE_PRECISON_MONTH_OR_BETTER 
- *  EVENTDATE_PRECISON_YEAR_OR_BETTER 
+ *  EVENTDATE_PRECISON_YEAR_OR_BETTER isEventDateYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) 
+ *                               also isEventDateJulianYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) 
  *  STARTDATE_CONSISTENT_WITH_ENDDATE
  *  YEAR_PROVIDED
  *  EVENTDATE_CONSISTENT_WITH_ATOMIC_PARTS 
@@ -304,6 +305,85 @@ public class DwCEventDQ {
     	}
     	return result;
     }    
+    
+    @Provides(value = "EVENTDATE_PRECISON_JULIAN_YEAR_OR_BETTER")
+	@Validation(label = "EventDate precision Julian year or better. ", description = "Test to see whether a provided event date " +
+			"has a duration less than or equal to a standard astronomical Julian year.")
+	@Specification(value = "Compliant if event date has a duration equal to or less than a = 31557600 seconds, otherwise not compliant. " +
+			"Internal prerequisites not met if eventDate is empty or not valid.")
+    @PreEnhancement
+    @PostEnhancement
+    public static EventDQValidation isEventDateJulianYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) { 
+    	EventDQValidation result = new EventDQValidation();
+    	if (DateUtils.isEmpty(eventDate)) {
+    		result.addComment("No value provided for eventDate.");
+    		result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    	} else { 
+    		if (DateUtils.eventDateValid(eventDate)) { 
+    			logger.debug(eventDate);
+    			logger.debug(DateUtils.measureDurationSeconds(eventDate));
+    			if (DateUtils.measureDurationSeconds(eventDate)<= 31557600) { 
+    				result.setResult(EnumDQValidationResult.COMPLIANT);
+    				result.addComment("Provided value for eventDate '" + eventDate + "' has a duration less than or equal to one Julian year of 365.25 days.");
+    			}  else { 
+    				result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    				result.addComment("Provided value for eventDate '" + eventDate + "' has a duration more than one Julian year of 365.25 days.");
+    			}
+    			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    		} else { 
+    			result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    			result.addComment("provided dwc:eventDate not recognized as a valid date value.");
+    		}
+    	}
+    	return result;
+    }      
+    
+    
+    @Provides(value = "EVENTDATE_PRECISON_YEAR_OR_BETTER")
+	@Validation(label = "EventDate precision calendar year or better. ", description = "Test to see whether a provided event date " +
+			"has a duration less than or equal to a calendar year.")
+	@Specification(value = "Compliant if event date has a duration equal to or less than 365 days if a standard year, 366 days if a leap year. " +
+			"Internal prerequisites not met if eventDate is empty or not valid.")
+    @PreEnhancement
+    @PostEnhancement
+    public static EventDQValidation isEventDateYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) { 
+    	EventDQValidation result = new EventDQValidation();
+    	if (DateUtils.isEmpty(eventDate)) {
+    		result.addComment("No value provided for eventDate.");
+    		result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    	} else { 
+    		if (DateUtils.includesLeapDay(eventDate)) { 
+    			if (DateUtils.eventDateValid(eventDate)) { 
+    				if (DateUtils.measureDurationSeconds(eventDate)<= 31622400) { 
+    					result.setResult(EnumDQValidationResult.COMPLIANT);
+    					result.addComment("Provided value for eventDate '" + eventDate + "' contains a leap day and has a duration less than or equal to one calendar year of 366 days.");
+    				}  else { 
+    					result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    					result.addComment("Provided value for eventDate '" + eventDate + "' contains a leap day has a duration more than one calendar year of 366 days.");
+    				}
+    				result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    			} else { 
+    				result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    				result.addComment("provided dwc:eventDate not recognized as a valid date value.");
+    			}
+    		} else { 
+    			if (DateUtils.eventDateValid(eventDate)) { 
+    				if (DateUtils.measureDurationSeconds(eventDate)<= 31536000) { 
+    					result.setResult(EnumDQValidationResult.COMPLIANT);
+    					result.addComment("Provided value for eventDate '" + eventDate + "' does not contain a leap day and has a duration less than or equal to one calendar year of 365 days.");
+    				}  else { 
+    					result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    					result.addComment("Provided value for eventDate '" + eventDate + "' does not contain a leap day has a duration more than one calendar year of 365 days.");
+    				}
+    				result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    			} else { 
+    				result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    				result.addComment("provided dwc:eventDate not recognized as a valid date value.");
+    			}
+    		}
+    	}
+    	return result;
+    }     
 
     /**
      * Check if a value for day is consistent with a provided month and year. 

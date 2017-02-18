@@ -172,6 +172,28 @@ public class DwcEventDQTest {
 		assertEquals(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
 	}
 
+	@Test
+	public void testDurationInYear() {
+		EventDQValidation result = null;
+		for (int i = 1981; i<=1983; i++) {
+			// not leap years
+			result = DwCEventDQ.isEventDateJulianYearOrLess(Integer.toString(i));
+			assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+			assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());
+			result = DwCEventDQ.isEventDateYearOrLess(Integer.toString(i));
+			assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+			assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());			
+		}
+		// Leap year
+		result = DwCEventDQ.isEventDateJulianYearOrLess("1980");
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());
+		result = DwCEventDQ.isEventDateYearOrLess("1980");
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());			
+	}
+	
+	
 	/**
 	 * Test method for {@link org.filteredpush.qc.date.DwCEventDQ#isDayPossibleForMonthYear(java.lang.String, java.lang.String, java.lang.String)}.
 	 */

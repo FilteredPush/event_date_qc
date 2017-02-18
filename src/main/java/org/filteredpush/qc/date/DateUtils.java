@@ -2125,6 +2125,41 @@ public class DateUtils {
 		return result;
 	}
  
+	/**
+	 * Given an event date (which may represent a date range), check to see if the 
+	 * eventDate contains a leap day.  Returns false if provided a null or invalid 
+	 * eventDate value.
+	 * 
+	 * @param eventDate to check for a leap day
+	 * @return true if a leap day is present in the eventDate range, otherwise false.
+	 */
+	public static boolean includesLeapDay(String eventDate) {
+		boolean result = false;
+		if (!DateUtils.isEmpty(eventDate) && DateUtils.eventDateValid(eventDate)) { 
+			Interval interval = extractInterval(eventDate);
+			String startYear = Integer.toString(interval.getStart().getYear()).trim();
+			String endYear = Integer.toString(interval.getEnd().getYear()).trim();
+			String leapDay = startYear + "-02-29";
+			logger.debug(leapDay);
+			if (DateUtils.eventDateValid(leapDay)) { 
+				if (interval.contains(DateUtils.extractInterval(leapDay))) { 
+					result = true;
+				}
+			}
+			if (!endYear.equals(startYear)) { 
+				leapDay = endYear + "-02-29";
+				logger.debug(leapDay);
+				if (DateUtils.eventDateValid(leapDay)) { 
+					if (interval.contains(DateUtils.extractInterval(leapDay))) { 
+						result = true;
+					}
+				}				
+			}
+			// TODO: Support ranges of more than one year.
+		}
+		return result;
+	}
+	
     /**
      * Run from the command line, arguments -f to specify a file, -m to show matches. 
      * Converts dates in a specified input file from verbatim form to format expected by dwc:eventDate.

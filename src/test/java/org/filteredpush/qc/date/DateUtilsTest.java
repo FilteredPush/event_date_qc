@@ -1609,13 +1609,12 @@ public class DateUtilsTest {
     	assertEquals("1899-05/1899-07", result.getResult());
     	
     	result = DateUtils.extractDateFromVerbatimER("[29 Apr - 24 May 1847]");
-    	//assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	//assertEquals("1847-04-29/1847-05-24", result.getResult());    	
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1847-04-29/1847-05-24", result.getResult());    	
     	
     	/*
     	 Not yet supported cases: 
     	 
-    	 [29 Apr - 24 May 1847]
     	 8-15 to 20, 1884
     	 
     	*/  
@@ -1736,6 +1735,32 @@ public class DateUtilsTest {
     	
     	assertEquals("1961-02-03T04:05",DateUtils.createEventDateFromStartEnd("1961-02-03T04:05",null));
     	assertEquals("1961-02-03T04:05/1961-02-03T08:15",DateUtils.createEventDateFromStartEnd("1961-02-03T04:05","1961-02-03T08:15"));
+    }
+ 
+    @Test
+    public void testIncludesLeapDay() { 
+    	assertEquals(false, DateUtils.includesLeapDay(null));
+    	assertEquals(false, DateUtils.includesLeapDay(""));
+    	assertEquals(false, DateUtils.includesLeapDay("ZZZZZZ"));
+    	
+    	assertEquals(true, DateUtils.includesLeapDay("1980"));
+    	assertEquals(false, DateUtils.includesLeapDay("1981"));
+    	assertEquals(false, DateUtils.includesLeapDay("1982"));
+    	assertEquals(false, DateUtils.includesLeapDay("1983"));
+    	assertEquals(true, DateUtils.includesLeapDay("1984"));
+    	
+    	assertEquals(true, DateUtils.includesLeapDay("1600"));
+    	assertEquals(false, DateUtils.includesLeapDay("1700"));
+    	assertEquals(false, DateUtils.includesLeapDay("1800"));
+    	assertEquals(false, DateUtils.includesLeapDay("1900"));
+    	assertEquals(true, DateUtils.includesLeapDay("2000"));
+    	
+    	assertEquals(true, DateUtils.includesLeapDay("1984-02-28/1984-03-01"));
+    	assertEquals(false, DateUtils.includesLeapDay("1985-02-28/1985-03-01"));
+    	
+    	assertEquals(true, DateUtils.includesLeapDay("1984-01-01/1985-12-31"));
+    	assertEquals(false, DateUtils.includesLeapDay("1985-03-01/1985-12-31"));
+    	assertEquals(false, DateUtils.includesLeapDay("1985-01-01/1985-02-28"));
     }
     
 }
