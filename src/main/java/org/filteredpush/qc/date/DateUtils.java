@@ -350,20 +350,26 @@ public class DateUtils {
 		}
 		
 		if (verbatimEventDate.matches("^[0-9]{1,2}[-. ][0-9]{1,2}[-. ][0-9]{4}/[0-9]{1,2}[-. ][0-9]{1,2}[-. ][0-9]{4}$")) {
-			// if verbatim date is a range with identical first and last dates, use just one.
+			// if verbatim date is a range with identical first and last dates (/), use just one.
+			// Example: 12-11-1982/12-11-1982  changed to 12-11-1982
 			String[] bits = verbatimEventDate.split("/");
 			if (bits.length==2 && bits[0].equals(bits[1])) { 
 				verbatimEventDate = bits[0];
 			}
 		}
 		if (verbatimEventDate.matches("^[0-9]{1,2}[./ ][0-9]{1,2}[./ ][0-9]{4}[-][0-9]{1,2}[./ ][0-9]{1,2}[./ ][0-9]{4}$")) {
-			// if verbatim date is a range with identical first and last dates, use just one.
+			// if verbatim date is a range with identical first and last dates (-), use just one.
+			// Example: 12/11/1982-12/11/1982  changed to 12/11/1982
 			String[] bits = verbatimEventDate.split("-");
 			if (bits.length==2 && bits[0].equals(bits[1])) { 
 				verbatimEventDate = bits[0];
 			}
 		}
-		if (verbatimEventDate.matches("^[0-9]{4}[-/]([0-9]{1,2}|[A-Za-z]+)[-/][0-9]{1,2}.*")) { 
+		if (verbatimEventDate.matches("^[0-9]{4}[-/]([0-9]{1,2}|[A-Za-z]+)[-/][0-9]{1,2}.*")) {
+			// Example 1982/02/05
+			// Example 1982/Feb/05
+			// Example 1982-02-05
+			// Example 1982-02-05T05:03:06
 			try { 
 				DateTimeParser[] parsers = { 
 						DateTimeFormat.forPattern("yyyy/MM/dd").getParser(),
@@ -381,6 +387,7 @@ public class DateUtils {
 			}
 		}
 		if (verbatimEventDate.matches("^[0-9]{1,2}[-/ ][0-9]{4}")) { 
+			// Example 02/1982
 			try { 
 				DateTimeParser[] parsers = { 
 						DateTimeFormat.forPattern("MM-yyyy").getParser(),
@@ -397,6 +404,7 @@ public class DateUtils {
 			}
 		}		
 		if (verbatimEventDate.matches("^[0-9]{4}年[0-9]{1,2}月[0-9]{1,2}[日号]$")) { 
+			// Example: 1972年03月25日
 			try { 
 				DateTimeParser[] parsers = { 
 						DateTimeFormat.forPattern("yyyy年MM月dd日").getParser(),
@@ -413,6 +421,7 @@ public class DateUtils {
 			}
 		}		
 		if (verbatimEventDate.matches("^[0-9]{4}[-][0-9]{3}/[0-9]{4}[-][0-9]{3}$")) { 
+			// Example: 1982-145
 			try { 
 				String[] bits = verbatimEventDate.split("/");
 				DateTimeParser[] parsers = { 
@@ -436,6 +445,7 @@ public class DateUtils {
 		}
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
 				verbatimEventDate.matches("^[0-9]{4}$")) { 
+			// Example: 1962 
 			try { 
 				DateTimeParser[] parsers = { 
 						DateTimeFormat.forPattern("yyyy").getParser(),
@@ -450,7 +460,8 @@ public class DateUtils {
 			}
 		}		
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
-				verbatimEventDate.matches("^[12][0-9]{2}0s$")) { 
+				verbatimEventDate.matches("^[12][0-9]{2}0s$")) {
+			// Example: 1970s 
 			try { 
 				DateTimeParser[] parsers = { 
 						DateTimeFormat.forPattern("yyyy's").getParser(),
@@ -467,6 +478,9 @@ public class DateUtils {
 		}		
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
 				verbatimEventDate.matches("^[A-Za-z]{3,9}[.]{0,1}[-/ ][0-9]{4}$")) { 
+			// Example: Jan-1980
+			// Example: Jan./1980
+			// Example: January 1980
 			try { 
 				DateTimeParser[] parsers = { 
 						DateTimeFormat.forPattern("MMM-yyyy").getParser(),
@@ -484,41 +498,44 @@ public class DateUtils {
 			}
 		}
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
+			// Example: 04/03/1994  (ambiguous)
+			// Example: 04/20/1994
+			// Example: 20/04/1994
 			String resultDateMD = null;
 			String resultDateDM = null;
 			DateMidnight parseDate1 = null;
 			DateMidnight parseDate2 = null;
 			if (assumemmddyyyy==null || assumemmddyyyy) { 
-			try { 
-				DateTimeParser[] parsers = { 
-					DateTimeFormat.forPattern("MM/dd/yyyy").getParser(),
-					DateTimeFormat.forPattern("MM/dd yyyy").getParser(),
-					DateTimeFormat.forPattern("MM dd yyyy").getParser(),
-					DateTimeFormat.forPattern("MM-dd-yyyy").getParser(),
-					DateTimeFormat.forPattern("MM.dd.yyyy").getParser()
-				};
-				DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
-				parseDate1 = LocalDate.parse(verbatimEventDate,formatter).toDateMidnight();
-				resultDateMD = parseDate1.toString("yyyy-MM-dd");
-			} catch (Exception e) { 
-				logger.debug(e.getMessage());
-			}
+				try { 
+					DateTimeParser[] parsers = { 
+							DateTimeFormat.forPattern("MM/dd/yyyy").getParser(),
+							DateTimeFormat.forPattern("MM/dd yyyy").getParser(),
+							DateTimeFormat.forPattern("MM dd yyyy").getParser(),
+							DateTimeFormat.forPattern("MM-dd-yyyy").getParser(),
+							DateTimeFormat.forPattern("MM.dd.yyyy").getParser()
+					};
+					DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
+					parseDate1 = LocalDate.parse(verbatimEventDate,formatter).toDateMidnight();
+					resultDateMD = parseDate1.toString("yyyy-MM-dd");
+				} catch (Exception e) { 
+					logger.debug(e.getMessage());
+				}
 			} 
 			if (assumemmddyyyy==null || !assumemmddyyyy) { 
-			try { 
-				DateTimeParser[] parsers = { 
-					DateTimeFormat.forPattern("dd/MM/yyyy").getParser(),
-					DateTimeFormat.forPattern("dd/MM yyyy").getParser(),
-					DateTimeFormat.forPattern("dd MM yyyy").getParser(),
-					DateTimeFormat.forPattern("dd-MM-yyyy").getParser(),
-					DateTimeFormat.forPattern("dd.MM.yyyy").getParser()
-				};
-				DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
-				parseDate2 = LocalDate.parse(verbatimEventDate,formatter).toDateMidnight();
-				resultDateDM = parseDate2.toString("yyyy-MM-dd");
-			} catch (Exception e) { 
-				logger.debug(e.getMessage());
-			}			
+				try { 
+					DateTimeParser[] parsers = { 
+							DateTimeFormat.forPattern("dd/MM/yyyy").getParser(),
+							DateTimeFormat.forPattern("dd/MM yyyy").getParser(),
+							DateTimeFormat.forPattern("dd MM yyyy").getParser(),
+							DateTimeFormat.forPattern("dd-MM-yyyy").getParser(),
+							DateTimeFormat.forPattern("dd.MM.yyyy").getParser()
+					};
+					DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
+					parseDate2 = LocalDate.parse(verbatimEventDate,formatter).toDateMidnight();
+					resultDateDM = parseDate2.toString("yyyy-MM-dd");
+				} catch (Exception e) { 
+					logger.debug(e.getMessage());
+				}			
 			}
 			if (resultDateMD!=null && resultDateDM==null) {
 				result.setResultState(EventResult.EventQCResultState.DATE);
@@ -529,7 +546,7 @@ public class DateUtils {
 			} else if (resultDateMD!=null && resultDateDM!=null) { 
 				if (resultDateMD.equals(resultDateDM)) { 
 					result.setResultState(EventResult.EventQCResultState.DATE);
-				    result.setResult(resultDateDM);
+					result.setResult(resultDateDM);
 				} else { 
 					result.setResultState(EventResult.EventQCResultState.AMBIGUOUS);
 				    Interval range = null;
@@ -543,6 +560,8 @@ public class DateUtils {
 		}
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
 				verbatimEventDate.matches("^([0-9]{1,2}|[A-Za-z]+)[-/.]([0-9]{1,2}|[A-Za-z]+)[-/. ][0-9]{4}$")) { 
+			// Example: 03/Jan/1982
+			// Example: Jan-03-1982
 			try { 
 				DateTimeParser[] parsers = { 
 						DateTimeFormat.forPattern("MMM/dd/yyyy").getParser(),
@@ -570,6 +589,8 @@ public class DateUtils {
 		}	
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
 				verbatimEventDate.matches("^[X*]{2}[-/. ]([0-9]{1,2}|[A-Za-z]+)[-/. ][0-9]{4}$")) { 
+			// Example: XX-04-1982   (XX for day)
+			// Example: XX-Jan-1995
 			try { 
 				DateTimeParser[] parsers = { 
 						DateTimeFormat.forPattern("MMM/yyyy").getParser(),
@@ -591,6 +612,8 @@ public class DateUtils {
 		}		
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
 				verbatimEventDate.matches("^[X*]{2}[-/. ][X*]{2,3}[-/. ][0-9]{4}$")) { 
+			// Example: XX-XXX-1995
+			// Example: **-**-1995
 			try { 
 				DateTimeParser[] parsers = { 
 						DateTimeFormat.forPattern("yyyy").getParser(),
@@ -606,6 +629,7 @@ public class DateUtils {
 			}
 		}			
 		if (verbatimEventDate.matches("^[0-9]{4}[-][0-9]{3}$")) { 
+			// Example: 1994-128  (three digits after year = day of year).
 			if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
 				try { 
 					DateTimeParser[] parsers = { 
@@ -626,6 +650,8 @@ public class DateUtils {
 		
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
 			try { 
+				// Example: 1983-15  (two digits after year may fall into subsequent blocks).
+				// Example: 1933-Mar
 				DateTimeParser[] parsers = { 
 					DateTimeFormat.forPattern("yyyy/M").getParser(),
 					DateTimeFormat.forPattern("yyyy-M").getParser(),
@@ -661,6 +687,7 @@ public class DateUtils {
 		}
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
 				verbatimEventDate.matches("^[0-9]{4}[-][0-9]{2}$")) {
+			// Example: 1884-85   (two digits look like year later in century).
 			try { 
 				String century = verbatimEventDate.substring(0,2);
 				String startBit = verbatimEventDate.substring(0,4);
@@ -679,6 +706,7 @@ public class DateUtils {
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
 				verbatimEventDate.matches("^[0-9]{4}[0-9]{2}[0-9]{2}$") && 
 				!verbatimEventDate.endsWith("0000")) {
+			// Example: 19950315
 			try { 
 				DateTimeParser[] parsers = { 
 					DateTimeFormat.forPattern("yyyyMMdd").getParser()
@@ -693,6 +721,7 @@ public class DateUtils {
 			}			
 		}			
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
+			// Example: 1845 
 			try { 
 				DateTimeParser[] parsers = { 
 					DateTimeFormat.forPattern("yyyy").getParser()
@@ -708,6 +737,7 @@ public class DateUtils {
 			}			
 		}	
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
+			// Multiple yyyy-mmm-ddd, mmm-dd-yyyy, dd-mmm-yyyy patterns.
 			try { 
 				DateTimeParser[] parsers = { 
 					DateTimeFormat.forPattern("yyyy MMM dd").getParser(),
@@ -894,6 +924,8 @@ public class DateUtils {
 		}		
 		logger.debug(result.getResultState());
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
+			// Example: jan.-1992
+			// Example: January 1992
 			if (verbatimEventDate.matches(".*[0-9]{4}.*")) { 
 				try { 
 					DateTimeParser[] parsers = { 
@@ -925,6 +957,9 @@ public class DateUtils {
 		}
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
 				verbatimEventDate.matches("^[0-9]{4}([- ]+| to |[/ ]+)[0-9]{4}$")) {
+			// Example:  1882-1995
+			// Example:  1882 to 1885
+			// Example:  1882/1885
 			try { 
 				String cleaned = verbatimEventDate.replace(" ", "");
 				cleaned = cleaned.replace("-", "/");
@@ -945,6 +980,8 @@ public class DateUtils {
 		}	
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
 				verbatimEventDate.matches("^[A-Za-z]+[.]{0,1}( and | to |[-][ ]{0,1})[A-Za-z]+[.]{0,1}[/ .][0-9]{4}$")) { 
+			// Example: Jan to Feb 1882
+			// Example: Jan-Feb/1882
 		    if ( verbatimEventDate.matches("^[A-Za-z]+[.]{0,1}[-][A-Za-z]+[.]{0,1}[.][0-9]{4}$"))
 		    { 
 		    	// transform case with multiple periods to slash before year.
@@ -993,6 +1030,7 @@ public class DateUtils {
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
 				verbatimEventDate.matches("^[0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[-][0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[/ -.][0-9]{4}$")) 
 		{ 
+			// Example: 05/Jan/1882-03/Feb/1885
 		    if (verbatimEventDate.matches("^[0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[-][0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[-][0-9]{4}$")) { 
 		    	// transform case with multiple dashes to slash before year.
 			    verbatimEventDate = verbatimEventDate.substring(0,verbatimEventDate.length()-5) + "/" + verbatimEventDate.substring(verbatimEventDate.length()-4);
@@ -1035,6 +1073,7 @@ public class DateUtils {
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
 				verbatimEventDate.matches("^[0-9]{1,2}[-][0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[/ -.][0-9]{4}$")) 
 		{ 
+			// Example 05-02 Jan./1992
 		    if (verbatimEventDate.matches("^[0-9]{1,2}[-][0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[-][0-9]{4}$")) { 
 		    	// transform case with multiple dashes to slash before year.
 			    verbatimEventDate = verbatimEventDate.substring(0,verbatimEventDate.length()-5) + "/" + verbatimEventDate.substring(verbatimEventDate.length()-4);
@@ -1077,6 +1116,7 @@ public class DateUtils {
 		}		
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
 				verbatimEventDate.matches("^[0-9]{2}[-. ]XXX[-. ][0-9]{4}$")) { 
+			// Example: 05-XXX-1884
 			try { 
 				String start = verbatimEventDate.substring(verbatimEventDate.length()-4) + "-01-" + verbatimEventDate.substring(0,2);
 				String end = verbatimEventDate.substring(verbatimEventDate.length()-4) + "-12-" + verbatimEventDate.substring(0,2);
@@ -1094,6 +1134,7 @@ public class DateUtils {
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
 				verbatimEventDate.matches("^[0-9]{4}-[0-9]{2}/[0-9]{4}-[0-9]{2}$")
 			) {
+			// Example: 1885-03/1886-04
 			try { 
 				Interval parseDate = Interval.parse(verbatimEventDate);
 				logger.debug(parseDate);
@@ -1105,6 +1146,7 @@ public class DateUtils {
 			}			
 		}		
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
+			// Example: 1995-03-05/1996-05-08
 			try { 
 				Interval parseDate = Interval.parse(verbatimEventDate);
 				logger.debug(parseDate);
@@ -1116,6 +1158,8 @@ public class DateUtils {
 			}			
 		}	
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
+			// Example: Jan,15-18 1882
+			// Example: Jan. 17 and 18 1882
 			String cleaned = verbatimEventDate.trim();
 			if (verbatimEventDate.matches("^[A-Za-z.]+[ ,]+[0-9]{1,2} and [0-9]{0,2}[ ,]+[0-9]{4}$")) { 
 				cleaned = cleaned.replace(" and ", " to ");
@@ -1155,7 +1199,9 @@ public class DateUtils {
 				        }
 				}
 			}
-		}		
+		}
+		
+		// Now test to see if result is sane.
 		if (result!=null && !result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
 			Interval testExtract = DateUtils.extractDateInterval(result.getResult());
 			if(testExtract==null || testExtract.getStart().getYear()< yearsBeforeSuspect) { 
