@@ -944,7 +944,7 @@ public class DateUtils {
 			}			
 		}	
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
-				verbatimEventDate.matches("^[A-Za-z]+[.]{0,1}[-][ ]{0,1}[A-Za-z]+[.]{0,1}[/ .][0-9]{4}$")) { 
+				verbatimEventDate.matches("^[A-Za-z]+[.]{0,1}( and | to |[-][ ]{0,1})[A-Za-z]+[.]{0,1}[/ .][0-9]{4}$")) { 
 		    if ( verbatimEventDate.matches("^[A-Za-z]+[.]{0,1}[-][A-Za-z]+[.]{0,1}[.][0-9]{4}$"))
 		    { 
 		    	// transform case with multiple periods to slash before year.
@@ -956,7 +956,19 @@ public class DateUtils {
 		    	// remove space trailing after dash.
 			    verbatimEventDate = verbatimEventDate.replace("- ", "-");
 			   logger.debug(verbatimEventDate);
-		    }		    
+		    }
+		    if ( verbatimEventDate.matches("^[A-Za-z]+[.]{0,1} and {1}[A-Za-z]+[.]{0,1}[/ .][0-9]{4}$"))
+		    { 
+		    	// replace and with dash
+			    verbatimEventDate = verbatimEventDate.replace(" and ", "-");
+			   logger.debug(verbatimEventDate);
+		    }		
+		    if ( verbatimEventDate.matches("^[A-Za-z]+[.]{0,1} to {1}[A-Za-z]+[.]{0,1}[/ .][0-9]{4}$"))
+		    { 
+		    	// replace to with dash
+			    verbatimEventDate = verbatimEventDate.replace(" to ", "-");
+			   logger.debug(verbatimEventDate);
+		    }			    
 			try { 
 				String[] bits = verbatimEventDate.replace(" ", "/").split("-");
 				if (bits!=null && bits.length==2) { 
