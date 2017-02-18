@@ -1028,8 +1028,9 @@ public class DateUtils {
 			}			
 		}
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
-				verbatimEventDate.matches("^[0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[-][0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[/ -.][0-9]{4}$")) 
+				verbatimEventDate.matches("^[0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}( - |[-])[0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[/ -.][0-9]{4}$")) 
 		{ 
+			logger.debug(verbatimEventDate);
 			// Example: 05/Jan/1882-03/Feb/1885
 		    if (verbatimEventDate.matches("^[0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[-][0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[-][0-9]{4}$")) { 
 		    	// transform case with multiple dashes to slash before year.
@@ -1042,7 +1043,7 @@ public class DateUtils {
 			   logger.debug(verbatimEventDate);
 		    }
 			try { 
-				String[] bits = verbatimEventDate.replace(" ", "/").split("-");
+				String[] bits = verbatimEventDate.replace(" - ","-").replace(" ", "/").split("-");
 				if (bits!=null && bits.length==2) { 
 					String year = verbatimEventDate.substring(verbatimEventDate.length()-4,verbatimEventDate.length());
 					String startBit = bits[0]+"/"+year;
@@ -1069,7 +1070,36 @@ public class DateUtils {
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
 			}			
-		}		
+		}
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
+				verbatimEventDate.matches("^[A-Za-z]+[.]{0,1}[ ]{0,1}[0-9]{1,2}( - |[-]| to )[A-Za-z]+[.]{0,1}[ ]{0,1}[0-9]{1,2}[/ .,][ ]{0,1}[0-9]{4}$")) 
+		{ 
+			logger.debug(verbatimEventDate);
+			// Example: Aug. 5 - Sept. 8, 1943
+			try { 
+				String[] bits = verbatimEventDate.replace(" to ","-").replace(" - ","-").replace(", "," ").replace(" ", "/").split("-");
+				if (bits!=null && bits.length==2) { 
+					String year = verbatimEventDate.substring(verbatimEventDate.length()-4,verbatimEventDate.length());
+					String startBit = bits[0]+"/"+year;
+					logger.debug(cleanMonth(startBit));
+					logger.debug(cleanMonth(bits[1]));
+					DateTimeParser[] parsers = { 
+							DateTimeFormat.forPattern("MMM/dd/yyyy").getParser(),
+							DateTimeFormat.forPattern("MMM./dd/yyyy").getParser(),
+							DateTimeFormat.forPattern("MMM.dd/yyyy").getParser()
+					};
+					DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
+					LocalDate parseStartDate = LocalDate.parse(cleanMonth(startBit),formatter.withLocale(Locale.ENGLISH));
+					LocalDate parseEndDate = LocalDate.parse(cleanMonth(bits[1]),formatter.withLocale(Locale.ENGLISH));
+					resultDate =  parseStartDate.toString("yyyy-MM-dd") + "/" + parseEndDate.toString("yyyy-MM-dd");
+					logger.debug(resultDate);
+				    result.setResultState(EventResult.EventQCResultState.RANGE);
+					result.setResult(resultDate);
+				}
+			} catch (Exception e) { 
+				logger.debug(e.getMessage());
+			}			
+		}			
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
 				verbatimEventDate.matches("^[0-9]{1,2}[-][0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[/ -.][0-9]{4}$")) 
 		{ 

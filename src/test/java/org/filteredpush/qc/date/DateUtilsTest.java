@@ -1593,8 +1593,12 @@ public class DateUtilsTest {
     	//assertEquals("1884-08-15/1884-08-20", result.getResult());
     	
     	result = DateUtils.extractDateFromVerbatimER("August 29 - September 2, 2006");
-    	//assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	//assertEquals("2006-08-29/2006-09-02", result.getResult());    	
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("2006-08-29/2006-09-02", result.getResult());   
+    	
+    	result = DateUtils.extractDateFromVerbatimER("Aug. 29 - Sept. 2, 2006");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("2006-08-29/2006-09-02", result.getResult());      	
     	
     	result = DateUtils.extractDateFromVerbatimER("May and June 1899");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
@@ -1612,7 +1616,6 @@ public class DateUtilsTest {
     	 Not yet supported cases: 
     	 
     	 [29 Apr - 24 May 1847]
-    	 August 29 - September 2, 2006
     	 8-15 to 20, 1884
     	 
     	*/  
