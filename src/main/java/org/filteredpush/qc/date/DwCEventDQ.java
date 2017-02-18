@@ -50,6 +50,9 @@ import org.datakurator.ffdq.api.EnumDQAmendmentResultState;
  *  STARTDATE_CONSISTENT_WITH_ENDDATE
  *  YEAR_PROVIDED
  *  EVENTDATE_CONSISTENT_WITH_ATOMIC_PARTS 
+ *  
+ *  Also provides (intended to prepare upstream data for Darwin Core: 
+ *  UPSTREAM_EVENTDATE_FILLED_IN_FROM_START_END  extractDateFromStartEnd(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "startDate") String startDate, @Consulted(value="endDate") String endDate) 
  * 
  * @author mole
  *
@@ -141,6 +144,29 @@ public class DwCEventDQ {
     	}
     	return result;
     }
+    
+    @Provides(value = "UPSTREAM_EVENTDATE_FILLED_IN_FROM_START_END")
+	@Amendment(label = "Event Date From non-Darwin Core start/end", description = "Try to populate the event date from non-Darwin Core start date and end date terms.")
+	@Specification(value = "If a dwc:eventDate is empty and an event date can be inferred from start date and end date, fill in dwc:eventDate " +
+			"based on the values in the start and end dates.  Will not propose a change if dwc:eventDate contains a value.")
+    @Enhancement
+    public static EventDQAmendment extractDateFromStartEnd(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "startDate") String startDate, @Consulted(value="endDate") String endDate) { 
+    	EventDQAmendment result = new EventDQAmendment();
+    	if (DateUtils.isEmpty(eventDate)) { 
+    		String response = DateUtils.createEventDateFromStartEnd(startDate, endDate);
+    		if (DateUtils.isEmpty(response)) { 
+    		    result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		    result.addComment("Unable to extract a date from " + startDate + " and " + endDate);
+    		} else { 
+    		    result.addResult("dwc:eventDate", response);
+    		    result.setResultState(EnumDQAmendmentResultState.CHANGED);
+    		}
+    	} else { 
+    		result.setResultState(EnumDQAmendmentResultState.NO_CHANGE);
+    		result.addComment("eventDate contains a value, not changing.");
+    	}
+    	return result;
+    }    
     
     /**
      * Given an event date, check to see if it is empty or contains a valid date value.  If it contains
