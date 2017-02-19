@@ -2160,6 +2160,7 @@ public class DateUtils {
      * 
      * @param args -f filename to check a file containing a list of dates, one per line.
      *    -m to show matched dates and their interpretations otherwise lists non-matched lines.  
+     *    -a to show all lines, matched or not with their interpretations.
      */
     public static void main(String[] args) { 
         try {
@@ -2178,8 +2179,10 @@ public class DateUtils {
         		}
             }
         	boolean showMatches = false;
+        	boolean showAll = false;
         	for (int i=0; i<args.length; i++) {
         		if (args[i].equals("-m")) { showMatches = true; } 
+        		if (args[i].equals("-a")) { showAll = true; } 
         	}
 			BufferedReader reader = new BufferedReader(new FileReader(datesFile));
 			String line = null;
@@ -2188,13 +2191,16 @@ public class DateUtils {
 			while ((line=reader.readLine())!=null) {
 				EventResult result = DateUtils.extractDateFromVerbatimER(line.trim());
 				if (result==null || result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
-					if (!showMatches) {
+					if (!showMatches && !showAll) {
 					   System.out.println(line);
+					}
+					if (showAll) { 
+					   System.out.println(line +  "\t" + result.getResultState());
 					}
 					unmatched++;
 				} else { 
 					matched++;
-				   if (showMatches) { 
+				   if (showMatches || showAll) { 
 					   System.out.println(line + "\t" + result.getResultState() + "\t" + result.getResult());
 				   }
 				}
