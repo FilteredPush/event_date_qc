@@ -1628,6 +1628,10 @@ public class DateUtilsTest {
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	assertEquals("1840-01-01/1849-12-31", result.getResult());
     	
+    	result = DateUtils.extractDateFromVerbatimER("1800's");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1800-01-01/1899-12-31", result.getResult());    	
+    	
     	/*
     	 Not yet supported cases: 
     	 

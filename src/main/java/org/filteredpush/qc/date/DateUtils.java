@@ -454,6 +454,24 @@ public class DateUtils {
 			}
 		}		
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
+				verbatimEventDate.matches("^[12][0-9]{1}00[']{0,1}s$")) {
+			// Example: 1900s 
+			try { 
+				String verbatimEventDateDelta = verbatimEventDate.replace("'s", "s");
+				DateTimeParser[] parsers = { 
+						DateTimeFormat.forPattern("yyyy's").getParser(),
+				};
+				DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
+				DateMidnight parseDate = LocalDate.parse(verbatimEventDateDelta,formatter).toDateMidnight();
+				DateMidnight endDate = parseDate.plusYears(100).minusDays(1);
+				resultDate = parseDate.toString("yyyy") + "-01-01/" + endDate.toString("yyyy") + "-12-31";
+				result.setResultState(EventResult.EventQCResultState.RANGE);
+				result.setResult(resultDate);
+			} catch (Exception e) { 
+				logger.debug(e.getMessage());
+			}
+		}		
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
 				verbatimEventDate.matches("^[12][0-9]{2}0[']{0,1}s$")) {
 			// Example: 1970s 
 			try { 
