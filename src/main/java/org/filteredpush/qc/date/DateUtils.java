@@ -1877,6 +1877,19 @@ public class DateUtils {
     		// Put cases of alternative spellings, missing accents, and capitalization into
     		// a form that Joda will parse.
 
+    		cleaned = cleaned.replace("DECEMBER", "December");
+    		cleaned = cleaned.replace("NOVEMBER", "November");
+    		cleaned = cleaned.replace("OCTOBER", "October");
+    		cleaned = cleaned.replace("SEPTEMBER", "September");
+    		cleaned = cleaned.replace("AUGUST", "August");
+    		cleaned = cleaned.replace("JULY", "July");
+    		cleaned = cleaned.replace("JUNE", "June");
+    		cleaned = cleaned.replace("MAY", "May");
+    		cleaned = cleaned.replace("APRIL", "April");
+    		cleaned = cleaned.replace("MARCH", "March");
+    		cleaned = cleaned.replace("FEBRUARY", "February");
+    		cleaned = cleaned.replace("JANUARY", "January");	    		
+    		
     		// Italian months are lower case, if capitalized, skip a step and go right to english.
     		cleaned = cleaned.replace("Dicembre", "December");
     		cleaned = cleaned.replace("Novembre", "November");
