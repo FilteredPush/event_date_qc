@@ -2165,7 +2165,7 @@ public class DateUtils {
         try {
         	File datesFile = null;
         	try { 
-        	   URL datesURI = DateUtils.class.getResource("/org.filteredpush.kuration.services/example_dates.csv");
+        	   URL datesURI = DateUtils.class.getResource("/example_dates.csv");
         	   datesFile = new File(datesURI.toURI());
         	} catch (NullPointerException e){ 
     			logger.error(e.getMessage());
