@@ -826,6 +826,7 @@ public class DateUtils {
 					DateTimeFormat.forPattern("dd.MMM-yyyy").getParser(),
 					DateTimeFormat.forPattern("dd.MMM yyyy").getParser(),
 					DateTimeFormat.forPattern("dd. MMM yyyy").getParser(),
+					DateTimeFormat.forPattern("dd, MMM, yyyy").getParser(),
 					DateTimeFormat.forPattern("dd MMM-yyyy").getParser(),
 					DateTimeFormat.forPattern("dd-MMM yyyy").getParser(),
 					DateTimeFormat.forPattern("ddMMMyyyy").getParser(),
@@ -1895,6 +1896,8 @@ public class DateUtils {
     		if (cleaned.matches("^.*[0-9]{4}[.]$")) { 
     			cleaned = cleaned.replaceAll("[.]$", "");
     		}
+    		cleaned = cleaned.replace("Jly. ", "July ");
+    		cleaned = cleaned.replace("Jly ", "July ");
 
     		// Joda date time parsing as used here, is case sensitive for months.
     		// Put cases of alternative spellings, missing accents, and capitalization into
