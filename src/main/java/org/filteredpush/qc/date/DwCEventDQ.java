@@ -50,7 +50,7 @@ import org.datakurator.ffdq.api.EnumDQAmendmentResultState;
  *                               also isEventDateJulianYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) 
  *  STARTDATE_CONSISTENT_WITH_ENDDATE
  *  YEAR_PROVIDED
- *  EVENTDATE_CONSISTENT_WITH_ATOMIC_PARTS 
+ *  EVENTDATE_CONSISTENT_WITH_ATOMIC_PARTS isConsistent(String eventDate, String startDayOfYear, String endDayOfYear, String year, String month, String day)
  *  
  *  Also provides (intended to prepare upstream data for Darwin Core: 
  *  UPSTREAM_EVENTDATE_FILLED_IN_FROM_START_END  extractDateFromStartEnd(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "startDate") String startDate, @Consulted(value="endDate") String endDate) 

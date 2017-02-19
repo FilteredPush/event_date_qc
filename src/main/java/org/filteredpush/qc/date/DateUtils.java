@@ -46,34 +46,27 @@ import org.joda.time.format.ISODateTimeFormat;
 /**
  * Utility functions for working with DarwinCore date concepts.
  *  
- *  Provides support for the following draft TDWG DQIG TG2 validations and amendments. 
- *  (Note: Moving all these to DwCEventDQ) 
+ *  Includes:
  *  
- *  DAY_MONTH_TRANSPOSED dayMonthTransposition(String month, String day) 
- *  DAY_MONTH_YEAR_FILLED_IN
- *  EVENTDATE_FILLED_IN_FROM_VERBATIM  extractDateFromVerbatim(String verbatimEventDate)
- *  START_ENDDAYOFYEAR_FILLED_IN
- *  
- *  EVENT_DATE_DURATION_SECONDS  measureDurationSeconds(String eventDate)
- *  DAY_IS_FIRST_OF_CENTURY
- *  DAY_IS_FIRST_OF_YEAR
- *  
- *  DAY_IN_RANGE  isDayInRange(String day) 
- *  MONTH_IN_RANGE isMonthInRange(String month) 
- *  DAY_POSSIBLE_FOR_MONTH_YEAR  isDayPossibleForMonthYear(String year, String month, String day) 
- *  EVENTDATE_CONSISTENT_WITH_DAY_MONTH_YEAR  isConsistent(String eventDate, String year, String month, String day) 
- *  EVENTDATE_IN_PAST
- *  EVENTDATE_PRECISON_MONTH_OR_BETTER specificToMonthScale(String eventDate)
- *  EVENTDATE_PRECISON_YEAR_OR_BETTER specificToYearScale(String eventDate)
- *  STARTDATE_CONSISTENT_WITH_ENDDATE
- *  YEAR_PROVIDED
- *  EVENTDATE_CONSISTENT_WITH_ATOMIC_PARTS isConsistent(String eventDate, String startDayOfYear, String endDayOfYear, String year, String month, String day)
+ *  dayMonthTransposition(String month, String day) 
+ *  extractDateFromVerbatim(String verbatimEventDate)
+ *  measureDurationSeconds(String eventDate)
+ *  isDayInRange(String day) 
+ *  isMonthInRange(String month) 
+ *  isDayPossibleForMonthYear(String year, String month, String day) 
+ *  isConsistent(String eventDate, String year, String month, String day) 
+ *  specificToMonthScale(String eventDate)
+ *  specificToYearScale(String eventDate)
+ *  isConsistent(String eventDate, String startDayOfYear, String endDayOfYear, String year, String month, String day)
  *  
  *  extractZuluTime(String eventDate) 
  *  createEventDateFromParts(String verbatimEventDate, String startDayOfYear, String endDayOfYear, String year, String month, String day)
  *  
  *  containsTime(String eventDate)
  *  eventDateValid(String eventDate)
+ *  
+ *  Also for helping map non-Darwin Core concepts on to Darwin Core:
+ *  createEventDateFromStartEnd(String startDate, String endDate)
  * 
  * @author mole
  *
