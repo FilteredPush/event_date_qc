@@ -969,7 +969,7 @@ public class DateUtilsTest {
     	result = DateUtils.extractDateFromVerbatimER("5/9/1985");
     	assertEquals(EventResult.EventQCResultState.AMBIGUOUS, result.getResultState());
     	assertEquals("1985-05-09/1985-09-05", result.getResult());    	
-
+    	
     }
     
     
@@ -1611,6 +1611,15 @@ public class DateUtilsTest {
     	result = DateUtils.extractDateFromVerbatimER("[29 Apr - 24 May 1847]");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	assertEquals("1847-04-29/1847-05-24", result.getResult());    	
+ 
+    	result = DateUtils.extractDateFromVerbatimER("May-June, 1902");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1902-05/1902-06", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("14. Aug 1853");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1853-08-14", result.getResult());
+    	
     	
     	/*
     	 Not yet supported cases: 

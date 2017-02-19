@@ -803,6 +803,7 @@ public class DateUtils {
 					DateTimeFormat.forPattern("dd MMM.yyyy").getParser(),
 					DateTimeFormat.forPattern("dd.MMM-yyyy").getParser(),
 					DateTimeFormat.forPattern("dd.MMM yyyy").getParser(),
+					DateTimeFormat.forPattern("dd. MMM yyyy").getParser(),
 					DateTimeFormat.forPattern("dd MMM-yyyy").getParser(),
 					DateTimeFormat.forPattern("dd-MMM yyyy").getParser(),
 					DateTimeFormat.forPattern("ddMMMyyyy").getParser(),
@@ -973,9 +974,10 @@ public class DateUtils {
 			}			
 		}	
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
-				verbatimEventDate.matches("^[A-Za-z]+[.]{0,1}( and | to |[-][ ]{0,1})[A-Za-z]+[.]{0,1}[/ .][0-9]{4}$")) { 
+				verbatimEventDate.matches("^[A-Za-z]+[.]{0,1}( and | to |[-][ ]{0,1})[A-Za-z]+[.]{0,1}(, |[/ .])[0-9]{4}$")) { 
 			// Example: Jan to Feb 1882
 			// Example: Jan-Feb/1882
+			verbatimEventDate = verbatimEventDate.replace(", ", " ");
 		    if ( verbatimEventDate.matches("^[A-Za-z]+[.]{0,1}[-][A-Za-z]+[.]{0,1}[.][0-9]{4}$"))
 		    { 
 		    	// transform case with multiple periods to slash before year.
