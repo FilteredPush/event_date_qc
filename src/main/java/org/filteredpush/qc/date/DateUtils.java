@@ -814,6 +814,7 @@ public class DateUtils {
 					DateTimeFormat.forPattern("MMM. dd, yyyy").getParser(),
 					DateTimeFormat.forPattern("MMM. dd yyyy").getParser(),
 					DateTimeFormat.forPattern("MMM. dd'' yyyy").getParser(),
+					DateTimeFormat.forPattern("MMM dd'' yyyy").getParser(),
 					DateTimeFormat.forPattern("dd. MMM. yyyy").getParser(),
 					DateTimeFormat.forPattern("dd. MMM.yyyy").getParser(),
 					DateTimeFormat.forPattern("dd MMM., yyyy").getParser(),
