@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.datakurator.ffdq.api.EnumDQResultState;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeFieldType;
@@ -2162,8 +2163,15 @@ public class DateUtils {
      */
     public static void main(String[] args) { 
         try {
-        	URL datesURI = DateUtils.class.getResource("/org.filteredpush.kuration.services/example_dates.csv");
-        	File datesFile = new File(datesURI.toURI());
+        	File datesFile = null;
+        	try { 
+        	   URL datesURI = DateUtils.class.getResource("/org.filteredpush.kuration.services/example_dates.csv");
+        	   datesFile = new File(datesURI.toURI());
+        	} catch (NullPointerException e){ 
+    			logger.error(e.getMessage());
+    		} catch (URISyntaxException e) {
+    			logger.error(e.getMessage());
+        	}
         	if (args[0]!=null && args[0].toLowerCase().equals("-f")) {
         		if (args[1]!=null) { 
         			datesFile = new File(args[1]);
@@ -2178,8 +2186,8 @@ public class DateUtils {
 			int unmatched = 0;
 			int matched = 0;
 			while ((line=reader.readLine())!=null) {
-				Map<String,String> result = DateUtils.extractDateFromVerbatim(line);
-				if (result==null || result.size()==0) {
+				EventResult result = DateUtils.extractDateFromVerbatimER(line.trim());
+				if (result==null || result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
 					if (!showMatches) {
 					   System.out.println(line);
 					}
@@ -2187,8 +2195,7 @@ public class DateUtils {
 				} else { 
 					matched++;
 				   if (showMatches) { 
-					   // if (result.get("resultState").equals("suspect")) 
-					   System.out.println(line + "\t" + result.get("resultState") + "\t" + result.get("result"));
+					   System.out.println(line + "\t" + result.getResultState() + "\t" + result.getResult());
 				   }
 				}
 			}
@@ -2201,8 +2208,7 @@ public class DateUtils {
 		} catch (IOException e) {
 			logger.error(e.getMessage());;
 			System.out.println(e.getMessage());
-		} catch (URISyntaxException e) {
-			System.out.println(e.getMessage());
+
 		}
         
     }
