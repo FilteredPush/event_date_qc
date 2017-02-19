@@ -454,14 +454,15 @@ public class DateUtils {
 			}
 		}		
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
-				verbatimEventDate.matches("^[12][0-9]{2}0s$")) {
+				verbatimEventDate.matches("^[12][0-9]{2}0[']{0,1}s$")) {
 			// Example: 1970s 
 			try { 
+				String verbatimEventDateDelta = verbatimEventDate.replace("'s", "s");
 				DateTimeParser[] parsers = { 
 						DateTimeFormat.forPattern("yyyy's").getParser(),
 				};
 				DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
-				DateMidnight parseDate = LocalDate.parse(verbatimEventDate,formatter).toDateMidnight();
+				DateMidnight parseDate = LocalDate.parse(verbatimEventDateDelta,formatter).toDateMidnight();
 				DateMidnight endDate = parseDate.plusYears(10).minusDays(1);
 				resultDate = parseDate.toString("yyyy") + "-01-01/" + endDate.toString("yyyy") + "-12-31";
 				result.setResultState(EventResult.EventQCResultState.RANGE);
