@@ -804,6 +804,7 @@ public class DateUtils {
 					DateTimeFormat.forPattern("MMM, dd, yyyy").getParser(),					
 					DateTimeFormat.forPattern("MMM, dd., yyyy").getParser(),
 					DateTimeFormat.forPattern("MMM. dd yyyy").getParser(),
+					DateTimeFormat.forPattern("MMM. dd, yyyy").getParser(),
 					DateTimeFormat.forPattern("MMM. dd/yyyy").getParser(),
 					DateTimeFormat.forPattern("MMM dd,yyyy").getParser(),
 					DateTimeFormat.forPattern("MMM dd, yyyy").getParser(),
@@ -811,6 +812,8 @@ public class DateUtils {
 					DateTimeFormat.forPattern("MMM. dd-yyyy").getParser(),
 					DateTimeFormat.forPattern("MMM.dd-yyyy").getParser(),
 					DateTimeFormat.forPattern("MMM. dd, yyyy").getParser(),
+					DateTimeFormat.forPattern("MMM. dd yyyy").getParser(),
+					DateTimeFormat.forPattern("MMM. dd'' yyyy").getParser(),
 					DateTimeFormat.forPattern("dd. MMM. yyyy").getParser(),
 					DateTimeFormat.forPattern("dd. MMM.yyyy").getParser(),
 					DateTimeFormat.forPattern("dd MMM., yyyy").getParser(),
@@ -895,7 +898,7 @@ public class DateUtils {
 				};
 				DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
 				String cleaned = cleanMonth(verbatimEventDate);
-				
+				cleaned = cleaned.replace("''", "'");
 				try {
 					// Specify English locale, or local default will be used
 				    LocalDate parseDate = LocalDate.parse(cleaned,formatter.withLocale(Locale.ENGLISH));
@@ -951,7 +954,8 @@ public class DateUtils {
 							DateTimeFormat.forPattern("MMM. yyyy").getParser(),
 							DateTimeFormat.forPattern("MMM-yyyy").getParser(),
 							DateTimeFormat.forPattern("MMM -yyyy").getParser(),
-							DateTimeFormat.forPattern("MMM yyyy").getParser()
+							DateTimeFormat.forPattern("MMM yyyy").getParser(), 
+							DateTimeFormat.forPattern("MMM/yyyy").getParser()
 					};
 					DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
 					String cleaned = cleanMonth(verbatimEventDate);

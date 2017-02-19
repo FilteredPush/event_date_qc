@@ -1632,6 +1632,21 @@ public class DateUtilsTest {
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	assertEquals("1800-01-01/1899-12-31", result.getResult());    	
     	
+    	result = DateUtils.extractDateFromVerbatimER("VII/1892");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1892-07", result.getResult()); 
+    	
+    	result = DateUtils.extractDateFromVerbatimER("Sept. 31, 1911");  // Sept has 30 days.
+    	assertEquals(EventResult.EventQCResultState.NOT_RUN, result.getResultState());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("Sept. 23' 1915");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1915-09-23", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("Sept. 23'' 1915");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1915-09-23", result.getResult());
+    	
     	/*
     	 Not yet supported cases: 
     	 
