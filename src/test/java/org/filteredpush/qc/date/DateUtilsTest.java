@@ -1703,6 +1703,10 @@ public class DateUtilsTest {
     	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
     	assertEquals("1942-08-13", result.getResult());
     	
+    	result = DateUtils.extractDateFromVerbatimER("10. 1. 1928");
+    	assertEquals(EventResult.EventQCResultState.AMBIGUOUS, result.getResultState());
+    	assertEquals("1928-01-10/1928-10-01", result.getResult());
+    	
     	/*
     	 Not yet supported cases: 
     	 

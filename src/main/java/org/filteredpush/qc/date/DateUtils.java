@@ -526,7 +526,9 @@ public class DateUtils {
 							DateTimeFormat.forPattern("MM/dd yyyy").getParser(),
 							DateTimeFormat.forPattern("MM dd yyyy").getParser(),
 							DateTimeFormat.forPattern("MM-dd-yyyy").getParser(),
-							DateTimeFormat.forPattern("MM.dd.yyyy").getParser()
+							DateTimeFormat.forPattern("MM.dd.yyyy").getParser(),
+							DateTimeFormat.forPattern("MM. dd. yyyy").getParser(),
+							DateTimeFormat.forPattern("MM. dd. yyyy.").getParser()
 					};
 					DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
 					parseDate1 = LocalDate.parse(verbatimEventDate,formatter).toDateMidnight();
@@ -542,7 +544,9 @@ public class DateUtils {
 							DateTimeFormat.forPattern("dd/MM yyyy").getParser(),
 							DateTimeFormat.forPattern("dd MM yyyy").getParser(),
 							DateTimeFormat.forPattern("dd-MM-yyyy").getParser(),
-							DateTimeFormat.forPattern("dd.MM.yyyy").getParser()
+							DateTimeFormat.forPattern("dd.MM.yyyy").getParser(),
+							DateTimeFormat.forPattern("dd. MM. yyyy").getParser(),
+							DateTimeFormat.forPattern("dd. MM. yyyy.").getParser()
 					};
 					DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
 					parseDate2 = LocalDate.parse(verbatimEventDate,formatter).toDateMidnight();
