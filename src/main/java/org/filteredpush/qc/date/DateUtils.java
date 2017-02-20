@@ -490,7 +490,7 @@ public class DateUtils {
 			}
 		}		
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
-				verbatimEventDate.matches("^[A-Za-z]{3,9}[.]{0,1}[-/ ][0-9]{4}$")) { 
+				verbatimEventDate.matches("^[A-Za-z]{3,9}[.]{0,1}[ ]{0,1}[-/ ][0-9]{4}$")) { 
 			// Example: Jan-1980
 			// Example: Jan./1980
 			// Example: January 1980
@@ -498,6 +498,7 @@ public class DateUtils {
 				DateTimeParser[] parsers = { 
 						DateTimeFormat.forPattern("MMM-yyyy").getParser(),
 						DateTimeFormat.forPattern("MMM/yyyy").getParser(),
+						DateTimeFormat.forPattern("MMM /yyyy").getParser(),
 						DateTimeFormat.forPattern("MMM yyyy").getParser()
 				};
 				DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
@@ -769,11 +770,13 @@ public class DateUtils {
 					DateTimeFormat.forPattern("yyyy MMM. dd'th'").getParser(),
 					
 					DateTimeFormat.forPattern("MMM dd, yyyy").getParser(),
+					DateTimeFormat.forPattern("MMMdd, yyyy").getParser(),
 					DateTimeFormat.forPattern("MMM dd'st', yyyy").getParser(),
 					DateTimeFormat.forPattern("MMM dd'nd', yyyy").getParser(),
 					DateTimeFormat.forPattern("MMM dd'rd', yyyy").getParser(),
 					DateTimeFormat.forPattern("MMM dd'th', yyyy").getParser(),
 					DateTimeFormat.forPattern("MMM. dd, yyyy").getParser(),
+					DateTimeFormat.forPattern("MMM.dd, yyyy").getParser(),
 					DateTimeFormat.forPattern("MMM. dd'st', yyyy").getParser(),
 					DateTimeFormat.forPattern("MMM. dd'nd', yyyy").getParser(),
 					DateTimeFormat.forPattern("MMM. dd'rd', yyyy").getParser(),
@@ -822,12 +825,14 @@ public class DateUtils {
 					DateTimeFormat.forPattern("dd. MMM.yyyy").getParser(),
 					DateTimeFormat.forPattern("dd MMM., yyyy").getParser(),
 					DateTimeFormat.forPattern("dd MMM.,yyyy").getParser(),
+					DateTimeFormat.forPattern("dd MMM..yyyy").getParser(),
 					
 					DateTimeFormat.forPattern("dd MMM, yyyy").getParser(),
 					DateTimeFormat.forPattern("dd MMM yyyy").getParser(),
 					DateTimeFormat.forPattern("dd MMM,yyyy").getParser(),
 					DateTimeFormat.forPattern("dd MMM.yyyy").getParser(),
 					DateTimeFormat.forPattern("dd.MMM-yyyy").getParser(),
+					DateTimeFormat.forPattern("dd-MMM-yyyy").getParser(),
 					DateTimeFormat.forPattern("dd.MMM yyyy").getParser(),
 					DateTimeFormat.forPattern("dd. MMM yyyy").getParser(),
 					DateTimeFormat.forPattern("dd, MMM, yyyy").getParser(),
@@ -1901,6 +1906,7 @@ public class DateUtils {
     	if (!isEmpty(verbatimEventDate)) { 
     		cleaned = cleaned.replace("Sept.", "Sep.");
     		cleaned = cleaned.replace("Sept ", "Sep. ");
+    		cleaned = cleaned.replace("Sept-", "Sep-");
     		cleaned = cleaned.replace("Sept,", "Sep.,");
     		cleaned = cleaned.replace("  ", " ").trim();
     		cleaned = cleaned.replace(" ,", ",");
@@ -1913,6 +1919,7 @@ public class DateUtils {
     		}
     		cleaned = cleaned.replace("Jly. ", "July ");
     		cleaned = cleaned.replace("Jly ", "July ");
+    		cleaned = cleaned.replace("Septmber", "September");
 
     		// Joda date time parsing as used here, is case sensitive for months.
     		// Put cases of alternative spellings, missing accents, and capitalization into
