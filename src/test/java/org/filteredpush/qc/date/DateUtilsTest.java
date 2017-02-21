@@ -641,9 +641,10 @@ public class DateUtilsTest {
     	assertEquals("range", result.get("resultState"));
     	assertEquals("1911-12", result.get("result"));
     	
-    	result = DateUtils.extractDateFromVerbatim("Sept. 5 1901", 1950);
-    	assertEquals("suspect", result.get("resultState"));
-    	assertEquals("1901-09-05", result.get("result"));
+    	//Deprecated method, test of replacement moved elsewhere.
+    	//result = DateUtils.extractDateFromVerbatim("Sept. 5 1901", 1950);
+    	//assertEquals("suspect", result.get("resultState"));
+    	//assertEquals("1901-09-05", result.get("result"));
     	
     	result = DateUtils.extractDateFromVerbatim("Apr/1963");
     	assertEquals("range", result.get("resultState"));
@@ -813,6 +814,17 @@ public class DateUtilsTest {
     	assertEquals("1934/1936", result.get("result"));
     }
 
+    @Test 
+    public void testExtractDateFromVerbatimERSuspect() { 
+	     EventResult result = DateUtils.extractDateFromVerbatimER("Sept. 5 1901", 1950, null);
+	     assertEquals(EventResult.EventQCResultState.SUSPECT, result.getResultState());
+	     assertEquals("1901-09-05", result.getResult());
+	     
+	     result = DateUtils.extractDateFromVerbatimER("Sept. 5 1901", 1850, null);
+	     assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+	     assertEquals("1901-09-05", result.getResult());
+    } 
+    
     @Test
     /** 
      * Test extraction of verbatim date values from VertNet reference set of patterns: 
@@ -1185,7 +1197,7 @@ public class DateUtilsTest {
     	result = DateUtils.extractDateToDayFromVerbatimER("April 1871", DateUtils.YEAR_BEFORE_SUSPECT);
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	assertEquals("1871-04-01/1871-04-30", result.getResult());      	
-    	
+
     	result = DateUtils.extractDateFromVerbatimER("1981-03");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	assertEquals("1981-03", result.getResult()); 

@@ -1,6 +1,6 @@
 /** DateUtils.java
  * 
- * Copyright 2015 President and Fellows of Harvard College
+ * Copyright 2015-2017 President and Fellows of Harvard College
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.datakurator.ffdq.api.EnumDQResultState;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeFieldType;
@@ -50,7 +49,7 @@ import org.joda.time.format.ISODateTimeFormat;
  *  Includes:
  *  
  *  dayMonthTransposition(String month, String day) 
- *  extractDateFromVerbatim(String verbatimEventDate)
+ *  extractDateFromVerbatimER(String verbatimEventDate)
  *  measureDurationSeconds(String eventDate)
  *  isDayInRange(String day) 
  *  isMonthInRange(String month) 
@@ -68,6 +67,10 @@ import org.joda.time.format.ISODateTimeFormat;
  *  
  *  Also for helping map non-Darwin Core concepts on to Darwin Core:
  *  createEventDateFromStartEnd(String startDate, String endDate)
+ * 
+ *  Note: extractDate functions that return a Map&lt;String,String&gt;
+ *  (for example extractDateFromVerbatim()) are deprecated and should be replaced
+ *  by the versions that return an EventResult object, e.g. EventResult extractDateFromVerbatimER(). 
  * 
  * @author mole
  *
@@ -199,12 +202,26 @@ public class DateUtils {
 	
 	/**
 	 * Attempt to extract a date or date range in standard format from a provided verbatim 
-	 * date string.  
+	 * date string.  Does not make an assumption about ambiguous mm/dd/yyyy dates, but returns
+	 * the range of possible dates and a result state asserting that the result is ambiguous.  
+	 * Assumes that any date prior to DateUtils.YEAR_BEFORE_SUSPECT is a suspect date. 
 	 * 
-	 * Provides: EVENTDATE_FILLED_IN_FROM_VERBATIM 
+	 * Provides: EVENTDATE_FILLED_IN_FROM_VERBATIM
+	 * 
+	 * Example use illustrated with unit test:
+	 <pre> 
+	    result = DateUtils.extractDateFromVerbatimER("April 1871");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1871-04", result.getResult());   // String suitable for dwc:eventDate.
+    	logger.debug(result.getComment());    // Provenance behind result assertion.
+     </pre>  
 	 * 
 	 * @param verbatimEventDate a string containing a verbatim event date.
 	 * @return a result object with a resultState and the extracted value in result.
+	 * 
+	 * @see DateUtils#extractDateFromVerbatimER(String, int, Boolean) to
+	 *    override default assumptions.  
+	 * @see DateUtils#YEAR_BEFORE_SUSPECT for default point before which dates are considered suspect.
 	 * 
 	 */
 	public static EventResult extractDateFromVerbatimER(String verbatimEventDate) {
@@ -214,8 +231,6 @@ public class DateUtils {
 	/**
 	 * Attempt to extract a date or date range in standard format from a provided verbatim 
 	 * date string.  
-	 * 
-	 * Provides: EVENTDATE_FILLED_IN_FROM_VERBATIM 
 	 * 
 	 * @param verbatimEventDate a string containing a verbatim event date.
 	 * @return a map with result and resultState as keys
@@ -262,7 +277,7 @@ public class DateUtils {
 	 * @return  a map with result and resultState as keys
 	 * 
 	 * @deprecated
-	 * @see #extractDateToDayFromVerbatimER(String, int) replacement method
+	 * @see DateUtils#extractDateToDayFromVerbatimER(String, int) replacement method
 	 */
 	public static Map<String,String> extractDateToDayFromVerbatim(String verbatimEventDate, int yearsBeforeSuspect) {
 		Map<String,String> result =  extractDateFromVerbatim(verbatimEventDate, yearsBeforeSuspect);
@@ -288,6 +303,9 @@ public class DateUtils {
 	 * @param yearsBeforeSuspect  Dates that parse to a year prior to this year are marked as suspect.
 	 * 
 	 * @return a map with keys resultState for the nature of the match and result for the resulting date. 
+	 * 
+	 * @deprecated
+	 * @see DateUtils#extractDateFromVerbatimER(String, int, Boolean) replacement method.
 	 */
 	public static Map<String,String> extractDateFromVerbatim(String verbatimEventDate, int yearsBeforeSuspect) {		
 		Map result = new HashMap<String,String>();
