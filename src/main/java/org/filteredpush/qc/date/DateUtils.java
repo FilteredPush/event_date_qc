@@ -336,6 +336,12 @@ public class DateUtils {
 		if (verbatimEventDate!=null && (verbatimEventDate.startsWith(" ") || verbatimEventDate.endsWith(" "))) { 
 			verbatimEventDate = verbatimEventDate.trim();
 		}
+		// strip off trailing period after number
+		if (verbatimEventDate!=null && 
+				verbatimEventDate.endsWith(".") && 
+				verbatimEventDate.matches("[0-9]\\.$")) { 
+			verbatimEventDate = verbatimEventDate.substring(0,verbatimEventDate.length()-1);
+		}		
 		
 		
 		// Stop before doing work if provided verbatim string is null.
@@ -526,6 +532,7 @@ public class DateUtils {
 							DateTimeFormat.forPattern("MM/dd yyyy").getParser(),
 							DateTimeFormat.forPattern("MM/dd-yyyy").getParser(),
 							DateTimeFormat.forPattern("MM/dd, yyyy").getParser(),
+							DateTimeFormat.forPattern("MM/dd,yyyy").getParser(),
 							DateTimeFormat.forPattern("MM dd yyyy").getParser(),
 							DateTimeFormat.forPattern("MM-dd-yyyy").getParser(),
 							DateTimeFormat.forPattern("MM.dd.yyyy").getParser(),
@@ -544,8 +551,9 @@ public class DateUtils {
 					DateTimeParser[] parsers = { 
 							DateTimeFormat.forPattern("dd/MM/yyyy").getParser(),
 							DateTimeFormat.forPattern("dd/MM yyyy").getParser(),
-							DateTimeFormat.forPattern("MM/dd-yyyy").getParser(),
-							DateTimeFormat.forPattern("MM/dd, yyyy").getParser(),
+							DateTimeFormat.forPattern("dd/MM-yyyy").getParser(),
+							DateTimeFormat.forPattern("dd/MM, yyyy").getParser(),
+							DateTimeFormat.forPattern("dd/MM,yyyy").getParser(),
 							DateTimeFormat.forPattern("dd MM yyyy").getParser(),
 							DateTimeFormat.forPattern("dd-MM-yyyy").getParser(),
 							DateTimeFormat.forPattern("dd.MM.yyyy").getParser(),
@@ -1046,6 +1054,7 @@ public class DateUtils {
 		}	
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
 				verbatimEventDate.matches("^[A-Za-z]+[.]{0,1}( and | to |[-][ ]{0,1})[A-Za-z]+[.]{0,1}(, |[/ .])[0-9]{4}$")) { 
+			logger.debug(verbatimEventDate);
 			// Example: Jan to Feb 1882
 			// Example: Jan-Feb/1882
 			verbatimEventDate = verbatimEventDate.replace(", ", " ");
@@ -1931,10 +1940,13 @@ public class DateUtils {
     public static String cleanMonth(String verbatimEventDate) {
     	String cleaned = verbatimEventDate;
     	if (!isEmpty(verbatimEventDate)) { 
+    		// Some variant abbreviations
     		cleaned = cleaned.replace("Sept.", "Sep.");
+    		cleaned = cleaned.replace("sEPT.", "Sep.");
     		cleaned = cleaned.replace("Sept ", "Sep. ");
     		cleaned = cleaned.replace("Sept-", "Sep-");
     		cleaned = cleaned.replace("Sept,", "Sep.,");
+    		cleaned = cleaned.replace("Sept/", "Sep./");
     		cleaned = cleaned.replace("  ", " ").trim();
     		cleaned = cleaned.replace(" ,", ",");
     		cleaned = cleaned.replace(" - ", "-");
@@ -1946,7 +1958,12 @@ public class DateUtils {
     		}
     		cleaned = cleaned.replace("Jly. ", "July ");
     		cleaned = cleaned.replace("Jly ", "July ");
+    		cleaned = cleaned.replace("Febr.", "February");
+    		// Some misspellings
+    		cleaned = cleaned.replace("Jully ", "July ");
     		cleaned = cleaned.replace("Septmber", "September");
+    		cleaned = cleaned.replace("Febuary", "February");
+    		cleaned = cleaned.replace("Janauary", "January");
 
     		// Joda date time parsing as used here, is case sensitive for months.
     		// Put cases of alternative spellings, missing accents, and capitalization into
@@ -1963,7 +1980,20 @@ public class DateUtils {
     		cleaned = cleaned.replace("APRIL", "April");
     		cleaned = cleaned.replace("MARCH", "March");
     		cleaned = cleaned.replace("FEBRUARY", "February");
-    		cleaned = cleaned.replace("JANUARY", "January");	    		
+    		cleaned = cleaned.replace("JANUARY", "January");	    	
+    		
+    		cleaned = cleaned.replace("dECEMBER", "December");
+    		cleaned = cleaned.replace("nOVEMBER", "November");
+    		cleaned = cleaned.replace("oCTOBER", "October");
+    		cleaned = cleaned.replace("sEPTEMBER", "September");
+    		cleaned = cleaned.replace("aUGUST", "August");
+    		cleaned = cleaned.replace("jULY", "July");
+    		cleaned = cleaned.replace("jUNE", "June");
+    		cleaned = cleaned.replace("mAY", "May");
+    		cleaned = cleaned.replace("aPRIL", "April");
+    		cleaned = cleaned.replace("mARCH", "March");
+    		cleaned = cleaned.replace("fEBRUARY", "February");
+    		cleaned = cleaned.replace("jANUARY", "January");    		
     		
     		// Italian months are lower case, if capitalized, skip a step and go right to english.
     		cleaned = cleaned.replace("Dicembre", "December");
@@ -2248,7 +2278,8 @@ public class DateUtils {
      * Run from the command line, arguments -f to specify a file, -m to show matches. 
      * Converts dates in a specified input file from verbatim form to format expected by dwc:eventDate.
      * 
-     * @param args -f filename to check a file containing a list of dates, one per line.
+     * @param args -f filename to check a file containing a list of dates, one per line, 
+     *        e.g. -f src/test/resources/example_dates.csv
      *    -m to show matched dates and their interpretations otherwise lists non-matched lines.  
      *    -a to show all lines, matched or not with their interpretations.
      */

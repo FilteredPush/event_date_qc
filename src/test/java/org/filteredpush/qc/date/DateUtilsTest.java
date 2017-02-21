@@ -1735,10 +1735,32 @@ public class DateUtilsTest {
     	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
     	assertEquals("1911-08-19", result.getResult());
     	
+    	result = DateUtils.extractDateFromVerbatimER("Sept-Oct 1965");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1965-09/1965-10", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("29/7,1918");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1918-07-29", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("9/7,1918");
+    	assertEquals(EventResult.EventQCResultState.AMBIGUOUS, result.getResultState());
+    	assertEquals("1918-07-09/1918-09-07", result.getResult());
+    	
     	/*
     	 Not yet supported cases: 
     	 
     	 8-15 to 20, 1884
+    	 II-VIII-1913
+    	 
+    	 Some cases where interpretation is problematic:
+    	 6-11, 1902  -> (1902-06-11/1902-11-06 or 1902-06/1902-11)
+    	 
+    	 Discontinuous range: 
+    	 Sept. & Oct. 1892 & Oct. 1893
+    	 September 14th and 19th, 1916
+    	 Sept. 27, 1896&Oct. 27, 1895
+    	 May 18, May 25, June 7, 1895
     	 
     	*/  
     	
