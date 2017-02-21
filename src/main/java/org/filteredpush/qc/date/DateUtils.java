@@ -524,6 +524,8 @@ public class DateUtils {
 					DateTimeParser[] parsers = { 
 							DateTimeFormat.forPattern("MM/dd/yyyy").getParser(),
 							DateTimeFormat.forPattern("MM/dd yyyy").getParser(),
+							DateTimeFormat.forPattern("MM/dd-yyyy").getParser(),
+							DateTimeFormat.forPattern("MM/dd, yyyy").getParser(),
 							DateTimeFormat.forPattern("MM dd yyyy").getParser(),
 							DateTimeFormat.forPattern("MM-dd-yyyy").getParser(),
 							DateTimeFormat.forPattern("MM.dd.yyyy").getParser(),
@@ -542,6 +544,8 @@ public class DateUtils {
 					DateTimeParser[] parsers = { 
 							DateTimeFormat.forPattern("dd/MM/yyyy").getParser(),
 							DateTimeFormat.forPattern("dd/MM yyyy").getParser(),
+							DateTimeFormat.forPattern("MM/dd-yyyy").getParser(),
+							DateTimeFormat.forPattern("MM/dd, yyyy").getParser(),
 							DateTimeFormat.forPattern("dd MM yyyy").getParser(),
 							DateTimeFormat.forPattern("dd-MM-yyyy").getParser(),
 							DateTimeFormat.forPattern("dd.MM.yyyy").getParser(),
@@ -674,10 +678,17 @@ public class DateUtils {
 					DateTimeFormat.forPattern("yyyy/M").getParser(),
 					DateTimeFormat.forPattern("yyyy-M").getParser(),
 					DateTimeFormat.forPattern("yyyy-MMM").getParser(),
+					DateTimeFormat.forPattern("yyyy.MMM").getParser(),
+					DateTimeFormat.forPattern("yyyy.MMM.").getParser(),
+					DateTimeFormat.forPattern("yyyy MMM.").getParser(),
+					DateTimeFormat.forPattern("yyyy MMM").getParser(),
+					DateTimeFormat.forPattern("yyyy. MMM.").getParser(),
+					DateTimeFormat.forPattern("yyyy. MMM").getParser(),
 					DateTimeFormat.forPattern("yyyy/MMM").getParser()
 				};
 				DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
-				LocalDate parseDate = LocalDate.parse(verbatimEventDate,formatter.withLocale(Locale.ENGLISH));
+				String cleaned = cleanMonth(verbatimEventDate);
+				LocalDate parseDate = LocalDate.parse(cleaned,formatter.withLocale(Locale.ENGLISH));
 				resultDate =  parseDate.toString("yyyy-MM");
 				// resultDate =  parseDate.dayOfMonth().withMinimumValue() + "/" + parseDate.dayOfMonth().withMaximumValue();
 				logger.debug(resultDate);
@@ -763,6 +774,18 @@ public class DateUtils {
 					DateTimeFormat.forPattern("yyyy, MMM dd").getParser(),
 					DateTimeFormat.forPattern("yyyy, MMM. dd").getParser(),
 					DateTimeFormat.forPattern("yyyy.MMM.dd").getParser(),
+					DateTimeFormat.forPattern("yyyy.MMM.dd.").getParser(),
+					DateTimeFormat.forPattern("yyyy. MMM. dd").getParser(),
+					DateTimeFormat.forPattern("yyyy. MMM. dd.").getParser(),
+					DateTimeFormat.forPattern("yyyy. MMM dd.").getParser(),
+					DateTimeFormat.forPattern("yyyy. MMM dd").getParser(),
+					DateTimeFormat.forPattern("yyyy MMM. dd.").getParser(),
+					DateTimeFormat.forPattern("yyyy: MMM. dd.").getParser(),
+					DateTimeFormat.forPattern("yyyy: MMM. dd").getParser(),
+					DateTimeFormat.forPattern("yyyy: MMM dd").getParser(),
+					DateTimeFormat.forPattern("yyyy:MMM dd").getParser(),
+					DateTimeFormat.forPattern("yyyy:MMM. dd").getParser(),
+					DateTimeFormat.forPattern("yyyy:MMM.dd").getParser(),
 					
 					DateTimeFormat.forPattern("yyyy MMM dd'st'").getParser(),
 					DateTimeFormat.forPattern("yyyy MMM. dd'st'").getParser(),

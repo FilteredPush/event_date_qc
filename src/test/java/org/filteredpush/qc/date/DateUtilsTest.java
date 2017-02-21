@@ -1707,6 +1707,34 @@ public class DateUtilsTest {
     	assertEquals(EventResult.EventQCResultState.AMBIGUOUS, result.getResultState());
     	assertEquals("1928-01-10/1928-10-01", result.getResult());
     	
+    	result = DateUtils.extractDateFromVerbatimER("1880. Aug 23.");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1880-08-23", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("1886. Sept.");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1886-09", result.getResult());
+    
+    	result = DateUtils.extractDateFromVerbatimER("1924: Dec 24");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1924-12-24", result.getResult());
+    
+    	result = DateUtils.extractDateFromVerbatimER("1880. Aug 22");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1880-08-22", result.getResult());
+    
+    	result = DateUtils.extractDateFromVerbatimER("1880. July");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1880-07", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("8/16-1920");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1920-08-16", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("8/19, 1911");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1911-08-19", result.getResult());
+    	
     	/*
     	 Not yet supported cases: 
     	 
