@@ -7,6 +7,8 @@ DOI: 10.5281/zenodo.166329
 
 [![DOI](https://zenodo.org/badge/70093157.svg)](https://zenodo.org/badge/latestdoi/70093157)
 
+This library provides two classes each with a set of static methods which provide functions to support data quality control of date data in the context of biodiversity.  DateUtils provides a set of primitive methods for working with event date data, and DwCEventQC provides a wrapper set of annotated methods for making assertions about event date data in terms of the Fittness for Use Framework.  
+
 ## DateUtils - primitives
 
 This library provides the class org.filteredpush.qc.date.DateUtils
@@ -21,11 +23,11 @@ DateUtils provides a set of static methods for working with dwc:Event terms, inc
 
 **isRange(String eventDate)** Test to see if a string appears to represent a date range of more than one day.
 
-**createEventDateFromParts(String verbatimEventDate, String startDayOfYear, String endDayOfYear, String year, String month, String day** Attempt to construct an ISO formatted date as a string built from atomic parts of the date.
+**createEventDateFromParts(String verbatimEventDate, String startDayOfYear, String endDayOfYear, String year, String month, String day** Attempt to construct an ISO formatted date as a string built from atomic parts of the date.  
 
 **EventResult extractDateToDayFromVerbatimER(String verbatimEventDate, int yearsBeforeSuspect)**  Attempt to extract a date or date range in standard format from a provided verbatim date string.  Returns an EventResult object with properies resultState with values including date, range, suspect, or ambiguous and result, which contains a string value in a format suitable for dwc:eventDate.  
 
-Verbatim event dates in a variety of forms typical of natural science collections data can be interpreted into standard dwc:eventDate values, including dates with times, single dates, dates with roman numeral months, dates with months spelled out or abbreviated in several languages,  and date ranges.  Multiple orders of year month and day are supported, including day/month/year, month/day/year, and year/month/day, with identification of ambiguity and translation of ambiguous forms into ranges.  About 80-90% of verbatim date values found in Museum of Comparative Zoology and Harvard University Herbaria data are interpreted.  All but three forms of verbatim dates with 4 digit years found by VertNet are interpreted.  Dates with two digit years are not yet handled.  Examples of verbatim date formats that can be interpreted include: 
+Verbatim event dates in a variety of forms typical of natural science collections data can be interpreted into standard dwc:eventDate values, including dates with times, single dates, dates with roman numeral months, dates with months spelled out or abbreviated in several languages,  and date ranges.  Multiple orders of year month and day are supported, including day/month/year, month/day/year, and year/month/day, with identification of ambiguity and translation of ambiguous forms into ranges.  About 83% of all distinct verbatim date values (and 96% of distinct verbatim date values with 4 digit years) found in Museum of Comparative Zoology and Harvard University Herbaria data are interpreted.  All but three forms of verbatim dates with 4 digit years found by VertNet are interpreted.  Dates with two digit years are not yet handled.  Examples of verbatim date formats that can be interpreted include: 
 
 * May 9th 1880 -> 1880-05-09
 * Jul. 9th 1880 -> 1880-07-09
