@@ -401,45 +401,11 @@ public class DateUtilsTest {
     
     @Test
     public void extractDateFromVerbatimTest() { 
-    	Map<String,String> result = DateUtils.extractDateFromVerbatim("May 9th 1880");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1880-05-09", result.get("result"));
+
+    	Map<String,String> result = null;
     	
-    	result = DateUtils.extractDateFromVerbatim("");
-    	assertEquals(0, result.size());
-    	result = DateUtils.extractDateFromVerbatim(null);
-    	assertEquals(0, result.size());
-    	result = DateUtils.extractDateFromVerbatim(" ");
-    	assertEquals(0, result.size());
-    	result = DateUtils.extractDateFromVerbatim("[ ]");
-    	assertEquals(0, result.size());
-    	result = DateUtils.extractDateFromVerbatim("[]");
-    	assertEquals(0, result.size());
-    	result = DateUtils.extractDateFromVerbatim("..");
-    	assertEquals(0, result.size());
-    	result = DateUtils.extractDateFromVerbatim("zzzzzz");
-    	assertEquals(0, result.size());
-    	result = DateUtils.extractDateFromVerbatim("****");
-    	assertEquals(0, result.size());
-    	
-    	result = DateUtils.extractDateFromVerbatim("18/35");
-    	assertEquals(0, result.size());
-    	
-    	result = DateUtils.extractDateFromVerbatim("Jul. 9th 1880");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1880-07-09", result.get("result"));   
-    	
-    	result = DateUtils.extractDateFromVerbatim("Sept. 5 1901");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1901-09-05", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("[Sept. 5 1901]");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1901-09-05", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("May 13. 1883");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1883-05-13", result.get("result")); 
+    	// TODO: Confirm that these dates are tested for extractDateFromVerbatimERTest()
+    	// then remove them from this test of the deprecated method.
     	
     	result = DateUtils.extractDateFromVerbatim("May 9th, 1915");
     	assertEquals("date", result.get("resultState"));
@@ -1018,7 +984,7 @@ public class DateUtilsTest {
     	
     	result = DateUtils.extractDateFromVerbatimER("1880/07/09");
     	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
-    	assertEquals("1880-07-09", result.getResult());     	
+    	assertEquals("1880-07-09", result.getResult());    
     	
     	result = DateUtils.extractDateFromVerbatimER("Sept. 5 1901");
     	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
@@ -1026,7 +992,7 @@ public class DateUtilsTest {
     	
     	result = DateUtils.extractDateFromVerbatimER("[Sept. 5 1901]");
     	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
-    	assertEquals("1901-09-05", result.getResult());
+    	assertEquals("1901-09-05", result.getResult());   	
     	
     	result = DateUtils.extractDateFromVerbatimER("May 13. 1883");
     	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
@@ -1787,9 +1753,16 @@ public class DateUtilsTest {
     	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
     	assertEquals("1893-06-24", result.getResult());
     	
+    	// With - or / as separator, assume yyyy-mm-dd format
     	result = DateUtils.extractDateFromVerbatimER("1893-6-19.");
     	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
     	assertEquals("1893-06-19", result.getResult());
+    	
+    	// Cases of year[.,]00[.,]00 could be yyyy-mm-dd, but the separators are non-standard, so 
+    	// we should test for and assert ambiguity.
+    	result = DateUtils.extractDateFromVerbatimER("1893,6.8");
+    	assertEquals(EventResult.EventQCResultState.AMBIGUOUS, result.getResultState());
+    	assertEquals("1893-06-08/1893-08-06", result.getResult());
     	
     	/*
     	 Not yet supported cases: 

@@ -391,6 +391,7 @@ public class DateUtils {
 			}
 		}
 		if (verbatimEventDate.matches("^[0-9]{4}[-]([0-9]{1,2}|[A-Za-z]+)[-][0-9]{1,2}.*")) {
+			// Both separators are the same.
 			// Example 1982-02-05
 			// Example 1982-Feb-05
 			// Example 1982-02-05
@@ -412,6 +413,7 @@ public class DateUtils {
 			}
 		}
 		if (verbatimEventDate.matches("^[0-9]{4}[/]([0-9]{1,2}|[A-Za-z]+)[/][0-9]{1,2}.*")) {
+			// Both separators are the same.
 			// Example 1982/02/05
 			// Example 1982/Feb/05
 			// Example 1982-02-05
@@ -435,21 +437,58 @@ public class DateUtils {
 		if (verbatimEventDate.matches("^[0-9]{4}[.,][0-9]{1,2}[.,][0-9]{1,2}$")) {
 			// Example 1982.02.05
 			// Example 1982,02,05
+			// Cases where the 1-2 digit numbers are both smaller than 12 are treated as ambiguous.
+			String resultDateMD = null;
+			String resultDateDM = null;
+			DateMidnight parseDate1 = null;
+			DateMidnight parseDate2 = null;
 			try { 
-				DateTimeParser[] parsers = { 
+					DateTimeParser[] parsers = { 
 						DateTimeFormat.forPattern("yyyy.MM.dd").getParser(),
 						DateTimeFormat.forPattern("yyyy,MM,dd").getParser(),
 						DateTimeFormat.forPattern("yyyy,MM.dd").getParser(),
 						DateTimeFormat.forPattern("yyyy.MM,dd").getParser()
-				};
-				DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
-				DateMidnight parseDate = LocalDate.parse(verbatimEventDate,formatter).toDateMidnight();
-				resultDate = parseDate.toString("yyyy-MM-dd");
+					};
+					DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
+					parseDate1 = LocalDate.parse(verbatimEventDate,formatter).toDateMidnight();
+					resultDateMD = parseDate1.toString("yyyy-MM-dd");
+				} catch (Exception e) { 
+					logger.debug(e.getMessage());
+				}
+				try { 
+					DateTimeParser[] parsers = { 
+						DateTimeFormat.forPattern("yyyy.dd.MM").getParser(),
+						DateTimeFormat.forPattern("yyyy,dd,MM").getParser(),
+						DateTimeFormat.forPattern("yyyy,dd.MM").getParser(),
+						DateTimeFormat.forPattern("yyyy.dd,MM").getParser()
+					};
+					DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
+					parseDate2 = LocalDate.parse(verbatimEventDate,formatter).toDateMidnight();
+					resultDateDM = parseDate2.toString("yyyy-MM-dd");
+				} catch (Exception e) { 
+					logger.debug(e.getMessage());
+				}			
+			if (resultDateMD!=null && resultDateDM==null) {
 				result.setResultState(EventResult.EventQCResultState.DATE);
-				result.setResult(resultDate);
-			} catch (Exception e) { 
-				logger.debug(e.getMessage());
-			}
+				result.setResult(resultDateMD);
+			} else if (resultDateMD==null && resultDateDM!=null) { 
+				result.setResultState(EventResult.EventQCResultState.DATE);
+				result.setResult(resultDateDM);
+			} else if (resultDateMD!=null && resultDateDM!=null) { 
+				if (resultDateMD.equals(resultDateDM)) { 
+					result.setResultState(EventResult.EventQCResultState.DATE);
+					result.setResult(resultDateDM);
+				} else { 
+					result.setResultState(EventResult.EventQCResultState.AMBIGUOUS);
+				    Interval range = null;
+				    if (parseDate1.isBefore(parseDate2)) { 
+				        result.setResult(resultDateMD + "/" + resultDateDM);
+				    } else { 
+				        result.setResult(resultDateDM + "/" + resultDateMD);
+				    }
+				}
+			} 			
+			
 		}
 		if (verbatimEventDate.matches("^[0-9]{1,2}[-/ ][0-9]{4}")) { 
 			// Example 02/1982
