@@ -398,243 +398,13 @@ public class DateUtilsTest {
     	assertEquals((86400*(31+20))-1,DateUtils.measureDurationSeconds("1880-03-01/1880-04-20"));
     }
     
-    @Test
-    public void extractDateFromVerbatimTest() { 
-
-    	Map<String,String> result = null;
-    	
-    	// TODO: Confirm that these dates are tested for extractDateFromVerbatimERTest()
-    	// then remove them from this test of the deprecated method.
-    	
-
-    	
-    	
-
-    	result = DateUtils.extractDateFromVerbatim("1981-03");
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("1981-03", result.get("result")); 
-    	
-    	result = DateUtils.extractDateFromVerbatim("June, 1871");
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("1871-06", result.get("result"));  
-    	
-    	result = DateUtils.extractDateFromVerbatim("July 16-26, 1945");
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("1945-07-16/1945-07-26", result.get("result")); 
-    	
-    	result = DateUtils.extractDateFromVerbatim("July 16 to 26, 1945");
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("1945-07-16/1945-07-26", result.get("result"));     	
-    	
-    	result = DateUtils.extractDateFromVerbatim("July 16-26 1945");
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("1945-07-16/1945-07-26", result.get("result")); 
-    	
-    	result = DateUtils.extractDateFromVerbatim("August 1-10, 2006");
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("2006-08-01/2006-08-10", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("giugno 1-10, 2006");
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("2006-06-01/2006-06-10", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("[Nov. 8]");
-    	assertEquals(0, result.size());
-    	
-    	result = DateUtils.extractDateFromVerbatim("[March 8]");
-    	assertEquals(0, result.size());
-    	
-    	result = DateUtils.extractDateFromVerbatim("Sept.-1873");
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("1873-09", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("July 5 - 1889");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1889-07-05", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("Aug. 7 -1892");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1892-08-07", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("12/1911");
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("1911-12", result.get("result"));
-    	
-    	//Deprecated method, test of replacement moved elsewhere.
-    	//result = DateUtils.extractDateFromVerbatim("Sept. 5 1901", 1950);
-    	//assertEquals("suspect", result.get("resultState"));
-    	//assertEquals("1901-09-05", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("Apr/1963");
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("1963-04", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("May/1963");
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("1963-05", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("1875-1899");
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("1875/1899", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("17.III-1933");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1933-03-17", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("17-III 1933");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1933-03-17", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("15 Giugno 1917");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1917-06-15", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("15 Juin 1917");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1917-06-15", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("15 giugno 1917");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1917-06-15", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("15 juin 1917");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1917-06-15", result.get("result"));    	
-    	
-    	result = DateUtils.extractDateFromVerbatim("15 Août 1917");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1917-08-15", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("15 août 1917");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1917-08-15", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("15 Aout 1917");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1917-08-15", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("15 aout 1917");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1917-08-15", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("15 agosto 1917");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1917-08-15", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("15 Agosto 1917");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1917-08-15", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("22.4.1927");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1927-04-22", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("4.4.1927");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1927-04-04", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("5.4.1927");
-    	assertEquals("ambiguous", result.get("resultState"));
-    	assertEquals("1927-04-05/1927-05-04", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("05-05-1927/05-05-1927");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1927-05-05", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("31 x 1996");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1996-10-31", result.get("result"));    	
-    	
-    	result = DateUtils.extractDateFromVerbatim("IX-6 1962");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1962-09-06", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("2006.III.30");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("2006-03-30", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("4/1959");
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("1959-04", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("IX.10-1920");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1920-09-10", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("1913-14");
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("1913/1914", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("1913-04");
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("1913-04", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("1905-03");
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("1905-03", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("1903-04");
-    	assertEquals("suspect", result.get("resultState"));
-    	assertEquals("1903-04", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("1928-29");
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("1928/1929", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("8 Setiembre 1920");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1920-09-08", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("15.June 1956");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1956-06-15", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("30/Sep/1950");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1950-09-30", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("31/Sep/1950");  // only 30 days
-    	assertEquals(0, result.size());
-    	
-    	result = DateUtils.extractDateFromVerbatim("31iii2005");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("2005-03-31", result.get("result"));
-
-    	result = DateUtils.extractDateFromVerbatim("31March2005");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("2005-03-31", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("31. Mar.2005");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("2005-03-31", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("Jan-Feb/1962");
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("1962-01/1962-02", result.get("result"));
-    	
-    	result = DateUtils.extractDateToDayFromVerbatim("Jan-Feb/1962", DateUtils.YEAR_BEFORE_SUSPECT);
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("1962-01-01/1962-02-28", result.get("result"));
-    	
-    	result = DateUtils.extractDateToDayFromVerbatim("Jan-Feb/1964", DateUtils.YEAR_BEFORE_SUSPECT); 
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("1964-01-01/1964-02-29", result.get("result"));  // leap year
-    	
-    	result = DateUtils.extractDateFromVerbatim("1908 June 10th");
-    	assertEquals("date", result.get("resultState"));
-    	assertEquals("1908-06-10", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("1982 -1983");
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("1982/1983", result.get("result"));
-    	
-    	result = DateUtils.extractDateFromVerbatim("1934 - 1936");
-    	assertEquals("range", result.get("resultState"));
-    	assertEquals("1934/1936", result.get("result"));
-    }
 
     @Test 
+    /**
+     * Test recognition of dates being suspect by provided date before suspect.
+     */
     public void testExtractDateFromVerbatimERSuspect() { 
+    	
 	     EventResult result = DateUtils.extractDateFromVerbatimER("Sept. 5 1901", 1950, null);
 	     assertEquals(EventResult.EventQCResultState.SUSPECT, result.getResultState());
 	     assertEquals("1901-09-05", result.getResult());
@@ -642,6 +412,15 @@ public class DateUtilsTest {
 	     result = DateUtils.extractDateFromVerbatimER("Sept. 5 1901", 1850, null);
 	     assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
 	     assertEquals("1901-09-05", result.getResult());
+	     
+	     result = DateUtils.extractDateFromVerbatimER("Sept. 5 101", 50, null);
+	     assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+	     assertEquals("0101-09-05", result.getResult());
+	     
+	     result = DateUtils.extractDateFromVerbatimER("Sept. 5 0101", 50, null);
+	     assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+	     assertEquals("0101-09-05", result.getResult());
+	     
     } 
     
     @Test
@@ -1020,8 +799,6 @@ public class DateUtilsTest {
     	result = DateUtils.extractDateToDayFromVerbatimER("April 1871", 1900);
     	assertEquals(EventResult.EventQCResultState.SUSPECT, result.getResultState());
     	assertEquals("1871-04", result.getResult());  
-    	
-    	// TODO: check extractDateFromVerbatimTest() after here
 
     	result = DateUtils.extractDateFromVerbatimER("1981-03");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());

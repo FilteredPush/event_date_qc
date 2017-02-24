@@ -1439,9 +1439,12 @@ public class DateUtils {
 				result.setResultState(EventResult.EventQCResultState.SUSPECT);
 				logger.debug(result.getResult());
 				logger.debug(testExtract);
+			} else { 
+				logger.debug(result.getResult());
 			}
-			if (!verbatimEventDate.matches(".*[0-9]{4}.*")) { 
+			if (!verbatimEventDate.matches(".*[0-9]{4}.*") && yearsBeforeSuspect>999) { 
 				result = new EventResult();
+				logger.debug(result.getResult());
 			}
 		}
 		
