@@ -421,6 +421,10 @@ public class DateUtilsTest {
 	     assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
 	     assertEquals("0101-09-05", result.getResult());
 	     
+	     result = DateUtils.extractDateFromVerbatimER("Sept. 5 41", 50, null);
+	     assertEquals(EventResult.EventQCResultState.SUSPECT, result.getResultState());
+	     assertEquals("0041-09-05", result.getResult());
+	     
     } 
     
     @Test
