@@ -343,11 +343,15 @@ public class DateUtils {
 		}		
 		
 		// Strip off leading and trailing []
-		if (verbatimEventDate!=null && verbatimEventDate.startsWith("[")) { 
+		if (verbatimEventDate!=null && verbatimEventDate.startsWith("[") &&  
+		    verbatimEventDate.endsWith("]")
+		    ) { 
 			verbatimEventDate = verbatimEventDate.substring(1);
-		}
-		if (verbatimEventDate!=null && verbatimEventDate.endsWith("]")) { 
 			verbatimEventDate = verbatimEventDate.substring(0,verbatimEventDate.length()-1);
+		}
+		
+		if (verbatimEventDate!=null && verbatimEventDate.matches(".*\\[[0-9]+\\].*")) { 
+			verbatimEventDate = verbatimEventDate.replace("[", "").replace("]", "");
 		}
 		
 		// Strip off leading and trailing quotation marks
@@ -2076,6 +2080,18 @@ public class DateUtils {
     		cleaned = cleaned.replace("Sept-", "Sep-");
     		cleaned = cleaned.replace("Sept,", "Sep.,");
     		cleaned = cleaned.replace("Sept/", "Sep./");
+    		cleaned = cleaned.replace("OCt.", "Oct.");
+    		cleaned = cleaned.replace("OCt-", "Oct-");
+    		cleaned = cleaned.replace("OCt ", "Oct ");
+    		cleaned = cleaned.replace("JAn.", "Jan.");
+    		cleaned = cleaned.replace("FEb.", "Feb.");
+    		cleaned = cleaned.replace("MAr.", "Mar.");
+    		cleaned = cleaned.replace("APr.", "APr.");
+    		cleaned = cleaned.replace("JUn.", "Jun.");
+    		cleaned = cleaned.replace("JUl.", "Jul.");
+    		cleaned = cleaned.replace("AUg.", "Aug.");
+    		cleaned = cleaned.replace("NOv.", "Nov.");
+    		cleaned = cleaned.replace("DEc.", "Dec.");
     		cleaned = cleaned.replace("  ", " ").trim();
     		cleaned = cleaned.replace(" ,", ",");
     		cleaned = cleaned.replace(" - ", "-");
@@ -2110,6 +2126,19 @@ public class DateUtils {
     		cleaned = cleaned.replace("MARCH", "March");
     		cleaned = cleaned.replace("FEBRUARY", "February");
     		cleaned = cleaned.replace("JANUARY", "January");	    	
+    		
+    		cleaned = cleaned.replace("DEcember", "December");
+    		cleaned = cleaned.replace("NOvember", "November");
+    		cleaned = cleaned.replace("OCtober", "October");
+    		cleaned = cleaned.replace("SEptember", "September");
+    		cleaned = cleaned.replace("AUgust", "August");
+    		cleaned = cleaned.replace("JUly", "July");
+    		cleaned = cleaned.replace("JUne", "June");
+    		cleaned = cleaned.replace("MAy", "May");
+    		cleaned = cleaned.replace("APril", "April");
+    		cleaned = cleaned.replace("MArch", "March");
+    		cleaned = cleaned.replace("FEbruary", "February");
+    		cleaned = cleaned.replace("JAnuary", "January");	    		
     		
     		cleaned = cleaned.replace("DEC", "Dec");
     		cleaned = cleaned.replace("NOV", "Nov");
