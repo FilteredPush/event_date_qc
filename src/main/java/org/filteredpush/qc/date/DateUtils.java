@@ -983,6 +983,8 @@ public class DateUtils {
 					DateTimeFormat.forPattern("dd. MMM.yyyy").getParser(),
 					DateTimeFormat.forPattern("dd MMM., yyyy").getParser(),
 					DateTimeFormat.forPattern("dd MMM.,yyyy").getParser(),
+					DateTimeFormat.forPattern("dd MMM,.yyyy").getParser(),
+					DateTimeFormat.forPattern("dd MMM,. yyyy").getParser(),
 					DateTimeFormat.forPattern("dd MMM..yyyy").getParser(),
 					
 					DateTimeFormat.forPattern("dd MMM, yyyy").getParser(),
