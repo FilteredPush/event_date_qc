@@ -950,6 +950,11 @@ public class DateUtils {
 					DateTimeFormat.forPattern("MMM dd'rd'. yyyy").getParser(),
 					DateTimeFormat.forPattern("MMM dd'd'. yyyy").getParser(),
 					DateTimeFormat.forPattern("MMM dd'th'. yyyy").getParser(),					
+					DateTimeFormat.forPattern("MMM dd'st'.yyyy").getParser(),
+					DateTimeFormat.forPattern("MMM dd'nd'.yyyy").getParser(),
+					DateTimeFormat.forPattern("MMM dd'rd'.yyyy").getParser(),
+					DateTimeFormat.forPattern("MMM dd'd'.yyyy").getParser(),
+					DateTimeFormat.forPattern("MMM dd'th'.yyyy").getParser(),					
 					
 					DateTimeFormat.forPattern("MMM-dd-yyyy").getParser(),
 					DateTimeFormat.forPattern("MMM-dd yyyy").getParser(),
