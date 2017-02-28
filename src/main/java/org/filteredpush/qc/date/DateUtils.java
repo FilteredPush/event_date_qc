@@ -996,11 +996,15 @@ public class DateUtils {
 					DateTimeFormat.forPattern("dd MMM yyyy").getParser(),
 					DateTimeFormat.forPattern("dd MMM,yyyy").getParser(),
 					DateTimeFormat.forPattern("dd MMM.yyyy").getParser(),
+					DateTimeFormat.forPattern("ddMMM.yyyy").getParser(),
+					DateTimeFormat.forPattern("ddMMM. yyyy").getParser(),
 					DateTimeFormat.forPattern("dd.MMM-yyyy").getParser(),
 					DateTimeFormat.forPattern("dd-MMM-yyyy").getParser(),
 					DateTimeFormat.forPattern("dd.MMM yyyy").getParser(),
 					DateTimeFormat.forPattern("dd. MMM yyyy").getParser(),
 					DateTimeFormat.forPattern("dd, MMM, yyyy").getParser(),
+					DateTimeFormat.forPattern("dd, MMM; yyyy").getParser(),
+					DateTimeFormat.forPattern("dd. MMM; yyyy").getParser(),
 					DateTimeFormat.forPattern("dd MMM-yyyy").getParser(),
 					DateTimeFormat.forPattern("dd-MMM yyyy").getParser(),
 					DateTimeFormat.forPattern("ddMMMyyyy").getParser(),
@@ -1313,23 +1317,29 @@ public class DateUtils {
 			}			
 		}			
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
-				verbatimEventDate.matches("^[0-9]{1,2}[-][0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[/ -.][0-9]{4}$")) 
+				verbatimEventDate.matches("^[0-9]{1,2}([ ]{0,1}[-][ ]{0,1}| and | et | to )[0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[/ -.][0-9]{4}$")) 
 		{ 
-			// Example 05-02 Jan./1992
-		    if (verbatimEventDate.matches("^[0-9]{1,2}[-][0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[-][0-9]{4}$")) { 
+			// Example: 11 et 14 VII 1910
+			// Example: 05-02 Jan./1992
+			String toCheck = verbatimEventDate;
+			toCheck = toCheck.replace(" - ", "-").replace(" et ", "-").replace(" and ", "-").replace(" to ", "-");
+			// Note: "and" has different semantics than "to", may imply that a specimen record
+			// represents two occurrences (e.g. flower on one date, fruit on another) rather than
+			// a range, but dwc:eventDate representation for both forms on one event is a range.
+		    if (toCheck.matches("^[0-9]{1,2}[-][0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[-][0-9]{4}$")) { 
 		    	// transform case with multiple dashes to slash before year.
-			    verbatimEventDate = verbatimEventDate.substring(0,verbatimEventDate.length()-5) + "/" + verbatimEventDate.substring(verbatimEventDate.length()-4);
-			   logger.debug(verbatimEventDate);
+		    	toCheck = toCheck.substring(0,toCheck.length()-5) + "/" + toCheck.substring(toCheck.length()-4);
+			   logger.debug(toCheck);
 		    }
-		    if (verbatimEventDate.matches("^[0-9]{1,2}[-][0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[.][0-9]{4}$")) { 
+		    if (toCheck.matches("^[0-9]{1,2}[-][0-9]{1,2}[ /.]{0,1}[A-Za-z]+[.]{0,1}[.][0-9]{4}$")) { 
 		    	// transform case with multiple periods to slash before year.
-			    verbatimEventDate = verbatimEventDate.substring(0,verbatimEventDate.length()-5) + "/" + verbatimEventDate.substring(verbatimEventDate.length()-4);
-			   logger.debug(verbatimEventDate);
+		    	toCheck = toCheck.substring(0,toCheck.length()-5) + "/" + toCheck.substring(toCheck.length()-4);
+			   logger.debug(toCheck);
 		    }
 			try { 
-				String[] bits = verbatimEventDate.replace(" ", "/").split("-");
+				String[] bits = toCheck.replace(" ", "/").split("-");
 				if (bits!=null && bits.length==2) { 
-					String year = verbatimEventDate.substring(verbatimEventDate.length()-4,verbatimEventDate.length());
+					String year = toCheck.substring(toCheck.length()-4,toCheck.length());
 					logger.debug(cleanMonth(bits[1]));
 					DateTimeParser[] parsers = { 
 							DateTimeFormat.forPattern("dd MMM/yyyy").getParser(),
@@ -1404,6 +1414,9 @@ public class DateUtils {
 			// Example: Jan. 17 and 18 1882
 			String cleaned = verbatimEventDate.trim();
 			if (verbatimEventDate.matches("^[A-Za-z.]+[ ,]+[0-9]{1,2} and [0-9]{0,2}[ ,]+[0-9]{4}$")) { 
+				// Note: "and" has different semantics than "to", may imply that a specimen record
+				// represents two occurrences (e.g. flower on one date, fruit on another) rather than
+				// a range, but dwc:eventDate representation for both forms on one event is a range.
 				cleaned = cleaned.replace(" and ", " to ");
 			}			
 			if (verbatimEventDate.matches("^[A-Za-z.]+[ ,]+[0-9]{1,2}-[0-9]{0,2}[ ,]+[0-9]{4}$")) { 
