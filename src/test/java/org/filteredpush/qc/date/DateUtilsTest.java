@@ -1436,6 +1436,10 @@ public class DateUtilsTest {
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	assertEquals("1910-07-11/1910-07-14", result.getResult());
     	
+    	result = DateUtils.extractDateFromVerbatimER("May 16 and June 13, 1878");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1878-05-16/1878-06-13", result.getResult());
+    	
     	/*
     	 Not yet supported cases: 
     	 
@@ -1595,6 +1599,57 @@ public class DateUtilsTest {
     	assertEquals(true, DateUtils.includesLeapDay("1984-01-01/1985-12-31"));
     	assertEquals(false, DateUtils.includesLeapDay("1985-03-01/1985-12-31"));
     	assertEquals(false, DateUtils.includesLeapDay("1985-01-01/1985-02-28"));
+    	
+    	assertEquals(true, DateUtils.includesLeapDay("1981/1986"));
+    	assertEquals(true, DateUtils.includesLeapDay("1981/1985"));
+    	
+    	assertEquals(false, DateUtils.includesLeapDay("1981/1983"));
     }
     
+    @Test
+    public void testCountLeapDays() { 
+    	assertEquals(0, DateUtils.countLeapDays(null));
+    	assertEquals(0, DateUtils.countLeapDays(""));
+    	assertEquals(0, DateUtils.countLeapDays("ZZZZZZ"));
+    	
+    	assertEquals(1, DateUtils.countLeapDays("1980"));
+    	assertEquals(0, DateUtils.countLeapDays("1981"));
+    	assertEquals(0, DateUtils.countLeapDays("1982"));
+    	assertEquals(0, DateUtils.countLeapDays("1983"));
+    	assertEquals(1, DateUtils.countLeapDays("1984"));
+    	
+    	assertEquals(1, DateUtils.countLeapDays("1600"));
+    	assertEquals(0, DateUtils.countLeapDays("1700"));
+    	assertEquals(0, DateUtils.countLeapDays("1800"));
+    	assertEquals(0, DateUtils.countLeapDays("1900"));
+    	assertEquals(1, DateUtils.countLeapDays("2000"));
+    	
+    	assertEquals(1, DateUtils.countLeapDays("1984-02-28/1984-03-01"));
+    	assertEquals(0, DateUtils.countLeapDays("1985-02-28/1985-03-01"));
+    	
+    	assertEquals(1, DateUtils.countLeapDays("1984-01-01/1985-12-31"));
+    	assertEquals(0, DateUtils.countLeapDays("1985-03-01/1985-12-31"));
+    	assertEquals(0, DateUtils.countLeapDays("1985-01-01/1985-02-28"));
+    	
+    	assertEquals(1, DateUtils.countLeapDays("1981/1986"));
+    	assertEquals(1, DateUtils.countLeapDays("1981/1985"));
+    	assertEquals(2, DateUtils.countLeapDays("1978/1985"));
+    	
+    	assertEquals(0, DateUtils.countLeapDays("1981/1983"));
+    }    
+ 
+    @Test
+    public void testVerbatimIsDiscontinuous() { 
+    	assertEquals(null, DateUtils.verbatimIsDiscontinuous(null));
+    	assertEquals(null, DateUtils.verbatimIsDiscontinuous(""));
+    	assertEquals(null, DateUtils.verbatimIsDiscontinuous("Flower and Fruit"));
+    	assertEquals(null, DateUtils.verbatimIsDiscontinuous("Jul and earlier"));
+    	
+    	assertEquals(false, DateUtils.verbatimIsDiscontinuous("8 Sep,. 1947"));
+    	assertEquals(false, DateUtils.verbatimIsDiscontinuous("1984-02-28/1984-03-01"));
+    	
+    	assertEquals(true, DateUtils.verbatimIsDiscontinuous("May 16 and June 13, 1878"));
+    	assertEquals(true, DateUtils.verbatimIsDiscontinuous("11 et 14 VII 1910"));
+    	assertEquals(true, DateUtils.verbatimIsDiscontinuous("June and Sept. 1876"));
+    }
 }

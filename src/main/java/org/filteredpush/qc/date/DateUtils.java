@@ -1288,12 +1288,14 @@ public class DateUtils {
 			}			
 		}
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
-				verbatimEventDate.matches("^[A-Za-z]+[.]{0,1}[ ]{0,1}[0-9]{1,2}( - |[-]| to )[A-Za-z]+[.]{0,1}[ ]{0,1}[0-9]{1,2}[/ .,][ ]{0,1}[0-9]{4}$")) 
+				verbatimEventDate.matches("^[A-Za-z]+[.]{0,1}[ ]{0,1}[0-9]{1,2}( - |[-]| to | and | et )[A-Za-z]+[.]{0,1}[ ]{0,1}[0-9]{1,2}[/ .,][ ]{0,1}[0-9]{4}$")) 
 		{ 
 			logger.debug(verbatimEventDate);
 			// Example: Aug. 5 - Sept. 8, 1943
 			try { 
-				String[] bits = verbatimEventDate.replace(" to ","-").replace(" - ","-").replace(", "," ").replace(" ", "/").split("-");
+				String[] bits = verbatimEventDate.replace(" to ","-").replace(" - ","-")
+						.replace(" and ", "-").replace(" et ","-")
+						.replace(", "," ").replace(" ", "/").split("-");
 				if (bits!=null && bits.length==2) { 
 					String year = verbatimEventDate.substring(verbatimEventDate.length()-4,verbatimEventDate.length());
 					String startBit = bits[0]+"/"+year;
@@ -2442,8 +2444,10 @@ public class DateUtils {
 		boolean result = false;
 		if (!DateUtils.isEmpty(eventDate) && DateUtils.eventDateValid(eventDate)) { 
 			Interval interval = extractInterval(eventDate);
-			String startYear = Integer.toString(interval.getStart().getYear()).trim();
-			String endYear = Integer.toString(interval.getEnd().getYear()).trim();
+			Integer sYear = interval.getStart().getYear();
+			Integer eYear = interval.getEnd().getYear();
+			String startYear = Integer.toString(sYear).trim();
+			String endYear = Integer.toString(eYear).trim();
 			String leapDay = startYear + "-02-29";
 			logger.debug(leapDay);
 			if (DateUtils.eventDateValid(leapDay)) { 
@@ -2451,6 +2455,7 @@ public class DateUtils {
 					result = true;
 				}
 			}
+			// Range spanning more than one year, check last year
 			if (!endYear.equals(startYear)) { 
 				leapDay = endYear + "-02-29";
 				logger.debug(leapDay);
@@ -2460,7 +2465,92 @@ public class DateUtils {
 					}
 				}				
 			}
-			// TODO: Support ranges of more than one year.
+			// Ranges of more than two years, check intermediate years
+			if (eYear > sYear + 1) { 
+				for (int testYear = sYear+1; testYear<eYear; testYear++) { 
+					leapDay = Integer.toString(testYear).trim() + "-02-29";
+					logger.debug(leapDay);
+					if (DateUtils.eventDateValid(leapDay)) { 
+						if (interval.contains(DateUtils.extractInterval(leapDay))) { 
+							result = true;
+						}
+					}				
+				}
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Count the number of leap days present in an event date 
+	 * 
+	 * @param eventDate to check for leap days
+	 * @return number of leap days present in eventDate, 0 if no leap days are present or
+	 *    if eventDate does not contain a date. 
+	 */
+	public static int countLeapDays(String eventDate) {
+		int result = 0;
+		if (!DateUtils.isEmpty(eventDate) && DateUtils.eventDateValid(eventDate)) {
+			Interval interval = extractInterval(eventDate);
+			Integer sYear = interval.getStart().getYear();
+			Integer eYear = interval.getEnd().getYear();
+			String startYear = Integer.toString(sYear).trim();
+			String endYear = Integer.toString(eYear).trim();
+			String leapDay = startYear + "-02-29";
+			logger.debug(leapDay);
+			if (DateUtils.eventDateValid(leapDay)) { 
+				if (interval.contains(DateUtils.extractInterval(leapDay))) { 
+					result = 1;
+				}
+			}
+			// Range spanning more than one year, check last year
+			if (!endYear.equals(startYear)) { 
+				leapDay = endYear + "-02-29";
+				logger.debug(leapDay);
+				if (DateUtils.eventDateValid(leapDay)) { 
+					if (interval.contains(DateUtils.extractInterval(leapDay))) { 
+						result++;
+					}
+				}				
+			}
+			// Ranges of more than two years, check intermediate years
+			if (eYear > sYear + 1) { 
+				for (int testYear = sYear+1; testYear<eYear; testYear++) { 
+					leapDay = Integer.toString(testYear).trim() + "-02-29";
+					logger.debug(leapDay);
+					if (DateUtils.eventDateValid(leapDay)) { 
+						if (interval.contains(DateUtils.extractInterval(leapDay))) { 
+							result++;
+						}
+					}				
+				}
+			}
+		}
+		return result;
+	}	
+	
+	/**
+	 * Test to see if a verbatimEventDate appears to represent a discontinuous range (e.g. 
+	 *   'Jan 5 and Feb 2 1882'.   When used on an Event that represents a collecting event, 
+	 *   signals that more than the occurrence should be split into more than one occurrence 
+	 *   (e.g. one occurrence on Jan 5, another on Feb 2).
+	 * 
+	 * @param verbatimEventDate to test
+	 * @return null if no date is found, true if the date appears to be a discontinuous range, 
+	 *    false otherwise.
+	 */
+	public static Boolean verbatimIsDiscontinuous(String verbatimEventDate) { 
+		Boolean result = null;
+		if (!isEmpty(verbatimEventDate)) { 
+			EventResult containedDate = DateUtils.extractDateFromVerbatimER(verbatimEventDate);
+			if (!containedDate.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
+				// verbatimEventDate contains a date
+				result = false;
+				// Does verbatim event date contain an indicator that a discontinuous range is involved
+				if (verbatimEventDate.contains(" and ")) { result = true; }
+				if (verbatimEventDate.contains(" et ")) { result = true; }
+				if (verbatimEventDate.contains(" & ")) { result = true; }
+			}
 		}
 		return result;
 	}
