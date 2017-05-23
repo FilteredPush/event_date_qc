@@ -1657,6 +1657,7 @@ public class DateUtilsTest {
     public void testeventsAreSameInterval() { 
     	assertEquals(true,DateUtils.eventsAreSameInterval("1880", "1880"));
     	assertEquals(true,DateUtils.eventsAreSameInterval("1880", "1880-01-01/1880-12-31"));
+    	assertEquals(true,DateUtils.eventsAreSameInterval("1982-01-01T15:40", "1982-01-01"));
     	assertEquals(false,DateUtils.eventsAreSameInterval("1880", "1881"));
     	assertEquals(false,DateUtils.eventsAreSameInterval("1880", ""));
     	assertEquals(false,DateUtils.eventsAreSameInterval("1880", "1880-01-01"));

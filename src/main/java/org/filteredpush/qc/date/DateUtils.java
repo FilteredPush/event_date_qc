@@ -2556,7 +2556,7 @@ public class DateUtils {
 	}
 	
 	/**
-	 * Compare two strings that should represent event dates
+	 * Compare two strings that should represent event dates (ingoring time, if not a date range)
 	 * 
 	 * @param eventDate to compare with second event date
 	 * @param secondEventDate to compare with
@@ -2564,9 +2564,13 @@ public class DateUtils {
 	 */
 	public static Boolean eventsAreSameInterval(String eventDate, String secondEventDate) {
 		boolean result = false;
-		try { 
-            Interval secondInterval = DateUtils.extractInterval(secondEventDate);
-            Interval interval = DateUtils.extractInterval(eventDate);
+		try {
+			Interval interval = null;
+			Interval secondInterval = null;
+            interval = DateUtils.extractDateInterval(eventDate);
+            secondInterval = DateUtils.extractDateInterval(secondEventDate);
+			logger.debug(interval.toString());
+			logger.debug(secondInterval.toString());
             result = interval.equals(secondInterval);
 		} catch (Exception e) { 
 			logger.error(e.getMessage());
