@@ -119,10 +119,11 @@ public class DwCEventDQ {
      *    resultState is CHANGED if a new value is proposed.
      */
     @Provides(value = "EVENTDATE_CONSISTENT_WITH_VERBATIM")
-	@Amendment(label = "Event Date and Verbatim Consistent", description = "Test to see if the eventDate and verbatimEventDate are consistent.")
+	@Validation(label = "Event Date and Verbatim Consistent", description = "Test to see if the eventDate and verbatimEventDate are consistent.")
 	@Specification(value = "If a dwc:eventDate is not empty and the verbatimEventDate is not empty compare the value " +
 			"of dwc:eventDate with that of dwc:verbatimEventDate, and assert Compliant if the two represent the same data or date range.")
-    @Enhancement
+    @PreEnhancement
+	@PostEnhancement
     public static EventDQValidation eventDateConsistentWithVerbatim(@ActedUpon(value = "eventDate") String eventDate, @ActedUpon(value = "verbatimEventDate") String verbatimEventDate) {
     	EventDQValidation result = new EventDQValidation();
     	if (!DateUtils.isEmpty(eventDate) && !DateUtils.isEmpty(verbatimEventDate)) {
