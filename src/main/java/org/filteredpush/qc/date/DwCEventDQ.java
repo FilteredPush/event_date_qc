@@ -24,6 +24,7 @@ import org.datakurator.ffdq.annotations.*;
 import org.datakurator.ffdq.api.EnumDQResultState;
 import org.datakurator.ffdq.api.EnumDQValidationResult;
 import org.datakurator.ffdq.api.EnumDQAmendmentResultState;
+import org.joda.time.Interval;
 
 
 /**
@@ -107,6 +108,57 @@ public class DwCEventDQ {
 
 		return result;
 	}
+	
+    /**
+     * If a dwc:eventDate is empty and the verbatimEventDate is not empty, try to populate the 
+     * eventDate from the verbatim value.
+     * 
+     * @param eventDate to check for emptyness
+     * @param verbatimEventDate to try to replace a non-empty event date.
+     * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
+     *    resultState is CHANGED if a new value is proposed.
+     */
+    @Provides(value = "EVENTDATE_CONSISTENT_WITH_VERBATIM")
+	@Amendment(label = "Event Date and Verbatim Consistent", description = "Test to see if the eventDate and verbatimEventDate are consistent.")
+	@Specification(value = "If a dwc:eventDate is not empty and the verbatimEventDate is not empty compare the value " +
+			"of dwc:eventDate with that of dwc:verbatimEventDate, and assert Compliant if the two represent the same data or date range.")
+    @Enhancement
+    public static EventDQValidation eventDateConsistentWithVerbatim(@ActedUpon(value = "eventDate") String eventDate, @ActedUpon(value = "verbatimEventDate") String verbatimEventDate) {
+    	EventDQValidation result = new EventDQValidation();
+    	if (!DateUtils.isEmpty(eventDate) && !DateUtils.isEmpty(verbatimEventDate)) {
+		    EventResult extractResponse = DateUtils.extractDateFromVerbatimER(verbatimEventDate);
+		    if (!extractResponse.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
+		    		(extractResponse.getResultState().equals(EventResult.EventQCResultState.RANGE) || 
+		    	      extractResponse.getResultState().equals(EventResult.EventQCResultState.DATE) ||
+		    	      extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS) ||
+		    	      extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)
+		    	     ) 
+		    	) 
+		    { 
+		    	if (DateUtils.eventsAreSameInterval(eventDate, extractResponse.getResult())) { 
+					result.setResult(EnumDQValidationResult.COMPLIANT);
+    				result.addComment("Provided value for eventDate '" + eventDate + "' represents the same range as verbatimEventDate '"+verbatimEventDate+"'.");
+		    	} else { 
+					result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    				result.addComment("Provided value for eventDate '" + eventDate + "' does not represent the same range as verbatimEventDate '"+verbatimEventDate+"'.");
+		    	}
+		    } else { 
+		        result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+		        result.addComment("Unable to extract a date from verbatimEventDate: " + verbatimEventDate);
+		    }    		
+    	} else {
+    		if (DateUtils.isEmpty(eventDate)) { 
+    		    result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		    result.addComment("eventDate does not contains a value.");
+    		}   			
+    		if (DateUtils.isEmpty(verbatimEventDate)) { 
+    		    result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		    result.addComment("verbatimEventDate does not contains a value.");
+    		}   			
+    	}
+
+    	return result;
+    }	
 
     /**
      * If a dwc:eventDate is empty and the verbatimEventDate is not empty, try to populate the 

@@ -1652,4 +1652,17 @@ public class DateUtilsTest {
     	assertEquals(true, DateUtils.verbatimIsDiscontinuous("11 et 14 VII 1910"));
     	assertEquals(true, DateUtils.verbatimIsDiscontinuous("June and Sept. 1876"));
     }
+    
+    @Test
+    public void testeventsAreSameInterval() { 
+    	assertEquals(true,DateUtils.eventsAreSameInterval("1880", "1880"));
+    	assertEquals(true,DateUtils.eventsAreSameInterval("1880", "1880-01-01/1880-12-31"));
+    	assertEquals(false,DateUtils.eventsAreSameInterval("1880", "1881"));
+    	assertEquals(false,DateUtils.eventsAreSameInterval("1880", ""));
+    	assertEquals(false,DateUtils.eventsAreSameInterval("1880", "1880-01-01"));
+    	assertEquals(false,DateUtils.eventsAreSameInterval("1880", "1880-01-01/1880-12-30"));
+    	assertEquals(false,DateUtils.eventsAreSameInterval("1880", "Z"));
+    	assertEquals(false,DateUtils.eventsAreSameInterval("1880", null));
+    }
+    
 }

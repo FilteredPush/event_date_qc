@@ -2555,6 +2555,25 @@ public class DateUtils {
 		return result;
 	}
 	
+	/**
+	 * Compare two strings that should represent event dates
+	 * 
+	 * @param eventDate to compare with second event date
+	 * @param secondEventDate to compare with
+	 * @return true if the two provided event dates represent the same interval.
+	 */
+	public static Boolean eventsAreSameInterval(String eventDate, String secondEventDate) {
+		boolean result = false;
+		try { 
+            Interval secondInterval = DateUtils.extractInterval(secondEventDate);
+            Interval interval = DateUtils.extractInterval(eventDate);
+            result = interval.equals(secondInterval);
+		} catch (Exception e) { 
+			logger.error(e.getMessage());
+		}
+        return result;
+	}
+	
     /**
      * Run from the command line, arguments -f to specify a file, -m to show matches. 
      * Converts dates in a specified input file from verbatim form to format expected by dwc:eventDate.
