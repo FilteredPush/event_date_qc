@@ -1658,6 +1658,8 @@ public class DateUtilsTest {
     	assertEquals(true,DateUtils.eventsAreSameInterval("1880", "1880"));
     	assertEquals(true,DateUtils.eventsAreSameInterval("1880", "1880-01-01/1880-12-31"));
     	assertEquals(true,DateUtils.eventsAreSameInterval("1982-01-01T15:40", "1982-01-01"));
+		//assertEquals(true,DateUtils.eventsAreSameInterval("2013/01/04 8:16 AM CST", "2013-01-04T09:16Z"));
+		//assertEquals(true,DateUtils.eventsAreSameInterval("2017-02-14T23:18Z", "2017-02-14 10:18:19 PM CST"));
     	assertEquals(false,DateUtils.eventsAreSameInterval("1880", "1881"));
     	assertEquals(false,DateUtils.eventsAreSameInterval("1880", ""));
     	assertEquals(false,DateUtils.eventsAreSameInterval("1880", "1880-01-01"));
