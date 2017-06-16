@@ -214,6 +214,73 @@ public class DwCEventDQ {
     	return result;
     }
     
+
+    /**
+     * If a dwc:eventDate is empty and the verbatimEventDate, day, month, year, startDayOfYear, etc are not empty, try to populate the 
+     * eventDate from the verbatim and other atomic values.
+     * 
+     * @param eventDate to check for emptyness
+     * @param verbatimEventDate to try to replace a non-empty event date.
+     * @param startDayOfYear to try to replace a non-empty event date.
+     * @param endDayOfYear to try to replace a non-empty event date.
+     * @param year to try to replace a non-empty event date.
+     * @param month to try to replace a non-empty event date.
+     * @param day to try to replace a non-empty event date.
+     * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
+     *    resultState is CHANGED if a new value is proposed.
+     */
+    @Provides(value = "urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812")
+	@Amendment(label = "Event Date From Parts", description = "Try to populate the event date from the verbatim and other atomic parts (day, month, year, etc).")
+	@Specification(value = "If a dwc:eventDate is empty and the verbatimEventDate is not empty fill in dwc:eventDate " +
+			"based on value from dwc:verbatimEventDate, dwc:year dwc:month, dwc:day, dwc:start/endDayOfYear.")
+    @Enhancement
+    public static EventDQAmendment extractDateFromParts(@ActedUpon(value = "eventDate") String eventDate, 
+    		 @Consulted(value = "verbatimEventDate") String verbatimEventDate,
+    		 @Consulted(value = "startDayOfYear") String startDayOfYear, 
+    		 @Consulted(value = "endDayOfYear") String endDayOfYear, 
+    		 @Consulted(value = "year") String year, 
+    		 @Consulted(value = "month") String month, 
+    		 @Consulted(value = "day") String day
+    		 ) {
+    	EventDQAmendment result = new EventDQAmendment();
+    	if (DateUtils.isEmpty(eventDate)) { 
+    		if (!DateUtils.isEmpty(verbatimEventDate)) { 
+    		    String createdDate = DateUtils.createEventDateFromParts(verbatimEventDate, startDayOfYear, endDayOfYear, year, month, day);
+    		    EventResult extractResponse = DateUtils.extractDateFromVerbatimER(createdDate);
+    		    if (!extractResponse.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
+    		    		(extractResponse.getResultState().equals(EventResult.EventQCResultState.RANGE) || 
+    		    	      extractResponse.getResultState().equals(EventResult.EventQCResultState.DATE) ||
+    		    	      extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS) ||
+    		    	      extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)
+    		    	     ) 
+    		    	) 
+    		    { 
+    		        result.addResult("dwc:eventDate", extractResponse.getResult());
+    		        if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
+    		        	result.setResultState(EnumDQAmendmentResultState.AMBIGUOUS);
+    		        	result.addComment(extractResponse.getComment());
+    		        } else { 
+    		        	if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
+    		        		result.addComment("Interpretation of verbatimEventDate [" + verbatimEventDate + "] is suspect.");
+    		        		result.addComment(extractResponse.getComment());
+    		        	}
+    		        	result.setResultState(EnumDQAmendmentResultState.CHANGED);
+    		        }
+    		    } else { 
+    		        result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		        result.addComment("Unable to extract a date from " + verbatimEventDate);
+    		    }
+    		} else { 
+    		    result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		    result.addComment("verbatimEventDate does not contains a value.");
+    		}
+    	} else { 
+    		result.setResultState(EnumDQAmendmentResultState.NO_CHANGE);
+    		result.addComment("eventDate contains a value, not changing.");
+    	}
+    	return result;
+    }
+
     @Provides(value = "UPSTREAM_EVENTDATE_FILLED_IN_FROM_START_END")
 	@Amendment(label = "Event Date From non-Darwin Core start/end", description = "Try to populate the event date from non-Darwin Core start date and end date terms.")
 	@Specification(value = "If a dwc:eventDate is empty and an event date can be inferred from start date and end date, fill in dwc:eventDate " +
