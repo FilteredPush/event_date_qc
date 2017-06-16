@@ -237,6 +237,53 @@ public class DwCEventDQ {
     	return result;
     }    
     
+
+    /**
+     * Test to see whether a provided dcterms:modified is a validly formated ISO date.
+     * 
+     * Provides: ModifiedDateValid
+     * 
+     * @param modified  a string to test
+     * @return COMPLIANT if modified is a validly formated ISO date/time with a duration of less than one day, NOT_COMPLIANT if
+     *     not an ISO date/time or a range of days, INTERNAL_PREREQUSISITES_NOT_MET if modified is empty.
+     */
+    @Provides(value = "urn:uuid:62a9c256-43e4-41ee-8938-d2d2e99479ef")  // MODIFIED_DATE_INVALID/MODIFIED_DATE_VALID
+	@Validation(label = "Modified date correctly formatted", description = "Test to see whether a provided dcterms:modified " +
+			"is a validly formated ISO date/time.")
+	@Specification(value = "Compliant if dcterms:modified can to parsed to an explicit date/time, otherwise not compliant. " +
+			"Internal prerequisites not met if dcterms:modified is empty.")
+    @PreEnhancement
+    @PostEnhancement
+    public static EventDQValidation isModifiedDateValid(@ActedUpon(value = "dcterms:modified") String modified) {
+    	EventDQValidation result = new EventDQValidation();
+    	if (DateUtils.isEmpty(modified)) {
+    		result.addComment("No value provided for dcterms:modified.");
+    		result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    	} else { 
+    		try { 
+    	        if (DateUtils.eventDateValid(modified) && DateUtils.specificToDay(modified)) {
+    				result.setResult(EnumDQValidationResult.COMPLIANT);
+    				result.addComment("Provided value for dcterms:modified '" + modified + "' is formated as an ISO date tha can be parsed to an explicit date/time ");
+    			} else { 
+    	            if (!DateUtils.eventDateValid(modified)) { 
+    				    result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    				    result.addComment("Provided value for dcterms:modified '" + modified + "' is not a validly formatted ISO date .");
+                    } else { 
+    				    result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    				    result.addComment("Provided value for dcterms:modified '" + modified + "' is a validly formatted ISO date, but has a duration of more than one day, modified is expected to be an explicit date/time.");
+                    }
+    			}
+    			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    		} catch (Exception e) { 
+    			logger.debug(e.getMessage());
+    			result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    			result.addComment(e.getMessage());
+    		}
+    	}
+    	return result;
+    }	
+
+
     /**
      * Given an event date, check to see if it is empty or contains a valid date value.  If it contains
      * a value that is not a valid date, propose a properly formatted eventDate as an amendment.
@@ -290,6 +337,110 @@ public class DwCEventDQ {
     }    
 
     /**
+     * Given a dateModified, check to see if it is empty or contains a valid date value.  If it contains
+     * a value that is not a valid date, propose a properly formatted dateModified as an amendment.
+     * 
+     * @param modified dcterms:modified (date last modified) to check
+     * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
+     *    resultState is CHANGED if a new value is proposed.
+     */
+    @Provides(value = "urn:uuid:367bf43f-9cb6-45b2-b45f-b8152f1d334a")
+    @Amendment(label = "Date Modified Format Correction", description = "Try to propose a correction for a date modified")
+    @Specification(value = "Check dcterms:modified to see if it is empty or contains a valid date value. If it contains a " +
+            "value that is not a valid date, propose a properly formatted dcterms:modified as an amendment.")
+    @Enhancement
+    public static EventDQAmendment correctModifiedDateFormat(@ActedUpon(value = "dcterms:modified") String modified) {
+        EventDQAmendment result = new EventDQAmendment();
+        if (DateUtils.eventDateValid(modified)) {
+            result.setResultState(EnumDQAmendmentResultState.NO_CHANGE);
+            result.addComment("dcterms:modified contains a correctly formatted date, not changing.");
+        } else {
+            if (DateUtils.isEmpty(modified)) {
+                result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+                result.addComment("dcterms:modified does not contains a value.");
+            } else {
+                EventResult extractResponse = DateUtils.extractDateFromVerbatimER(modified);
+                if (!extractResponse.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
+                        (extractResponse.getResultState().equals(EventResult.EventQCResultState.RANGE) ||
+                          extractResponse.getResultState().equals(EventResult.EventQCResultState.DATE) ||
+                          extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS) ||
+                          extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)
+                         )
+                    )
+                {
+                    result.addResult("dcterms:modified", extractResponse.getResult());
+                    if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
+                        result.setResultState(EnumDQAmendmentResultState.AMBIGUOUS);
+                        result.addComment(extractResponse.getComment());
+                    } else {
+                        if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
+                            result.addComment("Interpretation of dcterms:modified [" + modified + "] is suspect.");
+                            result.addComment(extractResponse.getComment());
+                        }
+                        result.setResultState(EnumDQAmendmentResultState.CHANGED);
+                    }
+                } else {
+                    result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+                    result.addComment("Unable to extract a date from " + modified);
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Given a dateIdentified, check to see if it is empty or contains a valid date value.  If it contains
+     * a value that is not a valid (ISO formatted) date, propose a properly formatted dateModified as an amendment.
+     * 
+     * @param dateIdentified to check
+     * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
+     *    resultState is CHANGED if a new value is proposed.
+     */
+    @Provides(value = "DATEIDENTIFIED_FORMAT_AMENDED")
+    @Amendment(label = "Date Identified Format Correction", description = "Try to propose a correction for a date identified")
+    @Specification(value = "Check dwc:dateIdentified to see if it is empty or contains a valid date value. If it contains a " +
+            "value that is not a valid date, propose a properly formatted dateIdentified as an amendment.")
+    @Enhancement
+    public static EventDQAmendment correctIdentifiedDateFormat(@ActedUpon(value = "dateIdentified") String dateIdentified) {
+        EventDQAmendment result = new EventDQAmendment();
+        if (DateUtils.eventDateValid(dateIdentified)) {
+            result.setResultState(EnumDQAmendmentResultState.NO_CHANGE);
+            result.addComment("dwc:dateIdentified contains a correctly formatted date, not changing.");
+        } else {
+            if (DateUtils.isEmpty(dateIdentified)) {
+                result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+                result.addComment("dwc:dateIdentified does not contains a value.");
+            } else {
+                EventResult extractResponse = DateUtils.extractDateFromVerbatimER(dateIdentified);
+                if (!extractResponse.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
+                        (extractResponse.getResultState().equals(EventResult.EventQCResultState.RANGE) ||
+                          extractResponse.getResultState().equals(EventResult.EventQCResultState.DATE) ||
+                          extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS) ||
+                          extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)
+                         )
+                    )
+                {
+                    result.addResult("dwc:dateIdentified", extractResponse.getResult());
+                    if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
+                        result.setResultState(EnumDQAmendmentResultState.AMBIGUOUS);
+                        result.addComment(extractResponse.getComment());
+                    } else {
+                        if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
+                            result.addComment("Interpretation of dwc:dateIdentified [" + dateIdentified + "] is suspect.");
+                            result.addComment(extractResponse.getComment());
+                        }
+                        result.setResultState(EnumDQAmendmentResultState.CHANGED);
+                    }
+                } else {
+                    result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+                    result.addComment("Unable to extract a date from " + dateIdentified);
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
      * Test to see whether a provided day is an integer in the range of values that can be 
      * a day of a month.
      * 
@@ -300,7 +451,8 @@ public class DwCEventDQ {
      *     an integer outside this range, INTERNAL_PREREQUSISITES_NOT_MET if day is empty or an integer
      *     cannot be parsed from day. 
      */
-    @Provides(value = "DAY_IN_RANGE")
+    //@Provides(value = "DAY_IN_RANGE")
+    @Provides(value = "urn:uuid:48aa7d66-36d1-4662-a503-df170f11b03f")   // GUID for DAY_INVALID/DAY_IN_RANGE
 	@Validation(label = "Day In Range", description = "Test to see whether a provided day is an integer in the range " +
 			"of values that can be a day of a month.")
 	@Specification(value = "Compliant if dwc:day is an integer in the range 1 to 31 inclusive, not compliant otherwise. " +
@@ -342,7 +494,8 @@ public class DwCEventDQ {
      *     an integer outside this range, INTERNAL_PREREQUSISITES_NOT_MET if month is empty or an integer
      *     cannot be parsed from month. 
      */
-    @Provides(value = "MONTH_IN_RANGE")
+    // @Provides(value = "MONTH_IN_RANGE")
+    @Provides(value = "urn:uuid:01c6dafa-0886-4b7e-9881-2c3018c98bdc")  // MONTH_INVALID/MONTH_IN_RANGE
 	@Validation(label = "Month In Range", description = "Test to see whether a provided month is in the range of " +
 			"integer values that form months of the year.")
 	@Specification(value = "Compliant if month is an integer in the range 1 to 12 inclusive, otherwise not compliant. " +
