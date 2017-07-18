@@ -1679,6 +1679,7 @@ public class DateUtils {
     	DateTimeParser[] parsers = { 
     			DateTimeFormat.forPattern("yyyy-MM").getParser(),
     			DateTimeFormat.forPattern("yyyy").getParser(),
+				DateTimeFormat.forPattern("yyyy-MM-dd/yyyy-MM-dd").getParser(),
     			ISODateTimeFormat.dateOptionalTimeParser().getParser(), 
     			ISODateTimeFormat.date().getParser() 
     	};
