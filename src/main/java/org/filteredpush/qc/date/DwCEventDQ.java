@@ -59,7 +59,7 @@ import org.joda.time.Interval;
  * @author mole
  *
  */
-@Mechanism("Kurator: Date Validator - DwCEventDQ")
+@Mechanism(value = "urn:uuid:b844059f-87cf-4c31-b4d7-9a52003eef84", label = "Kurator: Date Validator - DwCEventDQ")
 public class DwCEventDQ {
 	
 	private static final Log logger = LogFactory.getLog(DwCEventDQ.class);
@@ -70,10 +70,11 @@ public class DwCEventDQ {
 	 * @param eventDate to measure duration in seconds
 	 * @return EventDQMeasurement object, which if state is COMPLETE has a value of type Long.
 	 */
-    @Provides(value = "EVENT_DATE_DURATION_SECONDS")
-	@Measure(label = "Event Date Duration In Seconds", description = "Measure the duration of an event date in seconds.")
+    //@Provides(value = "EVENT_DATE_DURATION_SECONDS")
+	@Provides(value = "urn:uuid:b0753f69-08c1-45f5-a5ca-48d24e76d813")
+	@Measure(dimension = Dimension.PRECISION, label = "Event Date Duration In Seconds", description = "Measure the duration of an event date in seconds.")
 	@Specification(value = "For values of dwc:eventDate, calculate the duration in seconds.")
-	public static EventDQMeasurement<Long> measureDurationSeconds(@ActedUpon(value = "eventDate") String eventDate) {
+	public static EventDQMeasurement<Long> measureDurationSeconds(@ActedUpon(value = "dwc:eventDate") String eventDate) {
 		EventDQMeasurement<Long> result = new EventDQMeasurement<Long>();
     	if (DateUtils.isEmpty(eventDate)) {
     		result.addComment("No value provided for eventDate.");
@@ -92,10 +93,11 @@ public class DwCEventDQ {
     	return result;
 	}
 
-	@Provides(value = "EVENT_DATE_COMPLETENESS")
-	@Measure(label = "Event Date Completeness", description = "Measure the completeness of an event date.")
+	//@Provides(value = "EVENT_DATE_COMPLETENESS")
+	@Provides(value = "urn:uuid:0a59e03f-ebb5-4df3-a802-2e444de525b5")
+	@Measure(dimension = Dimension.COMPLETENESS, label = "Event Date Completeness", description = "Measure the completeness of an event date.")
 	@Specification(value = "For values of dwc:eventDate, check is not empty.")
-	public static EventDQMeasurement<Long> measureCompleteness(@ActedUpon(value = "eventDate") String eventDate) {
+	public static EventDQMeasurement<Long> measureCompleteness(@ActedUpon(value = "dwc:eventDate") String eventDate) {
 		EventDQMeasurement<Long> result = new EventDQMeasurement<Long>();
 		if (!DateUtils.isEmpty(eventDate)) {
 			result.addComment("No value provided for eventDate.");
@@ -114,11 +116,12 @@ public class DwCEventDQ {
      * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
      *    resultState is CHANGED if a new value is proposed.
      */
-    @Provides(value = "EVENTDATE_CONSISTENT_WITH_VERBATIM")
+    //@Provides(value = "EVENTDATE_CONSISTENT_WITH_VERBATIM")
+	@Provides(value = "urn:uuid:da63f836-1fc6-4e96-a612-fa76678cfd6a")
 	@Validation(label = "Event Date and Verbatim Consistent", description = "Test to see if the eventDate and verbatimEventDate are consistent.")
 	@Specification(value = "If a dwc:eventDate is not empty and the verbatimEventDate is not empty compare the value " +
 			"of dwc:eventDate with that of dwc:verbatimEventDate, and assert Compliant if the two represent the same data or date range.")
-    public static EventDQValidation eventDateConsistentWithVerbatim(@ActedUpon(value = "eventDate") String eventDate, @ActedUpon(value = "verbatimEventDate") String verbatimEventDate) {
+    public static EventDQValidation eventDateConsistentWithVerbatim(@ActedUpon(value = "dwc:eventDate") String eventDate, @ActedUpon(value = "dwc:verbatimEventDate") String verbatimEventDate) {
     	EventDQValidation result = new EventDQValidation();
     	if (!DateUtils.isEmpty(eventDate) && !DateUtils.isEmpty(verbatimEventDate)) {
 		    EventResult extractResponse = DateUtils.extractDateFromVerbatimER(verbatimEventDate);
@@ -164,11 +167,12 @@ public class DwCEventDQ {
      * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
      *    resultState is CHANGED if a new value is proposed.
      */
-    @Provides(value = "EVENTDATE_FILLED_IN_FROM_VERBATIM")
+    //@Provides(value = "EVENTDATE_FILLED_IN_FROM_VERBATIM")
+	@Provides(value = "urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812")
 	@Amendment(label = "Event Date From Verbatim", description = "Try to populate the event date from the verbatim value.")
 	@Specification(value = "If a dwc:eventDate is empty and the verbatimEventDate is not empty fill in dwc:eventDate " +
 			"based on value from dwc:verbatimEventDate")
-    public static EventDQAmendment extractDateFromVerbatim(@ActedUpon(value = "eventDate") String eventDate, @Consulted(value = "verbatimEventDate") String verbatimEventDate) {
+    public static EventDQAmendment extractDateFromVerbatim(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "dwc:verbatimEventDate") String verbatimEventDate) {
     	EventDQAmendment result = new EventDQAmendment();
     	if (DateUtils.isEmpty(eventDate)) { 
     		if (!DateUtils.isEmpty(verbatimEventDate)) { 
@@ -226,13 +230,13 @@ public class DwCEventDQ {
 	@Amendment(label = "Event Date From Parts", description = "Try to populate the event date from the verbatim and other atomic parts (day, month, year, etc).")
 	@Specification(value = "If a dwc:eventDate is empty and the verbatimEventDate is not empty fill in dwc:eventDate " +
 			"based on value from dwc:verbatimEventDate, dwc:year dwc:month, dwc:day, dwc:start/endDayOfYear.")
-    public static EventDQAmendment extractDateFromParts(@ActedUpon(value = "eventDate") String eventDate, 
-    		 @Consulted(value = "verbatimEventDate") String verbatimEventDate,
-    		 @Consulted(value = "startDayOfYear") String startDayOfYear, 
-    		 @Consulted(value = "endDayOfYear") String endDayOfYear, 
-    		 @Consulted(value = "year") String year, 
-    		 @Consulted(value = "month") String month, 
-    		 @Consulted(value = "day") String day
+    public static EventDQAmendment extractDateFromParts(@ActedUpon(value = "dwc:eventDate") String eventDate,
+    		 @Consulted(value = "dwc:verbatimEventDate") String verbatimEventDate,
+    		 @Consulted(value = "dwc:startDayOfYear") String startDayOfYear,
+    		 @Consulted(value = "dwc:endDayOfYear") String endDayOfYear,
+    		 @Consulted(value = "dwc:year") String year,
+    		 @Consulted(value = "dwc:month") String month,
+    		 @Consulted(value = "dwc:day") String day
     		 ) {
     	EventDQAmendment result = new EventDQAmendment();
     	if (DateUtils.isEmpty(eventDate)) { 
@@ -273,11 +277,12 @@ public class DwCEventDQ {
     	return result;
     }
 
-    @Provides(value = "UPSTREAM_EVENTDATE_FILLED_IN_FROM_START_END")
+    //@Provides(value = "UPSTREAM_EVENTDATE_FILLED_IN_FROM_START_END")
+	@Provides(value = "urn:uuid:e4ddf9bc-cd10-46cc-b307-d6c7233a240a")
 	@Amendment(label = "Event Date From non-Darwin Core start/end", description = "Try to populate the event date from non-Darwin Core start date and end date terms.")
 	@Specification(value = "If a dwc:eventDate is empty and an event date can be inferred from start date and end date, fill in dwc:eventDate " +
 			"based on the values in the start and end dates.  Will not propose a change if dwc:eventDate contains a value.")
-    public static EventDQAmendment extractDateFromStartEnd(@ActedUpon(value = "eventDate") String eventDate, @Consulted(value = "startDate") String startDate, @Consulted(value="endDate") String endDate) {
+    public static EventDQAmendment extractDateFromStartEnd(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "dwc:startDate") String startDate, @Consulted(value="dwc:endDate") String endDate) {
     	EventDQAmendment result = new EventDQAmendment();
     	if (DateUtils.isEmpty(eventDate)) { 
     		String response = DateUtils.createEventDateFromStartEnd(startDate, endDate);
@@ -348,11 +353,12 @@ public class DwCEventDQ {
      * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
      *    resultState is CHANGED if a new value is proposed.
      */
-    @Provides(value = "EVENTDATE_FORMAT_CORRECTION")
+    //@Provides(value = "EVENTDATE_FORMAT_CORRECTION")
+	@Provides(value = "urn:uuid:134c7b4f-1261-41ec-acb5-69cd4bc8556f")
 	@Amendment(label = "Event Date Format Correction", description = "Try to propose a correction for an event date")
 	@Specification(value = "Check dwc:eventDate to see if it is empty or contains a valid date value. If it contains a " +
 			"value that is not a valid date, propose a properly formatted eventDate as an amendment.")
-    public static EventDQAmendment correctEventDateFormat(@ActedUpon(value = "eventDate") String eventDate) {
+    public static EventDQAmendment correctEventDateFormat(@ActedUpon(value = "dwc:eventDate") String eventDate) {
     	EventDQAmendment result = new EventDQAmendment();
     	if (DateUtils.eventDateValid(eventDate)) {
     		result.setResultState(EnumDQAmendmentResultState.NO_CHANGE);
@@ -450,11 +456,12 @@ public class DwCEventDQ {
      * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
      *    resultState is CHANGED if a new value is proposed.
      */
-    @Provides(value = "DATEIDENTIFIED_FORMAT_AMENDED")
+    //@Provides(value = "DATEIDENTIFIED_FORMAT_AMENDED")
+	@Provides(value = "urn:uuid:39bb2280-1215-447b-9221-fd13bc990641")
     @Amendment(label = "Date Identified Format Correction", description = "Try to propose a correction for a date identified")
     @Specification(value = "Check dwc:dateIdentified to see if it is empty or contains a valid date value. If it contains a " +
             "value that is not a valid date, propose a properly formatted dateIdentified as an amendment.")
-    public static EventDQAmendment correctIdentifiedDateFormat(@ActedUpon(value = "dateIdentified") String dateIdentified) {
+    public static EventDQAmendment correctIdentifiedDateFormat(@ActedUpon(value = "dwc:dateIdentified") String dateIdentified) {
         EventDQAmendment result = new EventDQAmendment();
         if (DateUtils.eventDateValid(dateIdentified)) {
             result.setResultState(EnumDQAmendmentResultState.NO_CHANGE);
@@ -510,7 +517,7 @@ public class DwCEventDQ {
 			"of values that can be a day of a month.")
 	@Specification(value = "Compliant if dwc:day is an integer in the range 1 to 31 inclusive, not compliant otherwise. " +
 			"Internal prerequisites not met if day is empty or an integer cannot be parsed from day.")
-    public static EventDQValidation isDayInRange(@ActedUpon(value = "day") String day) {
+    public static EventDQValidation isDayInRange(@ActedUpon(value = "dwc:day") String day) {
     	EventDQValidation result = new EventDQValidation();
     	if (DateUtils.isEmpty(day)) {
     		result.addComment("No value provided for day.");
@@ -551,7 +558,7 @@ public class DwCEventDQ {
 			"integer values that form months of the year.")
 	@Specification(value = "Compliant if month is an integer in the range 1 to 12 inclusive, otherwise not compliant. " +
 			"Internal prerequisites not met if month is empty or an integer cannot be parsed from month.")
-    public static EventDQValidation isMonthInRange(@ActedUpon(value="month") String month) {
+    public static EventDQValidation isMonthInRange(@ActedUpon(value="dwc:month") String month) {
     	EventDQValidation result = new EventDQValidation();
     	if (DateUtils.isEmpty(month)) {
     		result.addComment("No value provided for month.");
@@ -576,12 +583,13 @@ public class DwCEventDQ {
     	return result;
     }    
     
-    @Provides(value = "EVENTDATE_PRECISON_JULIAN_YEAR_OR_BETTER")
+    //@Provides(value = "EVENTDATE_PRECISON_JULIAN_YEAR_OR_BETTER")
+	@Provides(value = "urn:uuid:fd00e6be-45e4-4ced-9f3d-5cde30b21b69")
 	@Validation(label = "EventDate precision Julian year or better. ", description = "Test to see whether a provided event date " +
 			"has a duration less than or equal to a standard astronomical Julian year.")
 	@Specification(value = "Compliant if event date has a duration equal to or less than a = 31557600 seconds, otherwise not compliant. " +
 			"Internal prerequisites not met if eventDate is empty or not valid.")
-    public static EventDQValidation isEventDateJulianYearOrLess(@ActedUpon(value="eventDate") String eventDate) {
+    public static EventDQValidation isEventDateJulianYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) {
     	EventDQValidation result = new EventDQValidation();
     	if (DateUtils.isEmpty(eventDate)) {
     		result.addComment("No value provided for eventDate.");
@@ -607,12 +615,12 @@ public class DwCEventDQ {
     }      
     
     
-    @Provides(value = "EVENTDATE_PRECISON_YEAR_OR_BETTER")
+    @Provides(value = "urn:uuid:31d463b4-2a1c-4b90-b6c7-73459d1bad6d")
 	@Validation(label = "EventDate precision calendar year or better. ", description = "Test to see whether a provided event date " +
 			"has a duration less than or equal to a calendar year.")
 	@Specification(value = "Compliant if event date has a duration equal to or less than 365 days if a standard year, 366 days if a leap year. " +
 			"Internal prerequisites not met if eventDate is empty or not valid.")
-    public static EventDQValidation isEventDateYearOrLess(@ActedUpon(value="eventDate") String eventDate) {
+    public static EventDQValidation isEventDateYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) {
     	EventDQValidation result = new EventDQValidation();
     	if (DateUtils.isEmpty(eventDate)) {
     		result.addComment("No value provided for eventDate.");
@@ -654,19 +662,19 @@ public class DwCEventDQ {
     /**
      * Check if a value for day is consistent with a provided month and year. 
      * 
-     * Provides: DAY_POSSIBLE_FOR_MONTH_YEAR  
+     * Provides: DAY_POSSIBLE_FOR_MONTH_YEAR  (RECORDED_DATE_MISMATCH)
      * 
      * @param year for month and day
      * @param month for day
      * @param day to check 
      * @return an DQValidationResponse object describing whether day exists in year-month-day.
      */
-    @Provides(value = "DAY_POSSIBLE_FOR_MONTH_YEAR")
+    @Provides(value = "urn:uuid:5618f083-d55a-4ac2-92b5-b9fb227b832f")
 	@Validation(label = "Day Consistent With Month/Year", description = "Check if a value for day is consistent with a " +
 			"provided month and year.")
 	@Specification("Check that the value of dwc:eventDate is consistent with the values for dwc:month and dwc:year. " +
 			"Requires valid values for month and year.")
-    public static EventDQValidation isDayPossibleForMonthYear(@Consulted(value="year") String year, @Consulted(value="month") String month, @ActedUpon(value="day") String day) {
+    public static EventDQValidation isDayPossibleForMonthYear(@Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) {
     	EventDQValidation result = new EventDQValidation();
     	
     	EventDQValidation monthResult =  isMonthInRange(month);
@@ -722,12 +730,12 @@ public class DwCEventDQ {
      * @param day  the value of dwc:day
      * @return an EventDQAmmendment which may contain a proposed ammendment.
      */
-    @Provides(value = "DAY_MONTH_TRANSPOSED")
+    @Provides(value = "urn:uuid:f98a54eb-59e7-44c7-b96f-200e6af1c895")
 	@Amendment(label = "Day Month Transposition", description = "Check of month is out of range for months, but day is " +
 			"in range for months, and propose a transposition of the two if this is the case.")
 	@Specification("If dwc:month and dwc:day are provided, propose a transposition if day is in range for months, and " +
 			"month is in range for days")
-    public static final EventDQAmendment dayMonthTransposition(@ActedUpon(value="month") String month, @ActedUpon(value="day") String day) {
+    public static final EventDQAmendment dayMonthTransposition(@ActedUpon(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) {
     	EventDQAmendment result = new EventDQAmendment();
     	if (DateUtils.isEmpty(day) || DateUtils.isEmpty(month)) { 
     		result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
