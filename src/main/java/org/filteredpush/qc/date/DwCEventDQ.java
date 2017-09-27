@@ -324,7 +324,7 @@ public class DwCEventDQ {
     		try { 
     	        if (DateUtils.eventDateValid(modified) && DateUtils.specificToDay(modified)) {
     				result.setResult(EnumDQValidationResult.COMPLIANT);
-    				result.addComment("Provided value for dcterms:modified '" + modified + "' is formated as an ISO date tha can be parsed to an explicit date/time ");
+    				result.addComment("Provided value for dcterms:modified '" + modified + "' is formated as an ISO date that can be parsed to an explicit date/time ");
     			} else { 
     	            if (!DateUtils.eventDateValid(modified)) { 
     				    result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
@@ -343,7 +343,46 @@ public class DwCEventDQ {
     	}
     	return result;
     }	
-
+    
+    
+    
+    /**
+     * Test to see whether a provided dcterms:modified is a validly formated ISO date.
+     * 
+     * Provides: EventDateValid
+     * 
+     * @param eventdate  a string to test
+     * @return COMPLIANT if modified is a validly formated ISO date/time with a duration of less than one day, NOT_COMPLIANT if
+     *     not an ISO date/time or a range of days, INTERNAL_PREREQUSISITES_NOT_MET if modified is empty.
+     */
+    @Provides(value = "urn:uuid:f413594a-df57-41ea-a187-b8c6c6379b45")  // VALIDATION_EVENT_DATE_EXISTS
+	@Validation(label = "Event date correctly formatted and exists", description = "Test to see whether a provided dwc:eventDate " +
+			"is a validly formated ISO date or date/time for an existing date.")
+	@Specification(value = "Compliant if dwc:eventDate can to parsed as an actual ISO date, otherwise not compliant. " +
+			"Internal prerequisites not met if dwc:eventDate is empty.")
+    public static EventDQValidation isEventDateValid(@ActedUpon(value = "dwc:eventDate") String eventdate) {
+    	EventDQValidation result = new EventDQValidation();
+    	if (DateUtils.isEmpty(eventdate)) {
+    		result.addComment("No value provided for dwc:eventDate.");
+    		result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    	} else { 
+    		try { 
+    	        if (DateUtils.eventDateValid(eventdate)) {
+    				result.setResult(EnumDQValidationResult.COMPLIANT);
+    				result.addComment("Provided value for dwc:eventDate '" + eventdate + "' is formated as an ISO date. ");
+    			} else { 
+    				result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    				result.addComment("Provided value for dwc:eventDate '" + eventdate + "' is not a validly formatted ISO date .");
+    			}
+    			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    		} catch (Exception e) { 
+    			logger.debug(e.getMessage());
+    			result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    			result.addComment(e.getMessage());
+    		}
+    	}
+    	return result;
+    }	    
 
     /**
      * Given an event date, check to see if it is empty or contains a valid date value.  If it contains
