@@ -21,9 +21,13 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.datakurator.ffdq.annotations.*;
-import org.datakurator.ffdq.api.EnumDQResultState;
-import org.datakurator.ffdq.api.EnumDQValidationResult;
-import org.datakurator.ffdq.api.EnumDQAmendmentResultState;
+import org.datakurator.ffdq.api.DQResponse;
+import org.datakurator.ffdq.model.needs.Dimension;
+import org.datakurator.ffdq.model.result.ResultState;
+import org.datakurator.ffdq.model.result.amendment.AmendedValues;
+import org.datakurator.ffdq.model.result.measure.CompletenessValue;
+import org.datakurator.ffdq.model.result.measure.NumericalValue;
+import org.datakurator.ffdq.model.result.validation.ComplianceValue;
 import org.joda.time.Interval;
 
 
@@ -34,15 +38,15 @@ import org.joda.time.Interval;
  *  
  *  DAY_MONTH_TRANSPOSED  dayMonthTransposition(@ActedUpon(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) 
  *  DAY_MONTH_YEAR_FILLED_IN
- *  EVENTDATE_FILLED_IN_FROM_VERBATIM extractDateFromVerbatim(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "dwc:verbatimEventDate") String verbatimEventDate)
+ *  EVENTDATE_FILLED_IN_FROM_VERBATIM extractDateFromVerbatim(@DQParam("dwc:eventDate") String eventDate, @Consulted(value = "dwc:verbatimEventDate") String verbatimEventDate)
  *  START_ENDDAYOFYEAR_FILLED_IN
  *
- *  EVENT_DATE_DURATION_SECONDS  measureDurationSeconds(@ActedUpon(value = "dwc:eventDate") String eventDate)
+ *  EVENT_DATE_DURATION_SECONDS  measureDurationSeconds(@DQParam("dwc:eventDate") String eventDate)
  *  DAY_IS_FIRST_OF_CENTURY
  *  DAY_IS_FIRST_OF_YEAR
  *  
- *  DAY_IN_RANGE  isDayInRange(@ActedUpon(value = "dwc:day") String day)   
- *  MONTH_IN_RANGE  isMonthInRange(@ActedUpon(value = "dwc:month") String month) 
+ *  DAY_IN_RANGE  isDayInRange(@DQParam("dwc:day") String day)   
+ *  MONTH_IN_RANGE  isMonthInRange(@DQParam("dwc:month") String month) 
  *  DAY_POSSIBLE_FOR_MONTH_YEAR  isDayPossibleForMonthYear(@Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) 
  *  EVENTDATE_CONSISTENT_WITH_DAY_MONTH_YEAR  
  *  EVENTDATE_IN_PAST
@@ -54,54 +58,67 @@ import org.joda.time.Interval;
  *  EVENTDATE_CONSISTENT_WITH_ATOMIC_PARTS isConsistent(String eventDate, String startDayOfYear, String endDayOfYear, String year, String month, String day)
  *  
  *  Also provides (intended to prepare upstream data for Darwin Core: 
- *  UPSTREAM_EVENTDATE_FILLED_IN_FROM_START_END  extractDateFromStartEnd(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "startDate") String startDate, @Consulted(value="endDate") String endDate) 
+ *  UPSTREAM_EVENTDATE_FILLED_IN_FROM_START_END  extractDateFromStartEnd(@DQParam("dwc:eventDate") String eventDate, @Consulted(value = "startDate") String startDate, @Consulted(value="endDate") String endDate) 
  * 
  * @author mole
  *
  */
-@Mechanism(value = "urn:uuid:b844059f-87cf-4c31-b4d7-9a52003eef84", label = "Kurator: Date Validator - DwCEventDQ")
+@DQClass("b844059f-87cf-4c31-b4d7-9a52003eef84")
 public class DwCEventDQ {
 	
 	private static final Log logger = LogFactory.getLog(DwCEventDQ.class);
 	
 	/**
 	 * Measure the duration of an event date in seconds.
+	 *
+	 * Provides: EVENT_DATE_DURATION_SECONDS
 	 * 
 	 * @param eventDate to measure duration in seconds
 	 * @return EventDQMeasurement object, which if state is COMPLETE has a value of type Long.
 	 */
-    //@Provides(value = "EVENT_DATE_DURATION_SECONDS")
-	@Provides(value = "urn:uuid:b0753f69-08c1-45f5-a5ca-48d24e76d813")
-	@Measure(dimension = Dimension.PRECISION, label = "Event Date Duration In Seconds", description = "Measure the duration of an event date in seconds.")
-	@Specification(value = "For values of dwc:eventDate, calculate the duration in seconds.")
-	public static EventDQMeasurement<Long> measureDurationSeconds(@ActedUpon(value = "dwc:eventDate") String eventDate) {
-		EventDQMeasurement<Long> result = new EventDQMeasurement<Long>();
+	@DQProvides("b0753f69-08c1-45f5-a5ca-48d24e76d813")
+	public static DQResponse<NumericalValue> measureDurationSeconds(@DQParam("dwc:eventDate") final String eventDate) {
+		DQResponse<NumericalValue> result = new DQResponse<>();
+
     	if (DateUtils.isEmpty(eventDate)) {
     		result.addComment("No value provided for eventDate.");
-    		result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     	} else { 
     		try { 
     			long seconds = DateUtils.measureDurationSeconds(eventDate);
-    			result.setValue(new Long(seconds));
-    			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    			result.setValue(new NumericalValue(seconds));
+    			result.setResultState(ResultState.RUN_HAS_RESULT);
     		} catch (Exception e) { 
     			logger.debug(e.getMessage());
-    			result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     			result.addComment(e.getMessage());
     		}
     	}
+
     	return result;
 	}
 
-	//@Provides(value = "EVENT_DATE_COMPLETENESS")
-	@Provides(value = "urn:uuid:0a59e03f-ebb5-4df3-a802-2e444de525b5")
-	@Measure(dimension = Dimension.COMPLETENESS, label = "Event Date Completeness", description = "Measure the completeness of an event date.")
-	@Specification(value = "For values of dwc:eventDate, check is not empty.")
-	public static EventDQMeasurement<Long> measureCompleteness(@ActedUpon(value = "dwc:eventDate") String eventDate) {
-		EventDQMeasurement<Long> result = new EventDQMeasurement<Long>();
+	/**
+	 * Measure the completeness of an event date.
+	 *
+	 * Provides: EVENT_DATE_COMPLETENESS
+	 *
+	 * @param eventDate to check if empty
+	 * @return EventDQMeasurement object, which if state is COMPLETE has a value of type Long.
+	 */
+	@DQProvides(value = "0a59e03f-ebb5-4df3-a802-2e444de525b5")
+
+	public static DQResponse<CompletenessValue> measureCompleteness(@DQParam("dwc:eventDate") final String eventDate) {
+		DQResponse<CompletenessValue> result = new DQResponse<>();
+
 		if (!DateUtils.isEmpty(eventDate)) {
+			result.addComment("Value provided for eventDate.");
+			result.setValue(CompletenessValue.COMPLETE);
+			result.setResultState(ResultState.RUN_HAS_RESULT);
+		} else {
 			result.addComment("No value provided for eventDate.");
-			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+			result.setValue(CompletenessValue.NOT_COMPLETE);
+			result.setResultState(ResultState.RUN_HAS_RESULT);
 		}
 
 		return result;
@@ -116,13 +133,10 @@ public class DwCEventDQ {
      * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
      *    resultState is CHANGED if a new value is proposed.
      */
-    //@Provides(value = "EVENTDATE_CONSISTENT_WITH_VERBATIM")
-	@Provides(value = "urn:uuid:da63f836-1fc6-4e96-a612-fa76678cfd6a")
-	@Validation(label = "Event Date and Verbatim Consistent", description = "Test to see if the eventDate and verbatimEventDate are consistent.")
-	@Specification(value = "If a dwc:eventDate is not empty and the verbatimEventDate is not empty compare the value " +
-			"of dwc:eventDate with that of dwc:verbatimEventDate, and assert Compliant if the two represent the same data or date range.")
-    public static EventDQValidation eventDateConsistentWithVerbatim(@ActedUpon(value = "dwc:eventDate") String eventDate, @ActedUpon(value = "dwc:verbatimEventDate") String verbatimEventDate) {
-    	EventDQValidation result = new EventDQValidation();
+	@DQProvides("da63f836-1fc6-4e96-a612-fa76678cfd6a")
+    public static DQResponse<ComplianceValue> eventDateConsistentWithVerbatim(@DQParam(value = "dwc:eventDate") String eventDate, @DQParam(value = "dwc:verbatimEventDate") String verbatimEventDate) {
+		DQResponse<ComplianceValue> result = new DQResponse<>();
+
     	if (!DateUtils.isEmpty(eventDate) && !DateUtils.isEmpty(verbatimEventDate)) {
 		    EventResult extractResponse = DateUtils.extractDateFromVerbatimER(verbatimEventDate);
 		    if (!extractResponse.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
@@ -134,23 +148,23 @@ public class DwCEventDQ {
 		    	) 
 		    { 
 		    	if (DateUtils.eventsAreSameInterval(eventDate, extractResponse.getResult())) { 
-					result.setResult(EnumDQValidationResult.COMPLIANT);
+					result.setValue(ComplianceValue.COMPLIANT);
     				result.addComment("Provided value for eventDate '" + eventDate + "' represents the same range as verbatimEventDate '"+verbatimEventDate+"'.");
 		    	} else { 
-					result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+					result.setValue(ComplianceValue.NOT_COMPLIANT);
     				result.addComment("Provided value for eventDate '" + eventDate + "' does not represent the same range as verbatimEventDate '"+verbatimEventDate+"'.");
 		    	}
 		    } else { 
-		        result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+		        result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
 		        result.addComment("Unable to extract a date from verbatimEventDate: " + verbatimEventDate);
 		    }    		
     	} else {
     		if (DateUtils.isEmpty(eventDate)) { 
-    		    result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		    result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		    result.addComment("eventDate does not contains a value.");
     		}   			
     		if (DateUtils.isEmpty(verbatimEventDate)) { 
-    		    result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		    result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		    result.addComment("verbatimEventDate does not contains a value.");
     		}   			
     	}
@@ -161,19 +175,18 @@ public class DwCEventDQ {
     /**
      * If a dwc:eventDate is empty and the verbatimEventDate is not empty, try to populate the 
      * eventDate from the verbatim value.
-     * 
+     *
+	 * Provides: EVENTDATE_FILLED_IN_FROM_VERBATIM
+	 *
      * @param eventDate to check for emptyness
      * @param verbatimEventDate to try to replace a non-empty event date.
      * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
      *    resultState is CHANGED if a new value is proposed.
      */
-    //@Provides(value = "EVENTDATE_FILLED_IN_FROM_VERBATIM")
-	@Provides(value = "urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812")
-	@Amendment(label = "Event Date From Verbatim", description = "Try to populate the event date from the verbatim value.")
-	@Specification(value = "If a dwc:eventDate is empty and the verbatimEventDate is not empty fill in dwc:eventDate " +
-			"based on value from dwc:verbatimEventDate")
-    public static EventDQAmendment extractDateFromVerbatim(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "dwc:verbatimEventDate") String verbatimEventDate) {
-    	EventDQAmendment result = new EventDQAmendment();
+	@DQProvides("6d0a0c10-5e4a-4759-b448-88932f399812")
+    public static DQResponse<AmendedValues> extractDateFromVerbatim(@DQParam("dwc:eventDate") String eventDate, @DQParam("dwc:verbatimEventDate") String verbatimEventDate) {
+		DQResponse<AmendedValues> result = new DQResponse<>();
+
     	if (DateUtils.isEmpty(eventDate)) { 
     		if (!DateUtils.isEmpty(verbatimEventDate)) { 
     		    EventResult extractResponse = DateUtils.extractDateFromVerbatimER(verbatimEventDate);
@@ -184,28 +197,31 @@ public class DwCEventDQ {
     		    	      extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)
     		    	     ) 
     		    	) 
-    		    { 
-    		        result.addResult("dwc:eventDate", extractResponse.getResult());
+    		    {
+					AmendedValues amendedValues = new AmendedValues();
+					amendedValues.addResult("dwc:eventDate", extractResponse.getResult());
+
     		        if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
-    		        	result.setResultState(EnumDQAmendmentResultState.AMBIGUOUS);
+    		        	result.setResultState(ResultState.AMBIGUOUS);
+    		        	result.setValue(amendedValues);
     		        	result.addComment(extractResponse.getComment());
     		        } else { 
     		        	if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
     		        		result.addComment("Interpretation of verbatimEventDate [" + verbatimEventDate + "] is suspect.");
     		        		result.addComment(extractResponse.getComment());
     		        	}
-    		        	result.setResultState(EnumDQAmendmentResultState.CHANGED);
+    		        	result.setResultState(ResultState.CHANGED);
     		        }
     		    } else { 
-    		        result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		        result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		        result.addComment("Unable to extract a date from " + verbatimEventDate);
     		    }
     		} else { 
-    		    result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		    result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		    result.addComment("verbatimEventDate does not contains a value.");
     		}
     	} else { 
-    		result.setResultState(EnumDQAmendmentResultState.NO_CHANGE);
+    		result.setResultState(ResultState.NO_CHANGE);
     		result.addComment("eventDate contains a value, not changing.");
     	}
     	return result;
@@ -226,19 +242,16 @@ public class DwCEventDQ {
      * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
      *    resultState is CHANGED if a new value is proposed.
      */
-    @Provides(value = "urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812")
-	@Amendment(label = "Event Date From Parts", description = "Try to populate the event date from the verbatim and other atomic parts (day, month, year, etc).")
-	@Specification(value = "If a dwc:eventDate is empty and the verbatimEventDate is not empty fill in dwc:eventDate " +
-			"based on value from dwc:verbatimEventDate, dwc:year dwc:month, dwc:day, dwc:start/endDayOfYear.")
-    public static EventDQAmendment extractDateFromParts(@ActedUpon(value = "dwc:eventDate") String eventDate,
-    		 @Consulted(value = "dwc:verbatimEventDate") String verbatimEventDate,
-    		 @Consulted(value = "dwc:startDayOfYear") String startDayOfYear,
-    		 @Consulted(value = "dwc:endDayOfYear") String endDayOfYear,
-    		 @Consulted(value = "dwc:year") String year,
-    		 @Consulted(value = "dwc:month") String month,
-    		 @Consulted(value = "dwc:day") String day
-    		 ) {
-    	EventDQAmendment result = new EventDQAmendment();
+    @DQProvides("8cdd4f44-e7ed-4484-a1b8-4e6407a491e2")
+    public static DQResponse<AmendedValues> extractDateFromParts(@DQParam("dwc:eventDate") String eventDate,
+    		 @DQParam("dwc:verbatimEventDate") String verbatimEventDate,
+    		 @DQParam("dwc:startDayOfYear") String startDayOfYear,
+    		 @DQParam("dwc:endDayOfYear") String endDayOfYear,
+    		 @DQParam("dwc:year") String year,
+    		 @DQParam("dwc:month") String month,
+    		 @DQParam("dwc:day") String day) {
+		DQResponse<AmendedValues> result = new DQResponse<>();
+
     	if (DateUtils.isEmpty(eventDate)) { 
     		if (!DateUtils.isEmpty(verbatimEventDate)) { 
     		    String createdDate = DateUtils.createEventDateFromParts(verbatimEventDate, startDayOfYear, endDayOfYear, year, month, day);
@@ -250,51 +263,59 @@ public class DwCEventDQ {
     		    	      extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)
     		    	     ) 
     		    	) 
-    		    { 
-    		        result.addResult("dwc:eventDate", extractResponse.getResult());
+    		    {
+					AmendedValues extractedValues = new AmendedValues();
+					extractedValues.addResult("dwc:eventDate", extractResponse.getResult());
+					result.setValue(extractedValues);
+
     		        if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
-    		        	result.setResultState(EnumDQAmendmentResultState.AMBIGUOUS);
+    		        	result.setResultState(ResultState.AMBIGUOUS);
     		        	result.addComment(extractResponse.getComment());
     		        } else { 
     		        	if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
     		        		result.addComment("Interpretation of verbatimEventDate [" + verbatimEventDate + "] is suspect.");
     		        		result.addComment(extractResponse.getComment());
     		        	}
-    		        	result.setResultState(EnumDQAmendmentResultState.CHANGED);
+    		        	result.setResultState(ResultState.CHANGED);
     		        }
     		    } else { 
-    		        result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		        result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		        result.addComment("Unable to extract a date from " + verbatimEventDate);
     		    }
     		} else { 
-    		    result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		    result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		    result.addComment("verbatimEventDate does not contains a value.");
     		}
     	} else { 
-    		result.setResultState(EnumDQAmendmentResultState.NO_CHANGE);
+    		result.setResultState(ResultState.NO_CHANGE);
     		result.addComment("eventDate contains a value, not changing.");
     	}
     	return result;
     }
 
-    //@Provides(value = "UPSTREAM_EVENTDATE_FILLED_IN_FROM_START_END")
-	@Provides(value = "urn:uuid:e4ddf9bc-cd10-46cc-b307-d6c7233a240a")
-	@Amendment(label = "Event Date From non-Darwin Core start/end", description = "Try to populate the event date from non-Darwin Core start date and end date terms.")
-	@Specification(value = "If a dwc:eventDate is empty and an event date can be inferred from start date and end date, fill in dwc:eventDate " +
-			"based on the values in the start and end dates.  Will not propose a change if dwc:eventDate contains a value.")
-    public static EventDQAmendment extractDateFromStartEnd(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "dwc:startDate") String startDate, @Consulted(value="dwc:endDate") String endDate) {
-    	EventDQAmendment result = new EventDQAmendment();
+	/**
+	 * 	Provides : UPSTREAM_EVENTDATE_FILLED_IN_FROM_START_END
+	 */
+	@DQProvides("e4ddf9bc-cd10-46cc-b307-d6c7233a240a")
+    public static DQResponse<AmendedValues> extractDateFromStartEnd(@DQParam("dwc:eventDate") String eventDate,
+														   @DQParam("dwc:startDate") String startDate,
+														   @DQParam("dwc:endDate") String endDate) {
+		DQResponse<AmendedValues> result = new DQResponse<>();
+
     	if (DateUtils.isEmpty(eventDate)) { 
     		String response = DateUtils.createEventDateFromStartEnd(startDate, endDate);
     		if (DateUtils.isEmpty(response)) { 
-    		    result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		    result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		    result.addComment("Unable to extract a date from " + startDate + " and " + endDate);
-    		} else { 
-    		    result.addResult("dwc:eventDate", response);
-    		    result.setResultState(EnumDQAmendmentResultState.CHANGED);
+    		} else {
+    			AmendedValues extractedValues = new AmendedValues();
+				extractedValues.addResult("dwc:eventDate", response);
+
+				result.setValue(extractedValues);
+    		    result.setResultState(ResultState.CHANGED);
     		}
     	} else { 
-    		result.setResultState(EnumDQAmendmentResultState.NO_CHANGE);
+    		result.setResultState(ResultState.NO_CHANGE);
     		result.addComment("eventDate contains a value, not changing.");
     	}
     	return result;
@@ -304,40 +325,37 @@ public class DwCEventDQ {
     /**
      * Test to see whether a provided dcterms:modified is a validly formated ISO date.
      * 
-     * Provides: ModifiedDateValid
+     * Provides: MODIFIED_DATE_INVALID/MODIFIED_DATE_VALID
      * 
      * @param modified  a string to test
      * @return COMPLIANT if modified is a validly formated ISO date/time with a duration of less than one day, NOT_COMPLIANT if
      *     not an ISO date/time or a range of days, INTERNAL_PREREQUSISITES_NOT_MET if modified is empty.
      */
-    @Provides(value = "urn:uuid:62a9c256-43e4-41ee-8938-d2d2e99479ef")  // MODIFIED_DATE_INVALID/MODIFIED_DATE_VALID
-	@Validation(label = "Modified date correctly formatted", description = "Test to see whether a provided dcterms:modified " +
-			"is a validly formated ISO date/time.")
-	@Specification(value = "Compliant if dcterms:modified can to parsed to an explicit date/time, otherwise not compliant. " +
-			"Internal prerequisites not met if dcterms:modified is empty.")
-    public static EventDQValidation isModifiedDateValid(@ActedUpon(value = "dcterms:modified") String modified) {
-    	EventDQValidation result = new EventDQValidation();
+    @DQProvides("62a9c256-43e4-41ee-8938-d2d2e99479ef")
+    public static DQResponse<ComplianceValue> isModifiedDateValid(@DQParam("dcterms:modified") String modified) {
+		DQResponse<ComplianceValue> result = new DQResponse<>();
+
     	if (DateUtils.isEmpty(modified)) {
     		result.addComment("No value provided for dcterms:modified.");
-    		result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     	} else { 
     		try { 
     	        if (DateUtils.eventDateValid(modified) && DateUtils.specificToDay(modified)) {
-    				result.setResult(EnumDQValidationResult.COMPLIANT);
+    				result.setValue(ComplianceValue.COMPLIANT);
     				result.addComment("Provided value for dcterms:modified '" + modified + "' is formated as an ISO date tha can be parsed to an explicit date/time ");
     			} else { 
     	            if (!DateUtils.eventDateValid(modified)) { 
-    				    result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    				    result.setValue(ComplianceValue.NOT_COMPLIANT);
     				    result.addComment("Provided value for dcterms:modified '" + modified + "' is not a validly formatted ISO date .");
                     } else { 
-    				    result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    				    result.setValue(ComplianceValue.NOT_COMPLIANT);
     				    result.addComment("Provided value for dcterms:modified '" + modified + "' is a validly formatted ISO date, but has a duration of more than one day, modified is expected to be an explicit date/time.");
                     }
     			}
-    			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    			result.setResultState(ResultState.RUN_HAS_RESULT);
     		} catch (Exception e) { 
     			logger.debug(e.getMessage());
-    			result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     			result.addComment(e.getMessage());
     		}
     	}
@@ -348,24 +366,23 @@ public class DwCEventDQ {
     /**
      * Given an event date, check to see if it is empty or contains a valid date value.  If it contains
      * a value that is not a valid date, propose a properly formatted eventDate as an amendment.
-     * 
+     *
+	 * Provides: EVENTDATE_FORMAT_CORRECTION
+	 *
      * @param eventDate to check
      * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
      *    resultState is CHANGED if a new value is proposed.
      */
-    //@Provides(value = "EVENTDATE_FORMAT_CORRECTION")
-	@Provides(value = "urn:uuid:134c7b4f-1261-41ec-acb5-69cd4bc8556f")
-	@Amendment(label = "Event Date Format Correction", description = "Try to propose a correction for an event date")
-	@Specification(value = "Check dwc:eventDate to see if it is empty or contains a valid date value. If it contains a " +
-			"value that is not a valid date, propose a properly formatted eventDate as an amendment.")
-    public static EventDQAmendment correctEventDateFormat(@ActedUpon(value = "dwc:eventDate") String eventDate) {
-    	EventDQAmendment result = new EventDQAmendment();
+	@DQProvides("134c7b4f-1261-41ec-acb5-69cd4bc8556f")
+    public static DQResponse<AmendedValues> correctEventDateFormat(@DQParam("dwc:eventDate") String eventDate) {
+		DQResponse<AmendedValues> result = new DQResponse<>();
+
     	if (DateUtils.eventDateValid(eventDate)) {
-    		result.setResultState(EnumDQAmendmentResultState.NO_CHANGE);
+    		result.setResultState(ResultState.NO_CHANGE);
     		result.addComment("eventDate contains a correctly formatted date, not changing.");
     	} else {
     		if (DateUtils.isEmpty(eventDate)) {
-    		    result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		    result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		    result.addComment("eventDate does not contains a value.");
     		} else { 
     		    EventResult extractResponse = DateUtils.extractDateFromVerbatimER(eventDate);
@@ -376,20 +393,23 @@ public class DwCEventDQ {
     		    	      extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)
     		    	     ) 
     		    	) 
-    		    { 
-    		        result.addResult("dwc:eventDate", extractResponse.getResult());
+    		    {
+    		    	AmendedValues correctedValues = new AmendedValues();
+					correctedValues.addResult("dwc:eventDate", extractResponse.getResult());
+					result.setValue(correctedValues);
+
     		        if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
-    		        	result.setResultState(EnumDQAmendmentResultState.AMBIGUOUS);
+    		        	result.setResultState(ResultState.AMBIGUOUS);
     		        	result.addComment(extractResponse.getComment());
     		        } else { 
     		        	if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
     		        		result.addComment("Interpretation of eventDate [" + eventDate + "] is suspect.");
     		        		result.addComment(extractResponse.getComment());
     		        	}
-    		        	result.setResultState(EnumDQAmendmentResultState.CHANGED);
+    		        	result.setResultState(ResultState.CHANGED);
     		        }
     		    } else { 
-    		        result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		        result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		        result.addComment("Unable to extract a date from " + eventDate);
     		    }
     		}
@@ -405,18 +425,16 @@ public class DwCEventDQ {
      * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
      *    resultState is CHANGED if a new value is proposed.
      */
-    @Provides(value = "urn:uuid:367bf43f-9cb6-45b2-b45f-b8152f1d334a")
-    @Amendment(label = "Date Modified Format Correction", description = "Try to propose a correction for a date modified")
-    @Specification(value = "Check dcterms:modified to see if it is empty or contains a valid date value. If it contains a " +
-            "value that is not a valid date, propose a properly formatted dcterms:modified as an amendment.")
-    public static EventDQAmendment correctModifiedDateFormat(@ActedUpon(value = "dcterms:modified") String modified) {
-        EventDQAmendment result = new EventDQAmendment();
+    @DQProvides("367bf43f-9cb6-45b2-b45f-b8152f1d334a")
+    public static DQResponse<AmendedValues> correctModifiedDateFormat(@DQParam("dcterms:modified") String modified) {
+		DQResponse<AmendedValues> result = new DQResponse<>();
+
         if (DateUtils.eventDateValid(modified)) {
-            result.setResultState(EnumDQAmendmentResultState.NO_CHANGE);
+            result.setResultState(ResultState.NO_CHANGE);
             result.addComment("dcterms:modified contains a correctly formatted date, not changing.");
         } else {
             if (DateUtils.isEmpty(modified)) {
-                result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+                result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
                 result.addComment("dcterms:modified does not contains a value.");
             } else {
                 EventResult extractResponse = DateUtils.extractDateFromVerbatimER(modified);
@@ -428,19 +446,22 @@ public class DwCEventDQ {
                          )
                     )
                 {
-                    result.addResult("dcterms:modified", extractResponse.getResult());
+                	AmendedValues correctedValues = new AmendedValues();
+                	correctedValues.addResult("dcterms:modified", extractResponse.getResult());
+					result.setValue(correctedValues);
+
                     if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
-                        result.setResultState(EnumDQAmendmentResultState.AMBIGUOUS);
+                        result.setResultState(ResultState.AMBIGUOUS);
                         result.addComment(extractResponse.getComment());
                     } else {
                         if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
                             result.addComment("Interpretation of dcterms:modified [" + modified + "] is suspect.");
                             result.addComment(extractResponse.getComment());
                         }
-                        result.setResultState(EnumDQAmendmentResultState.CHANGED);
+                        result.setResultState(ResultState.CHANGED);
                     }
                 } else {
-                    result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+                    result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
                     result.addComment("Unable to extract a date from " + modified);
                 }
             }
@@ -452,23 +473,22 @@ public class DwCEventDQ {
      * Given a dateIdentified, check to see if it is empty or contains a valid date value.  If it contains
      * a value that is not a valid (ISO formatted) date, propose a properly formatted dateModified as an amendment.
      * 
+	 * Provides: DATEIDENTIFIED_FORMAT_AMENDED
+	 * 
      * @param dateIdentified to check
      * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
      *    resultState is CHANGED if a new value is proposed.
      */
-    //@Provides(value = "DATEIDENTIFIED_FORMAT_AMENDED")
-	@Provides(value = "urn:uuid:39bb2280-1215-447b-9221-fd13bc990641")
-    @Amendment(label = "Date Identified Format Correction", description = "Try to propose a correction for a date identified")
-    @Specification(value = "Check dwc:dateIdentified to see if it is empty or contains a valid date value. If it contains a " +
-            "value that is not a valid date, propose a properly formatted dateIdentified as an amendment.")
-    public static EventDQAmendment correctIdentifiedDateFormat(@ActedUpon(value = "dwc:dateIdentified") String dateIdentified) {
-        EventDQAmendment result = new EventDQAmendment();
+	@DQProvides("39bb2280-1215-447b-9221-fd13bc990641")
+    public static DQResponse<AmendedValues> correctIdentifiedDateFormat(@DQParam("dwc:dateIdentified") String dateIdentified) {
+		DQResponse<AmendedValues> result = new DQResponse<>();
+
         if (DateUtils.eventDateValid(dateIdentified)) {
-            result.setResultState(EnumDQAmendmentResultState.NO_CHANGE);
+            result.setResultState(ResultState.NO_CHANGE);
             result.addComment("dwc:dateIdentified contains a correctly formatted date, not changing.");
         } else {
             if (DateUtils.isEmpty(dateIdentified)) {
-                result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+                result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
                 result.addComment("dwc:dateIdentified does not contains a value.");
             } else {
                 EventResult extractResponse = DateUtils.extractDateFromVerbatimER(dateIdentified);
@@ -480,19 +500,22 @@ public class DwCEventDQ {
                          )
                     )
                 {
-                    result.addResult("dwc:dateIdentified", extractResponse.getResult());
+                	AmendedValues correctedValues = new AmendedValues();
+					correctedValues.addResult("dwc:dateIdentified", extractResponse.getResult());
+					result.setValue(correctedValues);
+
                     if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
-                        result.setResultState(EnumDQAmendmentResultState.AMBIGUOUS);
+                        result.setResultState(ResultState.AMBIGUOUS);
                         result.addComment(extractResponse.getComment());
                     } else {
                         if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
                             result.addComment("Interpretation of dwc:dateIdentified [" + dateIdentified + "] is suspect.");
                             result.addComment(extractResponse.getComment());
                         }
-                        result.setResultState(EnumDQAmendmentResultState.CHANGED);
+                        result.setResultState(ResultState.CHANGED);
                     }
                 } else {
-                    result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+                    result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
                     result.addComment("Unable to extract a date from " + dateIdentified);
                 }
             }
@@ -511,31 +534,27 @@ public class DwCEventDQ {
      *     an integer outside this range, INTERNAL_PREREQUSISITES_NOT_MET if day is empty or an integer
      *     cannot be parsed from day. 
      */
-    //@Provides(value = "DAY_IN_RANGE")
-    @Provides(value = "urn:uuid:48aa7d66-36d1-4662-a503-df170f11b03f")   // GUID for DAY_INVALID/DAY_IN_RANGE
-	@Validation(label = "Day In Range", description = "Test to see whether a provided day is an integer in the range " +
-			"of values that can be a day of a month.")
-	@Specification(value = "Compliant if dwc:day is an integer in the range 1 to 31 inclusive, not compliant otherwise. " +
-			"Internal prerequisites not met if day is empty or an integer cannot be parsed from day.")
-    public static EventDQValidation isDayInRange(@ActedUpon(value = "dwc:day") String day) {
-    	EventDQValidation result = new EventDQValidation();
+    @DQProvides("48aa7d66-36d1-4662-a503-df170f11b03f")
+    public static DQResponse<ComplianceValue> isDayInRange(@DQParam("dwc:day") String day) {
+    	DQResponse<ComplianceValue> result = new DQResponse<>();
+
     	if (DateUtils.isEmpty(day)) {
     		result.addComment("No value provided for day.");
-    		result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     	} else { 
     		try { 
     			int numericDay = Integer.parseInt(day.trim());
     			if (DateUtils.isDayInRange(numericDay)) { 
-    				result.setResult(EnumDQValidationResult.COMPLIANT);
+    				result.setValue(ComplianceValue.COMPLIANT);
     				result.addComment("Provided value for day '" + day + "' is an integer in the range 1 to 31.");
     			} else { 
-    				result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    				result.setValue(ComplianceValue.NOT_COMPLIANT);
     				result.addComment("Provided value for day '" + day + "' is not an integer in the range 1 to 31.");
     			}
-    			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    			result.setResultState(ResultState.RUN_HAS_RESULT);
     		} catch (NumberFormatException e) { 
     			logger.debug(e.getMessage());
-    			result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     			result.addComment(e.getMessage());
     		}
     	}
@@ -552,62 +571,57 @@ public class DwCEventDQ {
      *     an integer outside this range, INTERNAL_PREREQUSISITES_NOT_MET if month is empty or an integer
      *     cannot be parsed from month. 
      */
-    // @Provides(value = "MONTH_IN_RANGE")
-    @Provides(value = "urn:uuid:01c6dafa-0886-4b7e-9881-2c3018c98bdc")  // MONTH_INVALID/MONTH_IN_RANGE
-	@Validation(label = "Month In Range", description = "Test to see whether a provided month is in the range of " +
-			"integer values that form months of the year.")
-	@Specification(value = "Compliant if month is an integer in the range 1 to 12 inclusive, otherwise not compliant. " +
-			"Internal prerequisites not met if month is empty or an integer cannot be parsed from month.")
-    public static EventDQValidation isMonthInRange(@ActedUpon(value="dwc:month") String month) {
-    	EventDQValidation result = new EventDQValidation();
+    @DQProvides("01c6dafa-0886-4b7e-9881-2c3018c98bdc")
+    public static DQResponse<ComplianceValue> isMonthInRange(@DQParam("dwc:month") String month) {
+		DQResponse<ComplianceValue> result = new DQResponse<>();
+
     	if (DateUtils.isEmpty(month)) {
     		result.addComment("No value provided for month.");
-    		result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     	} else { 
     		try { 
     			int numericMonth = Integer.parseInt(month.trim());
     			if (DateUtils.isMonthInRange(numericMonth)) { 
-    				result.setResult(EnumDQValidationResult.COMPLIANT);
+    				result.setValue(ComplianceValue.COMPLIANT);
     				result.addComment("Provided value for month '" + month + "' is an integer in the range 1 to 12.");
     			} else { 
-    				result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    				result.setValue(ComplianceValue.NOT_COMPLIANT);
     				result.addComment("Provided value for month '" + month + "' is not an integer in the range 1 to 12.");
     			}
-    			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    			result.setResultState(ResultState.RUN_HAS_RESULT);
     		} catch (NumberFormatException e) { 
     			logger.debug(e.getMessage());
-    			result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     			result.addComment(e.getMessage());
     		}
     	}
     	return result;
-    }    
-    
-    //@Provides(value = "EVENTDATE_PRECISON_JULIAN_YEAR_OR_BETTER")
-	@Provides(value = "urn:uuid:fd00e6be-45e4-4ced-9f3d-5cde30b21b69")
-	@Validation(label = "EventDate precision Julian year or better. ", description = "Test to see whether a provided event date " +
-			"has a duration less than or equal to a standard astronomical Julian year.")
-	@Specification(value = "Compliant if event date has a duration equal to or less than a = 31557600 seconds, otherwise not compliant. " +
-			"Internal prerequisites not met if eventDate is empty or not valid.")
-    public static EventDQValidation isEventDateJulianYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) {
-    	EventDQValidation result = new EventDQValidation();
+    }
+
+	/**
+	 *	Provides: EVENTDATE_PRECISON_JULIAN_YEAR_OR_BETTER
+	 */
+	@DQProvides("fd00e6be-45e4-4ced-9f3d-5cde30b21b69")
+    public static DQResponse<ComplianceValue> isEventDateJulianYearOrLess(@DQParam("dwc:eventDate") String eventDate) {
+		DQResponse<ComplianceValue> result = new DQResponse<>();
+
     	if (DateUtils.isEmpty(eventDate)) {
     		result.addComment("No value provided for eventDate.");
-    		result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     	} else { 
     		if (DateUtils.eventDateValid(eventDate)) { 
     			logger.debug(eventDate);
     			logger.debug(DateUtils.measureDurationSeconds(eventDate));
     			if (DateUtils.measureDurationSeconds(eventDate)<= 31557600) { 
-    				result.setResult(EnumDQValidationResult.COMPLIANT);
+    				result.setValue(ComplianceValue.COMPLIANT);
     				result.addComment("Provided value for eventDate '" + eventDate + "' has a duration less than or equal to one Julian year of 365.25 days.");
     			}  else { 
-    				result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    				result.setValue(ComplianceValue.NOT_COMPLIANT);
     				result.addComment("Provided value for eventDate '" + eventDate + "' has a duration more than one Julian year of 365.25 days.");
     			}
-    			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    			result.setResultState(ResultState.RUN_HAS_RESULT);
     		} else { 
-    			result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     			result.addComment("provided dwc:eventDate not recognized as a valid date value.");
     		}
     	}
@@ -615,43 +629,40 @@ public class DwCEventDQ {
     }      
     
     
-    @Provides(value = "urn:uuid:31d463b4-2a1c-4b90-b6c7-73459d1bad6d")
-	@Validation(label = "EventDate precision calendar year or better. ", description = "Test to see whether a provided event date " +
-			"has a duration less than or equal to a calendar year.")
-	@Specification(value = "Compliant if event date has a duration equal to or less than 365 days if a standard year, 366 days if a leap year. " +
-			"Internal prerequisites not met if eventDate is empty or not valid.")
-    public static EventDQValidation isEventDateYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) {
-    	EventDQValidation result = new EventDQValidation();
+    @DQProvides("31d463b4-2a1c-4b90-b6c7-73459d1bad6d")
+    public static DQResponse<ComplianceValue> isEventDateYearOrLess(@DQParam("dwc:eventDate") String eventDate) {
+		DQResponse<ComplianceValue> result = new DQResponse<>();
+
     	if (DateUtils.isEmpty(eventDate)) {
     		result.addComment("No value provided for eventDate.");
-    		result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     	} else { 
     		if (DateUtils.includesLeapDay(eventDate)) { 
     			if (DateUtils.eventDateValid(eventDate)) { 
     				if (DateUtils.measureDurationSeconds(eventDate)<= 31622400) { 
-    					result.setResult(EnumDQValidationResult.COMPLIANT);
+    					result.setValue(ComplianceValue.COMPLIANT);
     					result.addComment("Provided value for eventDate '" + eventDate + "' contains a leap day and has a duration less than or equal to one calendar year of 366 days.");
     				}  else { 
-    					result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    					result.setValue(ComplianceValue.NOT_COMPLIANT);
     					result.addComment("Provided value for eventDate '" + eventDate + "' contains a leap day has a duration more than one calendar year of 366 days.");
     				}
-    				result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    				result.setResultState(ResultState.RUN_HAS_RESULT);
     			} else { 
-    				result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    				result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     				result.addComment("provided dwc:eventDate not recognized as a valid date value.");
     			}
     		} else { 
     			if (DateUtils.eventDateValid(eventDate)) { 
     				if (DateUtils.measureDurationSeconds(eventDate)<= 31536000) { 
-    					result.setResult(EnumDQValidationResult.COMPLIANT);
+    					result.setValue(ComplianceValue.COMPLIANT);
     					result.addComment("Provided value for eventDate '" + eventDate + "' does not contain a leap day and has a duration less than or equal to one calendar year of 365 days.");
     				}  else { 
-    					result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    					result.setValue(ComplianceValue.NOT_COMPLIANT);
     					result.addComment("Provided value for eventDate '" + eventDate + "' does not contain a leap day has a duration more than one calendar year of 365 days.");
     				}
-    				result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    				result.setResultState(ResultState.RUN_HAS_RESULT);
     			} else { 
-    				result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    				result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     				result.addComment("provided dwc:eventDate not recognized as a valid date value.");
     			}
     		}
@@ -669,39 +680,35 @@ public class DwCEventDQ {
      * @param day to check 
      * @return an DQValidationResponse object describing whether day exists in year-month-day.
      */
-    @Provides(value = "urn:uuid:5618f083-d55a-4ac2-92b5-b9fb227b832f")
-	@Validation(label = "Day Consistent With Month/Year", description = "Check if a value for day is consistent with a " +
-			"provided month and year.")
-	@Specification("Check that the value of dwc:eventDate is consistent with the values for dwc:month and dwc:year. " +
-			"Requires valid values for month and year.")
-    public static EventDQValidation isDayPossibleForMonthYear(@Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) {
-    	EventDQValidation result = new EventDQValidation();
+    @DQProvides("5618f083-d55a-4ac2-92b5-b9fb227b832f")
+    public static DQResponse<ComplianceValue> isDayPossibleForMonthYear(@DQParam("dwc:year") String year, @DQParam("dwc:month") String month, @DQParam("dwc:day") String day) {
+		DQResponse<ComplianceValue> result = new DQResponse<>();
+
+		DQResponse<ComplianceValue> monthResult =  isMonthInRange(month);
+		DQResponse<ComplianceValue> dayResult =  isDayInRange(day);
     	
-    	EventDQValidation monthResult =  isMonthInRange(month);
-    	EventDQValidation dayResult =  isDayInRange(day);
-    	
-    	if (monthResult.getResultState().equals(EnumDQResultState.RUN_HAS_RESULT)) {
-    		if (monthResult.getResult().equals(EnumDQValidationResult.COMPLIANT)) { 
-    	        if (dayResult.getResultState().equals(EnumDQResultState.RUN_HAS_RESULT)) { 
-    	        	if (dayResult.getResult().equals(EnumDQValidationResult.COMPLIANT)) {
+    	if (monthResult.getResultState().equals(ResultState.RUN_HAS_RESULT)) {
+    		if (monthResult.getValue().equals(ComplianceValue.COMPLIANT)) {
+    	        if (dayResult.getResultState().equals(ResultState.RUN_HAS_RESULT)) {
+    	        	if (dayResult.getValue().equals(ComplianceValue.COMPLIANT)) {
     	        		try { 
     	        		    Integer numericYear = Integer.parseInt(year);
     	        		    String date = String.format("%04d", numericYear) + "-" + month.trim() + "-" + day.trim();
 
     	        	    	if (DateUtils.eventDateValid(date)) { 
-    	        	    		result.setResult(EnumDQValidationResult.COMPLIANT);
+    	        	    		result.setValue(ComplianceValue.COMPLIANT);
     	        	    		result.addComment("Provided value for year-month-day " + date + " parses to a valid day.");;
     	        	    	} else { 
-    	        	    		result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    	        	    		result.setValue(ComplianceValue.NOT_COMPLIANT);
     	        	    		result.addComment("Provided value for year-month-day " + date + " does not parse to a valid day.");;
     	        	    	}
-    	        		    result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    	        		    result.setResultState(ResultState.RUN_HAS_RESULT);
     	        		} catch (NumberFormatException e) { 
-    	        			result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    	        			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     	        		    result.addComment("Unable to parse integer from provided value for year " + year + " " + e.getMessage());;
     	        		}
     	        	} else { 
-    	        		result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    	        		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     	        		result.addComment("Provided value for day " + day + " is outside the range 1-31.");;
     	        	}
     	        } else { 
@@ -709,7 +716,7 @@ public class DwCEventDQ {
     	        	result.addComment(dayResult.getComment());
     	        }
     		} else { 
-    			result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     			result.addComment("Provided value for month " + month + " is outside the range 1-12.");;
     		}
     	} else { 
@@ -730,49 +737,50 @@ public class DwCEventDQ {
      * @param day  the value of dwc:day
      * @return an EventDQAmmendment which may contain a proposed ammendment.
      */
-    @Provides(value = "urn:uuid:f98a54eb-59e7-44c7-b96f-200e6af1c895")
-	@Amendment(label = "Day Month Transposition", description = "Check of month is out of range for months, but day is " +
-			"in range for months, and propose a transposition of the two if this is the case.")
-	@Specification("If dwc:month and dwc:day are provided, propose a transposition if day is in range for months, and " +
-			"month is in range for days")
-    public static final EventDQAmendment dayMonthTransposition(@ActedUpon(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) {
-    	EventDQAmendment result = new EventDQAmendment();
+    @DQProvides("f98a54eb-59e7-44c7-b96f-200e6af1c895")
+    public static final DQResponse<AmendedValues> dayMonthTransposition(@DQParam("dwc:month") String month, @DQParam("dwc:day") String day) {
+		DQResponse<AmendedValues> result = new DQResponse<>();
+
     	if (DateUtils.isEmpty(day) || DateUtils.isEmpty(month)) { 
-    		result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		result.addComment("Either month or day was not provided.");
-    	} else { 
-        	EventDQValidation monthResult =  isMonthInRange(month);
-        	EventDQValidation dayResult =  isDayInRange(day);
-        	if (monthResult.getResultState().equals(EnumDQResultState.RUN_HAS_RESULT)) {
-        		if (monthResult.getResult().equals(EnumDQValidationResult.NOT_COMPLIANT)) { 
+    	} else {
+			DQResponse<ComplianceValue> monthResult =  isMonthInRange(month);
+			DQResponse<ComplianceValue> dayResult =  isDayInRange(day);
+
+			if (monthResult.getResultState().equals(ResultState.RUN_HAS_RESULT)) {
+        		if (monthResult.getValue().equals(ComplianceValue.NOT_COMPLIANT)) {
         			// month is integer, but out of range
-        	        if (dayResult.getResultState().equals(EnumDQResultState.RUN_HAS_RESULT)) { 
+        	        if (dayResult.getResultState().equals(ResultState.RUN_HAS_RESULT)) {
         	        	// day is also integer
         	        	int dayNumeric = Integer.parseInt(day);
         	        	int monthNumeric = Integer.parseInt(month);
         	        	if (DateUtils.isDayInRange(monthNumeric) && DateUtils.isMonthInRange(dayNumeric)) { 
         	        		// day is in range for months, and month is in range for days, so transpose.
-        	        	    result.addResult("dwc:month", day);
-        	        	    result.addResult("dwc:day", month);
-        	        	    result.setResultState(EnumDQAmendmentResultState.TRANSPOSED);
+							AmendedValues transposedValues = new AmendedValues();
+							transposedValues.addResult("dwc:month", day);
+							transposedValues.addResult("dwc:day", month);
+
+							result.setValue(transposedValues);
+        	        	    result.setResultState(ResultState.TRANSPOSED);
         	        	} else { 
-        	        	    result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+        	        	    result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
         	        	}
         	        } else { 
-    		            result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		            result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		            result.addComment("dwc:day " + dayResult.getResultState() + ". " + dayResult.getComment());
         	        }
         		} else { 
-        	        if (dayResult.getResultState().equals(EnumDQResultState.RUN_HAS_RESULT) &&
-        	            dayResult.getResult().equals(EnumDQValidationResult.COMPLIANT)) { 
+        	        if (dayResult.getResultState().equals(ResultState.RUN_HAS_RESULT) &&
+        	            dayResult.getValue().equals(ComplianceValue.COMPLIANT)) {
         			    // month is in range for months, so don't try to change.
-        	            result.setResultState(EnumDQAmendmentResultState.NO_CHANGE);
+        	            result.setResultState(ResultState.NO_CHANGE);
         	        } else { 
-    		            result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		            result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
         	        }
         		}
         	} else {
-    		   result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		   result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		   result.addComment("dwc:month " + monthResult.getResultState() + ". " + monthResult.getComment());
         	}
     	}
