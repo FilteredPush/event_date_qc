@@ -22,12 +22,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.datakurator.ffdq.annotations.*;
 import org.datakurator.ffdq.api.DQResponse;
-import org.datakurator.ffdq.model.needs.Dimension;
-import org.datakurator.ffdq.model.result.ResultState;
-import org.datakurator.ffdq.model.result.amendment.AmendedValues;
-import org.datakurator.ffdq.model.result.measure.CompletenessValue;
-import org.datakurator.ffdq.model.result.measure.NumericalValue;
-import org.datakurator.ffdq.model.result.validation.ComplianceValue;
+import org.datakurator.ffdq.model.report.ResultState;
+import org.datakurator.ffdq.model.report.result.AmendmentValue;
+import org.datakurator.ffdq.model.report.result.CompletenessValue;
+import org.datakurator.ffdq.model.report.result.ComplianceValue;
+import org.datakurator.ffdq.model.report.result.NumericalValue;
 import org.joda.time.Interval;
 
 
@@ -184,8 +183,10 @@ public class DwCEventDQ {
      *    resultState is CHANGED if a new value is proposed.
      */
 	@DQProvides("6d0a0c10-5e4a-4759-b448-88932f399812")
-    public static DQResponse<AmendedValues> extractDateFromVerbatim(@DQParam("dwc:eventDate") String eventDate, @DQParam("dwc:verbatimEventDate") String verbatimEventDate) {
-		DQResponse<AmendedValues> result = new DQResponse<>();
+    public static DQResponse<AmendmentValue> extractDateFromVerbatim(@DQParam("dwc:eventDate") String eventDate, @DQParam("dwc:verbatimEventDate") String verbatimEventDate) {
+		DQResponse<AmendmentValue> result = new DQResponse<>();
+		AmendmentValue extractedValues = new AmendmentValue();
+		result.setValue(extractedValues);
 
     	if (DateUtils.isEmpty(eventDate)) { 
     		if (!DateUtils.isEmpty(verbatimEventDate)) { 
@@ -198,12 +199,12 @@ public class DwCEventDQ {
     		    	     ) 
     		    	) 
     		    {
-					AmendedValues amendedValues = new AmendedValues();
-					amendedValues.addResult("dwc:eventDate", extractResponse.getResult());
+
+					extractedValues.addResult("dwc:eventDate", extractResponse.getResult());
 
     		        if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
     		        	result.setResultState(ResultState.AMBIGUOUS);
-    		        	result.setValue(amendedValues);
+    		        	result.setValue(extractedValues);
     		        	result.addComment(extractResponse.getComment());
     		        } else { 
     		        	if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
@@ -243,14 +244,14 @@ public class DwCEventDQ {
      *    resultState is CHANGED if a new value is proposed.
      */
     @DQProvides("8cdd4f44-e7ed-4484-a1b8-4e6407a491e2")
-    public static DQResponse<AmendedValues> extractDateFromParts(@DQParam("dwc:eventDate") String eventDate,
+    public static DQResponse<AmendmentValue> extractDateFromParts(@DQParam("dwc:eventDate") String eventDate,
     		 @DQParam("dwc:verbatimEventDate") String verbatimEventDate,
     		 @DQParam("dwc:startDayOfYear") String startDayOfYear,
     		 @DQParam("dwc:endDayOfYear") String endDayOfYear,
     		 @DQParam("dwc:year") String year,
     		 @DQParam("dwc:month") String month,
     		 @DQParam("dwc:day") String day) {
-		DQResponse<AmendedValues> result = new DQResponse<>();
+		DQResponse<AmendmentValue> result = new DQResponse<>();
 
     	if (DateUtils.isEmpty(eventDate)) { 
     		if (!DateUtils.isEmpty(verbatimEventDate)) { 
@@ -264,7 +265,7 @@ public class DwCEventDQ {
     		    	     ) 
     		    	) 
     		    {
-					AmendedValues extractedValues = new AmendedValues();
+					AmendmentValue extractedValues = new AmendmentValue();
 					extractedValues.addResult("dwc:eventDate", extractResponse.getResult());
 					result.setValue(extractedValues);
 
@@ -297,10 +298,10 @@ public class DwCEventDQ {
 	 * 	Provides : UPSTREAM_EVENTDATE_FILLED_IN_FROM_START_END
 	 */
 	@DQProvides("e4ddf9bc-cd10-46cc-b307-d6c7233a240a")
-    public static DQResponse<AmendedValues> extractDateFromStartEnd(@DQParam("dwc:eventDate") String eventDate,
+    public static DQResponse<AmendmentValue> extractDateFromStartEnd(@DQParam("dwc:eventDate") String eventDate,
 														   @DQParam("dwc:startDate") String startDate,
 														   @DQParam("dwc:endDate") String endDate) {
-		DQResponse<AmendedValues> result = new DQResponse<>();
+		DQResponse<AmendmentValue> result = new DQResponse<>();
 
     	if (DateUtils.isEmpty(eventDate)) { 
     		String response = DateUtils.createEventDateFromStartEnd(startDate, endDate);
@@ -308,7 +309,7 @@ public class DwCEventDQ {
     		    result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		    result.addComment("Unable to extract a date from " + startDate + " and " + endDate);
     		} else {
-    			AmendedValues extractedValues = new AmendedValues();
+    			AmendmentValue extractedValues = new AmendmentValue();
 				extractedValues.addResult("dwc:eventDate", response);
 
 				result.setValue(extractedValues);
@@ -374,8 +375,8 @@ public class DwCEventDQ {
      *    resultState is CHANGED if a new value is proposed.
      */
 	@DQProvides("134c7b4f-1261-41ec-acb5-69cd4bc8556f")
-    public static DQResponse<AmendedValues> correctEventDateFormat(@DQParam("dwc:eventDate") String eventDate) {
-		DQResponse<AmendedValues> result = new DQResponse<>();
+    public static DQResponse<AmendmentValue> correctEventDateFormat(@DQParam("dwc:eventDate") String eventDate) {
+		DQResponse<AmendmentValue> result = new DQResponse<>();
 
     	if (DateUtils.eventDateValid(eventDate)) {
     		result.setResultState(ResultState.NO_CHANGE);
@@ -394,7 +395,7 @@ public class DwCEventDQ {
     		    	     ) 
     		    	) 
     		    {
-    		    	AmendedValues correctedValues = new AmendedValues();
+    		    	AmendmentValue correctedValues = new AmendmentValue();
 					correctedValues.addResult("dwc:eventDate", extractResponse.getResult());
 					result.setValue(correctedValues);
 
@@ -426,8 +427,8 @@ public class DwCEventDQ {
      *    resultState is CHANGED if a new value is proposed.
      */
     @DQProvides("367bf43f-9cb6-45b2-b45f-b8152f1d334a")
-    public static DQResponse<AmendedValues> correctModifiedDateFormat(@DQParam("dcterms:modified") String modified) {
-		DQResponse<AmendedValues> result = new DQResponse<>();
+    public static DQResponse<AmendmentValue> correctModifiedDateFormat(@DQParam("dcterms:modified") String modified) {
+		DQResponse<AmendmentValue> result = new DQResponse<>();
 
         if (DateUtils.eventDateValid(modified)) {
             result.setResultState(ResultState.NO_CHANGE);
@@ -446,7 +447,7 @@ public class DwCEventDQ {
                          )
                     )
                 {
-                	AmendedValues correctedValues = new AmendedValues();
+                	AmendmentValue correctedValues = new AmendmentValue();
                 	correctedValues.addResult("dcterms:modified", extractResponse.getResult());
 					result.setValue(correctedValues);
 
@@ -480,8 +481,8 @@ public class DwCEventDQ {
      *    resultState is CHANGED if a new value is proposed.
      */
 	@DQProvides("39bb2280-1215-447b-9221-fd13bc990641")
-    public static DQResponse<AmendedValues> correctIdentifiedDateFormat(@DQParam("dwc:dateIdentified") String dateIdentified) {
-		DQResponse<AmendedValues> result = new DQResponse<>();
+    public static DQResponse<AmendmentValue> correctIdentifiedDateFormat(@DQParam("dwc:dateIdentified") String dateIdentified) {
+		DQResponse<AmendmentValue> result = new DQResponse<>();
 
         if (DateUtils.eventDateValid(dateIdentified)) {
             result.setResultState(ResultState.NO_CHANGE);
@@ -500,7 +501,7 @@ public class DwCEventDQ {
                          )
                     )
                 {
-                	AmendedValues correctedValues = new AmendedValues();
+                	AmendmentValue correctedValues = new AmendmentValue();
 					correctedValues.addResult("dwc:dateIdentified", extractResponse.getResult());
 					result.setValue(correctedValues);
 
@@ -738,8 +739,8 @@ public class DwCEventDQ {
      * @return an EventDQAmmendment which may contain a proposed ammendment.
      */
     @DQProvides("f98a54eb-59e7-44c7-b96f-200e6af1c895")
-    public static final DQResponse<AmendedValues> dayMonthTransposition(@DQParam("dwc:month") String month, @DQParam("dwc:day") String day) {
-		DQResponse<AmendedValues> result = new DQResponse<>();
+    public static final DQResponse<AmendmentValue> dayMonthTransposition(@DQParam("dwc:month") String month, @DQParam("dwc:day") String day) {
+		DQResponse<AmendmentValue> result = new DQResponse<>();
 
     	if (DateUtils.isEmpty(day) || DateUtils.isEmpty(month)) { 
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -757,7 +758,7 @@ public class DwCEventDQ {
         	        	int monthNumeric = Integer.parseInt(month);
         	        	if (DateUtils.isDayInRange(monthNumeric) && DateUtils.isMonthInRange(dayNumeric)) { 
         	        		// day is in range for months, and month is in range for days, so transpose.
-							AmendedValues transposedValues = new AmendedValues();
+							AmendmentValue transposedValues = new AmendmentValue();
 							transposedValues.addResult("dwc:month", day);
 							transposedValues.addResult("dwc:day", month);
 
