@@ -146,11 +146,13 @@ public class DwCEventDQ {
 		    	     ) 
 		    	) 
 		    { 
-		    	if (DateUtils.eventsAreSameInterval(eventDate, extractResponse.getResult())) { 
+		    	if (DateUtils.eventsAreSameInterval(eventDate, extractResponse.getResult())) {
 					result.setValue(ComplianceValue.COMPLIANT);
+					result.setResultState(ResultState.RUN_HAS_RESULT);
     				result.addComment("Provided value for eventDate '" + eventDate + "' represents the same range as verbatimEventDate '"+verbatimEventDate+"'.");
-		    	} else { 
+		    	} else {
 					result.setValue(ComplianceValue.NOT_COMPLIANT);
+					result.setResultState(ResultState.RUN_HAS_RESULT);
     				result.addComment("Provided value for eventDate '" + eventDate + "' does not represent the same range as verbatimEventDate '"+verbatimEventDate+"'.");
 		    	}
 		    } else { 
