@@ -313,6 +313,7 @@ public class DwCEventDQ {
     		} else {
     			AmendmentValue extractedValues = new AmendmentValue();
 				extractedValues.addResult("dwc:eventDate", response);
+				result.addComment("Extracted a date " + response + " from " + startDate + " and " + endDate);
 
 				result.setValue(extractedValues);
     		    result.setResultState(ResultState.CHANGED);
