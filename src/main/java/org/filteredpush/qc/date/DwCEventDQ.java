@@ -188,7 +188,6 @@ public class DwCEventDQ {
     public static DQResponse<AmendmentValue> extractDateFromVerbatim(@DQParam("dwc:eventDate") String eventDate, @DQParam("dwc:verbatimEventDate") String verbatimEventDate) {
 		DQResponse<AmendmentValue> result = new DQResponse<>();
 		AmendmentValue extractedValues = new AmendmentValue();
-		result.setValue(extractedValues);
 
     	if (DateUtils.isEmpty(eventDate)) { 
     		if (!DateUtils.isEmpty(verbatimEventDate)) { 
@@ -210,6 +209,7 @@ public class DwCEventDQ {
     		        	result.addComment(extractResponse.getComment());
     		        } else { 
     		        	if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
+							result.setValue(extractedValues);
     		        		result.addComment("Interpretation of verbatimEventDate [" + verbatimEventDate + "] is suspect.");
     		        		result.addComment(extractResponse.getComment());
     		        	}
