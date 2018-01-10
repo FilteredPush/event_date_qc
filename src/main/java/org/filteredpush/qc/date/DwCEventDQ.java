@@ -187,7 +187,6 @@ public class DwCEventDQ {
 	@DQProvides("6d0a0c10-5e4a-4759-b448-88932f399812")
     public static DQResponse<AmendmentValue> extractDateFromVerbatim(@DQParam("dwc:eventDate") String eventDate, @DQParam("dwc:verbatimEventDate") String verbatimEventDate) {
 		DQResponse<AmendmentValue> result = new DQResponse<>();
-		AmendmentValue extractedValues = new AmendmentValue();
 
     	if (DateUtils.isEmpty(eventDate)) { 
     		if (!DateUtils.isEmpty(verbatimEventDate)) { 
@@ -201,19 +200,19 @@ public class DwCEventDQ {
     		    	) 
     		    {
 
+					AmendmentValue extractedValues = new AmendmentValue();
 					extractedValues.addResult("dwc:eventDate", extractResponse.getResult());
+					result.setValue(extractedValues);
+					result.setResultState(ResultState.CHANGED);
 
     		        if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
     		        	result.setResultState(ResultState.AMBIGUOUS);
-    		        	result.setValue(extractedValues);
     		        	result.addComment(extractResponse.getComment());
-    		        } else { 
+    		        } else {
     		        	if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
-							result.setValue(extractedValues);
     		        		result.addComment("Interpretation of verbatimEventDate [" + verbatimEventDate + "] is suspect.");
     		        		result.addComment(extractResponse.getComment());
     		        	}
-    		        	result.setResultState(ResultState.CHANGED);
     		        }
     		    } else { 
     		        result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -270,6 +269,7 @@ public class DwCEventDQ {
 					AmendmentValue extractedValues = new AmendmentValue();
 					extractedValues.addResult("dwc:eventDate", extractResponse.getResult());
 					result.setValue(extractedValues);
+					result.setResultState(ResultState.CHANGED);
 
     		        if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
     		        	result.setResultState(ResultState.AMBIGUOUS);
@@ -279,7 +279,6 @@ public class DwCEventDQ {
     		        		result.addComment("Interpretation of verbatimEventDate [" + verbatimEventDate + "] is suspect.");
     		        		result.addComment(extractResponse.getComment());
     		        	}
-    		        	result.setResultState(ResultState.CHANGED);
     		        }
     		    } else { 
     		        result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
