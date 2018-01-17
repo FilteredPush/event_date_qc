@@ -22,10 +22,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.datakurator.ffdq.api.DQResponse;
 import org.datakurator.ffdq.model.report.ResultState;
-import org.datakurator.ffdq.model.report.result.AmendmentValue;
-import org.datakurator.ffdq.model.report.result.ComplianceValue;
-import org.datakurator.ffdq.model.report.result.NumericalValue;
+import org.datakurator.ffdq.api.result.AmendmentValue;
+import org.datakurator.ffdq.api.result.ComplianceValue;
+import org.datakurator.ffdq.api.result.NumericalValue;
 import org.junit.Test;
+
+import java.util.Map;
 
 /**
  * @author mole
@@ -38,12 +40,12 @@ public class DwcEventDQTest {
 	public void testMeasureDuration() { 
 		DQResponse<NumericalValue> measure = DwCEventDQ.measureDurationSeconds("1880-05-08");
 		Long seconds = (60l*60l*24l)-1l; 
-		assertEquals(seconds, measure.getValue().longValue());
+		assertEquals(seconds, measure.getValue());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
 		
 		measure = DwCEventDQ.measureDurationSeconds("1880-05");
 		seconds = (60l*60l*24l*31)-1l; 
-		assertEquals(seconds, measure.getValue().longValue());		
+		assertEquals(seconds, measure.getValue());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
 		
 		measure = DwCEventDQ.measureDurationSeconds("");
@@ -267,9 +269,11 @@ public class DwcEventDQTest {
 		String month = "30";
 		String day = "11";
 		DQResponse<AmendmentValue> result = DwCEventDQ.dayMonthTransposition(month,day);
+		Map<String, String> values = result.getValue().getObject();
+
 		assertEquals(ResultState.TRANSPOSED, result.getResultState());
-		assertEquals("11",result.getValue().get("dwc:month"));
-		assertEquals("30",result.getValue().get("dwc:day"));
+		assertEquals("11",values.get("dwc:month"));
+		assertEquals("30",values.get("dwc:day"));
 
 		result = DwCEventDQ.dayMonthTransposition(day,month);
 		assertEquals(ResultState.NO_CHANGE, result.getResultState());
@@ -313,45 +317,47 @@ public class DwcEventDQTest {
 		String eventDate = "";
 		String verbatimEventDate = "Jan 1884";
 		DQResponse<AmendmentValue> result = DwCEventDQ.extractDateFromVerbatim(eventDate,verbatimEventDate);
+		Map<String, String> values = result.getValue().getObject();
+
 		assertEquals(ResultState.CHANGED, result.getResultState());
-		assertEquals("1884-01",result.getValue().get("dwc:eventDate"));
-		assertEquals(1,result.getValue().size());
+		assertEquals("1884-01",values.get("dwc:eventDate"));
+		assertEquals(1,values.size());
 
 		verbatimEventDate = "1 Mar 1884";
 		result = DwCEventDQ.extractDateFromVerbatim(eventDate,verbatimEventDate);
 		assertEquals(ResultState.CHANGED, result.getResultState());
-		assertEquals("1884-03-01",result.getValue().get("dwc:eventDate"));
-		assertEquals(1,result.getValue().size());		
+		assertEquals("1884-03-01",values.get("dwc:eventDate"));
+		assertEquals(1,values.size());
 		
 		eventDate = "1884";
 		verbatimEventDate = "1 Mar 1884";
 		result = DwCEventDQ.extractDateFromVerbatim(eventDate,verbatimEventDate);
 		assertEquals(ResultState.NO_CHANGE, result.getResultState());
-		assertEquals(0,result.getValue().size());			
+		assertEquals(0,values.size());
 		eventDate = "1884-03-01";
 		verbatimEventDate = "1 Mar 1884";
 		result = DwCEventDQ.extractDateFromVerbatim(eventDate,verbatimEventDate);
 		assertEquals(ResultState.NO_CHANGE, result.getResultState());
-		assertEquals(0,result.getValue().size());		
+		assertEquals(0,values.size());
 		
 		eventDate = null;
 		verbatimEventDate = "";
 		result = DwCEventDQ.extractDateFromVerbatim(eventDate,verbatimEventDate);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
-		assertEquals(0,result.getValue().size());			
+		assertEquals(0,values.size());
 		
 		eventDate = null;
 		verbatimEventDate = "5-8-1884";
 		result = DwCEventDQ.extractDateFromVerbatim(eventDate,verbatimEventDate);
 		assertEquals(ResultState.AMBIGUOUS, result.getResultState());
-		assertEquals("1884-05-08/1884-08-05",result.getValue().get("dwc:eventDate"));
-		assertEquals(1,result.getValue().size());		
+		assertEquals("1884-05-08/1884-08-05",values.get("dwc:eventDate"));
+		assertEquals(1,values.size());
 		
 		eventDate = null;
 		verbatimEventDate = "2001/Feb/29";
 		result = DwCEventDQ.extractDateFromVerbatim(eventDate,verbatimEventDate);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
-		assertEquals(0,result.getValue().size());			
+		assertEquals(0,values.size());
 		
 	}
 	
@@ -359,23 +365,25 @@ public class DwcEventDQTest {
 	public void testCorrectEventDateFormat() { 
 		String eventDate = "Jan 1884";
 		DQResponse<AmendmentValue> result = DwCEventDQ.correctEventDateFormat(eventDate);
+		Map<String, String> values = result.getValue().getObject();
+
 		assertEquals(ResultState.CHANGED, result.getResultState());
-		assertEquals("1884-01",result.getValue().get("dwc:eventDate"));
-		assertEquals(1,result.getValue().size());	
+		assertEquals("1884-01",values.get("dwc:eventDate"));
+		assertEquals(1,values.size());
 		
 		eventDate = "1 Jan 1884";
 		result = DwCEventDQ.correctEventDateFormat(eventDate);
 		assertEquals(ResultState.CHANGED, result.getResultState());
-		assertEquals("1884-01-01",result.getValue().get("dwc:eventDate"));
-		assertEquals(1,result.getValue().size());		
+		assertEquals("1884-01-01",values.get("dwc:eventDate"));
+		assertEquals(1,values.size());
 		
 		/* Case that inspired adding this method, typical use of / instead of - in dates. 
 		 */
 		eventDate = "1884/01/02";
 		result = DwCEventDQ.correctEventDateFormat(eventDate);
 		assertEquals(ResultState.CHANGED, result.getResultState());
-		assertEquals("1884-01-02",result.getValue().get("dwc:eventDate"));
-		assertEquals(1,result.getValue().size());		
+		assertEquals("1884-01-02",values.get("dwc:eventDate"));
+		assertEquals(1,values.size());
 		
 		eventDate = "1884-01-02";
 		result = DwCEventDQ.correctEventDateFormat(eventDate);
@@ -395,8 +403,8 @@ public class DwcEventDQTest {
 		eventDate = "02/03/1884";
 		result = DwCEventDQ.correctEventDateFormat(eventDate);
 		assertEquals(ResultState.AMBIGUOUS, result.getResultState());	
-		assertEquals("1884-02-03/1884-03-02",result.getValue().get("dwc:eventDate"));
-		assertEquals(1,result.getValue().size());				
+		assertEquals("1884-02-03/1884-03-02",values.get("dwc:eventDate"));
+		assertEquals(1,values.size());
 		
 	}
 }

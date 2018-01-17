@@ -16,6 +16,7 @@
  */
 package org.filteredpush.qc.date;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -23,10 +24,10 @@ import org.apache.commons.logging.LogFactory;
 import org.datakurator.ffdq.annotations.*;
 import org.datakurator.ffdq.api.DQResponse;
 import org.datakurator.ffdq.model.report.ResultState;
-import org.datakurator.ffdq.model.report.result.AmendmentValue;
-import org.datakurator.ffdq.model.report.result.CompletenessValue;
-import org.datakurator.ffdq.model.report.result.ComplianceValue;
-import org.datakurator.ffdq.model.report.result.NumericalValue;
+import org.datakurator.ffdq.api.result.AmendmentValue;
+import org.datakurator.ffdq.api.result.CompletenessValue;
+import org.datakurator.ffdq.api.result.ComplianceValue;
+import org.datakurator.ffdq.api.result.NumericalValue;
 import org.joda.time.Interval;
 
 
@@ -187,8 +188,6 @@ public class DwCEventDQ {
 	@DQProvides("6d0a0c10-5e4a-4759-b448-88932f399812")
     public static DQResponse<AmendmentValue> extractDateFromVerbatim(@DQParam("dwc:eventDate") String eventDate, @DQParam("dwc:verbatimEventDate") String verbatimEventDate) {
 		DQResponse<AmendmentValue> result = new DQResponse<>();
-		AmendmentValue extractedValues = new AmendmentValue();
-		result.setValue(extractedValues);
 
     	if (DateUtils.isEmpty(eventDate)) { 
     		if (!DateUtils.isEmpty(verbatimEventDate)) { 
@@ -201,12 +200,13 @@ public class DwCEventDQ {
     		    	     ) 
     		    	) 
     		    {
+					Map<String, String> extractedValues = new HashMap<>();
+					extractedValues.put("dwc:eventDate", extractResponse.getResult());
 
-					extractedValues.addResult("dwc:eventDate", extractResponse.getResult());
+					result.setValue(new AmendmentValue(extractedValues));
 
     		        if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
     		        	result.setResultState(ResultState.AMBIGUOUS);
-    		        	result.setValue(extractedValues);
     		        	result.addComment(extractResponse.getComment());
     		        } else { 
     		        	if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
@@ -267,9 +267,10 @@ public class DwCEventDQ {
     		    	     ) 
     		    	) 
     		    {
-					AmendmentValue extractedValues = new AmendmentValue();
-					extractedValues.addResult("dwc:eventDate", extractResponse.getResult());
-					result.setValue(extractedValues);
+					Map<String, String> extractedValues = new HashMap<>();
+					extractedValues.put("dwc:eventDate", extractResponse.getResult());
+
+					result.setValue(new AmendmentValue(extractedValues));
 
     		        if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
     		        	result.setResultState(ResultState.AMBIGUOUS);
@@ -311,10 +312,10 @@ public class DwCEventDQ {
     		    result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		    result.addComment("Unable to extract a date from " + startDate + " and " + endDate);
     		} else {
-    			AmendmentValue extractedValues = new AmendmentValue();
-				extractedValues.addResult("dwc:eventDate", response);
+    			Map<String, String> extractedValues = new HashMap<>();
+				extractedValues.put("dwc:eventDate", response);
 
-				result.setValue(extractedValues);
+				result.setValue(new AmendmentValue(extractedValues));
     		    result.setResultState(ResultState.CHANGED);
     		}
     	} else { 
@@ -397,9 +398,9 @@ public class DwCEventDQ {
     		    	     ) 
     		    	) 
     		    {
-    		    	AmendmentValue correctedValues = new AmendmentValue();
-					correctedValues.addResult("dwc:eventDate", extractResponse.getResult());
-					result.setValue(correctedValues);
+    		    	Map<String, String> correctedValues = new HashMap<>();
+					correctedValues.put("dwc:eventDate", extractResponse.getResult());
+					result.setValue(new AmendmentValue(correctedValues));
 
     		        if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
     		        	result.setResultState(ResultState.AMBIGUOUS);
@@ -449,9 +450,10 @@ public class DwCEventDQ {
                          )
                     )
                 {
-                	AmendmentValue correctedValues = new AmendmentValue();
-                	correctedValues.addResult("dcterms:modified", extractResponse.getResult());
-					result.setValue(correctedValues);
+                	Map<String, String> correctedValues = new HashMap<String, String>();
+                	correctedValues.put("dcterms:modified", extractResponse.getResult());
+
+					result.setValue(new AmendmentValue(correctedValues));
 
                     if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
                         result.setResultState(ResultState.AMBIGUOUS);
@@ -503,9 +505,10 @@ public class DwCEventDQ {
                          )
                     )
                 {
-                	AmendmentValue correctedValues = new AmendmentValue();
-					correctedValues.addResult("dwc:dateIdentified", extractResponse.getResult());
-					result.setValue(correctedValues);
+                	Map<String, String> correctedValues = new HashMap<>();
+					correctedValues.put("dwc:dateIdentified", extractResponse.getResult());
+
+					result.setValue(new AmendmentValue(correctedValues));
 
                     if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
                         result.setResultState(ResultState.AMBIGUOUS);
@@ -760,11 +763,11 @@ public class DwCEventDQ {
         	        	int monthNumeric = Integer.parseInt(month);
         	        	if (DateUtils.isDayInRange(monthNumeric) && DateUtils.isMonthInRange(dayNumeric)) { 
         	        		// day is in range for months, and month is in range for days, so transpose.
-							AmendmentValue transposedValues = new AmendmentValue();
-							transposedValues.addResult("dwc:month", day);
-							transposedValues.addResult("dwc:day", month);
+							Map<String, String> transposedValues = new HashMap<>();
+							transposedValues.put("dwc:month", day);
+							transposedValues.put("dwc:day", month);
 
-							result.setValue(transposedValues);
+							result.setValue(new AmendmentValue(transposedValues));
         	        	    result.setResultState(ResultState.TRANSPOSED);
         	        	} else { 
         	        	    result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
