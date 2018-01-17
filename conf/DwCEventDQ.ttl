@@ -1,0 +1,409 @@
+@prefix rdfbeans: <http://viceversatech.com/rdfbeans/2.0/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sesame: <http://www.openrdf.org/schema/sesame#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix fn: <http://www.w3.org/2005/xpath-functions#> .
+
+<http://example.com/ffdq/Implementation> rdfbeans:bindingClass "org.datakurator.ffdq.model.solutions.Implementation" .
+
+<http://example.com/ffdq/Mechanism> rdfbeans:bindingClass "org.datakurator.ffdq.model.Mechanism" .
+
+<http://example.com/ffdq/Specification> rdfbeans:bindingClass "org.datakurator.ffdq.model.Specification" .
+
+<urn:uuid:077b6e19-32aa-427b-a403-3ed48ec1416a> <http://example.com/ffdq/hasSpecification> <urn:uuid:b0753f69-08c1-45f5-a5ca-48d24e76d813> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:b844059f-87cf-4c31-b4d7-9a52003eef84> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<urn:uuid:b0753f69-08c1-45f5-a5ca-48d24e76d813> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "For values of dwc:eventDate, calculate the duration in seconds." ;
+	rdfs:label "Event Date Duration In Seconds" .
+
+<urn:uuid:b844059f-87cf-4c31-b4d7-9a52003eef84> a <http://example.com/ffdq/Mechanism> ;
+	rdfs:label "Kurator: Date Validator - DwCEventDQ" .
+
+<d:precision> a <http://example.com/ffdq/Dimension> ;
+	rdfs:label "Precision" .
+
+<ffdq:ResourceType> rdfbeans:bindingClass "org.datakurator.ffdq.model.ResourceType" .
+
+<http://example.com/ffdq/ContextualizedDimension> rdfbeans:bindingClass "org.datakurator.ffdq.model.context.ContextualizedDimension" .
+
+<http://example.com/ffdq/Dimension> rdfbeans:bindingClass "org.datakurator.ffdq.model.Dimension" .
+
+<http://example.com/ffdq/InformationElement> rdfbeans:bindingClass "org.datakurator.ffdq.model.InformationElement" .
+
+<http://example.com/ffdq/MeasurementMethod> rdfbeans:bindingClass "org.datakurator.ffdq.model.solutions.MeasurementMethod" .
+
+<rt:SingleRecord> a <ffdq:ResourceType> ;
+	rdfs:label "SingleRecord" .
+
+<urn:uuid:03523c13-9eb5-4128-a47b-178f5dc49e3e> <http://example.com/ffdq/dimensionInContext> <urn:uuid:c5fda89b-4589-40cf-8b90-a3d45a48fa2f> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:b0753f69-08c1-45f5-a5ca-48d24e76d813> ;
+	a <http://example.com/ffdq/MeasurementMethod> .
+
+<urn:uuid:8557f566-48b7-4e95-9d45-9d52ae96d2c6> <http://example.com/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
+	a <http://example.com/ffdq/InformationElement> .
+
+<urn:uuid:c5fda89b-4589-40cf-8b90-a3d45a48fa2f> <http://example.com/ffdq/hasDimension> <d:precision> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:8557f566-48b7-4e95-9d45-9d52ae96d2c6> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedDimension> .
+
+<urn:uuid:0a59e03f-ebb5-4df3-a802-2e444de525b5> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "For values of dwc:eventDate, check is not empty." ;
+	rdfs:label "Event Date Completeness" .
+
+<urn:uuid:9fc51a61-bc35-4cf3-9977-8457387e81b1> <http://example.com/ffdq/hasSpecification> <urn:uuid:0a59e03f-ebb5-4df3-a802-2e444de525b5> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:b844059f-87cf-4c31-b4d7-9a52003eef84> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<d:completeness> a <http://example.com/ffdq/Dimension> ;
+	rdfs:label "Completeness" .
+
+<urn:uuid:2b8ba7cc-20c6-4071-8bf1-2fd289521377> <http://example.com/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
+	a <http://example.com/ffdq/InformationElement> .
+
+<urn:uuid:55ef55d3-4278-4be8-a903-aa888a48e6d6> <http://example.com/ffdq/hasDimension> <d:completeness> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:2b8ba7cc-20c6-4071-8bf1-2fd289521377> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedDimension> .
+
+<urn:uuid:b4326b7c-fda0-4086-9fa2-e46f2b4d7465> <http://example.com/ffdq/dimensionInContext> <urn:uuid:55ef55d3-4278-4be8-a903-aa888a48e6d6> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:0a59e03f-ebb5-4df3-a802-2e444de525b5> ;
+	a <http://example.com/ffdq/MeasurementMethod> .
+
+<urn:uuid:1e577ef5-2f9b-4b39-92e3-4c9764f6a89c> <http://example.com/ffdq/hasSpecification> <urn:uuid:da63f836-1fc6-4e96-a612-fa76678cfd6a> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:b844059f-87cf-4c31-b4d7-9a52003eef84> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<urn:uuid:da63f836-1fc6-4e96-a612-fa76678cfd6a> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "If a dwc:eventDate is not empty and the verbatimEventDate is not empty compare the value of dwc:eventDate with that of dwc:verbatimEventDate, and assert Compliant if the two represent the same data or date range." ;
+	rdfs:label "Event Date and Verbatim Consistent" .
+
+<http://example.com/ffdq/ContextualizedCriterion> rdfbeans:bindingClass "org.datakurator.ffdq.model.context.ContextualizedCriterion" .
+
+<http://example.com/ffdq/Criterion> rdfbeans:bindingClass "org.datakurator.ffdq.model.Criterion" .
+
+<http://example.com/ffdq/ValidationMethod> rdfbeans:bindingClass "org.datakurator.ffdq.model.solutions.ValidationMethod" .
+
+<urn:uuid:434df0bc-75d1-4261-9e71-7caf4e1024b5> <http://example.com/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> , <http://rs.tdwg.org/dwc/terms/verbatimEventDate> ;
+	a <http://example.com/ffdq/InformationElement> .
+
+<urn:uuid:8d3709c8-242b-459b-a16c-87735ca4422a> <http://example.com/ffdq/criterionInContext> <urn:uuid:b750b5d9-3041-419f-828b-54ef1eb69a8e> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:da63f836-1fc6-4e96-a612-fa76678cfd6a> ;
+	a <http://example.com/ffdq/ValidationMethod> .
+
+<urn:uuid:b750b5d9-3041-419f-828b-54ef1eb69a8e> <http://example.com/ffdq/hasCriterion> <urn:uuid:d6fc2198-eaa8-4d68-b288-758a80e442a2> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:434df0bc-75d1-4261-9e71-7caf4e1024b5> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedCriterion> .
+
+<urn:uuid:d6fc2198-eaa8-4d68-b288-758a80e442a2> a <http://example.com/ffdq/Criterion> ;
+	rdfs:label "Test to see if the eventDate and verbatimEventDate are consistent." .
+
+<urn:uuid:8cdd4f44-e7ed-4484-a1b8-4e6407a491e2> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "If a dwc:eventDate is empty and the verbatimEventDate is not empty fill in dwc:eventDate based on value from dwc:verbatimEventDate, dwc:year dwc:month, dwc:day, dwc:start/endDayOfYear." ;
+	rdfs:label "Event Date From Parts" .
+
+<urn:uuid:d10bfc9a-43e2-4bed-866c-485f9a8c1e1c> <http://example.com/ffdq/hasSpecification> <urn:uuid:8cdd4f44-e7ed-4484-a1b8-4e6407a491e2> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:b844059f-87cf-4c31-b4d7-9a52003eef84> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<http://example.com/ffdq/AmendmentMethod> rdfbeans:bindingClass "org.datakurator.ffdq.model.solutions.AmendmentMethod" .
+
+<http://example.com/ffdq/ContextualizedEnhancement> rdfbeans:bindingClass "org.datakurator.ffdq.model.context.ContextualizedEnhancement" .
+
+<http://example.com/ffdq/Enhancement> rdfbeans:bindingClass "org.datakurator.ffdq.model.Enhancement" .
+
+<urn:uuid:61d5b744-143a-482f-b3f9-4b97629cc52f> <http://example.com/ffdq/enhancementInContext> <urn:uuid:9cf90533-100c-416a-9b3b-4b6cb5da73c7> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:8cdd4f44-e7ed-4484-a1b8-4e6407a491e2> ;
+	a <http://example.com/ffdq/AmendmentMethod> .
+
+<urn:uuid:7d908c2a-2d0d-4043-80c1-39ec0f47f1ca> <http://example.com/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/day> , <http://rs.tdwg.org/dwc/terms/endDayOfYear> , <http://rs.tdwg.org/dwc/terms/eventDate> , <http://rs.tdwg.org/dwc/terms/month> , <http://rs.tdwg.org/dwc/terms/startDayOfYear> , <http://rs.tdwg.org/dwc/terms/verbatimEventDate> , <http://rs.tdwg.org/dwc/terms/year> ;
+	a <http://example.com/ffdq/InformationElement> .
+
+<urn:uuid:9cf90533-100c-416a-9b3b-4b6cb5da73c7> <http://example.com/ffdq/hasEnhancement> <urn:uuid:ad2acd16-afe0-4d4d-9861-f1825366505e> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:7d908c2a-2d0d-4043-80c1-39ec0f47f1ca> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedEnhancement> .
+
+<urn:uuid:ad2acd16-afe0-4d4d-9861-f1825366505e> a <http://example.com/ffdq/Enhancement> ;
+	rdfs:label "Populate the event date from the verbatim and other atomic parts (day, month, year, etc)." .
+
+<urn:uuid:93ad8317-bae2-4867-b60a-a14fddb186c3> <http://example.com/ffdq/hasSpecification> <urn:uuid:e4ddf9bc-cd10-46cc-b307-d6c7233a240a> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:b844059f-87cf-4c31-b4d7-9a52003eef84> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<urn:uuid:e4ddf9bc-cd10-46cc-b307-d6c7233a240a> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "If a dwc:eventDate is empty and an event date can be inferred from start date and end date, fill in dwc:eventDate based on the values in the start and end dates.  Will not propose a change if dwc:eventDate contains a value." ;
+	rdfs:label "Event Date From non-Darwin Core start/end" .
+
+<urn:uuid:174c3642-3586-4644-b83c-98ab11e03cb4> <http://example.com/ffdq/enhancementInContext> <urn:uuid:2f970e5c-7e62-488d-aeb4-e7a2b01e8ad4> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:e4ddf9bc-cd10-46cc-b307-d6c7233a240a> ;
+	a <http://example.com/ffdq/AmendmentMethod> .
+
+<urn:uuid:2f970e5c-7e62-488d-aeb4-e7a2b01e8ad4> <http://example.com/ffdq/hasEnhancement> <urn:uuid:48dd5995-b4d0-4fa4-a16b-525d5acd404e> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:41b61ea0-d9ca-4f95-86e8-c38a2ddc67f4> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedEnhancement> .
+
+<urn:uuid:41b61ea0-d9ca-4f95-86e8-c38a2ddc67f4> <http://example.com/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/endDate> , <http://rs.tdwg.org/dwc/terms/eventDate> , <http://rs.tdwg.org/dwc/terms/startDate> ;
+	a <http://example.com/ffdq/InformationElement> .
+
+<urn:uuid:48dd5995-b4d0-4fa4-a16b-525d5acd404e> a <http://example.com/ffdq/Enhancement> ;
+	rdfs:label "Populate the event date from non-Darwin Core start date and end date terms." .
+
+<urn:uuid:134c7b4f-1261-41ec-acb5-69cd4bc8556f> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "Check dwc:eventDate to see if it is empty or contains a valid date value. If it contains a value that is not a valid date, propose a properly formatted eventDate as an amendment." ;
+	rdfs:label "Event Date Format Correction" .
+
+<urn:uuid:eba05c88-114b-4c0f-b2d8-e75b2f0aa639> <http://example.com/ffdq/hasSpecification> <urn:uuid:134c7b4f-1261-41ec-acb5-69cd4bc8556f> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:b844059f-87cf-4c31-b4d7-9a52003eef84> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<urn:uuid:36f7b275-1ea3-4ade-a716-2f7844c168dc> <http://example.com/ffdq/enhancementInContext> <urn:uuid:f2649bdf-9d1c-4a7e-b2f9-f9e6316cb119> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:134c7b4f-1261-41ec-acb5-69cd4bc8556f> ;
+	a <http://example.com/ffdq/AmendmentMethod> .
+
+<urn:uuid:4579d623-9b29-4eee-926c-24049321b8d0> <http://example.com/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
+	a <http://example.com/ffdq/InformationElement> .
+
+<urn:uuid:c79fcebf-4067-4075-a17e-cff953acf684> a <http://example.com/ffdq/Enhancement> ;
+	rdfs:label "Try to propose a correction for an event date." .
+
+<urn:uuid:f2649bdf-9d1c-4a7e-b2f9-f9e6316cb119> <http://example.com/ffdq/hasEnhancement> <urn:uuid:c79fcebf-4067-4075-a17e-cff953acf684> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:4579d623-9b29-4eee-926c-24049321b8d0> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedEnhancement> .
+
+<urn:uuid:08ebed60-3f8c-4795-9284-75d45b8270c6> <http://example.com/ffdq/hasSpecification> <urn:uuid:39bb2280-1215-447b-9221-fd13bc990641> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:b844059f-87cf-4c31-b4d7-9a52003eef84> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<urn:uuid:39bb2280-1215-447b-9221-fd13bc990641> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "Check dwc:dateIdentified to see if it is empty or contains a valid date value. If it contains a value that is not a valid date, propose a properly formatted dwc:dateIdentified as an amendment." ;
+	rdfs:label "Date Identified Format Correction" .
+
+<urn:uuid:0f71db43-94af-4240-9ce1-4e1bc7329c29> <http://example.com/ffdq/hasEnhancement> <urn:uuid:e4fe4b38-a9fe-4288-9676-5d2d1e18a100> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:ba355696-ef03-408e-a2a2-c1e39b9499ce> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedEnhancement> .
+
+<urn:uuid:15afd712-432f-4a4d-a907-f87a16437eea> <http://example.com/ffdq/enhancementInContext> <urn:uuid:0f71db43-94af-4240-9ce1-4e1bc7329c29> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:39bb2280-1215-447b-9221-fd13bc990641> ;
+	a <http://example.com/ffdq/AmendmentMethod> .
+
+<urn:uuid:ba355696-ef03-408e-a2a2-c1e39b9499ce> <http://example.com/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/dateIdentified> ;
+	a <http://example.com/ffdq/InformationElement> .
+
+<urn:uuid:e4fe4b38-a9fe-4288-9676-5d2d1e18a100> a <http://example.com/ffdq/Enhancement> ;
+	rdfs:label "Try to propose a correction for a date identified" .
+
+<urn:uuid:6fbf44ba-a5a0-4388-bbfd-5d2c0a0c8375> <http://example.com/ffdq/hasSpecification> <urn:uuid:fd00e6be-45e4-4ced-9f3d-5cde30b21b69> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:b844059f-87cf-4c31-b4d7-9a52003eef84> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<urn:uuid:fd00e6be-45e4-4ced-9f3d-5cde30b21b69> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "Compliant if event date has a duration equal to or less than 31557600 seconds, otherwise not compliant. Internal prerequisites not met if eventDate is empty or not valid." ;
+	rdfs:label "Event Date precision Julian year or better" .
+
+<urn:uuid:47281f84-0b06-4b96-8e51-b6c174feeb60> <http://example.com/ffdq/criterionInContext> <urn:uuid:d8a65c59-0397-4c7f-9509-f78189f22f2b> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:fd00e6be-45e4-4ced-9f3d-5cde30b21b69> ;
+	a <http://example.com/ffdq/ValidationMethod> .
+
+<urn:uuid:8d63fef3-f098-4f5f-8e6d-f12704a3c84e> <http://example.com/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
+	a <http://example.com/ffdq/InformationElement> .
+
+<urn:uuid:95dbf9af-c5f1-4765-8b67-a5897afd5422> a <http://example.com/ffdq/Criterion> ;
+	rdfs:label "Test to see whether a provided event date has a duration less than or equal to a standard astronomical Julian year." .
+
+<urn:uuid:d8a65c59-0397-4c7f-9509-f78189f22f2b> <http://example.com/ffdq/hasCriterion> <urn:uuid:95dbf9af-c5f1-4765-8b67-a5897afd5422> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:8d63fef3-f098-4f5f-8e6d-f12704a3c84e> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedCriterion> .
+
+<urn:uuid:d54e628d-775f-440e-b423-e2c91e3f6bbb> <http://example.com/ffdq/hasSpecification> <urn:uuid:f98a54eb-59e7-44c7-b96f-200e6af1c895> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:b844059f-87cf-4c31-b4d7-9a52003eef84> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<urn:uuid:f98a54eb-59e7-44c7-b96f-200e6af1c895> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "If dwc:month and dwc:day are provided, propose a transposition if day is in range for months, and month is in range for days." ;
+	rdfs:label "Day Month Transposition" .
+
+<urn:uuid:3079c030-bc68-49f5-8af1-60d2bceeb6e1> <http://example.com/ffdq/hasEnhancement> <urn:uuid:39e729a8-eea8-4c6b-9a58-a2d4405fa679> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:951430d6-eedc-471f-933d-43458a45d670> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedEnhancement> .
+
+<urn:uuid:39e729a8-eea8-4c6b-9a58-a2d4405fa679> a <http://example.com/ffdq/Enhancement> ;
+	rdfs:label "Check of month is out of range for months, but day is in range for months, and propose a transposition of the two if this is the case." .
+
+<urn:uuid:951430d6-eedc-471f-933d-43458a45d670> <http://example.com/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/day> , <http://rs.tdwg.org/dwc/terms/month> ;
+	a <http://example.com/ffdq/InformationElement> .
+
+<urn:uuid:fd09cc42-b3af-4dd2-b614-006b8072e666> <http://example.com/ffdq/enhancementInContext> <urn:uuid:3079c030-bc68-49f5-8af1-60d2bceeb6e1> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:f98a54eb-59e7-44c7-b96f-200e6af1c895> ;
+	a <http://example.com/ffdq/AmendmentMethod> .
+
+<urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "If a dwc:eventDate is empty and the verbatimEventDate is not empty fill in dwc:eventDate based on value from dwc:verbatimEventDate." ;
+	rdfs:label "Event Date From Verbatim" .
+
+<urn:uuid:df0c2ca4-6cad-452a-b3f6-6eaf33eaff07> <http://example.com/ffdq/hasSpecification> <urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:b844059f-87cf-4c31-b4d7-9a52003eef84> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<urn:uuid:3014ef55-58eb-4439-8f62-85cf66624ce2> <http://example.com/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> , <http://rs.tdwg.org/dwc/terms/verbatimEventDate> ;
+	a <http://example.com/ffdq/InformationElement> .
+
+<urn:uuid:803669e6-ee99-4612-a5bb-3ee5b8a3f180> a <http://example.com/ffdq/Enhancement> ;
+	rdfs:label "Populate the event date from the verbatim value." .
+
+<urn:uuid:b6b36ed0-4a34-4112-a4c4-8c441b27946a> <http://example.com/ffdq/enhancementInContext> <urn:uuid:ba053d45-48f7-48a7-a37e-a623a7dc2b7a> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812> ;
+	a <http://example.com/ffdq/AmendmentMethod> .
+
+<urn:uuid:ba053d45-48f7-48a7-a37e-a623a7dc2b7a> <http://example.com/ffdq/hasEnhancement> <urn:uuid:803669e6-ee99-4612-a5bb-3ee5b8a3f180> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:3014ef55-58eb-4439-8f62-85cf66624ce2> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedEnhancement> .
+
+<urn:uuid:0ee79646-e189-4993-90cb-794897db2e7d> <http://example.com/ffdq/hasSpecification> <urn:uuid:31d463b4-2a1c-4b90-b6c7-73459d1bad6d> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:b844059f-87cf-4c31-b4d7-9a52003eef84> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<urn:uuid:31d463b4-2a1c-4b90-b6c7-73459d1bad6d> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "Compliant if event date has a duration equal to or less than 365 days if a standard year, 366 days if a leap year. Internal prerequisites not met if eventDate is empty or not valid." ;
+	rdfs:label "Event Date precision calendar year or better." .
+
+<urn:uuid:2d148d4c-29b2-4d29-99e4-48fe7de6bddf> <http://example.com/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
+	a <http://example.com/ffdq/InformationElement> .
+
+<urn:uuid:5579788c-131c-4b5b-bad5-d66efa50b269> a <http://example.com/ffdq/Criterion> ;
+	rdfs:label "Test to see whether a provided event date has a duration less than or equal to a calendar year." .
+
+<urn:uuid:6573100d-7433-4eaf-9115-3fc8abd29a47> <http://example.com/ffdq/criterionInContext> <urn:uuid:9fc4a840-4af6-4de1-82de-a6ed890e0a1f> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:31d463b4-2a1c-4b90-b6c7-73459d1bad6d> ;
+	a <http://example.com/ffdq/ValidationMethod> .
+
+<urn:uuid:9fc4a840-4af6-4de1-82de-a6ed890e0a1f> <http://example.com/ffdq/hasCriterion> <urn:uuid:5579788c-131c-4b5b-bad5-d66efa50b269> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:2d148d4c-29b2-4d29-99e4-48fe7de6bddf> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedCriterion> .
+
+<urn:uuid:5618f083-d55a-4ac2-92b5-b9fb227b832f> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "Check that the value of dwc:eventDate is consistent with the values for dwc:month and dwc:year. Requires valid values for month and year." ;
+	rdfs:label "Day Consistent With Month/Year" .
+
+<urn:uuid:e01cc0db-da8f-48c0-8898-b29a1ca45647> <http://example.com/ffdq/hasSpecification> <urn:uuid:5618f083-d55a-4ac2-92b5-b9fb227b832f> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:b844059f-87cf-4c31-b4d7-9a52003eef84> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<urn:uuid:367dc0eb-53c8-4325-bc79-63ba4d041002> <http://example.com/ffdq/criterionInContext> <urn:uuid:8e610f73-88ae-4213-a40c-cdfb391dc4ef> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:5618f083-d55a-4ac2-92b5-b9fb227b832f> ;
+	a <http://example.com/ffdq/ValidationMethod> .
+
+<urn:uuid:39b74a9a-6fa6-4b3d-a170-886a1e0ca0f1> a <http://example.com/ffdq/Criterion> ;
+	rdfs:label "Check if a value for day is consistent with a provided month and year." .
+
+<urn:uuid:6176f75e-e795-4ef9-8194-05367051a897> <http://example.com/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/day> , <http://rs.tdwg.org/dwc/terms/month> , <http://rs.tdwg.org/dwc/terms/year> ;
+	a <http://example.com/ffdq/InformationElement> .
+
+<urn:uuid:8e610f73-88ae-4213-a40c-cdfb391dc4ef> <http://example.com/ffdq/hasCriterion> <urn:uuid:39b74a9a-6fa6-4b3d-a170-886a1e0ca0f1> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:6176f75e-e795-4ef9-8194-05367051a897> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedCriterion> .
+
+<urn:uuid:0b18017b-b4a7-4009-a0b2-44c80038b992> <http://example.com/ffdq/hasSpecification> <urn:uuid:48aa7d66-36d1-4662-a503-df170f11b03f> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:b844059f-87cf-4c31-b4d7-9a52003eef84> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<urn:uuid:48aa7d66-36d1-4662-a503-df170f11b03f> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "Compliant if dwc:day is an integer in the range 1 to 31 inclusive, not compliant otherwise. Internal prerequisites not met if day is empty or an integer cannot be parsed from day." ;
+	rdfs:label "Day In Range" .
+
+<urn:uuid:006a825a-5edb-42e6-9984-0e323aa5c74e> <http://example.com/ffdq/hasCriterion> <urn:uuid:ae9fbb09-dd3d-4fcc-99e4-6f19f8281824> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:4a817c86-aa8d-4ad7-a85e-dc6da5eac59f> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedCriterion> .
+
+<urn:uuid:1f03353d-1630-4e9e-a414-3e6d0f927361> <http://example.com/ffdq/criterionInContext> <urn:uuid:006a825a-5edb-42e6-9984-0e323aa5c74e> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:48aa7d66-36d1-4662-a503-df170f11b03f> ;
+	a <http://example.com/ffdq/ValidationMethod> .
+
+<urn:uuid:4a817c86-aa8d-4ad7-a85e-dc6da5eac59f> <http://example.com/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/day> ;
+	a <http://example.com/ffdq/InformationElement> .
+
+<urn:uuid:ae9fbb09-dd3d-4fcc-99e4-6f19f8281824> a <http://example.com/ffdq/Criterion> ;
+	rdfs:label "Test to see whether a provided day is an integer in the range of values that can be a day of a month." .
+
+<urn:uuid:01c6dafa-0886-4b7e-9881-2c3018c98bdc> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "Compliant if month is an integer in the range 1 to 12 inclusive, otherwise not compliant. Internal prerequisites not met if month is empty or an integer cannot be parsed from month." ;
+	rdfs:label "Month In Range" .
+
+<urn:uuid:157a8fd5-8f97-4a67-81ef-addcac58702a> <http://example.com/ffdq/hasSpecification> <urn:uuid:01c6dafa-0886-4b7e-9881-2c3018c98bdc> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:b844059f-87cf-4c31-b4d7-9a52003eef84> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<urn:uuid:05345942-acf5-4d78-8b28-7bfa748b5da4> <http://example.com/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/month> ;
+	a <http://example.com/ffdq/InformationElement> .
+
+<urn:uuid:773d65f4-0872-42a2-9517-e53a673fb99b> <http://example.com/ffdq/hasCriterion> <urn:uuid:f4cd9dd5-969f-4b55-8d14-780ed679f414> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:05345942-acf5-4d78-8b28-7bfa748b5da4> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedCriterion> .
+
+<urn:uuid:c2f43cda-5b1c-4be3-b4f0-b035147ba4f8> <http://example.com/ffdq/criterionInContext> <urn:uuid:773d65f4-0872-42a2-9517-e53a673fb99b> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:01c6dafa-0886-4b7e-9881-2c3018c98bdc> ;
+	a <http://example.com/ffdq/ValidationMethod> .
+
+<urn:uuid:f4cd9dd5-969f-4b55-8d14-780ed679f414> a <http://example.com/ffdq/Criterion> ;
+	rdfs:label "Test to see whether a provided month is in the range of integer values that form months of the year." .
+
+<urn:uuid:367bf43f-9cb6-45b2-b45f-b8152f1d334a> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "Check dcterms:modified to see if it is empty or contains a valid date value. If it contains a value that is not a valid date, propose a properly formatted dcterms:modified as an amendment." ;
+	rdfs:label "Date Modified Format Correction" .
+
+<urn:uuid:91e3619f-98f0-4a9c-ac95-8b08a37c97b4> <http://example.com/ffdq/hasSpecification> <urn:uuid:367bf43f-9cb6-45b2-b45f-b8152f1d334a> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:b844059f-87cf-4c31-b4d7-9a52003eef84> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<urn:uuid:0fd15bb9-becf-40b4-a6c6-4bb49e71508b> <http://example.com/ffdq/composedOf> <http://purl.org/dc/terms/modified> ;
+	a <http://example.com/ffdq/InformationElement> .
+
+<urn:uuid:78ea0834-cacd-4eca-8c9b-be60502353ce> <http://example.com/ffdq/hasEnhancement> <urn:uuid:ff872b17-7ce1-436e-878c-e9a8831d74f3> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:0fd15bb9-becf-40b4-a6c6-4bb49e71508b> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedEnhancement> .
+
+<urn:uuid:ee9b63a1-2639-40ba-abe3-929cc2738d73> <http://example.com/ffdq/enhancementInContext> <urn:uuid:78ea0834-cacd-4eca-8c9b-be60502353ce> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:367bf43f-9cb6-45b2-b45f-b8152f1d334a> ;
+	a <http://example.com/ffdq/AmendmentMethod> .
+
+<urn:uuid:ff872b17-7ce1-436e-878c-e9a8831d74f3> a <http://example.com/ffdq/Enhancement> ;
+	rdfs:label "Try to propose a correction for a date modified" .
+
+<urn:uuid:60e5a176-5a8a-4b07-afb9-15a42ce8ce2f> <http://example.com/ffdq/hasSpecification> <urn:uuid:62a9c256-43e4-41ee-8938-d2d2e99479ef> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:b844059f-87cf-4c31-b4d7-9a52003eef84> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<urn:uuid:62a9c256-43e4-41ee-8938-d2d2e99479ef> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "Compliant if dcterms:modified can to parsed to an explicit date/time, otherwise not compliant. Internal prerequisites not met if dcterms:modified is empty." ;
+	rdfs:label "Modified date correctly formatted" .
+
+<urn:uuid:9b74b5be-326a-4abb-908c-71b1fa24d589> <http://example.com/ffdq/hasCriterion> <urn:uuid:d2ad1aec-fbb4-4348-9bab-4ebc029fc3ba> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:fadb53d3-d9b0-4d55-b997-d2736f767240> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedCriterion> .
+
+<urn:uuid:d2ad1aec-fbb4-4348-9bab-4ebc029fc3ba> a <http://example.com/ffdq/Criterion> ;
+	rdfs:label "Test to see whether a provided dcterms:modified is a validly formated ISO date/time." .
+
+<urn:uuid:e0d6630e-afa9-4575-9de1-ad702185a63f> <http://example.com/ffdq/criterionInContext> <urn:uuid:9b74b5be-326a-4abb-908c-71b1fa24d589> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:62a9c256-43e4-41ee-8938-d2d2e99479ef> ;
+	a <http://example.com/ffdq/ValidationMethod> .
+
+<urn:uuid:fadb53d3-d9b0-4d55-b997-d2736f767240> <http://example.com/ffdq/composedOf> <http://purl.org/dc/terms/modified> ;
+	a <http://example.com/ffdq/InformationElement> .
