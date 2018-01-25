@@ -473,7 +473,18 @@ public class DwcEventDQTest {
 		startDay = "200";  // start and end reversed or in different years.
 		endDay = "10";
 		result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
-		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET,result.getResultState());		
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET,result.getResultState());	
+		
+		// Example given in TG2 definition: 
+		//dwc:year=1999, dwc:startDayOfYear=123, dwc:endDayOfYear=125 
+		//therefore dwc:eventDate=1999-05-03/1999-05-05
+		eventDate = "";
+		year = "1999"; 
+		startDay = "123"; 
+		endDay = "125";  
+		result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
+		assertEquals(EnumDQAmendmentResultState.FILLED_IN,result.getResultState());
+		assertEquals("1999-05-03/1999-05-05", result.getResult().get("dwc:eventDate"));	
 		
 	}
 }
