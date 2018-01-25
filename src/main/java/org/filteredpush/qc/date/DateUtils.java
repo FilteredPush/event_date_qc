@@ -378,6 +378,22 @@ public class DateUtils {
 			return result;
 		}
 		
+		if (verbatimEventDate.matches("^[0-9]{4}[-][0-9]{2}[-][0-9]{2}/[0-9]{4}[-][0-9]{2}[-][0-9]{2}$")) {
+			// if verbatim date is a ISO formatted range with identical first and last dates (/), use just one.
+			// Example: 1982-12-11/1982-12-11  changed to 1982-12-11
+			String[] bits = verbatimEventDate.split("/");
+			if (bits.length==2 && bits[0].equals(bits[1])) { 
+				verbatimEventDate = bits[0];
+			}
+		}
+		if (verbatimEventDate.matches("^[0-9]{4}[/][0-9]{2}[/][0-9]{2}-[0-9]{4}[/][0-9]{2}[/][0-9]{2}$")) {
+			// if verbatim date is a range with identical first and last dates (-), use just one.
+			// Example: 1982/12/11-1982/12/11  changed to 1982/12/11
+			String[] bits = verbatimEventDate.split("-");
+			if (bits.length==2 && bits[0].equals(bits[1])) { 
+				verbatimEventDate = bits[0];
+			}
+		}
 		if (verbatimEventDate.matches("^[0-9]{1,2}[-. ][0-9]{1,2}[-. ][0-9]{4}/[0-9]{1,2}[-. ][0-9]{1,2}[-. ][0-9]{4}$")) {
 			// if verbatim date is a range with identical first and last dates (/), use just one.
 			// Example: 12-11-1982/12-11-1982  changed to 12-11-1982

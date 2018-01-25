@@ -1462,6 +1462,14 @@ public class DateUtilsTest {
 //    		System.out.println(locs[i].getLanguage());
 //    	}
     	
+    	result = DateUtils.extractDateFromVerbatimER("1939-05-15/1939-05-15");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1939-05-15", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("1939/05/15-1939/05/15");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1939-05-15", result.getResult());    	
+    	
     }    
     
     @Test
