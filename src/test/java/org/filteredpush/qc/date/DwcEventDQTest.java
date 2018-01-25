@@ -397,4 +397,83 @@ public class DwcEventDQTest {
 		assertEquals(1,result.getResult().size());				
 		
 	}
+	
+	@Test
+	public void testEventDateFromYearStartEndDay() { 
+		String eventDate = "";
+		String year = "1980";
+		String startDay = "5";
+		String endDay = "6";
+		EventDQAmendment result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
+		assertEquals(EnumDQAmendmentResultState.FILLED_IN,result.getResultState());
+		assertEquals("1980-01-05/1980-01-06", result.getResult().get("dwc:eventDate"));
+		
+		eventDate = "1980"; // eventDate contains a value
+		year = "1980";
+		startDay = "5";
+		endDay = "6";
+		result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
+		assertEquals(EnumDQAmendmentResultState.NOT_RUN,result.getResultState()); 
+		
+		eventDate = "";
+		year = "1980";
+		startDay = "day5";  // not a number
+		endDay = "6";
+		result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET,result.getResultState());
+		
+		eventDate = "";
+		year = "1980";  // a leap year
+		startDay = "1";
+		endDay = "366";  
+		result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
+		assertEquals(EnumDQAmendmentResultState.FILLED_IN,result.getResultState());
+		assertEquals("1980-01-01/1980-12-31", result.getResult().get("dwc:eventDate"));
+		
+		eventDate = "";
+		year = "1981";  // not a leap year
+		startDay = "1";
+		endDay = "365";  
+		result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
+		assertEquals(EnumDQAmendmentResultState.FILLED_IN,result.getResultState());
+		assertEquals("1981-01-01/1981-12-31", result.getResult().get("dwc:eventDate"));
+		
+		eventDate = "";
+		year = "1981";  // not a leap year
+		startDay = "45";
+		endDay = "280";  
+		result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
+		assertEquals(EnumDQAmendmentResultState.FILLED_IN,result.getResultState());
+		assertEquals("1981-02-14/1981-10-07", result.getResult().get("dwc:eventDate"));		
+		
+		eventDate = "";
+		year = "1980";  // a leap year
+		startDay = "45";  // spans leap day
+		endDay = "280";  
+		result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
+		assertEquals(EnumDQAmendmentResultState.FILLED_IN,result.getResultState());
+		assertEquals("1980-02-14/1980-10-06", result.getResult().get("dwc:eventDate"));			
+		
+		eventDate = "";
+		year = "1981";  // not a leap year
+		startDay = "1";
+		endDay = "366";  
+		result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET,result.getResultState());		
+		
+		eventDate = "";
+		year = "1980";
+		startDay = "900";  // out of range
+		endDay = "920";
+		result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET,result.getResultState());
+		
+		eventDate = "";
+		year = "1980";
+		startDay = "200";  // start and end reversed or in different years.
+		endDay = "10";
+		result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET,result.getResultState());		
+		
+	}
 }

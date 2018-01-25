@@ -578,6 +578,7 @@ public class DwCEventDQ {
      *     cannot be parsed from month. 
      */
     // @Provides(value = "MONTH_IN_RANGE")
+    // Corresponds to TG2-VALIDATION_MONTH_OUTOFRANGE
     @Provides(value = "urn:uuid:01c6dafa-0886-4b7e-9881-2c3018c98bdc")  // MONTH_INVALID/MONTH_IN_RANGE
 	@Validation(label = "Month In Range", description = "Test to see whether a provided month is in the range of " +
 			"integer values that form months of the year.")
@@ -804,4 +805,57 @@ public class DwCEventDQ {
     	return result;
     }    
     
+    // TG2-VALIDATION_STARTDAYOFYEAR_OUTOFRANGE
+    public static final EventDQValidation startDayOfYearInRangeForYear(@ActedUpon(value="dwc:startDayOfYear") String startDay, @Consulted(value="dwc:year")String year) { 
+    	EventDQValidation result = new EventDQValidation();
+    	if (DateUtils.isEmpty(year) || DateUtils.isEmpty(startDay)) { 
+    		result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		result.addComment("startDayOfYear was not provided.");
+    	} else { 
+    	    try { 
+    	       Integer numericStartDay = Integer.parseInt(startDay);
+    	    } catch (NumberFormatException e) { 
+    		   result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		   result.addComment("startDayOfYear [" + startDay + "] is not a number.");
+    	    }
+    	} 
+    	return result;
+    }
+    
+    // TG2-VALIDATION_ENDDAYOFYEAR_OUTOFRANGE 
+    
+    // TG2-AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR
+    public static final EventDQAmendment eventDateFromYearStartEndDay(@ActedUpon(value="dwc:eventDate") String eventDate, @Consulted(value="dwc:year") String year, @Consulted(value="dwc:startDayOfYear") String startDay, @Consulted(value="dwc:endDayOfYear") String endDay ) {
+    	EventDQAmendment result = new EventDQAmendment();
+    	if (DateUtils.isEmpty(year) || DateUtils.isEmpty(startDay)) { 
+    		result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		result.addComment("Either year or startDayOfYear was not provided.");
+    	} else if (!DateUtils.isEmpty(eventDate)) { 
+    		result.setResultState(EnumDQAmendmentResultState.NOT_RUN);
+    		result.addComment("A value exists in dwc:eventDate, ammendment not attempted.");
+    	} else { 
+    	    try { 
+     	       Integer numericYear = Integer.parseInt(year);
+     	       Integer numericStartDay = Integer.parseInt(startDay);
+     	       if (!DateUtils.isEmpty(endDay)) { 
+     	           Integer numericEndDay = Integer.parseInt(endDay);
+     	       }
+     	       
+     	       String resultDateString = DateUtils.createEventDateFromParts("", startDay, endDay, year, "", "");
+     	       
+     	       if (DateUtils.isEmpty(resultDateString)) {
+     	    	   result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+     		       result.addComment("Unable to construct a valid ISO date from startDayOfYear [" + startDay + "], year ["+year+"], and endDayOfYear ["+ endDay +"].");
+     	       } else {
+     	    	   result.setResultState(EnumDQAmendmentResultState.FILLED_IN);
+     	    	   result.addResult("dwc:eventDate", resultDateString);
+     	       }
+     	       
+     	    } catch (NumberFormatException e) { 
+     		   result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+     		   result.addComment("One of startDayOfYear [" + startDay + "], year ["+year+"], or endDayOfYear ["+ endDay +"] is not a number.");
+     	    }
+    	}
+    	return result;
+    }
 }
