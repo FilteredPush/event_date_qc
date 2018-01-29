@@ -829,6 +829,7 @@ public class DwCEventDQ {
      * @param year to check for leap year 
      * @return an DQValidationResponse object describing whether the date year-startDayOfYear exists.
      */
+    @Provides(value="urn:uuid:85803c7e-2a5a-42e1-b8d3-299a44cafc46")
     public static final EventDQValidation startDayOfYearInRangeForYear(@ActedUpon(value="dwc:startDayOfYear") String startDay, @Consulted(value="dwc:year")String year) { 
     	EventDQValidation result = new EventDQValidation();
     	if (DateUtils.isEmpty(startDay)) { 
@@ -884,6 +885,7 @@ public class DwCEventDQ {
      * @param year
      * @return an DQValidationResponse object describing whether the date year-endDayOfYear exists.
      */
+    @Provides(value="urn:uuid:9a39d88c-7eee-46df-b32a-c109f9f81fb8")
     public static final EventDQValidation endDayOfYearInRangeForYear(@ActedUpon(value="dwc:endDayOfYear") String endDay, @Consulted(value="dwc:year")String year) { 
     	EventDQValidation result = new EventDQValidation();
     	if (DateUtils.isEmpty(endDay)) { 
