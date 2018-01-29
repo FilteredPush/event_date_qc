@@ -345,6 +345,7 @@ public class DwCEventDQ {
      * Test to see whether a provided dcterms:modified is a validly formated ISO date.
      * 
      * Provides: EventDateValid
+     * ??  TG2-VALIDATION_EVENTDATE_NOTSTANDARD
      * 
      * @param eventdate  a string to test
      * @return COMPLIANT if modified is a validly formated ISO date/time with a duration of less than one day, NOT_COMPLIANT if
@@ -382,6 +383,7 @@ public class DwCEventDQ {
     /**
      * Given an event date, check to see if it is empty or contains a valid date value.  If it contains
      * a value that is not a valid date, propose a properly formatted eventDate as an amendment.
+     * 
      * 
      * @param eventDate to check
      * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
@@ -1046,5 +1048,21 @@ public class DwCEventDQ {
     //TG2-AMENDMENT_EVENTDATE_STANDARDIZED
     
     //TG2-AMENDMENT_EVENT_FROM_EVENTDATE 
+    
+    //TG2-VALIDATION_MONTH_OUTOFRANGE
+    //TG2-VALIDATION_DAY_OUTOFRANGE
+    
+    //TG2-VALIDATION_EVENT_EMPTY
+    //TG2-VALIDATION_YEAR_OUTOFRANGE 
+    //TG2-VALIDATION_EVENT_INCONSISTENT
+    //TG2-VALIDATION_EVENTDATE_NOTSTANDARD
+    //TG2-VALIDATION_YEAR_EMPTY
+    //TG2-VALIDATION_EVENTDATE_OUTOFRANGE
+    //TG2-VALIDATION_EVENTDATE_EMPTY 
+    
+    //TG2-VALIDATION_DATEIDENTIFIED_OUTOFRANGE
+    //TG2-VALIDATION_DATEIDENTIFIED_NOTSTANDARD
+    
+    //TG2-VALIDATION_DATEIDENTIFIED_PREEVENTDATE
     
 }
