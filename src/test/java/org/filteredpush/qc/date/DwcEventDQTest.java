@@ -487,4 +487,184 @@ public class DwcEventDQTest {
 		assertEquals("1999-05-03/1999-05-05", result.getResult().get("dwc:eventDate"));	
 		
 	}
+	
+	
+	@Test
+	public void testEventDateFromMonthDay() { 
+		String eventDate = "";
+		String year = "1980";
+		String month = "5";
+		String day = "6";
+		EventDQAmendment result = DwCEventDQ.eventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(EnumDQAmendmentResultState.FILLED_IN,result.getResultState());
+		assertEquals("1980-05-06", result.getResult().get("dwc:eventDate"));
+		
+		eventDate = "1980"; // eventDate contains a value
+		year = "1980";
+		month = "5";
+		day = "6";
+		result = DwCEventDQ.eventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(EnumDQAmendmentResultState.NOT_RUN,result.getResultState()); 
+		
+		eventDate = ""; // 
+		year = "1980";
+		month = "5";
+		day = "6";
+		result = DwCEventDQ.eventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(EnumDQAmendmentResultState.FILLED_IN,result.getResultState());
+		assertEquals("1980-05-06", result.getResult().get("dwc:eventDate")); 
+		
+		eventDate = ""; 
+		year = "1980";
+		month = "12";
+		day = "03";
+		result = DwCEventDQ.eventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(EnumDQAmendmentResultState.FILLED_IN,result.getResultState());
+		assertEquals("1980-12-03", result.getResult().get("dwc:eventDate")); 
+		
+		eventDate = ""; 
+		year = "1980";
+		month = "12";
+		day = "";
+		result = DwCEventDQ.eventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(EnumDQAmendmentResultState.FILLED_IN,result.getResultState());
+		assertEquals("1980-12", result.getResult().get("dwc:eventDate")); 	
+		
+		eventDate = ""; 
+		year = "1980";
+		month = "";
+		day = "";
+		result = DwCEventDQ.eventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(EnumDQAmendmentResultState.FILLED_IN,result.getResultState());
+		assertEquals("1980", result.getResult().get("dwc:eventDate")); 			
+		
+		eventDate = ""; 
+		year = "1640";
+		month = "2";
+		day = "05";
+		result = DwCEventDQ.eventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(EnumDQAmendmentResultState.FILLED_IN,result.getResultState());
+		assertEquals("1640-02-05", result.getResult().get("dwc:eventDate")); 			
+		
+		eventDate = ""; 
+		year = "1931";
+		month = "2";
+		day = "31";   // no such day
+		result = DwCEventDQ.eventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET,result.getResultState());
+		
+		eventDate = ""; 
+		year = "1931";
+		month = "2";
+		day = "29";   // no such day
+		result = DwCEventDQ.eventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET,result.getResultState());
+		
+		eventDate = ""; 
+		year = "1932";
+		month = "2";
+		day = "29";   // leap day
+		result = DwCEventDQ.eventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(EnumDQAmendmentResultState.FILLED_IN,result.getResultState());
+		assertEquals("1932-02-29", result.getResult().get("dwc:eventDate")); 			
+		
+		eventDate = ""; 
+		year = "1980";
+		month = "text";
+		day = "6";
+		result = DwCEventDQ.eventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET,result.getResultState());
+
+		eventDate = ""; 
+		year = "";
+		month = "5";
+		day = "6";
+		result = DwCEventDQ.eventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET,result.getResultState());	
+		
+		eventDate = ""; 
+		year = "1980";
+		month = "12";
+		day = "text";
+		result = DwCEventDQ.eventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET,result.getResultState());
+		
+		eventDate = ""; 
+		year = "1980";
+		month = "IV";
+		day = "6";
+		result = DwCEventDQ.eventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET,result.getResultState());
+		
+		eventDate = ""; 
+		year = "";  // no value provided for year
+		month = "1";
+		day = "6";
+		result = DwCEventDQ.eventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET,result.getResultState());			
+		
+	}
+	
+	@Test
+	public void testIsStartEndDayPossibleForYear() {
+		EventDQValidation result = null;
+		for (int year = 1900; year<=1903; year++) { 
+			for (int day= 1; day<=365; day++) { 
+				logger.debug(day + "-" + year);
+				result = DwCEventDQ.endDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+				assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+				assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());
+				
+				result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+				assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+				assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());
+			}
+		}
+
+		// A leap year
+		int year = 1932;
+		int day = 366;
+		result = DwCEventDQ.endDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());
+		result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());
+		
+		// not a leap year
+		year = 2001;
+		day = 366;  // out of range
+		result = DwCEventDQ.endDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
+		result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());		
+		
+		year = 2001;
+		day = 0;  // out of range
+		result = DwCEventDQ.endDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
+		result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());
+		
+		year = 2001;
+		day = 367;  // out of range
+		result = DwCEventDQ.endDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
+		result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());		
+		
+		// test with no year
+		day = 366;  
+		result = DwCEventDQ.endDayOfYearInRangeForYear(Integer.toString(day),"");
+		assertEquals(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day),"");
+		assertEquals(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+	}
+	
 }

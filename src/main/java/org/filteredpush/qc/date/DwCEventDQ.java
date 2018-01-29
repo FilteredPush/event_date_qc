@@ -148,10 +148,18 @@ public class DwCEventDQ {
      * If a dwc:eventDate is empty and the verbatimEventDate is not empty, try to populate the 
      * eventDate from the verbatim value.
      * 
+     * TG2-AMENDMENT_EVENTDATE_FROM_VERBATIM  
+     * 
+     * Run in order: extractDateFromVerbatim, then eventDateFromYearStartEndDay, then eventDateFromYearMonthDay
+     * 
+     * @see eventDateFromYearStartEndDay
+     * @see eventDateFromYearMonthDay
+     * 
      * @param eventDate to check for emptyness
      * @param verbatimEventDate to try to replace a non-empty event date.
      * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
      *    resultState is CHANGED if a new value is proposed.
+     *    
      */
     //@Provides(value = "EVENTDATE_FILLED_IN_FROM_VERBATIM")
 	@Provides(value = "urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812")
@@ -212,7 +220,8 @@ public class DwCEventDQ {
      * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
      *    resultState is CHANGED if a new value is proposed.
      */
-    @Provides(value = "urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812")
+    //Provides urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812 and eb0a44fa-241c-4d64-98df-ad4aa837307b and 3892f432-ddd0-4a0a-b713-f2e2ecbd879d
+    @Provides(value = "urn:uuid:016c6ee6-c528-4435-87ce-1a9dec9c7ae2")
 	@Amendment(label = "Event Date From Parts", description = "Try to populate the event date from the verbatim and other atomic parts (day, month, year, etc).")
 	@Specification(value = "If a dwc:eventDate is empty and the verbatimEventDate is not empty fill in dwc:eventDate " +
 			"based on value from dwc:verbatimEventDate, dwc:year dwc:month, dwc:day, dwc:start/endDayOfYear.")
@@ -477,13 +486,16 @@ public class DwCEventDQ {
      * Given a dateIdentified, check to see if it is empty or contains a valid date value.  If it contains
      * a value that is not a valid (ISO formatted) date, propose a properly formatted dateModified as an amendment.
      * 
+     * TG2-AMENDMENT_DATEIDENTIFIED_STANDARDIZED
+     * 
      * @param dateIdentified to check
      * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
      *    resultState is CHANGED if a new value is proposed.
+     * 
      */
-    //@Provides(value = "DATEIDENTIFIED_FORMAT_AMENDED")
+    //@Provides(value = "AMENDMENT_DATEIDENTIFIED_STANDARDIZED")
 	@Provides(value = "urn:uuid:39bb2280-1215-447b-9221-fd13bc990641")
-    @Amendment(label = "Date Identified Format Correction", description = "Try to propose a correction for a date identified")
+    @Amendment(label = "Date Identified Standardized", description = "Try to propose a correction for a date identified")
     @Specification(value = "Check dwc:dateIdentified to see if it is empty or contains a valid date value. If it contains a " +
             "value that is not a valid date, propose a properly formatted dateIdentified as an amendment.")
     public static EventDQAmendment correctIdentifiedDateFormat(@ActedUpon(value = "dwc:dateIdentified") String dateIdentified) {
@@ -805,26 +817,135 @@ public class DwCEventDQ {
     	return result;
     }    
     
-    // TG2-VALIDATION_STARTDAYOFYEAR_OUTOFRANGE
+    /**
+     * Given a year and an start day of a date range in days of the year, test whether or not
+     * the value for startDayOfYear is in range for the days in that year (1-365, or 366  in leap year).
+     * 
+     * TG2-VALIDATION_STARTDAYOFYEAR_OUTOFRANGE
+     * 
+     * @param startDay startDayOfYearto check
+     * @param year to check for leap year 
+     * @return an DQValidationResponse object describing whether the date year-startDayOfYear exists.
+     */
     public static final EventDQValidation startDayOfYearInRangeForYear(@ActedUpon(value="dwc:startDayOfYear") String startDay, @Consulted(value="dwc:year")String year) { 
     	EventDQValidation result = new EventDQValidation();
-    	if (DateUtils.isEmpty(year) || DateUtils.isEmpty(startDay)) { 
-    		result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    	if (DateUtils.isEmpty(startDay)) { 
+    		result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		result.addComment("startDayOfYear was not provided.");
     	} else { 
     	    try { 
     	       Integer numericStartDay = Integer.parseInt(startDay);
+    	       if (numericStartDay>0 && numericStartDay<366) { 
+    	    	   result.setResult(EnumDQValidationResult.COMPLIANT);
+    	    	   result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    		       result.addComment("startDayOfYear [" + startDay + "] is in range for days of the year.");
+    	       } else if (numericStartDay==366) {
+    	           if (DateUtils.isEmpty(year)) { 
+    		            result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		            result.addComment("year was not provided and day is 366, could be valid in a leap year.");
+    	           } else {
+    	        	   String potentialDay = DateUtils.createEventDateFromParts("", startDay, "", year, "", "");
+    	        	   if (DateUtils.isEmpty(potentialDay)) { 
+    		               result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    	    	           result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    		               result.addComment("startDayOfYear [" + startDay + "] is out of range for year ["+ year +"].");
+    	        	   } else if (DateUtils.eventDateValid(potentialDay)) { 
+    	    	           result.setResult(EnumDQValidationResult.COMPLIANT);
+    	    	           result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    		               result.addComment("startDayOfYear [" + startDay + "] is in range for days of the year ["+year+"].");
+    	        	   } else { 
+    		               result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    	    	           result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    		               result.addComment("startDayOfYear [" + startDay + "] is out of range for year ["+ year +"].");
+    	        	   }
+    	           } 
+    	       } else { 
+    		       result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    	    	   result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    		       result.addComment("startDayOfYear [" + startDay + "] is out of range for days in the year.");
+    	       }    	       
     	    } catch (NumberFormatException e) { 
-    		   result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		   result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		   result.addComment("startDayOfYear [" + startDay + "] is not a number.");
     	    }
     	} 
     	return result;
     }
     
-    // TG2-VALIDATION_ENDDAYOFYEAR_OUTOFRANGE 
+    /**
+     * Given a year and an end day of a date range in days of the year, test whether or not
+     * the value for endDayOfYear is in range for the days in that year (1-365, or 366  in leap year).
+     * 
+     * TG2-VALIDATION_ENDDAYOFYEAR_OUTOFRANGE 
+     * 
+     * @param endDay
+     * @param year
+     * @return an DQValidationResponse object describing whether the date year-endDayOfYear exists.
+     */
+    public static final EventDQValidation endDayOfYearInRangeForYear(@ActedUpon(value="dwc:endDayOfYear") String endDay, @Consulted(value="dwc:year")String year) { 
+    	EventDQValidation result = new EventDQValidation();
+    	if (DateUtils.isEmpty(endDay)) { 
+    		result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		result.addComment("endDayOfYear was not provided.");
+    	} else { 
+    	    try { 
+    	       Integer numericEndDay = Integer.parseInt(endDay);
+    	       if (numericEndDay>0 && numericEndDay<366) { 
+    	    	   result.setResult(EnumDQValidationResult.COMPLIANT);
+    	    	   result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    		       result.addComment("endDayOfYear [" + endDay + "] is in range for days of the year.");
+    	       } else if (numericEndDay==366) {
+    	           if (DateUtils.isEmpty(year)) { 
+    		            result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		            result.addComment("year was not provided and day is 366, could be valid in a leap year.");
+    	           } else {
+    	        	   String potentialDay = DateUtils.createEventDateFromParts("", endDay, "", year, "", "");
+    	        	   if (DateUtils.isEmpty(potentialDay)) { 
+    		               result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    	    	           result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    		               result.addComment("endDayOfYear [" + endDay + "] is out of range for year ["+ year +"].");
+    	        	   } else if (DateUtils.eventDateValid(potentialDay)) { 
+    	    	           result.setResult(EnumDQValidationResult.COMPLIANT);
+    	    	           result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    		               result.addComment("endDayOfYear [" + endDay + "] is in range for days of the year ["+year+"].");
+    	        	   } else { 
+    		               result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    	    	           result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    		               result.addComment("endDayOfYear [" + endDay + "] is out of range for year ["+ year +"].");
+    	        	   }
+    	           } 
+    	       } else { 
+    		       result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    	    	   result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    		       result.addComment("endDayOfYear [" + endDay + "] is out of range for days in the year.");
+    	       }
+    	    } catch (NumberFormatException e) { 
+    		   result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		   result.addComment("endDayOfYear [" + endDay + "] is not a number.");
+    	    }
+    	} 
+    	return result;
+    }
     
-    // TG2-AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR
+    
+    /**
+     * Given a year and a start and end day, propose a value to fill in an eventDate if it is not empty and if
+     * both year and start day are not empty.
+     * 
+     * TG2-AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR
+     * 
+     * Run in order: extractDateFromVerbatim, then eventDateFromYearStartEndDay, then eventDateFromYearMonthDay
+     * 
+     * @see extractDateFromVerbatim
+     * @see eventDateFromYearMonthDay
+     * 
+     * @param eventDate to propose a value for if not empty
+     * @param year from which to construct an event date
+     * @param startDay from which to construct an event date 
+     * @param endDay from which to construct an event date
+     * @return an EventDQAmmendment which may contain a proposed ammendment.
+     */
+    @Provides(value="urn:uuid:eb0a44fa-241c-4d64-98df-ad4aa837307b")
     public static final EventDQAmendment eventDateFromYearStartEndDay(@ActedUpon(value="dwc:eventDate") String eventDate, @Consulted(value="dwc:year") String year, @Consulted(value="dwc:startDayOfYear") String startDay, @Consulted(value="dwc:endDayOfYear") String endDay ) {
     	EventDQAmendment result = new EventDQAmendment();
     	if (DateUtils.isEmpty(year) || DateUtils.isEmpty(startDay)) { 
@@ -858,4 +979,72 @@ public class DwCEventDQ {
     	}
     	return result;
     }
+
+    
+    /**
+     * Given values for year, month, and day propose a value to fill in an empty eventDate. 
+     *  
+     * TG2-AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY 
+     * 
+     * Run in order: extractDateFromVerbatim, then eventDateFromYearStartEndDay, then eventDateFromYearMonthDay
+     * 
+     * @see eventDateFromYearStartEndDay
+     * @see extractDateFromVerbatim
+     * 
+     * @param eventDate to fill in if not empty
+     * @param year from which to construct the event date
+     * @param month from which to construct the event date
+     * @param day from which to construct the event date
+     * @return an EventDQAmmendment which may contain a proposed ammendment.
+     */
+    @Provides(value= "urn:uuid:3892f432-ddd0-4a0a-b713-f2e2ecbd879d") 
+    public static final EventDQAmendment eventDateFromYearMonthDay(@ActedUpon(value="dwc:eventDate") String eventDate, @Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @Consulted(value="dwc:day") String day ) {
+    	EventDQAmendment result = new EventDQAmendment();
+    	if (DateUtils.isEmpty(year)) { 
+    		result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		result.addComment("No value for dwc:year was provided.");
+    	} else if (!DateUtils.isEmpty(eventDate)) { 
+    		result.setResultState(EnumDQAmendmentResultState.NOT_RUN);
+    		result.addComment("A value exists in dwc:eventDate, ammendment not attempted.");
+    	} else { 
+    	    try { 
+     	       Integer numericYear = Integer.parseInt(year);
+    	       if (!DateUtils.isEmpty(month)) { 
+     	           Integer numericmonth = Integer.parseInt(month);
+    	       }
+     	       if (!DateUtils.isEmpty(day)) { 
+     	           Integer numericDay = Integer.parseInt(day);
+     	       }
+     	       
+     	       String resultDateString = DateUtils.createEventDateFromParts("", "", "", year, month, day);
+     	       
+     	       
+     	       if (DateUtils.isEmpty(resultDateString)) {
+     	    	   result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+     		       result.addComment("Unable to construct a valid ISO date from year ["+year+"], month ["+ month +"] and day ["+ day +"].");
+     	       } else if (!DateUtils.eventDateValid(resultDateString)) { 
+     	    	   result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+     		       result.addComment("Failed to construct a valid ISO date from year ["+year+"], month ["+ month +"] and day ["+ day +"].");
+     	       } else {
+     	    	   result.setResultState(EnumDQAmendmentResultState.FILLED_IN);
+     	    	   result.addResult("dwc:eventDate", resultDateString);
+     	       }
+     	       
+     	    } catch (NumberFormatException e) { 
+     		   result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+     		   result.addComment("One of year [" + year + "], month ["+month+"], or day ["+ day +"] is not a number.");
+     	    }
+    	}
+    	return result;
+    }
+  
+    
+    //TG2-AMENDMENT_YEAR_STANDARDIZED  ??
+    //TG2-AMENDMENT_MONTH_STANDARDIZED 
+    //TG2-AMENDMENT_DAY_STANDARDIZED 
+
+    //TG2-AMENDMENT_EVENTDATE_STANDARDIZED
+    
+    //TG2-AMENDMENT_EVENT_FROM_EVENTDATE 
+    
 }
