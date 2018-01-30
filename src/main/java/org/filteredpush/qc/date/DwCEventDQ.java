@@ -546,7 +546,7 @@ public class DwCEventDQ {
      * Test to see whether a provided day is an integer in the range of values that can be 
      * a day of a month.
      * 
-     * Provides: DAY_IN_RANGE
+     * Provides: DAY_IN_RANGE.  Is not the same as TG2-VALIDATION_DAY_OUTOFRANGE which includes year and month
      * 
      * @param day  a string to test
      * @return COMPLIANT if day is an integer in the range 1 to 31 inclusive, NOT_COMPLIANT if day is 
@@ -588,6 +588,8 @@ public class DwCEventDQ {
      * Test to see whether a provided month is in the range of integer values that form months of the year.
      * 
      * Provides: MONTH_IN_RANGE
+     * 
+     * TG2-VALIDATION_MONTH_OUTOFRANGE
      * 
      * @param month  a string to test
      * @return COMPLIANT if month is an integer in the range 1 to 12 inclusive, NOT_COMPLIANT if month is 
@@ -702,10 +704,14 @@ public class DwCEventDQ {
     	return result;
     }     
 
+    
+    // TODO: Confirm GUID, this may be 9f05540b-3783-4e0f-8e52-8d2a1f93d9d7 or  5618f083-d55a-4ac2-92b5-b9fb227b832f
     /**
      * Check if a value for day is consistent with a provided month and year. 
      * 
      * Provides: DAY_POSSIBLE_FOR_MONTH_YEAR  (RECORDED_DATE_MISMATCH)
+     * 
+     * TG2-VALIDATION_DAY_OUTOFRANGE
      * 
      * @param year for month and day
      * @param month for day
@@ -1151,9 +1157,6 @@ public class DwCEventDQ {
     //TG2-AMENDMENT_EVENTDATE_STANDARDIZED
     
     //TG2-AMENDMENT_EVENT_FROM_EVENTDATE 
-    
-    //TG2-VALIDATION_MONTH_OUTOFRANGE
-    //TG2-VALIDATION_DAY_OUTOFRANGE
     
     //TG2-VALIDATION_EVENT_EMPTY
     //TG2-VALIDATION_YEAR_OUTOFRANGE 
