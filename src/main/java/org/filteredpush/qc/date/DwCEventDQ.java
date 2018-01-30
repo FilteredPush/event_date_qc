@@ -56,6 +56,9 @@ import org.joda.time.Interval;
  *  Also provides (intended to prepare upstream data for Darwin Core: 
  *  UPSTREAM_EVENTDATE_FILLED_IN_FROM_START_END  extractDateFromStartEnd(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "startDate") String startDate, @Consulted(value="endDate") String endDate) 
  * 
+ *  Not implemented: 
+ *  TG2-AMENDMENT_YEAR_STANDARDIZED  Unclear what to do with this one.
+ * 
  * @author mole
  *
  */
@@ -1085,6 +1088,7 @@ public class DwCEventDQ {
     					Integer monthNumeric = DateUtils.extractDate(convertedDate).getMonthOfYear();
     					result.setResultState(EnumDQAmendmentResultState.CHANGED);
     					result.addResult("dwc:month", monthNumeric.toString());
+    					result.addComment("Interpreted provided value for dwc:month ["+month+"] as ["+monthNumeric.toString()+"].");
     				} else { 
     					result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
     					result.addComment("Unable to parse a meaningfull value for month from dwc:month ["+month+"].");
@@ -1097,6 +1101,16 @@ public class DwCEventDQ {
     }
     
     
+    /**
+     * Given a dwc:day, if the day is not empty and not an integer, attempt to interpret the value 
+     * as a day of the month.   Note: Implementation here is only guided by the example in the 
+     * test description, trailing non-numeric characters are removed.   
+     * 
+     * TG2-AMENDMENT_DAY_STANDARDIZED 
+     * 
+     * @param day to evaluate
+     * @return an EventDQAmmendment which may contain a proposed amendment for key dwc:day.
+     */
     @Provides(value="urn:uuid:b129fa4d-b25b-43f7-9645-5ed4d44b357b")
     public static final EventDQAmendment standardizeDay(@ActedUpon(value="dwc:day") String day) {
     	EventDQAmendment result = new EventDQAmendment();
@@ -1105,20 +1119,34 @@ public class DwCEventDQ {
     		result.addComment("No value for dwc:day was provided.");
     	} else { 
     		try { 
-    			Integer monthnumeric = Integer.parseInt(day);
+    			Integer dayNumeric = Integer.parseInt(day);
     			result.setResultState(EnumDQAmendmentResultState.NO_CHANGE);
     			result.addComment("A value for dwc:day parsable as an integer was provided.");
-     	    } catch (NumberFormatException e) { 
-     	    	// TODO: need definition
+    		} catch (NumberFormatException e) { 
+    			// Strip off any trailing non-numeric characters.
+    			String dayTrimmed = day.replaceAll("[^0-9]+$", "");
+    			// Try again
+    			try { 
+    				Integer dayNumeric = Integer.parseInt(dayTrimmed);
+    				if (dayNumeric>0 && dayNumeric<32) { 
+    					result.setResultState(EnumDQAmendmentResultState.CHANGED);
+    					result.addResult("dwc:day", dayNumeric.toString());
+    					result.addComment("Interpreted provided value for dwc:day ["+day+"] as ["+dayNumeric.toString()+"].");
+    				} else { 
+    					result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    					result.addComment("Unable to parse a meaningfull value for day of month from dwc:day ["+day+"].");
+
+    				}
+    			} catch (NumberFormatException ex) { 
+    				result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    				result.addComment("Unable to interpret value provided for dwc:day ["+ day + "] as a day of the month.");
+    			}
     		} 
     		
     	}
     	return result;
     }    
     
-    //TG2-AMENDMENT_YEAR_STANDARDIZED  ??
-    //TG2-AMENDMENT_MONTH_STANDARDIZED 
-    //TG2-AMENDMENT_DAY_STANDARDIZED 
 
     //TG2-AMENDMENT_EVENTDATE_STANDARDIZED
     

@@ -820,4 +820,60 @@ public class DwcEventDQTest {
 		
 	}
 	
+	@Test 
+	public void testDayStandardized() {
+		String day = "1";
+		EventDQAmendment result = DwCEventDQ.standardizeDay(day);
+		assertEquals(EnumDQAmendmentResultState.NO_CHANGE, result.getResultState());
+		for (int i=2; i<32; i++) { 
+		   result = DwCEventDQ.standardizeDay(Integer.toString(i));
+		   assertEquals(EnumDQAmendmentResultState.NO_CHANGE, result.getResultState());
+		}
+		
+		day = "0";
+		result = DwCEventDQ.standardizeDay(day);
+		assertEquals(EnumDQAmendmentResultState.NO_CHANGE, result.getResultState());
+		day = "32";
+		result = DwCEventDQ.standardizeDay(day);
+		assertEquals(EnumDQAmendmentResultState.NO_CHANGE, result.getResultState());		
+		
+		day = "";
+		result = DwCEventDQ.standardizeDay(day);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		
+		day = "Feb.";
+		result = DwCEventDQ.standardizeDay(day);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		
+		day = "1st";
+		result = DwCEventDQ.standardizeDay(day);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("1", result.getResult().get("dwc:day"));		
+		
+		day = "2nd.";
+		result = DwCEventDQ.standardizeDay(day);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("2", result.getResult().get("dwc:day"));
+		
+		day = "31st";
+		result = DwCEventDQ.standardizeDay(day);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("31", result.getResult().get("dwc:day"));		
+		
+		day = "32nd";
+		result = DwCEventDQ.standardizeDay(day);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		
+		day = "one";
+		result = DwCEventDQ.standardizeDay(day);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		
+		day = "o1";  // typo for 01
+		result = DwCEventDQ.standardizeDay(day);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		day = "O1";  // typo for 01
+		result = DwCEventDQ.standardizeDay(day);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+	}
+	
 }
