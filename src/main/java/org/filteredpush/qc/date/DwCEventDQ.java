@@ -1043,6 +1043,79 @@ public class DwCEventDQ {
     }
   
     
+    /**
+     * Given a value of dwc:month, check to see if that month is an integer, if not, attempt to 
+     * propose a suitable integer for the month of the year from the value provided.
+     * 
+     * TG2-AMENDMENT_MONTH_STANDARDIZED 
+     * 
+     * @param month the value of dwc:month to assess
+     * @return an EventDQAmmendment which may contain a proposed ammendment.
+     */
+    @Provides(value="urn:uuid:2e371d57-1eb3-4fe3-8a61-dff43ced50cf")
+    public static final EventDQAmendment standardizeMonth(@ActedUpon(value="dwc:month") String month) {
+    	EventDQAmendment result = new EventDQAmendment();
+    	if (DateUtils.isEmpty(month)) { 
+    		result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		result.addComment("No value for dwc:month was provided.");
+    	} else { 
+
+    		try { 
+    			Integer monthnumeric = Integer.parseInt(month);
+    			result.setResultState(EnumDQAmendmentResultState.NO_CHANGE);
+    			result.addComment("A value for dwc:month parsable as an integer was provided.");
+    		} catch (NumberFormatException e) { 
+    			// Convert roman numerals, some problematic forms of abbreviations, 
+    			// non-english capitalization variants, absence of exepected accented characters,
+    			// etc to date library (e.g. Joda) recognized month names.
+    			String monthConverted = DateUtils.cleanMonth(month);
+    			// Strip any trailing period off of month name.
+    			String monthTrim = monthConverted.replaceFirst("\\.$", "").trim();
+    			if (DateUtils.isEmpty(monthTrim)) { 
+    				result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    				result.addComment("Unable to parse a meaningfull value for month from dwc:month ["+month+"].");
+    			} else { 
+    				// Add the month string into the first day of that month in 1800, and see if 
+    				// a verbatim date can be parsed from that string.
+    				StringBuilder testDate = new StringBuilder().append("1800-").append(monthTrim).append("-01");
+    				EventResult convertedDateResult = DateUtils.extractDateFromVerbatimER(testDate.toString());
+    				if (convertedDateResult.getResultState().equals(EventResult.EventQCResultState.DATE)) { 
+    					String convertedDate = convertedDateResult.getResult();
+    					// Date could be parsed, extract the month.
+    					Integer monthNumeric = DateUtils.extractDate(convertedDate).getMonthOfYear();
+    					result.setResultState(EnumDQAmendmentResultState.CHANGED);
+    					result.addResult("dwc:month", monthNumeric.toString());
+    				} else { 
+    					result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    					result.addComment("Unable to parse a meaningfull value for month from dwc:month ["+month+"].");
+    				}
+    			} 
+    		}
+    		
+    	}
+    	return result;
+    }
+    
+    
+    @Provides(value="urn:uuid:b129fa4d-b25b-43f7-9645-5ed4d44b357b")
+    public static final EventDQAmendment standardizeDay(@ActedUpon(value="dwc:day") String day) {
+    	EventDQAmendment result = new EventDQAmendment();
+    	if (DateUtils.isEmpty(day)) { 
+    		result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		result.addComment("No value for dwc:day was provided.");
+    	} else { 
+    		try { 
+    			Integer monthnumeric = Integer.parseInt(day);
+    			result.setResultState(EnumDQAmendmentResultState.NO_CHANGE);
+    			result.addComment("A value for dwc:day parsable as an integer was provided.");
+     	    } catch (NumberFormatException e) { 
+     	    	// TODO: need definition
+    		} 
+    		
+    	}
+    	return result;
+    }    
+    
     //TG2-AMENDMENT_YEAR_STANDARDIZED  ??
     //TG2-AMENDMENT_MONTH_STANDARDIZED 
     //TG2-AMENDMENT_DAY_STANDARDIZED 

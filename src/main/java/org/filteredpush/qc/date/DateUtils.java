@@ -2331,6 +2331,20 @@ public class DateUtils {
     		cleaned = cleaned.replace(" v", " May");
     		cleaned = cleaned.replace(" x", " October");
 
+    		cleaned = cleaned.replace("月", "");
+    		cleaned = cleaned.replace("三", "March");
+    		cleaned = cleaned.replace("四", "April");
+    		cleaned = cleaned.replace("五", "May");
+    		cleaned = cleaned.replace("六", "June");
+    		cleaned = cleaned.replace("七", "July");
+    		cleaned = cleaned.replace("八", "August");
+    		cleaned = cleaned.replace("九", "September");
+    		cleaned = cleaned.replace("十一", "November");
+    		cleaned = cleaned.replace("十二", "December");
+    		cleaned = cleaned.replace("十", "October");
+    		cleaned = cleaned.replace("一", "January");    		
+    		cleaned = cleaned.replace("二", "February");
+
     	}
     	return cleaned;
     }

@@ -667,4 +667,157 @@ public class DwcEventDQTest {
 		assertEquals(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
 	}
 	
+	@Test 
+	public void testMonthStandardized() { 
+		String month = "12";
+		EventDQAmendment result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.NO_CHANGE, result.getResultState());
+		
+		month = "0";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.NO_CHANGE, result.getResultState());	
+		
+		month = "1414";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.NO_CHANGE, result.getResultState());		
+		
+		month = "";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		
+		month = "randomtext";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		
+		month = "Jan";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("1", result.getResult().get("dwc:month"));
+		
+		month = "Jan.";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("1", result.getResult().get("dwc:month"));		
+		
+		month = "January";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("1", result.getResult().get("dwc:month"));	
+		
+		month = "JAn.";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("1", result.getResult().get("dwc:month"));		
+		
+		month = "Feb.";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("2", result.getResult().get("dwc:month"));		
+		
+		month = "Février";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("2", result.getResult().get("dwc:month"));		
+		
+		month = "Fevrier";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("2", result.getResult().get("dwc:month"));		
+		
+		month = "fevrier";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("2", result.getResult().get("dwc:month"));		
+		
+		month = "Febbraio";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("2", result.getResult().get("dwc:month"));		
+		
+		month = "Febrero";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("2", result.getResult().get("dwc:month"));		
+		
+		month = "Februar";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("2", result.getResult().get("dwc:month"));		
+		
+		month = "二";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("2", result.getResult().get("dwc:month"));		
+		
+		month = "i";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("1", result.getResult().get("dwc:month"));			
+		
+		month = "I";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("1", result.getResult().get("dwc:month"));
+
+		month = "II";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("2", result.getResult().get("dwc:month"));
+		
+		month = "III";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("3", result.getResult().get("dwc:month"));
+		
+		month = "IV";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("4", result.getResult().get("dwc:month"));
+
+		month = "V";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("5", result.getResult().get("dwc:month"));
+		
+		month = "VI";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("6", result.getResult().get("dwc:month"));		
+		
+		month = "VII";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("7", result.getResult().get("dwc:month"));
+
+		month = "VIII";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("8", result.getResult().get("dwc:month"));
+		
+		month = "IX";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("9", result.getResult().get("dwc:month"));		
+		
+		month = "X";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("10", result.getResult().get("dwc:month"));
+
+		month = "XI";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("11", result.getResult().get("dwc:month"));
+		
+		month = "XII";
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.CHANGED, result.getResultState());
+		assertEquals("12", result.getResult().get("dwc:month"));	
+		
+		month = "XIII";  // no month 13
+		result = DwCEventDQ.standardizeMonth(month);
+		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		
+	}
+	
 }
