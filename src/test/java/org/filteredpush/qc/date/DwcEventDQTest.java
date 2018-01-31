@@ -1346,4 +1346,67 @@ public class DwcEventDQTest {
 		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());				
 		
 	}
+	
+	@Test
+	public void testEventDateEmpty() {
+		String eventDate = null;
+		EventDQValidation result = DwCEventDQ.isEventDateEmpty(eventDate);
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
+		
+		eventDate = "";
+		result = DwCEventDQ.isEventDateEmpty(eventDate);
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
+		
+		eventDate = "\n";
+		result = DwCEventDQ.isEventDateEmpty(eventDate);
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
+		
+		eventDate = " ";
+		result = DwCEventDQ.isEventDateEmpty(eventDate);
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
+		
+		eventDate = "NULL";
+		result = DwCEventDQ.isEventDateEmpty(eventDate);
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
+		
+		eventDate = "1840-01-05";
+		result = DwCEventDQ.isEventDateEmpty(eventDate);
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());	
+		
+		eventDate = "-1";
+		result = DwCEventDQ.isEventDateEmpty(eventDate);
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());	
+		
+		eventDate = "text";
+		result = DwCEventDQ.isEventDateEmpty(eventDate);
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());	
+		
+	}
+	
+	@Test
+	public void testYearEmpty() {
+		String year = null;
+		EventDQValidation result = DwCEventDQ.isYearEmpty(year);
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
+		
+		year="";
+		result = DwCEventDQ.isYearEmpty(year);
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
+		
+		year="NULL";
+		result = DwCEventDQ.isYearEmpty(year);
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
+		
+		year="1880";
+		result = DwCEventDQ.isYearEmpty(year);
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());				
+
+	    year = "-1";
+		result = DwCEventDQ.isYearEmpty(year);
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());				
+				
+		year = "text";
+		result = DwCEventDQ.isYearEmpty(year);
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());				
+	}
 }

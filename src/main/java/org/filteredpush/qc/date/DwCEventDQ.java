@@ -103,7 +103,7 @@ public class DwCEventDQ {
 	@Provides(value = "urn:uuid:0a59e03f-ebb5-4df3-a802-2e444de525b5")
 	@Measure(dimension = Dimension.COMPLETENESS, label = "Event Date Completeness", description = "Measure the completeness of an event date.")
 	@Specification(value = "For values of dwc:eventDate, check is not empty.")
-	public static EventDQMeasurement<EnumDQMeasurementResult> measureCompleteness(@ActedUpon(value = "dwc:eventDate") String eventDate) {
+	public static EventDQMeasurement<EnumDQMeasurementResult> measureEventCompleteness(@ActedUpon(value = "dwc:eventDate") String eventDate) {
 		EventDQMeasurement<EnumDQMeasurementResult> result = new EventDQMeasurement<EnumDQMeasurementResult>();
 		if (DateUtils.isEmpty(eventDate)) {
 			result.addComment("No value provided for eventDate.");
@@ -115,6 +115,53 @@ public class DwCEventDQ {
 			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
 		}
 
+		return result;
+	}
+	
+	/**
+	 * Test to see whether or not a dwc:eventDate contains any value.
+	 * 
+	 * validation corresponding to TG2-VALIDATION_EVENTDATE_EMPTY  f51e15a6-a67d-4729-9c28-3766299d2985
+	 * 
+	 * @param eventDate to assess for emptyness
+     * @return an object implementing DQValidationResponse describing whether any value is present dwc:eventDate.
+	 */
+	@Provides(value = "urn:uuid:f51e15a6-a67d-4729-9c28-3766299d2985")
+	public static EventDQValidation isEventDateEmpty(@ActedUpon(value = "dwc:eventDate") String eventDate) {
+		EventDQValidation result = new EventDQValidation();
+		if (DateUtils.isEmpty(eventDate)) {
+			result.addComment("No value provided for eventDate.");
+			result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+		} else { 
+			result.addComment("Some value provided for eventDate.");
+			result.setResult(EnumDQValidationResult.COMPLIANT);
+			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+		}
+		return result;
+	}
+	
+	
+	/**
+	 * Test to see whether or not a dwc:year contains any value.
+	 * 
+	 * validation corresponding to  TG2-VALIDATION_YEAR_EMPTY  c09ecbf9-34e3-4f3e-b74a-8796af15e59f
+	 * 
+	 * @param year
+     * @return an object implementing DQValidationResponse describing whether any value is present dwc:year.
+	 */
+	@Provides(value="urn:uuid:c09ecbf9-34e3-4f3e-b74a-8796af15e59f")
+	public static EventDQValidation isYearEmpty(@ActedUpon(value = "dwc:year") String year) {
+		EventDQValidation result = new EventDQValidation();
+		if (DateUtils.isEmpty(year)) {
+			result.addComment("No value provided for dwc:year.");
+			result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+		} else { 
+			result.addComment("Some value provided for dwc:year.");
+			result.setResult(EnumDQValidationResult.COMPLIANT);
+			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+		}
 		return result;
 	}
 	
@@ -1408,9 +1455,7 @@ public class DwCEventDQ {
     
     //TG2-VALIDATION_YEAR_OUTOFRANGE 
     //TG2-VALIDATION_EVENTDATE_NOTSTANDARD
-    //TG2-VALIDATION_YEAR_EMPTY
     //TG2-VALIDATION_EVENTDATE_OUTOFRANGE
-    //TG2-VALIDATION_EVENTDATE_EMPTY 
     
     //TG2-VALIDATION_DATEIDENTIFIED_OUTOFRANGE
     //TG2-VALIDATION_DATEIDENTIFIED_NOTSTANDARD
