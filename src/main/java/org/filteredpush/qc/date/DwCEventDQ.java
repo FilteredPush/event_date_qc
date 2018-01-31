@@ -1160,7 +1160,22 @@ public class DwCEventDQ {
     }    
     
     
-    //TG2-VALIDATION_EVENT_INCONSISTENT 
+    /**
+     * Given a set of Event terms related to date and time, determine if they are consistent or 
+     * inconsistent.
+     * 
+     * TG2-VALIDATION_EVENT_INCONSISTENT 
+     * 
+     * @param eventDate
+     * @param verbatimEventDate
+     * @param year
+     * @param month
+     * @param day
+     * @param startDayOfYear
+     * @param endDayOfYear
+     * @param eventTime
+     * @return
+     */
     @Provides(value="5618f083-d55a-4ac2-92b5-b9fb227b832f")
     public static EventDQValidation eventDateConsistentWithAtomic(
     		@ActedUpon(value = "dwc:eventDate") String eventDate,
@@ -1170,19 +1185,124 @@ public class DwCEventDQ {
 			@ActedUpon(value = "dwc:day") String day, 
 			@ActedUpon(value = "dwc:startDayOfYear") String startDayOfYear, 
 			@ActedUpon(value = "dwc:endDayOfYear") String endDayOfYear, 
-			@ActedUpon(value = "dwc:eventTime") String eventTime )   // TODO: check if in spreadsheet
+			@ActedUpon(value = "dwc:eventTime") String eventTime )   // TODO: Not in definition of test, needs to be added there.
     {
 
-    	
-    	
 		EventDQValidation result = new EventDQValidation();
+		boolean inconsistencyFound = false;
+		boolean interpretationProblem = false;
 
-		// TODO: Actor logic here...
+		// Compare eventDate and eventTime
+		if (!DateUtils.isEmpty(eventDate) && !DateUtils.isEmpty(eventTime)) { 
+			if (DateUtils.containsTime(eventDate)) { 
+				String time1 = DateUtils.extractZuluTime(eventDate);
+				String time2 = DateUtils.extractZuluTime("1900-01-01 "+ eventTime);
+				if (time1!=null && time2!=null) { 
+					if (!time1.equals(time2)) {
+						inconsistencyFound = true;
+						result.addComment("Time part of the provided value for eventDate '" + eventDate + "' appears to represents a different time than " +
+								" eventTime '" + eventTime + "'.");
+					}
+				} else { 
+					interpretationProblem = true;
+					result.addComment("Unable to interpret the time part of either the provided value for eventDate '" + eventDate + "' or " +
+								" eventTime '" + eventTime + "'.");
+				}
+			}
+		}
+		// compare eventDate and year, month, day
+		if (!DateUtils.isEmpty(eventDate) && !DateUtils.isEmpty(year)) { 
+			if (!DateUtils.isEmpty(month)) { 
+				if (!DateUtils.isEmpty(day)) { 
+					if (!DateUtils.isConsistent(eventDate, year, month, day)) { 
+						inconsistencyFound = true;
+						result.addComment("Provided value for eventDate '" + eventDate + "' appears to represent a date inconsistent with year-month-day " + year + "-" + month +"-" + day + ".");
+					}
 
-			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
-		result.setResult(EnumDQValidationResult.COMPLIANT);
-		result.addComment("Provided value for eventDate '" + eventDate + "' represents the " +
-				"same range as verbatimEventDate '" + verbatimEventDate + "'.");
+				} else { 
+					if (!DateUtils.isConsistent(eventDate, year, month, "1")) { 
+						inconsistencyFound = true;
+						result.addComment("Provided value for eventDate '" + eventDate + "' appears to represent a date inconsistent with year-month " + year + "-" + month +" .");
+					}
+				}
+			} else { 
+				if (!DateUtils.isEmpty(day)) {
+					interpretationProblem = true;
+					result.addComment("Provided value for eventDate '" + eventDate + "' can't be tested for consistency with " + year + "- -" + day + " (no month provided).");
+				} else { 
+					if (!DateUtils.isConsistent(eventDate, year, "1", "1")) { 
+						inconsistencyFound = true;
+						result.addComment("Provided value for eventDate '" + eventDate + "' appears to represent a date inconsistent with year " + year + " .");
+					}
+				}				
+			}
+		}
+		
+		
+		// compare eventDate and start/end day of year
+		if (!DateUtils.isEmpty(eventDate) && !DateUtils.isEmpty(startDayOfYear)) { 
+			if (!DateUtils.isConsistent(eventDate, startDayOfYear, endDayOfYear, "", "", "")) { 
+				inconsistencyFound = true;
+				result.addComment("Provided value for eventDate '" + eventDate + "' appears to represent a date inconsistent with startDayOfYear [" + startDayOfYear + "] or endDayOfYear [" + endDayOfYear +"].");
+			}
+			
+		}
+		
+		// compare eventDate and month day (if year is empty)
+		if (!DateUtils.isEmpty(eventDate) && DateUtils.isEmpty(year) && (!DateUtils.isEmpty(month) || !DateUtils.isEmpty(day))) { 
+			if (!DateUtils.isConsistent(eventDate, "", month, day)) { 
+				inconsistencyFound = true;
+				result.addComment("Provided value for eventDate '" + eventDate + "' appears to represent a date inconsistent with  the month ["+ month +" or day [" + day + "], no year provided.");
+			}
+		}
+
+		// compare year month day with start day of year
+		if (!DateUtils.isEmpty(year) && !DateUtils.isEmpty(month) && !DateUtils.isEmpty(day) && !DateUtils.isEmpty(startDayOfYear)) {
+			StringBuilder tempDate = new StringBuilder().append(year)
+					.append("-").append(month).append("-").append(day);
+			if (!DateUtils.isConsistent(tempDate.toString(), startDayOfYear, "", year, month, day)) { 
+				inconsistencyFound = true;
+				result.addComment("Provided value for year month and day'" + tempDate + "' appear to represent a date inconsistent with startDayOfYear [" + startDayOfYear + "] .");
+			}
+		}
+		
+		// compare eventDate with verbatimEventDate
+		if (!DateUtils.isEmpty(eventDate) && !DateUtils.isEmpty(verbatimEventDate)) {
+			String testDate = DateUtils.createEventDateFromParts(verbatimEventDate, "", "", "", "", "");
+			if (!DateUtils.isEmpty(testDate)) { 
+				if (!DateUtils.eventsAreSameInterval(eventDate, testDate)) { 
+					inconsistencyFound = true;
+					result.addComment("Provided value for eventDate '" + eventDate + "' appears to represent a different interval of time from the verbatimEventDate [" + verbatimEventDate +"].");
+				}
+			}
+		}
+		
+		if (DateUtils.isEmpty(eventDate) && 
+				DateUtils.isEmpty(year) &&
+				DateUtils.isEmpty(month) &&
+				DateUtils.isEmpty(day) &&
+				DateUtils.isEmpty(startDayOfYear) &&
+				DateUtils.isEmpty(endDayOfYear) &&
+				DateUtils.isEmpty(eventTime) &&
+				DateUtils.isEmpty(verbatimEventDate) ) 
+		{	
+			result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+			result.addComment("All provided event terms are empty, can't assess consistency.");
+			logger.debug("All terms empty.");
+		} else { 
+			if (inconsistencyFound) { 
+				// inconsistency trumps interpretation problem, return result as NOT COMPLIANT
+				result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+				result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+			} else { 
+				if (interpretationProblem) { 
+					result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+				} else { 
+					result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+					result.setResult(EnumDQValidationResult.COMPLIANT);
+				}
+			}
+		}
 
 		return result;
 	}  

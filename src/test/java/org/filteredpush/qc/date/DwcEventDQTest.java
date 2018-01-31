@@ -1144,5 +1144,206 @@ public class DwcEventDQTest {
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQMeasurementResult.COMPLETE, result.getValue());	
 	}	
+	
+	@Test
+	public void testEventDateConsistentWithAtomic() {
+		String eventDate = null;
+		String verbatimEventDate = null;
+		String year = null;
+		String month = null;
+		String day = null;
+		String startDayOfYear = null;
+		String endDayOfYear = null;
+		String eventTime = null;
+		
+		EventDQValidation result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		
+		eventDate = "";
+		verbatimEventDate = "";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		eventTime = "";
+		
+		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
 			
+		eventDate = "1980-02-14";
+		verbatimEventDate = "";
+		year = "1980";
+		month = "2";
+		day = "14";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		eventTime = "";
+		
+		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());			
+		
+		eventDate = "1980-02-14";
+		verbatimEventDate = "February 14, 1980";
+		year = "1980";
+		month = "2";
+		day = "14";
+		startDayOfYear = Integer.toString(31 + 14);
+		endDayOfYear = "";
+		eventTime = "";
+		
+		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());			
+		
+		eventDate = "1980-02-14";
+		verbatimEventDate = "February 14, 1980";
+		year = "1980";
+		month = "2";
+		day = "14";
+		startDayOfYear = Integer.toString(31 + 14);
+		endDayOfYear = Integer.toString(31 + 14);
+		eventTime = " 12:00";
+		
+		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());			
+		
+		eventDate = "";
+		verbatimEventDate = "February 14, 1980";
+		year = "1980";
+		month = "2";
+		day = "14";
+		startDayOfYear = Integer.toString(31 + 14);
+		endDayOfYear = Integer.toString(31 + 14);
+		eventTime = " 12:00";
+		
+		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());			
+		
+		eventDate = "1980-02-14";
+		verbatimEventDate = "February 15, 1980";
+		year = "1980";
+		month = "2";
+		day = "13";
+		startDayOfYear = Integer.toString(31 + 12);
+		endDayOfYear = "";
+		eventTime = "";
+		
+		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());		
+		
+		eventDate = "";
+		verbatimEventDate = "February 15, 1980";
+		year = "1980";
+		month = "2";
+		day = "13";
+		startDayOfYear = Integer.toString(31 + 12);
+		endDayOfYear = "";
+		eventTime = "";
+		
+		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());			
+		
+		eventDate = "1980-02-14";
+		verbatimEventDate = "February 14, 1980";
+		year = "1980";
+		month = "2";
+		day = "15";
+		startDayOfYear = Integer.toString(31 + 14);
+		endDayOfYear = "";
+		eventTime = "";
+		
+		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());		
+		
+		eventDate = "1980-02-14";
+		verbatimEventDate = "February 14, 1980";
+		year = "1980";
+		month = "2";
+		day = "14";
+		startDayOfYear = Integer.toString(31 + 15);
+		endDayOfYear = "";
+		eventTime = "";
+		
+		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
+		
+		eventDate = "1980-02-14";
+		verbatimEventDate = "February 14, 1980";
+		year = "1980";
+		month = "2";
+		day = "14";
+		startDayOfYear = Integer.toString(31 + 14);
+		endDayOfYear = Integer.toString(31 + 25);    // date range not in eventDate
+		eventTime = "";
+		
+		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());		
+		
+		eventDate = "1980-02-14/1980-02-25";
+		verbatimEventDate = "February 14-25, 1980";
+		year = "1980";
+		month = "2";
+		day = "14";
+		startDayOfYear = Integer.toString(31 + 14);
+		endDayOfYear = Integer.toString(31 + 25);    // date range in eventDate
+		eventTime = "";
+		
+		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		logger.debug(result.getComment());
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());	
+		
+		eventDate = "1980-02-14/1981-01-12";
+		verbatimEventDate = "February 14, 1980 to January 1, 1981";
+		year = "1980";
+		month = "2";
+		day = "14";
+		startDayOfYear = Integer.toString(31 + 14);
+		endDayOfYear = Integer.toString(12);    // date range in eventDate, but in previous year
+		eventTime = "";
+		
+		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		logger.debug(result.getComment());
+ 		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());		
+		
+		eventDate = "1980-02";
+		verbatimEventDate = "February 1980";
+		year = "1980";
+		month = "2";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";    
+		eventTime = "";
+		
+		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		logger.debug(result.getComment());
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());	
+		
+		eventDate = "1980-02";
+		verbatimEventDate = "February 1980";
+		year = "1980";
+		month = "2";
+		day = "";
+		startDayOfYear = "32";
+		assertTrue(DateUtils.includesLeapDay(eventDate));
+		endDayOfYear = Integer.toString(31 + 29);    
+		eventTime = "";
+		
+		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		logger.debug(result.getComment());
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());				
+		
+	}
 }
