@@ -21,6 +21,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.datakurator.ffdq.annotations.*;
+import org.datakurator.ffdq.api.EnumDQMeasurementResult;
 import org.datakurator.ffdq.api.EnumDQResultState;
 import org.datakurator.ffdq.api.EnumDQValidationResult;
 import org.datakurator.ffdq.api.EnumDQAmendmentResultState;
@@ -57,7 +58,7 @@ import org.joda.time.Interval;
  *  UPSTREAM_EVENTDATE_FILLED_IN_FROM_START_END  extractDateFromStartEnd(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "startDate") String startDate, @Consulted(value="endDate") String endDate) 
  * 
  *  Not implemented: 
- *  TG2-AMENDMENT_YEAR_STANDARDIZED  Unclear what to do with this one.
+ *  TG2-AMENDMENT_YEAR_STANDARDIZED  Unclear how to implement this one.
  * 
  * @author mole
  *
@@ -102,10 +103,15 @@ public class DwCEventDQ {
 	@Provides(value = "urn:uuid:0a59e03f-ebb5-4df3-a802-2e444de525b5")
 	@Measure(dimension = Dimension.COMPLETENESS, label = "Event Date Completeness", description = "Measure the completeness of an event date.")
 	@Specification(value = "For values of dwc:eventDate, check is not empty.")
-	public static EventDQMeasurement<Long> measureCompleteness(@ActedUpon(value = "dwc:eventDate") String eventDate) {
-		EventDQMeasurement<Long> result = new EventDQMeasurement<Long>();
-		if (!DateUtils.isEmpty(eventDate)) {
+	public static EventDQMeasurement<EnumDQMeasurementResult> measureCompleteness(@ActedUpon(value = "dwc:eventDate") String eventDate) {
+		EventDQMeasurement<EnumDQMeasurementResult> result = new EventDQMeasurement<EnumDQMeasurementResult>();
+		if (DateUtils.isEmpty(eventDate)) {
 			result.addComment("No value provided for eventDate.");
+			result.setValue(EnumDQMeasurementResult.NOT_COMPLETE);
+			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+		} else { 
+			result.addComment("Some value provided for eventDate.");
+			result.setValue(EnumDQMeasurementResult.COMPLETE);
 			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
 		}
 
@@ -138,11 +144,11 @@ public class DwCEventDQ {
 
 		EventDQValidation result = new EventDQValidation();
 
-		// Actor logic here...
+		// TODO: Actor logic here...
 
-		result.setResult(EnumDQValidationResult.COMPLIANT);
-		result.addComment("Provided value for eventDate '" + eventDate + "' represents the " +
-				"same range as verbatimEventDate '" + verbatimEventDate + "'.");
+		//result.setResult(EnumDQValidationResult.COMPLIANT);
+		//result.addComment("Provided value for eventDate '" + eventDate + "' represents the " +
+		//		"same range as verbatimEventDate '" + verbatimEventDate + "'.");
 
 		return result;
 	}
@@ -1153,14 +1159,134 @@ public class DwCEventDQ {
     	return result;
     }    
     
+    
+    //TG2-VALIDATION_EVENT_INCONSISTENT 
+    @Provides(value="5618f083-d55a-4ac2-92b5-b9fb227b832f")
+    public static EventDQValidation eventDateConsistentWithAtomic(
+    		@ActedUpon(value = "dwc:eventDate") String eventDate,
+			@ActedUpon(value = "dwc:verbatimEventDate") String verbatimEventDate, 
+			@ActedUpon(value = "dwc:year") String year, 
+			@ActedUpon(value = "dwc:month") String month, 
+			@ActedUpon(value = "dwc:day") String day, 
+			@ActedUpon(value = "dwc:startDayOfYear") String startDayOfYear, 
+			@ActedUpon(value = "dwc:endDayOfYear") String endDayOfYear, 
+			@ActedUpon(value = "dwc:eventTime") String eventTime )   // TODO: check if in spreadsheet
+    {
+
+    	
+    	
+		EventDQValidation result = new EventDQValidation();
+
+		// TODO: Actor logic here...
+
+			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+		result.setResult(EnumDQValidationResult.COMPLIANT);
+		result.addComment("Provided value for eventDate '" + eventDate + "' represents the " +
+				"same range as verbatimEventDate '" + verbatimEventDate + "'.");
+
+		return result;
+	}  
+    
+    /**
+     * Examine each of the date/time related terms in the Event class, and test to see if at least 
+     * one of them contains some value.  This may or may not be a meaningful value, and this may or
+     * may not be interpretable to a date or date range.
+     * 
+     * TG2-VALIDATION_EVENT_EMPTY
+     * 
+     * @param eventDate to examine
+     * @param verbatimEventDate to examine
+     * @param year to examine
+     * @param month to examine
+     * @param day to examine
+     * @param startDayOfYear to examine
+     * @param endDayOfYear to examine
+     * @param eventTime to examine
+     * @return an DQValidationResponse object describing whether any value is present in any of the temporal terms of the event.
+     */
+    @Provides(value = "urn:uuid:41267642-60ff-4116-90eb-499fee2cd83f")
+    public static EventDQValidation eventEmpty(
+    		@ActedUpon(value = "dwc:eventDate") String eventDate,
+			@ActedUpon(value = "dwc:verbatimEventDate") String verbatimEventDate, 
+			@ActedUpon(value = "dwc:year") String year, 
+			@ActedUpon(value = "dwc:month") String month, 
+			@ActedUpon(value = "dwc:day") String day, 
+			@ActedUpon(value = "dwc:startDayOfYear") String startDayOfYear, 
+			@ActedUpon(value = "dwc:endDayOfYear") String endDayOfYear, 
+			@ActedUpon(value = "dwc:eventTime") String eventTime )   // Note: Not currently in test definition, needs to be added there.
+    {
+    	
+		EventDQValidation result = new EventDQValidation();
+		
+		if (DateUtils.isEmpty(eventDate) && 
+			DateUtils.isEmpty(year) &&
+			DateUtils.isEmpty(month) &&
+			DateUtils.isEmpty(day) &&
+			DateUtils.isEmpty(startDayOfYear) &&
+			DateUtils.isEmpty(endDayOfYear) &&
+			DateUtils.isEmpty(eventTime) &&
+			DateUtils.isEmpty(verbatimEventDate)
+				) { 
+			result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+			result.addComment("No value is present in any of the Event temporal terms");
+		} else { 
+			result.setResult(EnumDQValidationResult.COMPLIANT);
+			result.addComment("Some value is present in at least one of the Event temporal terms");
+		}
+		result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+
+		return result;
+	}     
+    
+    /**
+     * Examine each of the date/time related terms in the Event class, and test to see if at least 
+     * one of them contains some value.  This may or may not be a meaningful value, and this may or
+     * may not be interpretable to a date or date range.
+     * 
+     * Equivalent measure for TG2-VALIDATION_EVENT_EMPTY
+     * 
+     * @param eventDate to examine
+     * @param verbatimEventDate to examine
+     * @param year to examine
+     * @param month to examine
+     * @param day to examine
+     * @param startDayOfYear to examine
+     * @param endDayOfYear to examine
+     * @param eventTime to examine
+     * @return an EventDQMeasurement object describing the completeness of the temporal terms of the event.
+     */    
+	@Provides(value = "9dc97514-3b88-4afc-931d-5fc386be21ee") // locally generated
+	@Measure(dimension = Dimension.COMPLETENESS, label = "Event Completeness", description = "Measure the completeness of the temporal terms in an Event.")
+	@Specification(value = "For values of dwc:eventDate, year, month, day, startDayOfYear, endDayOfYear, verbatimEventDate, eventTime, check is not empty.")
+	public static EventDQMeasurement<EnumDQMeasurementResult> measureEventCompleteness(
+    		@ActedUpon(value = "dwc:eventDate") String eventDate,
+			@ActedUpon(value = "dwc:verbatimEventDate") String verbatimEventDate, 
+			@ActedUpon(value = "dwc:year") String year, 
+			@ActedUpon(value = "dwc:month") String month, 
+			@ActedUpon(value = "dwc:day") String day, 
+			@ActedUpon(value = "dwc:startDayOfYear") String startDayOfYear, 
+			@ActedUpon(value = "dwc:endDayOfYear") String endDayOfYear, 
+			@ActedUpon(value = "dwc:eventTime") String eventTime ) 
+		{
+		EventDQMeasurement<EnumDQMeasurementResult> result = new EventDQMeasurement<EnumDQMeasurementResult>();
+		EventDQValidation validation = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		if (validation.getResultState().equals(EnumDQResultState.RUN_HAS_RESULT)) {
+			if (validation.getResult().equals(EnumDQValidationResult.COMPLIANT)) { 
+				result.setValue(EnumDQMeasurementResult.COMPLETE);
+			} else { 
+				result.addComment("No value provided for eventDate.");
+				result.setValue(EnumDQMeasurementResult.NOT_COMPLETE);
+			}
+			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+		}
+		return result;
+	}    
 
     //TG2-AMENDMENT_EVENTDATE_STANDARDIZED
     
     //TG2-AMENDMENT_EVENT_FROM_EVENTDATE 
     
-    //TG2-VALIDATION_EVENT_EMPTY
     //TG2-VALIDATION_YEAR_OUTOFRANGE 
-    //TG2-VALIDATION_EVENT_INCONSISTENT
     //TG2-VALIDATION_EVENTDATE_NOTSTANDARD
     //TG2-VALIDATION_YEAR_EMPTY
     //TG2-VALIDATION_EVENTDATE_OUTOFRANGE

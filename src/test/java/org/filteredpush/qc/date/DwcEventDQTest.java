@@ -21,6 +21,7 @@ import static org.junit.Assert.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.datakurator.ffdq.api.EnumDQAmendmentResultState;
+import org.datakurator.ffdq.api.EnumDQMeasurementResult;
 import org.datakurator.ffdq.api.EnumDQResultState;
 import org.datakurator.ffdq.api.EnumDQValidationResult;
 import org.junit.Test;
@@ -876,4 +877,272 @@ public class DwcEventDQTest {
 		assertEquals(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
 	}
 	
+	@Test
+	public void testEventEmpty() {
+		EventDQValidation result = null;
+		String eventDate = null;
+		String verbatimEventDate = null;
+		String year = null;
+		String month = null;
+		String day = null;
+		String startDayOfYear = null;
+		String endDayOfYear = null;
+		String eventTime = null;
+		
+		result = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
+		
+		eventDate = "";
+		verbatimEventDate = "";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		eventTime = "";
+		
+		result = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
+		
+		eventDate = "";
+		verbatimEventDate = " ";
+		year = " ";
+		month = "NULL";
+		day = "\t";
+		startDayOfYear = "\n";
+		endDayOfYear = "  ";
+		eventTime = "                        ";
+		
+		result = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());		
+		
+		eventDate = "text";
+		verbatimEventDate = "";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		eventTime = "";
+		
+		result = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());		
+		
+		eventDate = "";
+		verbatimEventDate = "";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		eventTime = "text";
+		
+		result = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());	
+		
+		eventDate = "1880-02-03";
+		verbatimEventDate = "";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		eventTime = "";
+		
+		result = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());		
+		
+		eventDate = "";
+		verbatimEventDate = "";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		eventTime = "14:50";
+		
+		result = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());	
+		
+		eventDate = "";
+		verbatimEventDate = "";
+		year = "";
+		month = "2";
+		day = "4";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		eventTime = "";
+		
+		result = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());	
+		
+		eventDate = "";
+		verbatimEventDate = "";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "1";
+		endDayOfYear = "365";
+		eventTime = "";
+		
+		result = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());			
+		
+		eventDate = "";
+		verbatimEventDate = "Summer";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		eventTime = "";
+		
+		result = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());			
+	}
+	
+	@Test
+	public void testMeasureEventEmpty() {
+		EventDQMeasurement<EnumDQMeasurementResult> result = null;
+		String eventDate = null;
+		String verbatimEventDate = null;
+		String year = null;
+		String month = null;
+		String day = null;
+		String startDayOfYear = null;
+		String endDayOfYear = null;
+		String eventTime = null;
+		
+		result = DwCEventDQ.measureEventCompleteness(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQMeasurementResult.NOT_COMPLETE, result.getValue());	
+		
+		eventDate = "";
+		verbatimEventDate = "";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		eventTime = "";
+		
+		result = DwCEventDQ.measureEventCompleteness(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQMeasurementResult.NOT_COMPLETE, result.getValue());	
+		
+		eventDate = "";
+		verbatimEventDate = " ";
+		year = " ";
+		month = "NULL";
+		day = "\t";
+		startDayOfYear = "\n";
+		endDayOfYear = "  ";
+		eventTime = "                        ";
+		
+		result = DwCEventDQ.measureEventCompleteness(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQMeasurementResult.NOT_COMPLETE, result.getValue());	
+		
+		eventDate = "text";
+		verbatimEventDate = "";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		eventTime = "";
+		
+		result = DwCEventDQ.measureEventCompleteness(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQMeasurementResult.COMPLETE, result.getValue());	
+		
+		eventDate = "";
+		verbatimEventDate = "";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		eventTime = "text";
+		
+		result = DwCEventDQ.measureEventCompleteness(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQMeasurementResult.COMPLETE, result.getValue());	
+		
+		eventDate = "1880-02-03";
+		verbatimEventDate = "";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		eventTime = "";
+		
+		result = DwCEventDQ.measureEventCompleteness(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQMeasurementResult.COMPLETE, result.getValue());	
+		
+		eventDate = "";
+		verbatimEventDate = "";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		eventTime = "14:50";
+		
+		result = DwCEventDQ.measureEventCompleteness(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQMeasurementResult.COMPLETE, result.getValue());	
+		
+		eventDate = "";
+		verbatimEventDate = "";
+		year = "";
+		month = "2";
+		day = "4";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		eventTime = "";
+		
+		result = DwCEventDQ.measureEventCompleteness(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQMeasurementResult.COMPLETE, result.getValue());	
+		
+		eventDate = "";
+		verbatimEventDate = "";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "1";
+		endDayOfYear = "365";
+		eventTime = "";
+		
+		result = DwCEventDQ.measureEventCompleteness(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQMeasurementResult.COMPLETE, result.getValue());	
+		
+		eventDate = "";
+		verbatimEventDate = "Summer";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		eventTime = "";
+		
+		result = DwCEventDQ.measureEventCompleteness(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(EnumDQMeasurementResult.COMPLETE, result.getValue());	
+	}	
+			
 }
