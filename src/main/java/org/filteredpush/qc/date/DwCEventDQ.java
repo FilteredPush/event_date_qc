@@ -1366,6 +1366,8 @@ public class DwCEventDQ {
      * 
      * TG2-VALIDATION_EVENT_EMPTY
      * 
+     * Does not include eventTime (not considered core) in the evaluation of emptyness.
+     * 
      * @param eventDate to examine
      * @param verbatimEventDate to examine
      * @param year to examine
@@ -1373,7 +1375,6 @@ public class DwCEventDQ {
      * @param day to examine
      * @param startDayOfYear to examine
      * @param endDayOfYear to examine
-     * @param eventTime to examine
      * @return an DQValidationResponse object describing whether any value is present in any of the temporal terms of the event.
      */
     @Provides(value = "urn:uuid:41267642-60ff-4116-90eb-499fee2cd83f")
@@ -1384,8 +1385,8 @@ public class DwCEventDQ {
 			@ActedUpon(value = "dwc:month") String month, 
 			@ActedUpon(value = "dwc:day") String day, 
 			@ActedUpon(value = "dwc:startDayOfYear") String startDayOfYear, 
-			@ActedUpon(value = "dwc:endDayOfYear") String endDayOfYear, 
-			@ActedUpon(value = "dwc:eventTime") String eventTime )   // Note: Not currently in test definition, needs to be added there.
+			@ActedUpon(value = "dwc:endDayOfYear") String endDayOfYear )
+			// @ActedUpon(value = "dwc:eventTime") String eventTime )   // Removed per discussion in tdwg/bdq issue 88
     {
     	
 		EventDQValidation result = new EventDQValidation();
@@ -1396,7 +1397,6 @@ public class DwCEventDQ {
 			DateUtils.isEmpty(day) &&
 			DateUtils.isEmpty(startDayOfYear) &&
 			DateUtils.isEmpty(endDayOfYear) &&
-			DateUtils.isEmpty(eventTime) &&
 			DateUtils.isEmpty(verbatimEventDate)
 				) { 
 			result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
@@ -1424,7 +1424,6 @@ public class DwCEventDQ {
      * @param day to examine
      * @param startDayOfYear to examine
      * @param endDayOfYear to examine
-     * @param eventTime to examine
      * @return an EventDQMeasurement object describing the completeness of the temporal terms of the event.
      */    
 	@Provides(value = "9dc97514-3b88-4afc-931d-5fc386be21ee") // locally generated
@@ -1437,11 +1436,10 @@ public class DwCEventDQ {
 			@ActedUpon(value = "dwc:month") String month, 
 			@ActedUpon(value = "dwc:day") String day, 
 			@ActedUpon(value = "dwc:startDayOfYear") String startDayOfYear, 
-			@ActedUpon(value = "dwc:endDayOfYear") String endDayOfYear, 
-			@ActedUpon(value = "dwc:eventTime") String eventTime ) 
+			@ActedUpon(value = "dwc:endDayOfYear") String endDayOfYear )
 		{
 		EventDQMeasurement<EnumDQMeasurementResult> result = new EventDQMeasurement<EnumDQMeasurementResult>();
-		EventDQValidation validation = DwCEventDQ.isEventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		EventDQValidation validation = DwCEventDQ.isEventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
 		if (validation.getResultState().equals(EnumDQResultState.RUN_HAS_RESULT)) {
 			if (validation.getResult().equals(EnumDQValidationResult.COMPLIANT)) { 
 				result.setValue(EnumDQMeasurementResult.COMPLETE);
