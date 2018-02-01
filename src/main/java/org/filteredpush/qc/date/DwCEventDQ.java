@@ -185,7 +185,7 @@ public class DwCEventDQ {
 			       "compare the value of dwc:eventDate with that of dwc:verbatimEventDate, " +
 			       "and assert Compliant if the two represent the same date or date range.")
 
-    public static EventDQValidation eventDateConsistentWithVerbatim(
+    public static EventDQValidation isEventDateConsistentWithVerbatim(
     		@ActedUpon(value = "dwc:eventDate") String eventDate,
 			@ActedUpon(value = "dwc:verbatimEventDate") String verbatimEventDate) {
 
@@ -440,6 +440,10 @@ public class DwCEventDQ {
      * Given an event date, check to see if it is empty or contains a valid date value.  If it contains
      * a value that is not a valid date, propose a properly formatted eventDate as an amendment.
      * 
+     * TODO: Need to confirm GUID, EVENTDATE_FORMAT_CORRECTION and TG2-AMENDMENT_EVENTDATE_STANDARDIZED may be
+     * the same thing with different guids.
+     * 
+     * TG2-AMENDMENT_EVENTDATE_STANDARDIZED  	718dfc3c-cb52-4fca-b8e2-0e722f375da7
      * 
      * @param eventDate to check
      * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
@@ -948,7 +952,7 @@ public class DwCEventDQ {
      * @return an DQValidationResponse object describing whether the date year-endDayOfYear exists.
      */
     @Provides(value="urn:uuid:9a39d88c-7eee-46df-b32a-c109f9f81fb8")
-    public static final EventDQValidation endDayOfYearInRangeForYear(@ActedUpon(value="dwc:endDayOfYear") String endDay, @Consulted(value="dwc:year")String year) { 
+    public static final EventDQValidation isEndDayOfYearInRangeForYear(@ActedUpon(value="dwc:endDayOfYear") String endDay, @Consulted(value="dwc:year")String year) { 
     	EventDQValidation result = new EventDQValidation();
     	if (DateUtils.isEmpty(endDay)) { 
     		result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -1224,7 +1228,7 @@ public class DwCEventDQ {
      * @return
      */
     @Provides(value="5618f083-d55a-4ac2-92b5-b9fb227b832f")
-    public static EventDQValidation eventDateConsistentWithAtomic(
+    public static EventDQValidation isEventDateConsistentWithAtomic(
     		@ActedUpon(value = "dwc:eventDate") String eventDate,
 			@ActedUpon(value = "dwc:verbatimEventDate") String verbatimEventDate, 
 			@ActedUpon(value = "dwc:year") String year, 
@@ -1372,7 +1376,7 @@ public class DwCEventDQ {
      * @return an DQValidationResponse object describing whether any value is present in any of the temporal terms of the event.
      */
     @Provides(value = "urn:uuid:41267642-60ff-4116-90eb-499fee2cd83f")
-    public static EventDQValidation eventEmpty(
+    public static EventDQValidation isEventEmpty(
     		@ActedUpon(value = "dwc:eventDate") String eventDate,
 			@ActedUpon(value = "dwc:verbatimEventDate") String verbatimEventDate, 
 			@ActedUpon(value = "dwc:year") String year, 
@@ -1436,7 +1440,7 @@ public class DwCEventDQ {
 			@ActedUpon(value = "dwc:eventTime") String eventTime ) 
 		{
 		EventDQMeasurement<EnumDQMeasurementResult> result = new EventDQMeasurement<EnumDQMeasurementResult>();
-		EventDQValidation validation = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		EventDQValidation validation = DwCEventDQ.isEventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		if (validation.getResultState().equals(EnumDQResultState.RUN_HAS_RESULT)) {
 			if (validation.getResult().equals(EnumDQValidationResult.COMPLIANT)) { 
 				result.setValue(EnumDQMeasurementResult.COMPLETE);
@@ -1449,7 +1453,6 @@ public class DwCEventDQ {
 		return result;
 	}    
 
-    //TG2-AMENDMENT_EVENTDATE_STANDARDIZED
     
     //TG2-AMENDMENT_EVENT_FROM_EVENTDATE 
     

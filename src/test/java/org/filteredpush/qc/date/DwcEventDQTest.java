@@ -612,7 +612,7 @@ public class DwcEventDQTest {
 		for (int year = 1900; year<=1903; year++) { 
 			for (int day= 1; day<=365; day++) { 
 				logger.debug(day + "-" + year);
-				result = DwCEventDQ.endDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+				result = DwCEventDQ.isEndDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
 				assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 				assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());
 				
@@ -625,7 +625,7 @@ public class DwcEventDQTest {
 		// A leap year
 		int year = 1932;
 		int day = 366;
-		result = DwCEventDQ.endDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+		result = DwCEventDQ.isEndDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());
 		result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
@@ -635,7 +635,7 @@ public class DwcEventDQTest {
 		// not a leap year
 		year = 2001;
 		day = 366;  // out of range
-		result = DwCEventDQ.endDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+		result = DwCEventDQ.isEndDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
 		result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
@@ -644,7 +644,7 @@ public class DwcEventDQTest {
 		
 		year = 2001;
 		day = 0;  // out of range
-		result = DwCEventDQ.endDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+		result = DwCEventDQ.isEndDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
 		result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
@@ -653,7 +653,7 @@ public class DwcEventDQTest {
 		
 		year = 2001;
 		day = 367;  // out of range
-		result = DwCEventDQ.endDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+		result = DwCEventDQ.isEndDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
 		result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
@@ -662,7 +662,7 @@ public class DwcEventDQTest {
 		
 		// test with no year
 		day = 366;  
-		result = DwCEventDQ.endDayOfYearInRangeForYear(Integer.toString(day),"");
+		result = DwCEventDQ.isEndDayOfYearInRangeForYear(Integer.toString(day),"");
 		assertEquals(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
 		result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day),"");
 		assertEquals(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
@@ -889,7 +889,7 @@ public class DwcEventDQTest {
 		String endDayOfYear = null;
 		String eventTime = null;
 		
-		result = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
 		
@@ -902,7 +902,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		eventTime = "";
 		
-		result = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
 		
@@ -915,7 +915,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "  ";
 		eventTime = "                        ";
 		
-		result = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());		
 		
@@ -928,7 +928,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		eventTime = "";
 		
-		result = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());		
 		
@@ -941,7 +941,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		eventTime = "text";
 		
-		result = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());	
 		
@@ -954,7 +954,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		eventTime = "";
 		
-		result = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());		
 		
@@ -967,7 +967,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		eventTime = "14:50";
 		
-		result = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());	
 		
@@ -980,7 +980,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		eventTime = "";
 		
-		result = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());	
 		
@@ -993,7 +993,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "365";
 		eventTime = "";
 		
-		result = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());			
 		
@@ -1006,7 +1006,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		eventTime = "";
 		
-		result = DwCEventDQ.eventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());			
 	}
@@ -1156,7 +1156,7 @@ public class DwcEventDQTest {
 		String endDayOfYear = null;
 		String eventTime = null;
 		
-		EventDQValidation result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		EventDQValidation result = DwCEventDQ.isEventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
 		
 		eventDate = "";
@@ -1168,7 +1168,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		eventTime = "";
 		
-		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
 			
 		eventDate = "1980-02-14";
@@ -1180,7 +1180,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		eventTime = "";
 		
-		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());			
 		
@@ -1193,7 +1193,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		eventTime = "";
 		
-		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());			
 		
@@ -1206,7 +1206,7 @@ public class DwcEventDQTest {
 		endDayOfYear = Integer.toString(31 + 14);
 		eventTime = " 12:00";
 		
-		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());			
 		
@@ -1219,7 +1219,7 @@ public class DwcEventDQTest {
 		endDayOfYear = Integer.toString(31 + 14);
 		eventTime = " 12:00";
 		
-		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());			
 		
@@ -1232,7 +1232,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		eventTime = "";
 		
-		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());		
 		
@@ -1245,7 +1245,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		eventTime = "";
 		
-		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());			
 		
@@ -1258,7 +1258,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		eventTime = "";
 		
-		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());		
 		
@@ -1271,7 +1271,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		eventTime = "";
 		
-		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
 		
@@ -1284,7 +1284,7 @@ public class DwcEventDQTest {
 		endDayOfYear = Integer.toString(31 + 25);    // date range not in eventDate
 		eventTime = "";
 		
-		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());		
 		
@@ -1297,7 +1297,7 @@ public class DwcEventDQTest {
 		endDayOfYear = Integer.toString(31 + 25);    // date range in eventDate
 		eventTime = "";
 		
-		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		logger.debug(result.getComment());
 		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());	
@@ -1311,7 +1311,7 @@ public class DwcEventDQTest {
 		endDayOfYear = Integer.toString(12);    // date range in eventDate, but in previous year
 		eventTime = "";
 		
-		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		logger.debug(result.getComment());
  		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());		
@@ -1325,7 +1325,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "";    
 		eventTime = "";
 		
-		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		logger.debug(result.getComment());
 		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());	
@@ -1340,7 +1340,7 @@ public class DwcEventDQTest {
 		endDayOfYear = Integer.toString(31 + 29);    
 		eventTime = "";
 		
-		result = DwCEventDQ.eventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		result = DwCEventDQ.isEventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
 		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());
 		logger.debug(result.getComment());
 		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());				
