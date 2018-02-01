@@ -147,7 +147,7 @@ public class DwCEventDQ {
 	 * 
 	 * validation corresponding to  TG2-VALIDATION_YEAR_EMPTY  c09ecbf9-34e3-4f3e-b74a-8796af15e59f
 	 * 
-	 * @param year
+	 * @param year to check for emptyness
      * @return an object implementing DQValidationResponse describing whether any value is present dwc:year.
 	 */
 	@Provides(value="urn:uuid:c09ecbf9-34e3-4f3e-b74a-8796af15e59f")
@@ -947,8 +947,8 @@ public class DwCEventDQ {
      * 
      * TG2-VALIDATION_ENDDAYOFYEAR_OUTOFRANGE 
      * 
-     * @param endDay
-     * @param year
+     * @param endDay to evaluate for range
+     * @param year to examine for day 366, in range in in a leap year.
      * @return an DQValidationResponse object describing whether the date year-endDayOfYear exists.
      */
     @Provides(value="urn:uuid:9a39d88c-7eee-46df-b32a-c109f9f81fb8")
@@ -1216,16 +1216,17 @@ public class DwCEventDQ {
      * inconsistent.
      * 
      * TG2-VALIDATION_EVENT_INCONSISTENT 
-     * 
-     * @param eventDate
-     * @param verbatimEventDate
-     * @param year
-     * @param month
-     * @param day
-     * @param startDayOfYear
-     * @param endDayOfYear
-     * @param eventTime
-     * @return
+     *  
+     * @param eventDate to examine
+     * @param verbatimEventDate  to examine
+     * @param year to examine
+     * @param month to examine
+     * @param day to examine
+     * @param startDayOfYear to examine
+     * @param endDayOfYear to examine
+     * @param eventTime to examine (may get removed from test definition)
+     * @return an DQValidationResponse object describing whether the event terms represent one temporal interval or 
+     *   whether they are inconsistent with each other.
      */
     @Provides(value="5618f083-d55a-4ac2-92b5-b9fb227b832f")
     public static EventDQValidation isEventDateConsistentWithAtomic(
@@ -1453,8 +1454,134 @@ public class DwCEventDQ {
 		return result;
 	}    
 
-    
-    //TG2-AMENDMENT_EVENT_FROM_EVENTDATE 
+ 
+	
+	/**
+	 * Given a set of event terms, examine the content of eventDate, and if it is correctly formatted and 
+	 * can be interpreted, fill in any empty of the following terms (year, month, day, startDayOfYear, endDayOfYear)
+	 * with appropriate values.
+	 * 
+     *TG2-AMENDMENT_EVENT_FROM_EVENTDATE  	710fe118-17e1-440f-b428-88ba3f547d6d
+	 * 
+	 * @param eventDate to examine
+	 * @param year to check for emptyness
+	 * @param month to check for emptyness
+	 * @param day to check for emptyness
+	 * @param startDayOfYear to check for emptyness
+	 * @param endDayOfYear to check for emptyness
+     * @return an EventDQAmmendment which may contain a proposed amendment for key dwc:day.
+	 */
+	@Provides(value="urn:uuid:710fe118-17e1-440f-b428-88ba3f547d6d")
+	public static EventDQAmendment fillInEventFromEventDate(
+    		@Consulted(value = "dwc:eventDate") String eventDate,
+			@ActedUpon(value = "dwc:year") String year, 
+			@ActedUpon(value = "dwc:month") String month, 
+			@ActedUpon(value = "dwc:day") String day, 
+			@ActedUpon(value = "dwc:startDayOfYear") String startDayOfYear, 
+			@ActedUpon(value = "dwc:endDayOfYear") String endDayOfYear 
+			) 
+		{
+    	EventDQAmendment result = new EventDQAmendment();
+    	if (DateUtils.isEmpty(eventDate)) { 
+    		result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		result.addComment("No value for dwc:eventDate was provided, no data to fill in from.");
+    	} else {
+    		if (!DateUtils.eventDateValid(eventDate)) {
+    			result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    			result.addComment("Provided value for dwc:eventDate ["+eventDate+"] could not be interpreted.");
+    		} else { 
+    			boolean isRange = false;
+    			if (DateUtils.isRange(eventDate)) { 
+    				isRange = true;
+    			}
+    			Interval interval = DateUtils.extractInterval(eventDate);
+    			if (interval==null) { 
+    				result.setResultState(EnumDQAmendmentResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    				result.addComment("Provided value for dwc:eventDate ["+ eventDate +"] appears to be correctly formatted, but could not be interpreted as a valid date.");
+
+    			} else { 
+    				if (DateUtils.isEmpty(day)) { 
+    					String newDay = Integer.toString(interval.getStart().getDayOfMonth());
+    					result.addResult("dwc:day", newDay );
+    					result.setResultState(EnumDQAmendmentResultState.FILLED_IN);
+    					if (isRange) { 
+    						result.addComment("Added day ["+ newDay+"] from start day of range ["+eventDate+"].");
+    					} else {
+    						result.addComment("Added day ["+ newDay+"] from eventDate ["+eventDate+"].");
+    					}
+    				}
+    				if (DateUtils.isEmpty(month)) { 
+    					String newMonth = Integer.toString(interval.getStart().getMonthOfYear());
+    					result.addResult("dwc:month", newMonth );
+    					result.setResultState(EnumDQAmendmentResultState.FILLED_IN);
+    					if (isRange) { 
+    						result.addComment("Added month ["+ newMonth +"] from start month of eventDate ["+eventDate+"].");
+    					} else {
+    						result.addComment("Added month ["+ newMonth +"] from eventDate ["+eventDate+"].");
+    					}
+    				}    		
+    				if (DateUtils.isEmpty(month)) { 
+    					String newMonth = Integer.toString(interval.getStart().getMonthOfYear());
+    					result.addResult("dwc:month", newMonth );
+    					result.setResultState(EnumDQAmendmentResultState.FILLED_IN);
+    					if (isRange) { 
+    						result.addComment("Added month ["+ newMonth +"] from start month of eventDate ["+eventDate+"].");
+    					} else {
+    						result.addComment("Added month ["+ newMonth +"] from eventDate ["+eventDate+"].");
+    					}
+    				}     
+    				if (DateUtils.isEmpty(year)) { 
+    					String newYear = Integer.toString(interval.getStart().getYear());
+    					result.addResult("dwc:year", newYear );
+    					result.setResultState(EnumDQAmendmentResultState.FILLED_IN);
+    					if (isRange) { 
+    						result.addComment("Added year ["+ newYear +"] from start month of eventDate ["+eventDate+"].");
+    					} else {
+    						result.addComment("Added year ["+ newYear +"] from eventDate ["+eventDate+"].");
+    					}
+    				}        		
+
+    				if (DateUtils.isEmpty(startDayOfYear)) { 
+    					String newDay = Integer.toString(interval.getStart().getDayOfYear());
+    					result.addResult("dwc:startDayOfYear", newDay );
+    					result.setResultState(EnumDQAmendmentResultState.FILLED_IN);
+    					if (isRange) { 
+    						result.addComment("Added startDayOfYear ["+ newDay +"] from start day of eventDate ["+eventDate+"].");
+    					} else {
+    						result.addComment("Added startDayOfYear ["+ newDay +"] from eventDate ["+eventDate+"].");
+    					}
+    				} 
+
+    				if (DateUtils.isEmpty(endDayOfYear)) { 
+    					String newDay = Integer.toString(interval.getEnd().getDayOfYear());
+    					result.addResult("dwc:endDayOfYear", newDay );
+    					result.setResultState(EnumDQAmendmentResultState.FILLED_IN);
+    					if (isRange) { 
+    						result.addComment("Added endDayOfYear ["+ newDay +"] from end day of eventDate ["+eventDate+"].");
+    					} else {
+    						result.addComment("Added endDayOfYear ["+ newDay +"] from eventDate ["+eventDate+"].");
+    					}
+    				}  
+
+    				// Time could also be populated, but we probably don't want to.  Here is a minimal implementation,
+    				// which illustrates some issues in implementation (using zulu time or not, dealing with time in ranges...)
+    				//if (DateUtils.isEmpty(eventTime)) { 
+    				//	if (DateUtils.containsTime(eventDate)) { 
+    				//		String newTime = DateUtils.extractZuluTime(eventDate);
+    				//		result.addResult("dwc:endDayOfYear", newTime );
+    				//      result.setResultState(EnumDQAmendmentResultState.FILLED_IN);
+    				//	    result.addComment("Added eventTime ["+ newTime +"] from eventDate ["+eventDate+"].");
+    				//	}
+    				//}
+    				if (!result.getResultState().equals(EnumDQAmendmentResultState.FILLED_IN)) {
+    					result.setResultState(EnumDQAmendmentResultState.NO_CHANGE);
+    					result.addComment("No changes proposed, all candidate fields to fill in contain values.");
+    				}
+    			} // end interval extraction
+    		} // end format validity check
+    	}
+    	return result;
+	}
     
     //TG2-VALIDATION_YEAR_OUTOFRANGE 
     //TG2-VALIDATION_EVENTDATE_NOTSTANDARD

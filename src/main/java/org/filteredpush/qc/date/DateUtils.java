@@ -1567,10 +1567,15 @@ public class DateUtils {
      * dates from that date range (ignoring time (thus the duration for the 
      * interval will be from one date midnight to another).
      * 
-     * @see #extractInterval(String) which is probably the method you want.
+     * This probably is not the method you want - given 1950-01-05, it returns an
+     * interval from midnight as the start of the 5th to midnight on the start of the 6th,
+     * simply grabbing start end days from this interval will return 5 and 6, which
+     * probably isn't what you are expecting.  
+     * 
+     * @see DateUtils#extractInterval(String) which is probably the method you want.
      * 
      * @param eventDate a string containing a dwc:eventDate from which to extract an interval.
-     * @return An interval from one DateMidnight to another DateMidnight.
+     * @return An interval from one DateMidnight to another DateMidnight, null if no interval can be extracted.
      */
     public static Interval extractDateInterval(String eventDate) {
     	Interval result = null;
@@ -1624,7 +1629,7 @@ public class DateUtils {
      * Given a string that may be a date or a date range, extract a interval of
      * dates from that date range, up to the end milisecond of the last day.
      * 
-     * @see #extractDateInterval(String) which returns a pair of DateMidnights.
+     * @see DateUtils#extractDateInterval(String) which returns a pair of DateMidnights.
      * 
      * @param eventDate a string containing a dwc:eventDate from which to extract an interval.
      * @return an interval from the beginning of event date to the end of event date.
