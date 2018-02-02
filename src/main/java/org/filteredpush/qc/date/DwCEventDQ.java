@@ -16,6 +16,7 @@
  */
 package org.filteredpush.qc.date;
 
+import java.util.Date;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -26,6 +27,7 @@ import org.datakurator.ffdq.api.EnumDQResultState;
 import org.datakurator.ffdq.api.EnumDQValidationResult;
 import org.datakurator.ffdq.api.EnumDQAmendmentResultState;
 import org.joda.time.Interval;
+import org.joda.time.LocalDateTime;
 
 
 /**
@@ -1581,7 +1583,51 @@ public class DwCEventDQ {
     	return result;
 	}
     
-    //TG2-VALIDATION_YEAR_OUTOFRANGE 
+	
+	/**
+	 * Given a year, evaluate whether that year falls in the range between a provided lower bound and the current
+	 * year, inclusive of the lower bound and the current year.  If null is provided for lowerBound, then the value
+	 * 1700 will be used as the lower bound.  This implementation uses the year from the local date/time as the upper 
+	 * bound, and will give different answers for values of year within 1 of the current year when run in different 
+	 * time zones within one day of a year boundary (i.e. this test is not suitable for fine grained evaluations of 
+	 * time).
+	 * 
+     * TG2-VALIDATION_YEAR_OUTOFRANGE 
+     * 
+	 * @param year to evaluate
+	 * @param lowerBound integer for lower bound of range of in range years, if null 1700 will be used.
+     * @return an DQValidationResponse object describing whether the provided value is in range.
+	 */
+    @Provides(value = "urn:uuid:ad0c8855-de69-4843-a80c-a5387d20fbc8")   // GUID for DAY_INVALID/DAY_IN_RANGE
+    public static EventDQValidation isYearInRange(@ActedUpon(value = "dwc:year") String year, Integer lowerBound) {
+    	EventDQValidation result = new EventDQValidation();
+    	if (lowerBound==null) { 
+    		lowerBound = 1700;
+    	}
+    	Integer upperBound = LocalDateTime.now().getYear();
+    	if (DateUtils.isEmpty(year)) {
+    		result.addComment("No value provided for dwc:year.");
+    		result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    	} else { 
+    		try { 
+    			int numericYear = Integer.parseInt(year.trim());
+    			if (numericYear<lowerBound || numericYear>upperBound) { 
+    				result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    				result.addComment("Provided value for dwc:year '" + year + "' is not an integer in the range 1 to 31.");
+    			} else { 
+    				result.setResult(EnumDQValidationResult.COMPLIANT);
+    				result.addComment("Provided value for dwc:year '" + year + "' is an integer in the range " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");
+    			}
+    			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    		} catch (NumberFormatException e) { 
+    			logger.debug(e.getMessage());
+    			result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    			result.addComment("Unable to parse dwc:year as an integer:" + e.getMessage());
+    		}
+    	}
+    	return result;
+    }		
+	
     //TG2-VALIDATION_EVENTDATE_NOTSTANDARD
     //TG2-VALIDATION_EVENTDATE_OUTOFRANGE
     

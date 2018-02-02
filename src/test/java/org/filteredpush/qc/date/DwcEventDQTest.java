@@ -24,6 +24,7 @@ import org.datakurator.ffdq.api.EnumDQAmendmentResultState;
 import org.datakurator.ffdq.api.EnumDQMeasurementResult;
 import org.datakurator.ffdq.api.EnumDQResultState;
 import org.datakurator.ffdq.api.EnumDQValidationResult;
+import org.joda.time.LocalDateTime;
 import org.junit.Test;
 
 /**
@@ -1786,6 +1787,65 @@ public class DwcEventDQTest {
 		assertEquals("1",result.getResult().get("dwc:startDayOfYear"));
 		assertEquals("366",result.getResult().get("dwc:endDayOfYear"));
 		assertEquals(2,result.getResult().size());			
+		
+	}
+	
+	@Test
+	public void testYearInRange() {
+		String year = null;
+		
+		EventDQValidation result = DwCEventDQ.isYearInRange(year, null);
+		assertEquals(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		
+		result = DwCEventDQ.isYearInRange(year, 1900);
+		assertEquals(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		
+		year = "1700";
+		result = DwCEventDQ.isYearInRange(year, null);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());
+		
+		year = "1699";
+		result = DwCEventDQ.isYearInRange(year, null);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());		
+		
+		Integer upperBound = LocalDateTime.now().getYear();
+		for (int i=1701; i<=upperBound; i++) { 
+			result = DwCEventDQ.isYearInRange(Integer.toString(i), null);
+			assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+			assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());
+		}
+		
+		year = Integer.toString(upperBound + 1);
+		result = DwCEventDQ.isYearInRange(year, null);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
+		
+		year = "1899";
+		result = DwCEventDQ.isYearInRange(year, 1900);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
+		
+		year = "1900";
+		result = DwCEventDQ.isYearInRange(year, 1900);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());		
+		
+		year = "1901";
+		result = DwCEventDQ.isYearInRange(year, 1900);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());	
+		
+		year = Integer.toString(LocalDateTime.now().getYear());
+		result = DwCEventDQ.isYearInRange(year, 1900);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());			
+		
+		year = Integer.toString(LocalDateTime.now().getYear() + 1);
+		result = DwCEventDQ.isYearInRange(year, 1900);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());				
 		
 	}
 }
