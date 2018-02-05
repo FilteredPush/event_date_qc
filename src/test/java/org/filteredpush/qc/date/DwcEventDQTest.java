@@ -1848,4 +1848,138 @@ public class DwcEventDQTest {
 		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());				
 		
 	}
+	
+	@Test
+	public void testEventDateInRange() {
+		String eventDate = null;
+		
+		EventDQValidation result = DwCEventDQ.isEventDateInRange(eventDate, null, true);
+		assertEquals(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		
+		result = DwCEventDQ.isEventDateInRange(eventDate, 1900, true);
+		assertEquals(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		
+		eventDate = "13ab/02/r3:06";
+		result = DwCEventDQ.isEventDateInRange(eventDate, 1900, true);
+		assertEquals(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());		
+		
+		eventDate = "1700";
+		result = DwCEventDQ.isEventDateInRange(eventDate, null, true);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());	
+
+		eventDate = "1700-01";
+		result = DwCEventDQ.isEventDateInRange(eventDate, null, true);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());			
+		
+		eventDate = "1700-01-01";
+		result = DwCEventDQ.isEventDateInRange(eventDate, null, true);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());			
+		
+		eventDate = "1699";
+		result = DwCEventDQ.isEventDateInRange(eventDate, null, true);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());			
+		
+		eventDate = "1699";
+		result = DwCEventDQ.isEventDateInRange(eventDate, null, false);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());	
+		
+		eventDate = "1699-01-01";
+		result = DwCEventDQ.isEventDateInRange(eventDate, null, false);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());		
+		
+		
+		eventDate = "1699";
+		result = DwCEventDQ.isEventDateInRange(eventDate, null, null);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
+		
+		eventDate = "1";
+		result = DwCEventDQ.isEventDateInRange(eventDate, null, false);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());	
+		
+		eventDate = "1-01-01";
+		result = DwCEventDQ.isEventDateInRange(eventDate, null, false);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());	
+		
+		eventDate = "-2000";
+		result = DwCEventDQ.isEventDateInRange(eventDate, null, false);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());			
+	
+		eventDate = "1699-12";
+		result = DwCEventDQ.isEventDateInRange(eventDate, null, true);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());			
+
+		eventDate = "1699-12-31";
+		result = DwCEventDQ.isEventDateInRange(eventDate, null, true);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
+		
+		eventDate = "1699-365";
+		result = DwCEventDQ.isEventDateInRange(eventDate, null, true);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());			
+	
+		eventDate = "1800-01-01";
+		result = DwCEventDQ.isEventDateInRange(eventDate, 1800, true);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());				
+			
+		eventDate = "1900-01-01";
+		result = DwCEventDQ.isEventDateInRange(eventDate, 1800, true);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());			
+		
+		eventDate = "1799-12-31";
+		result = DwCEventDQ.isEventDateInRange(eventDate, 1800, true);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());			
+		
+		eventDate = "1699-12-31/1700-01-01";
+		result = DwCEventDQ.isEventDateInRange(eventDate, null, true);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());	
+		
+		eventDate = "1699-12-31/1700-12-31";
+		result = DwCEventDQ.isEventDateInRange(eventDate, null, true);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());		
+		
+		eventDate = "1699-12-31/1800-12-31";
+		result = DwCEventDQ.isEventDateInRange(eventDate, null, true);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());			
+		
+		eventDate = "1699-01-01/1699-12-31";
+		result = DwCEventDQ.isEventDateInRange(eventDate, null, true);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());	
+		
+    	Integer upperBound = LocalDateTime.now().getYear();
+		eventDate = "1699-12-31/" + Integer.toString(upperBound + 1).trim();
+		result = DwCEventDQ.isEventDateInRange(eventDate, null, true);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.COMPLIANT, result.getResult());	
+		
+		// beginning of next year.
+		eventDate = Integer.toString(upperBound + 1).trim() + "-01-01";
+		result = DwCEventDQ.isEventDateInRange(eventDate, null, true);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());		
+		
+		// next year.
+		eventDate = Integer.toString(upperBound + 1).trim();
+		result = DwCEventDQ.isEventDateInRange(eventDate, null, true);
+		assertEquals(EnumDQResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(EnumDQValidationResult.NOT_COMPLIANT, result.getResult());			
+	}
 }

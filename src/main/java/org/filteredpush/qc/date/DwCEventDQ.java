@@ -400,10 +400,11 @@ public class DwCEventDQ {
     
     
     /**
-     * Test to see whether a provided dcterms:modified is a validly formated ISO date.
+     * Test to see whether a provided dwc:eventDate is a validly formated ISO date.
      * 
      * Provides: EventDateValid
-     * ??  TG2-VALIDATION_EVENTDATE_NOTSTANDARD
+     * TODO: needs clarification in the standard test suite, this may or may not be:  
+     * ??  TG2-VALIDATION_EVENTDATE_NOTSTANDARD 4f2bf8fd-fc5c-493f-a44c-e7b16153c803
      * 
      * @param eventdate  a string to test
      * @return COMPLIANT if modified is a validly formated ISO date/time with a duration of less than one day, NOT_COMPLIANT if
@@ -1613,7 +1614,7 @@ public class DwCEventDQ {
     			int numericYear = Integer.parseInt(year.trim());
     			if (numericYear<lowerBound || numericYear>upperBound) { 
     				result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
-    				result.addComment("Provided value for dwc:year '" + year + "' is not an integer in the range 1 to 31.");
+    				result.addComment("Provided value for dwc:year '" + year + "' is not an integer in the range " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");
     			} else { 
     				result.setResult(EnumDQValidationResult.COMPLIANT);
     				result.addComment("Provided value for dwc:year '" + year + "' is an integer in the range " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");
@@ -1628,8 +1629,88 @@ public class DwCEventDQ {
     	return result;
     }		
 	
-    //TG2-VALIDATION_EVENTDATE_NOTSTANDARD
-    //TG2-VALIDATION_EVENTDATE_OUTOFRANGE
+    /**
+     * Given an eventDate check to see if that event date falls entirely outside a range from a
+     * specified lower bound (1700-01-01 by default) and the present.  
+     * 
+     * TODO: This may or may not be consistent with the standard test, current implementation here fails
+     * only if the eventDate has no overlap with the lowerBound to the present, not if the eventDate has 
+     * any overlap outside the lowerBound to the present.
+     * TG2-VALIDATION_EVENTDATE_OUTOFRANGE
+     * 
+     * 
+     * @param eventDate to check
+     * @param lowerBound integer representing the year to use as the lower boundary, if null, then uses 1700
+     * @param useLowerBound if false, no lower limit, otherwise uses supplied lower bound.
+     * @return an DQValidationResponse object describing whether the provided value is in range.
+     */
+    @Provides(value="urn:uuid:3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
+    public static EventDQValidation isEventDateInRange(@ActedUpon(value = "dwc:eventDate") String eventDate, Integer lowerBound, Boolean useLowerBound) {
+    	EventDQValidation result = new EventDQValidation();
+    	// TODO: Implementation may be too tightly bound to year, may need to extract first/last day for finer granularity test
+    	if (lowerBound==null) { 
+    		lowerBound = 1700;
+    	}
+    	if (useLowerBound==null) { 
+    		useLowerBound = true;
+    	}
+    	Integer upperBound = LocalDateTime.now().getYear();
+    	if (DateUtils.isEmpty(eventDate)) {
+    		result.addComment("No value provided for dwc:eventDate.");
+    		result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    	} else { 
+    		if (! DateUtils.eventDateValid(eventDate)) { 
+    			result.addComment("Value provided for dwc:eventDate ["+eventDate+"] not recognized as a valid date.");
+    			result.setResultState(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		} else { 
+    			int startYear = 0;
+    			Interval interval = DateUtils.extractInterval(eventDate);
+    			if (DateUtils.isRange(eventDate)) {
+    				int endYear = interval.getEnd().getYear();
+    				startYear = interval.getStart().getYear();
+    				if (useLowerBound) { 
+    					if (endYear<lowerBound|| startYear>upperBound) { 
+    						result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is not a range spanning part of the range " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");
+    					} else { 
+    						result.setResult(EnumDQValidationResult.COMPLIANT);
+    						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is a range spanning at least part of " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");
+    					}    				
+    				} else { 
+    					if (startYear>upperBound) { 
+    						result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is not a range spanning part of the range " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");
+    					} else { 
+    						result.setResult(EnumDQValidationResult.COMPLIANT);
+    						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is a range spanning at least part of " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");
+    					}       					
+    				}
+    			} else {
+    				startYear = interval.getStart().getYear();
+    				if (useLowerBound) { 
+    					if (startYear<lowerBound || startYear>upperBound) { 
+    						result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' does not have a year in the range " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");
+    					} else { 
+    						result.setResult(EnumDQValidationResult.COMPLIANT);
+    						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' does not have a year in the range " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");
+    					} 
+    				} else { 
+    					if (startYear>upperBound) { 
+    						result.setResult(EnumDQValidationResult.NOT_COMPLIANT);
+    						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is not after  " + upperBound.toString() + " (current year).");
+    					} else { 
+    						result.setResult(EnumDQValidationResult.COMPLIANT);
+    						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is after " + upperBound.toString() + " (current year).");
+    					}     					
+    				}
+    			}
+    			result.setResultState(EnumDQResultState.RUN_HAS_RESULT);
+    		}
+    	}
+    	return result;
+    }	    
+    
     
     //TG2-VALIDATION_DATEIDENTIFIED_OUTOFRANGE
     //TG2-VALIDATION_DATEIDENTIFIED_NOTSTANDARD
