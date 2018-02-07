@@ -178,6 +178,7 @@ public class DwCOtherDateDQ {
 	}
 	
     //TG2-VALIDATION_DATEIDENTIFIED_OUTOFRANGE
+	@Provides(value="urn:uuid:dc8aae4b-134f-4d75-8a71-c4186239178e")
     public static EventDQValidation isDateIdentifiedInRange(@ActedUpon(value = "dwc:dateIdentified") String dateIdentified, Integer lowerBound, Boolean useLowerBound) {
     	EventDQValidation result = new EventDQValidation();
     	// TODO: Implementation may be too tightly bound to year, may need to extract first/last day for finer granularity test
@@ -246,6 +247,7 @@ public class DwCOtherDateDQ {
     }		
 	
     //TG2-VALIDATION_DATEIDENTIFIED_NOTSTANDARD
+    @Provides(value="urn:uuid:66269bdd-9271-4e76-b25c-7ab81eebe1d8")
 	public static EventDQValidation isDateIdentifiedValid(@ActedUpon(value = "dwc:dateIdentified") String dateIdentified) {
 		EventDQValidation result = new EventDQValidation();
 		if (DateUtils.isEmpty(dateIdentified)) {
@@ -271,6 +273,7 @@ public class DwCOtherDateDQ {
 	}
 	
     //TG2-VALIDATION_DATEIDENTIFIED_PREEVENTDATE	
+    @Provides(value="urn:uuid:391ca46d-3842-4a18-970c-0434cbc17f07")
 	public static EventDQValidation isDateIdentifiedPreEventDate(@ActedUpon(value = "dwc:dateIdentified") String dateIdentified,  @ActedUpon(value="dwc:eventDate")String eventDate) {
 		EventDQValidation result = new EventDQValidation();
 		if (DateUtils.isEmpty(dateIdentified) || DateUtils.isEmpty(eventDate)) {
