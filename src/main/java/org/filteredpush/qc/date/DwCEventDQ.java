@@ -32,29 +32,45 @@ import org.joda.time.LocalDateTime;
  * 
  *  Provides support for the following draft TDWG DQIG TG2 validations and amendments.  
  *  
- *  DAY_MONTH_TRANSPOSED  dayMonthTransposition(@ActedUpon(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) 
- *  DAY_MONTH_YEAR_FILLED_IN
- *  EVENTDATE_FILLED_IN_FROM_VERBATIM extractDateFromVerbatim(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "dwc:verbatimEventDate") String verbatimEventDate)
- *  START_ENDDAYOFYEAR_FILLED_IN
- *
- *  EVENT_DATE_DURATION_SECONDS  measureDurationSeconds(@ActedUpon(value = "dwc:eventDate") String eventDate)
- *  DAY_IS_FIRST_OF_CENTURY
- *  DAY_IS_FIRST_OF_YEAR
- *  
- *  DAY_IN_RANGE  isDayInRange(@ActedUpon(value = "dwc:day") String day)   
- *  MONTH_IN_RANGE  isMonthInRange(@ActedUpon(value = "dwc:month") String month) 
- *  DAY_POSSIBLE_FOR_MONTH_YEAR  isDayPossibleForMonthYear(@Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) 
- *  EVENTDATE_CONSISTENT_WITH_DAY_MONTH_YEAR  
- *  EVENTDATE_IN_PAST
- *  EVENTDATE_PRECISON_MONTH_OR_BETTER 
- *  EVENTDATE_PRECISON_YEAR_OR_BETTER isEventDateYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) 
- *                               also isEventDateJulianYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) 
- *  STARTDATE_CONSISTENT_WITH_ENDDATE
- *  YEAR_PROVIDED
- *  EVENTDATE_CONSISTENT_WITH_ATOMIC_PARTS isConsistent(String eventDate, String startDayOfYear, String endDayOfYear, String year, String month, String day)
+ * TG2-VALIDATION_EVENTDATE_EMPTY  f51e15a6-a67d-4729-9c28-3766299d2985
+ * TG2-VALIDATION_YEAR_EMPTY  c09ecbf9-34e3-4f3e-b74a-8796af15e59f
+ * TG2-AMENDMENT_EVENTDATE_FROM_VERBATIM  
+ * ?? TG2-VALIDATION_EVENTDATE_NOTSTANDARD 4f2bf8fd-fc5c-493f-a44c-e7b16153c803
+ * TG2-AMENDMENT_EVENTDATE_STANDARDIZED  	718dfc3c-cb52-4fca-b8e2-0e722f375da7
+ * TG2-VALIDATION_MONTH_OUTOFRANGE isMonthInRange(@ActedUpon(value = "dwc:month") String month) 
+ * TG2-VALIDATION_DAY_OUTOFRANGE isDayPossibleForMonthYear(@Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) 
+ * TG2-VALIDATION_STARTDAYOFYEAR_OUTOFRANGE
+ * TG2-VALIDATION_ENDDAYOFYEAR_OUTOFRANGE 
+ * TG2-AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR
+ * TG2-AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY 
+ * TG2-AMENDMENT_MONTH_STANDARDIZED 
+ * TG2-AMENDMENT_DAY_STANDARDIZED 
+ * TG2-VALIDATION_EVENT_INCONSISTENT isConsistent(String eventDate, String startDayOfYear, String endDayOfYear, String year, String month, String day 
+ * TG2-VALIDATION_EVENT_EMPTY
+ * An equivalent measure for TG2-VALIDATION_EVENT_EMPTY
+ * TG2-AMENDMENT_EVENT_FROM_EVENTDATE  	710fe118-17e1-440f-b428-88ba3f547d6d
+ * TG2-VALIDATION_YEAR_OUTOFRANGE 
+ * TG2-VALIDATION_EVENTDATE_OUTOFRANGE  
+ * 
+ * TG2-MEASURE_EVENT_RANGEINSECONDS  measureDurationSeconds(@ActedUpon(value = "dwc:eventDate") String eventDate)
+ *    
+ * Also Provides support for the following supplemental, under discussion or other tests: 
+ *   DAY_IN_RANGE.  isDayInRange(@ActedUpon(value = "dwc:day") String day)   
+ *      Is not the same as TG2-VALIDATION_DAY_OUTOFRANGE which includes year and month 
+ *   DAY_MONTH_TRANSPOSED  dayMonthTransposition(@ActedUpon(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) 
+ *   EVENTDATE_PRECISON_MONTH_OR_BETTER  TODO: not yet implemented.
+ *   EVENTDATE_PRECISON_YEAR_OR_BETTER isEventDateYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) 
+ *                                also isEventDateJulianYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) 
  *  
  *  Also provides (intended to prepare upstream data for Darwin Core: 
- *  UPSTREAM_EVENTDATE_FILLED_IN_FROM_START_END  extractDateFromStartEnd(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "startDate") String startDate, @Consulted(value="endDate") String endDate) 
+ *     UPSTREAM_EVENTDATE_FILLED_IN_FROM_START_END  extractDateFromStartEnd(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "startDate") String startDate, @Consulted(value="endDate") String endDate) 
+ *  
+ *  Supplemental, not yet(?) implemented
+ *  	DAY_IS_FIRST_OF_CENTURY
+ *  	DAY_IS_FIRST_OF_YEAR
+ *      EVENTDATE_CONSISTENT_WITH_DAY_MONTH_YEAR  
+ *      STARTDATE_CONSISTENT_WITH_ENDDATE
+ *      YEAR_PROVIDED
  * 
  *  Not implemented: 
  *  TG2-AMENDMENT_YEAR_STANDARDIZED  Unclear how to implement this one.
@@ -698,7 +714,7 @@ public class DwCEventDQ {
      * Check of month is out of range for months, but day is in range for months, and
      * propose a transposition of the two if this is the case.
      * 
-     * Provides: DAY_MONTH_TRANSPOSED
+     * Provides: dwc
      * 
      * @param month the value of dwc:month
      * @param day  the value of dwc:day
