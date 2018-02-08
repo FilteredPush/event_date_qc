@@ -18,6 +18,16 @@ import org.joda.time.LocalDateTime;
 /**
  * FFDQ tests for Date related concepts in Darwin Core outside of the Event class.
  * 
+ * Provides TG2 tests: 
+ * 	 TG2-AMENDMENT_DATEIDENTIFIED_STANDARDIZED
+ *   TG2-VALIDATION_DATEIDENTIFIED_OUTOFRANGE
+ *   TG2-VALIDATION_DATEIDENTIFIED_NOTSTANDARD
+ *   TG2-VALIDATION_DATEIDENTIFIED_PREEVENTDATE
+ *   
+ * Also provides: 
+ *   Date Modified Format Correction (supplemental)  
+ *   ModifiedDateValid (supplemental)
+ * 
  * @author mole
  *
  */
@@ -177,7 +187,16 @@ public class DwCOtherDateDQ {
 		return result;
 	}
 	
-    //TG2-VALIDATION_DATEIDENTIFIED_OUTOFRANGE
+	/**
+	 * Given a dwc:dateIdentified, check to see if it falls entirely outside the likely range of 1753-01-01 and the present.
+	 * 
+     * TG2-VALIDATION_DATEIDENTIFIED_OUTOFRANGE
+	 * 
+	 * @param dateIdentified to check 
+	 * @param lowerBound optional lower bound to use, if null, 1753 will be used. 
+	 * @param useLowerBound boolean, if false test treats lower end as unbounded, if true or null, uses specified lower bound.
+	 * @return a validation result 
+	 */
     @Provides(value="urn:uuid:dc8aae4b-134f-4d75-8a71-c4186239178e")
     @Validation( label = "VALIDATION_DATEIDENTIFIED_OUTOFRANGE", description="The value of dwc:dateIdentified is between 1753-01-01 date and the current date, inclusive")
     @Specification(value="The value of dwc:dateIdentified is between 1753-01-01 date and the current date, inclusive The field dwc:dateIdentified is a valid ISO 8601:2004(E) date.")
@@ -186,7 +205,7 @@ public class DwCOtherDateDQ {
     	// TODO: Implementation may be too tightly bound to year, may need to extract first/last day for finer granularity test
     	// TODO: Implementation is the same as isEventDateInRange, this may or may not need to be changed.
     	if (lowerBound==null) { 
-    		lowerBound = 1700;
+    		lowerBound = 1753;
     	}
     	if (useLowerBound==null) { 
     		useLowerBound = true;
@@ -248,7 +267,14 @@ public class DwCOtherDateDQ {
     	return result;
     }		
 	
-    //TG2-VALIDATION_DATEIDENTIFIED_NOTSTANDARD
+    /**
+     * Given a dwc:dateIdentified, check to see if it is correctly formated and represents a valid date or date range value.
+     * 
+     * TG2-VALIDATION_DATEIDENTIFIED_NOTSTANDARD
+     * 
+     * @param dateIdentified to check 
+     * @return a validation result object.
+     */
     @Provides(value="urn:uuid:66269bdd-9271-4e76-b25c-7ab81eebe1d8")
     @Validation( label = "VALIDATION_DATEIDENTIFIED_NOTSTANDARD", description="The value of dwc:dateIdentified is a valid ISO 8601:2004(E) date")
     @Specification(value="The value of dwc:dateIdentified is a valid ISO 8601:2004(E) date The field dwc:dateIdentified is not EMPTY.")
@@ -277,6 +303,14 @@ public class DwCOtherDateDQ {
 	}
 	
     //TG2-VALIDATION_DATEIDENTIFIED_PREEVENTDATE	
+    /**
+     * Given an eventDate (presumed to be a date collected/observed) and a dateIdentified check to see if the
+     * dateIdentified overlaps or falls after the eventDate.
+     * 
+     * @param dateIdentified to compare with eventDate
+     * @param eventDate a collecting/observing event date to compare with dateIdentified
+     * @return a validation result object.
+     */
     @Provides(value="urn:uuid:391ca46d-3842-4a18-970c-0434cbc17f07")
     @Validation( label = "VALIDATION_DATEIDENTIFIED_PREEVENTDATE", description="The date specified by dwc:dateIdentified is not entirely earlier than the date specified by dwc:eventDate")
     @Specification(value="The date specified by dwc:dateIdentified is not entirely earlier than the date specified by dwc:eventDate The fields dwc:dateIdentified and dwc:eventDate are both interpretable as ISO 8601:2004(E) dates")
