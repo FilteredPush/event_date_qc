@@ -41,7 +41,7 @@ public class DwCOtherDateDQ {
 	 */
 	//@Provides(value = "AMENDMENT_DATEIDENTIFIED_STANDARDIZED")
 	@Provides(value = "urn:uuid:39bb2280-1215-447b-9221-fd13bc990641")
-	@Amendment(label = "Date Identified Standardized", description = "Try to propose a correction for a date identified")
+    @Amendment( label = "AMENDMENT_DATEIDENTIFIED_STANDARDIZED", description="The value of dwc:dateIdentified was amended to conform with the ISO 8601:2004(E) date format")
 	@Specification(value = "Check dwc:dateIdentified to see if it is empty or contains a valid date value. If it contains a " +
 	        "value that is not a valid date, propose a properly formatted dateIdentified as an amendment.")
 	public static EventDQAmendment correctIdentifiedDateFormat(@ActedUpon(value = "dwc:dateIdentified") String dateIdentified) {
@@ -178,7 +178,9 @@ public class DwCOtherDateDQ {
 	}
 	
     //TG2-VALIDATION_DATEIDENTIFIED_OUTOFRANGE
-	@Provides(value="urn:uuid:dc8aae4b-134f-4d75-8a71-c4186239178e")
+    @Provides(value="urn:uuid:dc8aae4b-134f-4d75-8a71-c4186239178e")
+    @Validation( label = "VALIDATION_DATEIDENTIFIED_OUTOFRANGE", description="The value of dwc:dateIdentified is between 1753-01-01 date and the current date, inclusive")
+    @Specification(value="The value of dwc:dateIdentified is between 1753-01-01 date and the current date, inclusive The field dwc:dateIdentified is a valid ISO 8601:2004(E) date.")
     public static EventDQValidation isDateIdentifiedInRange(@ActedUpon(value = "dwc:dateIdentified") String dateIdentified, Integer lowerBound, Boolean useLowerBound) {
     	EventDQValidation result = new EventDQValidation();
     	// TODO: Implementation may be too tightly bound to year, may need to extract first/last day for finer granularity test
@@ -248,6 +250,8 @@ public class DwCOtherDateDQ {
 	
     //TG2-VALIDATION_DATEIDENTIFIED_NOTSTANDARD
     @Provides(value="urn:uuid:66269bdd-9271-4e76-b25c-7ab81eebe1d8")
+    @Validation( label = "VALIDATION_DATEIDENTIFIED_NOTSTANDARD", description="The value of dwc:dateIdentified is a valid ISO 8601:2004(E) date")
+    @Specification(value="The value of dwc:dateIdentified is a valid ISO 8601:2004(E) date The field dwc:dateIdentified is not EMPTY.")
 	public static EventDQValidation isDateIdentifiedValid(@ActedUpon(value = "dwc:dateIdentified") String dateIdentified) {
 		EventDQValidation result = new EventDQValidation();
 		if (DateUtils.isEmpty(dateIdentified)) {
@@ -274,6 +278,8 @@ public class DwCOtherDateDQ {
 	
     //TG2-VALIDATION_DATEIDENTIFIED_PREEVENTDATE	
     @Provides(value="urn:uuid:391ca46d-3842-4a18-970c-0434cbc17f07")
+    @Validation( label = "VALIDATION_DATEIDENTIFIED_PREEVENTDATE", description="The date specified by dwc:dateIdentified is not entirely earlier than the date specified by dwc:eventDate")
+    @Specification(value="The date specified by dwc:dateIdentified is not entirely earlier than the date specified by dwc:eventDate The fields dwc:dateIdentified and dwc:eventDate are both interpretable as ISO 8601:2004(E) dates")
 	public static EventDQValidation isDateIdentifiedPreEventDate(@ActedUpon(value = "dwc:dateIdentified") String dateIdentified,  @ActedUpon(value="dwc:eventDate")String eventDate) {
 		EventDQValidation result = new EventDQValidation();
 		if (DateUtils.isEmpty(dateIdentified) || DateUtils.isEmpty(eventDate)) {

@@ -58,6 +58,9 @@ import org.joda.time.LocalDateTime;
  * 
  *  Not implemented: 
  *  TG2-AMENDMENT_YEAR_STANDARDIZED  Unclear how to implement this one.
+ *    Provides(value="urn:uuid:baf2a90b-af45-4f1a-839f-47126743a48a")
+ *    Amendment( label = "AMENDMENT_YEAR_STANDARDIZED", description="The value of dwc:year was interpreted to be a number between a designated minimum value and the current year, inclusive")
+ *
  * 
  * @author mole
  *
@@ -76,9 +79,11 @@ public class DwCEventDQ {
 	 * @return EventDQMeasurement object, which if state is COMPLETE has a value of type Long.
 	 */
     //@Provides(value = "EVENT_DATE_DURATION_SECONDS")
-	@Provides(value = "urn:uuid:b0753f69-08c1-45f5-a5ca-48d24e76d813")
-	@Measure(dimension = Dimension.PRECISION, label = "Event Date Duration In Seconds", description = "Measure the duration of an event date in seconds.")
-	@Specification(value = "For values of dwc:eventDate, calculate the duration in seconds.")
+    @Provides(value="urn:uuid:b0753f69-08c1-45f5-a5ca-48d24e76d813")
+    @Measure(dimension = Dimension.PRECISION, label = "MEASURE_EVENT_RANGEINSECONDS", description="Report on the length of the period expressed in the dwc:Event")
+    @Specification(value="Report on the length of the period expressed in the dwc:Event The field dwc:eventDate contains a valid ISO 8601:2004(E) date.")
+
+	
 	public static EventDQMeasurement<Long> measureDurationSeconds(@ActedUpon(value = "dwc:eventDate") String eventDate) {
 		EventDQMeasurement<Long> result = new EventDQMeasurement<Long>();
     	if (DateUtils.isEmpty(eventDate)) {
@@ -125,7 +130,9 @@ public class DwCEventDQ {
 	 * @param eventDate to assess for emptyness
      * @return an object implementing DQValidationResponse describing whether any value is present dwc:eventDate.
 	 */
-	@Provides(value = "urn:uuid:f51e15a6-a67d-4729-9c28-3766299d2985")
+    @Provides(value="urn:uuid:f51e15a6-a67d-4729-9c28-3766299d2985")
+    @Validation( label = "VALIDATION_EVENTDATE_EMPTY", description="The field dwc:eventDate is not EMPTY")
+    @Specification(value="The field dwc:eventDate is not EMPTY The field dwc:eventDate exists in the record.")
 	public static EventDQValidation isEventDateEmpty(@ActedUpon(value = "dwc:eventDate") String eventDate) {
 		EventDQValidation result = new EventDQValidation();
 		if (DateUtils.isEmpty(eventDate)) {
@@ -150,6 +157,8 @@ public class DwCEventDQ {
      * @return an object implementing DQValidationResponse describing whether any value is present dwc:year.
 	 */
 	@Provides(value="urn:uuid:c09ecbf9-34e3-4f3e-b74a-8796af15e59f")
+    @Validation( label = "VALIDATION_YEAR_EMPTY", description="The field dwc:year is not EMPTY")
+    @Specification(value="The field dwc:year is not EMPTY The field dwc:year exists in the record.")
 	public static EventDQValidation isYearEmpty(@ActedUpon(value = "dwc:year") String year) {
 		EventDQValidation result = new EventDQValidation();
 		if (DateUtils.isEmpty(year)) {
@@ -217,10 +226,11 @@ public class DwCEventDQ {
      *    
      */
     //@Provides(value = "EVENTDATE_FILLED_IN_FROM_VERBATIM")
-	@Provides(value = "urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812")
-	@Amendment(label = "Event Date From Verbatim", description = "Try to populate the event date from the verbatim value.")
-	@Specification(value = "If a dwc:eventDate is empty and the verbatimEventDate is not empty fill in dwc:eventDate " +
-			"based on value from dwc:verbatimEventDate")
+    @Provides(value="urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812")
+    @Amendment( label = "AMENDMENT_EVENTDATE_FROM_VERBATIM", description="The value of dwc:eventDate was interpreted from dwc:verbatimEventDate")
+    @Specification(value="The value of dwc:eventDate was interpreted from dwc:verbatimEventDate The field dwc:eventDate is EMPTY and the field dwc:verbatimEventDate is not EMPTY and is interpretable as an ISO 8601:2004(E) date")
+	//@Specification(value = "If a dwc:eventDate is empty and the verbatimEventDate is not empty fill in dwc:eventDate " +
+	//		"based on value from dwc:verbatimEventDate")
     public static EventDQAmendment extractDateFromVerbatim(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "dwc:verbatimEventDate") String verbatimEventDate) {
     	EventDQAmendment result = new EventDQAmendment();
     	if (DateUtils.isEmpty(eventDate)) { 
@@ -362,11 +372,14 @@ public class DwCEventDQ {
      * @return COMPLIANT if modified is a validly formated ISO date/time with a duration of less than one day, NOT_COMPLIANT if
      *     not an ISO date/time or a range of days, INTERNAL_PREREQUSISITES_NOT_MET if modified is empty.
      */
-    @Provides(value = "urn:uuid:f413594a-df57-41ea-a187-b8c6c6379b45")  // VALIDATION_EVENT_DATE_EXISTS
-	@Validation(label = "Event date correctly formatted and exists", description = "Test to see whether a provided dwc:eventDate " +
-			"is a validly formated ISO date or date/time for an existing date.")
-	@Specification(value = "Compliant if dwc:eventDate can to parsed as an actual ISO date, otherwise not compliant. " +
-			"Internal prerequisites not met if dwc:eventDate is empty.")
+    //@Provides(value = "urn:uuid:f413594a-df57-41ea-a187-b8c6c6379b45")  // VALIDATION_EVENT_DATE_EXISTS
+    @Provides(value="urn:uuid:4f2bf8fd-fc5c-493f-a44c-e7b16153c803")
+    @Validation( label = "VALIDATION_EVENTDATE_NOTSTANDARD", description="The value of dwc:eventDate is a correctly formatted ISO 8601:2004(E) date")
+    @Specification(value="The value of dwc:eventDate is a correctly formatted ISO 8601:2004(E) date The field dwc:eventDate is not EMPTY.")
+	//@Validation(label = "Event date correctly formatted and exists", description = "Test to see whether a provided dwc:eventDate " +
+	//		"is a validly formated ISO date or date/time for an existing date.")
+	//@Specification(value = "Compliant if dwc:eventDate can to parsed as an actual ISO date, otherwise not compliant. " +
+	//		"Internal prerequisites not met if dwc:eventDate is empty.")
     public static EventDQValidation isEventDateValid(@ActedUpon(value = "dwc:eventDate") String eventdate) {
     	EventDQValidation result = new EventDQValidation();
     	if (DateUtils.isEmpty(eventdate)) {
@@ -405,10 +418,12 @@ public class DwCEventDQ {
      *    resultState is CHANGED if a new value is proposed.
      */
     //@Provides(value = "EVENTDATE_FORMAT_CORRECTION")
-	@Provides(value = "urn:uuid:134c7b4f-1261-41ec-acb5-69cd4bc8556f")
-	@Amendment(label = "Event Date Format Correction", description = "Try to propose a correction for an event date")
-	@Specification(value = "Check dwc:eventDate to see if it is empty or contains a valid date value. If it contains a " +
-			"value that is not a valid date, propose a properly formatted eventDate as an amendment.")
+	//@Provides(value = "urn:uuid:134c7b4f-1261-41ec-acb5-69cd4bc8556f")
+    @Provides(value="urn:uuid:718dfc3c-cb52-4fca-b8e2-0e722f375da7")
+    @Amendment( label = "AMENDMENT_EVENTDATE_STANDARDIZED", description="The field dwc:eventDate was altered to conform with ISO 8601:2004(E)")
+    @Specification(value="The field dwc:eventDate was altered to conform with ISO 8601:2004(E) The field dwc:eventDate is not EMPTY.")
+	// @Specification(value = "Check dwc:eventDate to see if it is empty or contains a valid date value. If it contains a " +
+	//		"value that is not a valid date, propose a properly formatted eventDate as an amendment.")
     public static EventDQAmendment correctEventDateFormat(@ActedUpon(value = "dwc:eventDate") String eventDate) {
     	EventDQAmendment result = new EventDQAmendment();
     	if (DateUtils.eventDateValid(eventDate)) {
@@ -504,11 +519,14 @@ public class DwCEventDQ {
      */
     // @Provides(value = "MONTH_IN_RANGE")
     // Corresponds to TG2-VALIDATION_MONTH_OUTOFRANGE
-    @Provides(value = "urn:uuid:01c6dafa-0886-4b7e-9881-2c3018c98bdc")  // MONTH_INVALID/MONTH_IN_RANGE
-	@Validation(label = "Month In Range", description = "Test to see whether a provided month is in the range of " +
-			"integer values that form months of the year.")
-	@Specification(value = "Compliant if month is an integer in the range 1 to 12 inclusive, otherwise not compliant. " +
-			"Internal prerequisites not met if month is empty or an integer cannot be parsed from month.")
+    //@Provides(value = "urn:uuid:01c6dafa-0886-4b7e-9881-2c3018c98bdc")  // MONTH_INVALID/MONTH_IN_RANGE
+	//@Validation(label = "Month In Range", description = "Test to see whether a provided month is in the range of " +
+	//		"integer values that form months of the year.")
+	//@Specification(value = "Compliant if month is an integer in the range 1 to 12 inclusive, otherwise not compliant. " +
+	//		"Internal prerequisites not met if month is empty or an integer cannot be parsed from month.")
+    @Provides(value="urn:uuid:01c6dafa-0886-4b7e-9881-2c3018c98bdc")
+    @Validation( label = "VALIDATION_MONTH_OUTOFRANGE", description="The value of dwc:month is between 1 and 12, inclusive")
+    @Specification(value="The value of dwc:month is between 1 and 12, inclusive The value of dwc:month is a number.")
     public static EventDQValidation isMonthInRange(@ActedUpon(value="dwc:month") String month) {
     	EventDQValidation result = new EventDQValidation();
     	if (DateUtils.isEmpty(month)) {
@@ -624,11 +642,12 @@ public class DwCEventDQ {
      * @param day to check 
      * @return an DQValidationResponse object describing whether day exists in year-month-day.
      */
-    @Provides(value = "urn:uuid:5618f083-d55a-4ac2-92b5-b9fb227b832f")
-	@Validation(label = "Day Consistent With Month/Year", description = "Check if a value for day is consistent with a " +
-			"provided month and year.")
-	@Specification("Check that the value of dwc:eventDate is consistent with the values for dwc:month and dwc:year. " +
-			"Requires valid values for month and year.")
+    @Provides(value="urn:uuid:5618f083-d55a-4ac2-92b5-b9fb227b832f")
+    @Validation( label = "VALIDATION_DAY_OUTOFRANGE", description="The value of dwc:day is a valid day given the month and year.")
+    @Specification(value="The value of dwc:day is a valid day given the month and year. The value of dwc:day is a integer. If present, dwc:month and dwc:year must be integers.")
+    //@Specification(value="The provided values for year, month, day and start and end days of year (dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayofYear) are within the range of the supplied dwc:eventDate The dwc:eventDate is not EMPTY and at least one of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear is not EMPTY")
+	//@Specification("Check that the value of dwc:eventDate is consistent with the values for dwc:month and dwc:year. " +
+	//		"Requires valid values for month and year.")
     public static EventDQValidation isDayPossibleForMonthYear(@Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) {
     	EventDQValidation result = new EventDQValidation();
     	
@@ -745,6 +764,8 @@ public class DwCEventDQ {
      * @return an DQValidationResponse object describing whether the date year-startDayOfYear exists.
      */
     @Provides(value="urn:uuid:85803c7e-2a5a-42e1-b8d3-299a44cafc46")
+    @Validation( label = "VALIDATION_STARTDAYOFYEAR_OUTOFRANGE", description="The value of dwc:startDayOfYear is a valid day given the year.")
+    @Specification(value="The value of dwc:startDayOfYear is a valid day given the year. The value of dwc:startDayOfYear is a number. If present dwc:year must be an integer. This test should be run after the test TG2-AMENDMENT_EVENT_FROM_EVENTDATE (#52)")
     public static final EventDQValidation startDayOfYearInRangeForYear(@ActedUpon(value="dwc:startDayOfYear") String startDay, @Consulted(value="dwc:year")String year) { 
     	EventDQValidation result = new EventDQValidation();
     	if (DateUtils.isEmpty(startDay)) { 
@@ -801,6 +822,8 @@ public class DwCEventDQ {
      * @return an DQValidationResponse object describing whether the date year-endDayOfYear exists.
      */
     @Provides(value="urn:uuid:9a39d88c-7eee-46df-b32a-c109f9f81fb8")
+    @Validation( label = "VALIDATION_ENDDAYOFYEAR_OUTOFRANGE", description="The value of dwc:endDayOfYear is a valid day given the year.")
+    @Specification(value="The value of dwc:endDayOfYear is a valid day given the year. The value of dwc:endDayOfYear is a number. If present dwc:year must be an integer. This test should be run after the test TG2-AMENDMENT_EVENT_FROM_EVENTDATE (#52)")
     public static final EventDQValidation isEndDayOfYearInRangeForYear(@ActedUpon(value="dwc:endDayOfYear") String endDay, @Consulted(value="dwc:year")String year) { 
     	EventDQValidation result = new EventDQValidation();
     	if (DateUtils.isEmpty(endDay)) { 
@@ -865,6 +888,8 @@ public class DwCEventDQ {
      * @return an EventDQAmmendment which may contain a proposed ammendment.
      */
     @Provides(value="urn:uuid:eb0a44fa-241c-4d64-98df-ad4aa837307b")
+    @Amendment( label = "AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR", description="The value of dwc:eventDate was interpreted from the values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear")
+    @Specification(value="The value of dwc:eventDate was interpreted from the values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear The field dwc:eventDate is EMPTY and at least dwc:year and one of dwc:startDayOfYear or dwc:endDayOfYear must not be EMPTY and must be interpretable.")
     public static final EventDQAmendment eventDateFromYearStartEndDay(@ActedUpon(value="dwc:eventDate") String eventDate, @Consulted(value="dwc:year") String year, @Consulted(value="dwc:startDayOfYear") String startDay, @Consulted(value="dwc:endDayOfYear") String endDay ) {
     	EventDQAmendment result = new EventDQAmendment();
     	if (DateUtils.isEmpty(year) || DateUtils.isEmpty(startDay)) { 
@@ -916,7 +941,9 @@ public class DwCEventDQ {
      * @param day from which to construct the event date
      * @return an EventDQAmmendment which may contain a proposed ammendment.
      */
-    @Provides(value= "urn:uuid:3892f432-ddd0-4a0a-b713-f2e2ecbd879d") 
+    @Provides(value="urn:uuid:3892f432-ddd0-4a0a-b713-f2e2ecbd879d")
+    @Amendment( label = "AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY", description="The value of dwc:eventDate was interpreted from the values in dwc:year, dwc:month and dwc:day")
+    @Specification(value="The value of dwc:eventDate was interpreted from the values in dwc:year, dwc:month and dwc:day The field dwc:eventDate is EMPTY and at least dwc:year (from among dwc:year, dwc:month, and dwc:day) must not be EMPTY and must be interpretable as a year.")
     public static final EventDQAmendment eventDateFromYearMonthDay(@ActedUpon(value="dwc:eventDate") String eventDate, @Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @Consulted(value="dwc:day") String day ) {
     	EventDQAmendment result = new EventDQAmendment();
     	if (DateUtils.isEmpty(year)) { 
@@ -968,6 +995,8 @@ public class DwCEventDQ {
      * @return an EventDQAmmendment which may contain a proposed ammendment.
      */
     @Provides(value="urn:uuid:2e371d57-1eb3-4fe3-8a61-dff43ced50cf")
+    @Amendment( label = "AMENDMENT_MONTH_STANDARDIZED", description="The value of dwc:month was interpreted to be a number between 1 and 12, inclusive")
+    @Specification(value="The value of dwc:month was interpreted to be a number between 1 and 12, inclusive The field dwc:month is not EMPTY.")
     public static final EventDQAmendment standardizeMonth(@ActedUpon(value="dwc:month") String month) {
     	EventDQAmendment result = new EventDQAmendment();
     	if (DateUtils.isEmpty(month)) { 
@@ -1024,6 +1053,8 @@ public class DwCEventDQ {
      * @return an EventDQAmmendment which may contain a proposed amendment for key dwc:day.
      */
     @Provides(value="urn:uuid:b129fa4d-b25b-43f7-9645-5ed4d44b357b")
+    @Amendment( label = "AMENDMENT_DAY_STANDARDIZED", description="The value of dwc:day was interpreted to be a number between 1 and 31, inclusive")
+    @Specification(value="The value of dwc:day was interpreted to be a number between 1 and 31, inclusive The field dwc:day is not EMPTY.")
     public static final EventDQAmendment standardizeDay(@ActedUpon(value="dwc:day") String day) {
     	EventDQAmendment result = new EventDQAmendment();
     	if (DateUtils.isEmpty(day)) { 
@@ -1226,7 +1257,9 @@ public class DwCEventDQ {
      * @param endDayOfYear to examine
      * @return an DQValidationResponse object describing whether any value is present in any of the temporal terms of the event.
      */
-    @Provides(value = "urn:uuid:41267642-60ff-4116-90eb-499fee2cd83f")
+    @Provides(value="urn:uuid:41267642-60ff-4116-90eb-499fee2cd83f")
+    @Validation( label = "VALIDATION_EVENT_EMPTY", description="At least one field needed to determine the event date exists and is not EMPTY.")
+    @Specification(value="At least one field needed to determine the event date exists and is not EMPTY. None. It is not necessary for the record to have any fields in the Event class to run this test.")
     public static EventDQValidation isEventEmpty(
     		@ActedUpon(value = "dwc:eventDate") String eventDate,
 			@ActedUpon(value = "dwc:verbatimEventDate") String verbatimEventDate, 
@@ -1319,6 +1352,8 @@ public class DwCEventDQ {
      * @return an EventDQAmmendment which may contain a proposed amendment for key dwc:day.
 	 */
 	@Provides(value="urn:uuid:710fe118-17e1-440f-b428-88ba3f547d6d")
+    @Amendment( label = "AMENDMENT_EVENT_FROM_EVENTDATE", description="One or more empty component terms of the dwc:Event class (dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear) have been filled in from a valid value in the term dwc:eventDate.")
+    @Specification(value="One or more empty component terms of the dwc:Event class (dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear) have been filled in from a valid value in the term dwc:eventDate. The field dwc:eventDate is not EMPTY and contains a valid ISO 8601:2004(E).  Run this amendment after any other amendment which may affect dwc:eventDate.")
 	public static EventDQAmendment fillInEventFromEventDate(
     		@Consulted(value = "dwc:eventDate") String eventDate,
 			@ActedUpon(value = "dwc:year") String year, 
@@ -1446,6 +1481,8 @@ public class DwCEventDQ {
      * @return an DQValidationResponse object describing whether the provided value is in range.
 	 */
     @Provides(value = "urn:uuid:ad0c8855-de69-4843-a80c-a5387d20fbc8")   // GUID for DAY_INVALID/DAY_IN_RANGE
+    @Validation( label = "VALIDATION_YEAR_OUTOFRANGE", description="The value of dwc:year is between a designated minimum value and the current year, inclusive")
+    @Specification(value="The value of dwc:year is between a designated minimum value and the current year, inclusive The value of dwc:year is a number.")
     public static EventDQValidation isYearInRange(@ActedUpon(value = "dwc:year") String year, Integer lowerBound) {
     	EventDQValidation result = new EventDQValidation();
     	if (lowerBound==null) { 
@@ -1491,6 +1528,8 @@ public class DwCEventDQ {
      * @return an DQValidationResponse object describing whether the provided value is in range.
      */
     @Provides(value="urn:uuid:3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
+    @Validation( label = "VALIDATION_EVENTDATE_OUTOFRANGE", description="The range of dwc:eventDate does not extend into the future and optionally does not extend before a date designated when the test is run")
+    @Specification(value="The range of dwc:eventDate does not extend into the future and optionally does not extend before a date designated when the test is run The field dwc:eventDate is not EMPTY.")
     public static EventDQValidation isEventDateInRange(@ActedUpon(value = "dwc:eventDate") String eventDate, Integer lowerBound, Boolean useLowerBound) {
     	EventDQValidation result = new EventDQValidation();
     	// TODO: Implementation may be too tightly bound to year, may need to extract first/last day for finer granularity test
@@ -1556,5 +1595,10 @@ public class DwCEventDQ {
     	}
     	return result;
     }	    
-    
+
+
+
+
+
+
 }
