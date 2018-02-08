@@ -46,9 +46,18 @@ Verbatim event dates in a variety of forms typical of natural science collection
 
 This library provides the class org.filteredpush.qc.date.DwCEventDQ
 
-DwCEventDQ provides a set of static methods for working with dwc:Event terms wrapping the static methods in DateUtils and returning objects that implement the API provided by ffdq-api for reporting data quality assertions in terms of the Fit4U Framework.  
+DwCEventDQ provides a set of static methods for working with dwc:Event terms wrapping the static methods in DateUtils and returning objects that implement the API provided by ffdq-api for reporting data quality assertions in terms of the Fit4U Framework. 
 
-Not all of the relevant methods in DateUtils are yet implemented in DwCEventDQ.
+As of 2018 Feb 08, the current set of dwc:Event class related tests in the core test suite under consideration by the TDWG BDQIG TG2 tests and assertions task group have implementations in DwCEventDQ, and other date/time related tests have implementations in DwCOtherDateDQ.  These methods are annotated with @Provides, @Validation/Amendment/Measure, and @Specification annotations in the form:  
+
+    @Provides(value="urn:uuid:f51e15a6-a67d-4729-9c28-3766299d2985")
+    @Validation( label = "VALIDATION_EVENTDATE_EMPTY", description="The field dwc:eventDate is not EMPTY")
+    @Specification(value="The field dwc:eventDate is not EMPTY The field dwc:eventDate exists in the record.")
+    public static EventDQValidation isEventDateEmpty(@ActedUpon(value = "dwc:eventDate") String eventDate) {
+       ...
+    } 
+
+These tests are subject to change as the TDWG BDQIG TG2 specifications change.
 
 The unit test below shows an example of a call on DwCEventDQ.measureDurationSeconds to perform a measurement of the duration of a dwc:eventDate in seconds, and invocations of getResultState(), getValue(), and getComment() on the returned implementation of the DQMeasurementResult interface.
 
@@ -68,6 +77,8 @@ The unit test below shows an example of a call on DwCEventDQ.measureDurationSeco
         assertEquals(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET, measure.getResultState());
         System.out.println(measure.getComment());
     }
+    
+The APIs for both the java annotations for the framework and the result objects for the framework are expected to change.    
 
 # Include using maven
 
