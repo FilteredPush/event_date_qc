@@ -302,10 +302,11 @@ public class DwCOtherDateDQ {
 		return result;
 	}
 	
-    //TG2-VALIDATION_DATEIDENTIFIED_PREEVENTDATE	
     /**
      * Given an eventDate (presumed to be a date collected/observed) and a dateIdentified check to see if the
      * dateIdentified overlaps or falls after the eventDate.
+     * 
+     * TG2-VALIDATION_DATEIDENTIFIED_PREEVENTDATE	
      * 
      * @param dateIdentified to compare with eventDate
      * @param eventDate a collecting/observing event date to compare with dateIdentified
