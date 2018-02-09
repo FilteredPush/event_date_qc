@@ -87,7 +87,7 @@ Available in Maven Central.
     <dependency>
         <groupId>org.filteredpush</groupId>
         <artifactId>event_date_qc</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.5</version>
     </dependency>
 
 # Building
@@ -104,7 +104,7 @@ To deploy a new release to maven central, set the version in pom.xml to a non-sn
 
     mvn clean deploy -P release
 
-After this, you will need to login to the sonatype oss repository hosting nexus instance, find the staged release in the staging repositories, and perform the release.  It should be possible (haven't verified this yet) to perform the release from the command line instead by running: 
+After this, you will need to login to the sonatype oss repository hosting nexus instance (https://oss.sonatype.org/index.html#welcome), find the staged release in the staging repositories, and perform the release.  It should be possible (haven't verified this yet) to perform the release from the command line instead by running: 
 
     mvn nexus-staging:release -P release
 
