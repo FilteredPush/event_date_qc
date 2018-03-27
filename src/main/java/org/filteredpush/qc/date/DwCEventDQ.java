@@ -1548,7 +1548,7 @@ public class DwCEventDQ {
     @Provides(value="urn:uuid:bc8d1ffb-d074-4b4b-919c-f0c8fbe1a618")  // new guid, probably not the test as specified 
     @Validation( label = "VALIDATION_EVENTDATE_WHOLLYOUTOFRANGE", description="The range of dwc:eventDate does not fall entirely into the future and optionally does not fall entirely before a date designated when the test is run")
     @Specification(value="The range of dwc:eventDate is not entirely the future and optionally does not entirely fall before a date designated when the test is run The field dwc:eventDate is not EMPTY.")
-    public static EventDQValidation isEventDateInRange(@ActedUpon(value = "dwc:eventDate") String eventDate, Integer lowerBound, Boolean useLowerBound) {
+    public static EventDQValidation isEventDateInRange(@ActedUpon(value = "dwc:eventDate") String eventDate, @Parameter(name = "whollyOutOfRangeLowerBound") Integer lowerBound, @Parameter(name = "whollyOutOfRangeUseLowerBound") Boolean useLowerBound) {
     	EventDQValidation result = new EventDQValidation();
     	// TODO: Implementation may be too tightly bound to year, may need to extract first/last day for finer granularity test
     	if (lowerBound==null) { 
@@ -1630,7 +1630,7 @@ public class DwCEventDQ {
     @Provides(value="urn:uuid:3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
     @Validation( label = "VALIDATION_EVENTDATE_EXTENDSOUTOFRANGE", description="The range of dwc:eventDate does not extend into the future and optionally does not extend before a date designated when the test is run")
     @Specification(value="The range of dwc:eventDate does not extend into the future and optionally does not extend before a date designated when the test is run The field dwc:eventDate is not EMPTY.")
-    public static EventDQValidation isEventDateAtAllInRange(@ActedUpon(value = "dwc:eventDate") String eventDate, Integer lowerBound, Boolean useLowerBound) {
+    public static EventDQValidation isEventDateAtAllInRange(@ActedUpon(value = "dwc:eventDate") String eventDate, @Parameter(name = "extendsOutOfRangeLowerBound") Integer lowerBound, @Parameter(name = "extendsOutOfRangeUseLowerBound") Boolean useLowerBound) {
     	EventDQValidation result = new EventDQValidation();
     	// TODO: Implementation may be too tightly bound to year, may need to extract first/last day for finer granularity test
     	if (lowerBound==null) { 
