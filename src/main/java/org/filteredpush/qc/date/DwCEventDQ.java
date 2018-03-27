@@ -1501,7 +1501,7 @@ public class DwCEventDQ {
     @Provides(value = "urn:uuid:ad0c8855-de69-4843-a80c-a5387d20fbc8")   // GUID for DAY_INVALID/DAY_IN_RANGE
     @Validation( label = "VALIDATION_YEAR_OUTOFRANGE", description="The value of dwc:year is between a designated minimum value and the current year, inclusive")
     @Specification(value="The value of dwc:year is between a designated minimum value and the current year, inclusive The value of dwc:year is a number.")
-    public static EventDQValidation isYearInRange(@ActedUpon(value = "dwc:year") String year, Integer lowerBound) {
+    public static EventDQValidation isYearInRange(@ActedUpon(value = "dwc:year") String year,  @Parameter(name = "validationYearLowerBound") Integer lowerBound) {
     	EventDQValidation result = new EventDQValidation();
     	if (lowerBound==null) { 
     		lowerBound = 1700;
