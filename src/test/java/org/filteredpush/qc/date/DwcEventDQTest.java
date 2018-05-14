@@ -40,12 +40,12 @@ public class DwcEventDQTest {
 	public void testMeasureDuration() { 
 		DQResponse<NumericalValue> measure = DwCEventDQ.measureDurationSeconds("1880-05-08");
 		Long seconds = (60l*60l*24l)-1l; 
-		assertEquals(seconds, measure.getValue());
+		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
 		
 		measure = DwCEventDQ.measureDurationSeconds("1880-05");
 		seconds = (60l*60l*24l*31)-1l; 
-		assertEquals(seconds, measure.getValue());
+		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
 		
 		measure = DwCEventDQ.measureDurationSeconds("");
@@ -78,7 +78,7 @@ public class DwcEventDQTest {
 		i=32;
 		result = DwCEventDQ.isDayInRange(Integer.toString(i));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	 
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 
 		i=-1;
 		result = DwCEventDQ.isDayInRange(Integer.toString(i));
@@ -93,7 +93,7 @@ public class DwcEventDQTest {
 		i=Integer.MIN_VALUE;
 		result = DwCEventDQ.isDayInRange(Integer.toString(i));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 
 		result = DwCEventDQ.isDayInRange(null);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
@@ -120,7 +120,7 @@ public class DwcEventDQTest {
 	@Test
 	public void testIsMonthInRange() {
 		DQResponse<ComplianceValue> result = null;
-		for (int i = 1; i<=12; i++) { 
+		for (int i = 1; i<=12; i++) {
 			result = DwCEventDQ.isMonthInRange(Integer.toString(i));
 			assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 			assertEquals(ComplianceValue.COMPLIANT, result.getValue());
@@ -140,7 +140,7 @@ public class DwcEventDQTest {
 		i=13;
 		result = DwCEventDQ.isMonthInRange(Integer.toString(i));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	 
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 
 		i=-1;
 		result = DwCEventDQ.isMonthInRange(Integer.toString(i));
@@ -155,7 +155,7 @@ public class DwcEventDQTest {
 		i=Integer.MIN_VALUE;
 		result = DwCEventDQ.isMonthInRange(Integer.toString(i));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 
 		result = DwCEventDQ.isMonthInRange(null);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
@@ -169,7 +169,7 @@ public class DwcEventDQTest {
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
 		result = DwCEventDQ.isMonthInRange("**");
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
-		
+
 		result = DwCEventDQ.isMonthInRange("Jan");
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
 		result = DwCEventDQ.isMonthInRange("January");
@@ -186,7 +186,7 @@ public class DwcEventDQTest {
 			assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 			result = DwCEventDQ.isEventDateYearOrLess(Integer.toString(i));
 			assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-			assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
+			assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		}
 		// Leap year
 		result = DwCEventDQ.isEventDateJulianYearOrLess("1980");
@@ -194,7 +194,7 @@ public class DwcEventDQTest {
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 		result = DwCEventDQ.isEventDateYearOrLess("1980");
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 	}
 	
 	
@@ -269,7 +269,7 @@ public class DwcEventDQTest {
 		String month = "30";
 		String day = "11";
 		DQResponse<AmendmentValue> result = DwCEventDQ.dayMonthTransposition(month,day);
-		Map<String, String> values = result.getValue().getObject();
+		Map<String, String> values = (Map<String, String>) result.getObject();
 
 		assertEquals(ResultState.TRANSPOSED, result.getResultState());
 		assertEquals("11",values.get("dwc:month"));
@@ -317,7 +317,7 @@ public class DwcEventDQTest {
 		String eventDate = "";
 		String verbatimEventDate = "Jan 1884";
 		DQResponse<AmendmentValue> result = DwCEventDQ.extractDateFromVerbatim(eventDate,verbatimEventDate);
-		Map<String, String> values = result.getValue().getObject();
+		Map<String, String> values = (Map<String, String>) result.getObject();
 
 		assertEquals(ResultState.CHANGED, result.getResultState());
 		assertEquals("1884-01",values.get("dwc:eventDate"));
@@ -365,7 +365,7 @@ public class DwcEventDQTest {
 	public void testCorrectEventDateFormat() { 
 		String eventDate = "Jan 1884";
 		DQResponse<AmendmentValue> result = DwCEventDQ.correctEventDateFormat(eventDate);
-		Map<String, String> values = result.getValue().getObject();
+		Map<String, String> values = (Map<String, String>) result.getObject();
 
 		assertEquals(ResultState.CHANGED, result.getResultState());
 		assertEquals("1884-01",values.get("dwc:eventDate"));
