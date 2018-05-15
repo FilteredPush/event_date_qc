@@ -190,7 +190,7 @@ public class DateUtils {
 			}
 		}			
 		if (year!=null && year.matches("[0-9]{4}") && month!=null && month.matches("[0-9]{1,2}") &&( day==null || day.trim().length()==0 )) {  
-		    result = String.format("%o4d",Integer.parseInt(year)) + "-" + String.format("%02d",Integer.parseInt(month));
+		    result = String.format("%04d",Integer.parseInt(year)) + "-" + String.format("%02d",Integer.parseInt(month));
 		}
 		if (year!=null && year.matches("[0-9]{4}") && month!=null && month.matches("[0-9]{1,2}") && day!=null && day.matches("[0-9]{1,2}")) {  
 		    result = String.format("%04d",Integer.parseInt(year)) + "-" + 
@@ -378,6 +378,22 @@ public class DateUtils {
 			return result;
 		}
 		
+		if (verbatimEventDate.matches("^[0-9]{4}[-][0-9]{2}[-][0-9]{2}/[0-9]{4}[-][0-9]{2}[-][0-9]{2}$")) {
+			// if verbatim date is a ISO formatted range with identical first and last dates (/), use just one.
+			// Example: 1982-12-11/1982-12-11  changed to 1982-12-11
+			String[] bits = verbatimEventDate.split("/");
+			if (bits.length==2 && bits[0].equals(bits[1])) { 
+				verbatimEventDate = bits[0];
+			}
+		}
+		if (verbatimEventDate.matches("^[0-9]{4}[/][0-9]{2}[/][0-9]{2}-[0-9]{4}[/][0-9]{2}[/][0-9]{2}$")) {
+			// if verbatim date is a range with identical first and last dates (-), use just one.
+			// Example: 1982/12/11-1982/12/11  changed to 1982/12/11
+			String[] bits = verbatimEventDate.split("-");
+			if (bits.length==2 && bits[0].equals(bits[1])) { 
+				verbatimEventDate = bits[0];
+			}
+		}
 		if (verbatimEventDate.matches("^[0-9]{1,2}[-. ][0-9]{1,2}[-. ][0-9]{4}/[0-9]{1,2}[-. ][0-9]{1,2}[-. ][0-9]{4}$")) {
 			// if verbatim date is a range with identical first and last dates (/), use just one.
 			// Example: 12-11-1982/12-11-1982  changed to 12-11-1982
@@ -1551,10 +1567,15 @@ public class DateUtils {
      * dates from that date range (ignoring time (thus the duration for the 
      * interval will be from one date midnight to another).
      * 
-     * @see #extractInterval(String) which is probably the method you want.
+     * This probably is not the method you want - given 1950-01-05, it returns an
+     * interval from midnight as the start of the 5th to midnight on the start of the 6th,
+     * simply grabbing start end days from this interval will return 5 and 6, which
+     * probably isn't what you are expecting.  
+     * 
+     * @see DateUtils#extractInterval(String) which is probably the method you want.
      * 
      * @param eventDate a string containing a dwc:eventDate from which to extract an interval.
-     * @return An interval from one DateMidnight to another DateMidnight.
+     * @return An interval from one DateMidnight to another DateMidnight, null if no interval can be extracted.
      */
     public static Interval extractDateInterval(String eventDate) {
     	Interval result = null;
@@ -1608,7 +1629,7 @@ public class DateUtils {
      * Given a string that may be a date or a date range, extract a interval of
      * dates from that date range, up to the end milisecond of the last day.
      * 
-     * @see #extractDateInterval(String) which returns a pair of DateMidnights.
+     * @see DateUtils#extractDateInterval(String) which returns a pair of DateMidnights.
      * 
      * @param eventDate a string containing a dwc:eventDate from which to extract an interval.
      * @return an interval from the beginning of event date to the end of event date.
@@ -2314,6 +2335,20 @@ public class DateUtils {
     		cleaned = cleaned.replace(" i", " January");
     		cleaned = cleaned.replace(" v", " May");
     		cleaned = cleaned.replace(" x", " October");
+
+    		cleaned = cleaned.replace("月", "");
+    		cleaned = cleaned.replace("三", "March");
+    		cleaned = cleaned.replace("四", "April");
+    		cleaned = cleaned.replace("五", "May");
+    		cleaned = cleaned.replace("六", "June");
+    		cleaned = cleaned.replace("七", "July");
+    		cleaned = cleaned.replace("八", "August");
+    		cleaned = cleaned.replace("九", "September");
+    		cleaned = cleaned.replace("十一", "November");
+    		cleaned = cleaned.replace("十二", "December");
+    		cleaned = cleaned.replace("十", "October");
+    		cleaned = cleaned.replace("一", "January");    		
+    		cleaned = cleaned.replace("二", "February");
 
     	}
     	return cleaned;

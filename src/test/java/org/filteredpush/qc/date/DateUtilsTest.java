@@ -64,6 +64,7 @@ public class DateUtilsTest {
 		assertEquals("1882-03-24", DateUtils.createEventDateFromParts("1882-03-24", null, null, "1882", "03", "24"));
 		assertEquals("1882-03-04", DateUtils.createEventDateFromParts("1882-03-04", null, null, "1882", "3", "4"));
 		assertEquals("1882-03-04", DateUtils.createEventDateFromParts(null, null, null, "1882", "3", "4"));
+		assertEquals("1882-03", DateUtils.createEventDateFromParts(null, null, null, "1882", "3", ""));		
 		assertEquals("1882-03-24", DateUtils.createEventDateFromParts("1882-03-24", null, null, null, null, null));
 		assertEquals("1882-03-24", DateUtils.createEventDateFromParts("03/24/1882", null, null, null, null, null));
 		assertEquals("1882-03-24", DateUtils.createEventDateFromParts("24/03/1882", null, null, null, null, null));
@@ -151,6 +152,14 @@ public class DateUtilsTest {
     	assertEquals(2, test.getEnd().getMonthOfYear());
     	assertEquals(29, test.getEnd().getDayOfMonth());
     	
+    	test = DateUtils.extractDateInterval("1880-234");
+    	assertEquals(1880, test.getStart().getYear());
+    	assertEquals(8, test.getStart().getMonthOfYear());
+    	assertEquals(234, test.getStart().getDayOfYear());
+    	assertEquals(21, test.getStart().getDayOfMonth());
+    	assertEquals(1880, test.getEnd().getYear());
+    	assertEquals(8, test.getEnd().getMonthOfYear());
+    	
     	test = DateUtils.extractDateInterval("1880-01-01T08:30Z/1880-12-31");
     	assertEquals(1880, test.getStart().getYear());
     	assertEquals(1, test.getStart().getMonthOfYear());
@@ -188,6 +197,15 @@ public class DateUtilsTest {
     	assertEquals(1, test.getEnd().getMonthOfYear());
     	assertEquals(1, test.getEnd().getDayOfMonth());
     	assertEquals(86399, test.toDuration().getStandardSeconds());
+    	
+    	test = DateUtils.extractInterval("1880-234");
+    	assertEquals(1880, test.getStart().getYear());
+    	assertEquals(8, test.getStart().getMonthOfYear());
+    	assertEquals(234, test.getStart().getDayOfYear());
+    	assertEquals(1880, test.getEnd().getYear());
+    	assertEquals(8, test.getEnd().getMonthOfYear());
+    	assertEquals(21, test.getEnd().getDayOfMonth());
+    	assertEquals(86399, test.toDuration().getStandardSeconds());    	
     	
     	test = DateUtils.extractInterval("1880-01");
     	assertEquals(1880, test.getStart().getYear());
@@ -264,6 +282,12 @@ public class DateUtilsTest {
     	assertEquals(1, test.getMonthOfYear());
     	assertEquals(1, test.getDayOfMonth());
     	assertEquals(null,DateUtils.extractDate(""));
+    	test = DateUtils.extractDate("1880-234");
+    	assertEquals(1880, test.getYear());
+    	assertEquals(8, test.getMonthOfYear());
+    	assertEquals(234, test.getDayOfYear());
+    	assertEquals(21, test.getDayOfMonth());
+    	
     }
     
     @Test
@@ -391,6 +415,7 @@ public class DateUtilsTest {
     public void measureDateDurationTest() { 
     	assertEquals(0,DateUtils.measureDurationSeconds(""));
     	assertEquals(86399,DateUtils.measureDurationSeconds("1980-02-02"));
+    	assertEquals(86399,DateUtils.measureDurationSeconds("1980-234"));
     	assertEquals(86400*29-1,DateUtils.measureDurationSeconds("1980-02"));
     	assertEquals(86400*28-1,DateUtils.measureDurationSeconds("1982-02"));
     	assertEquals(86400*365-1,DateUtils.measureDurationSeconds("1981"));
@@ -1461,6 +1486,14 @@ public class DateUtilsTest {
 //    	for (int i = 0; i<locs.length; i++) {
 //    		System.out.println(locs[i].getLanguage());
 //    	}
+    	
+    	result = DateUtils.extractDateFromVerbatimER("1939-05-15/1939-05-15");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1939-05-15", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("1939/05/15-1939/05/15");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1939-05-15", result.getResult());    	
     	
     }    
     
