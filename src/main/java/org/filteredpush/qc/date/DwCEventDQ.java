@@ -136,7 +136,7 @@ public class DwCEventDQ {
 	 */
 
 	@Provides(value = "urn:uuid:0a59e03f-ebb5-4df3-a802-2e444de525b5")
-	@Measure(dimension = Dimension.COMPLETENESS, label = "Event Date Completeness", description = "Measure the completeness of an event date.")
+	@Measure(dimension = Dimension.COMPLETENESS, label = "EVENT_DATE_COMPLETENESS", description = "Measure the completeness of an event date.")
 	@Specification(value = "For values of dwc:eventDate, check is not empty.")
 
 	public static DQResponse<CompletenessValue> measureEventCompleteness(@ActedUpon(value = "dwc:eventDate") String eventDate) {
@@ -224,7 +224,7 @@ public class DwCEventDQ {
 	@Provides("urn:uuid:da63f836-1fc6-4e96-a612-fa76678cfd6a")
 
 	@Validation(
-			label = "Event Date and Verbatim Consistent",
+			label = "EVENT_DATE_AND_VERBATIM_CONSISTENT",
 			description = "Test to see if the eventDate and verbatimEventDate are consistent.")
 
 	@Specification("If a dwc:eventDate is not empty and the verbatimEventDate is not empty " +
@@ -363,7 +363,7 @@ public class DwCEventDQ {
      */
     //Provides urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812 and eb0a44fa-241c-4d64-98df-ad4aa837307b and 3892f432-ddd0-4a0a-b713-f2e2ecbd879d
     @Provides(value = "urn:uuid:016c6ee6-c528-4435-87ce-1a9dec9c7ae2")
-	@Amendment(label = "Event Date From Parts", description = "Try to populate the event date from the verbatim and other atomic parts (day, month, year, etc).")
+	@Amendment(label = "EVENT_DATE_FROM_PARTS", description = "Try to populate the event date from the verbatim and other atomic parts (day, month, year, etc).")
 	@Specification(value = "If a dwc:eventDate is empty and the verbatimEventDate is not empty fill in dwc:eventDate " +
 			"based on value from dwc:verbatimEventDate, dwc:year dwc:month, dwc:day, dwc:start/endDayOfYear.")
     public static DQResponse<AmendmentValue> extractDateFromParts(@ActedUpon(value = "dwc:eventDate") String eventDate,
@@ -420,7 +420,7 @@ public class DwCEventDQ {
 
     //@Provides(value = "UPSTREAM_EVENTDATE_FILLED_IN_FROM_START_END")
 	@Provides(value = "urn:uuid:e4ddf9bc-cd10-46cc-b307-d6c7233a240a")
-	@Amendment(label = "Event Date From non-Darwin Core start/end", description = "Try to populate the event date from non-Darwin Core start date and end date terms.")
+	@Amendment(label = "UPSTREAM_EVENTDATE_FILLED_IN_FROM_START_END", description = "Try to populate the event date from non-Darwin Core start date and end date terms.")
 	@Specification(value = "If a dwc:eventDate is empty and an event date can be inferred from start date and end date, fill in dwc:eventDate " +
 			"based on the values in the start and end dates.  Will not propose a change if dwc:eventDate contains a value.")
     public static DQResponse<AmendmentValue> extractDateFromStartEnd(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "dwc:startDate") String startDate, @Consulted(value="dwc:endDate") String endDate) {
@@ -566,7 +566,7 @@ public class DwCEventDQ {
      */
     //@Provides(value = "DAY_IN_RANGE")
     @Provides(value = "urn:uuid:48aa7d66-36d1-4662-a503-df170f11b03f")   // GUID for DAY_INVALID/DAY_IN_RANGE
-	@Validation(label = "Day In Range", description = "Test to see whether a provided day is an integer in the range " +
+	@Validation(label = "DAY_IN_RANGE", description = "Test to see whether a provided day is an integer in the range " +
 			"of values that can be a day of a month.")
 	@Specification(value = "Compliant if dwc:day is an integer in the range 1 to 31 inclusive, not compliant otherwise. " +
 			"Internal prerequisites not met if day is empty or an integer cannot be parsed from day.")
@@ -646,7 +646,7 @@ public class DwCEventDQ {
 
     //@Provides(value = "EVENTDATE_PRECISON_JULIAN_YEAR_OR_BETTER")
 	@Provides(value = "urn:uuid:fd00e6be-45e4-4ced-9f3d-5cde30b21b69")
-	@Validation(label = "EventDate precision Julian year or better. ", description = "Test to see whether a provided event date " +
+	@Validation(label = "EVENT_DATE_PRECISON_JULIAN_YEAR_OR_BETTER", description = "Test to see whether a provided event date " +
 			"has a duration less than or equal to a standard astronomical Julian year.")
 	@Specification(value = "Compliant if event date has a duration equal to or less than a = 31557600 seconds, otherwise not compliant. " +
 			"Internal prerequisites not met if eventDate is empty or not valid.")
@@ -677,7 +677,7 @@ public class DwCEventDQ {
 
 
     @Provides(value = "urn:uuid:31d463b4-2a1c-4b90-b6c7-73459d1bad6d")
-	@Validation(label = "EventDate precision calendar year or better. ", description = "Test to see whether a provided event date " +
+	@Validation(label = "EVENT_DATE_YEAR_INCOMPLETE", description = "Test to see whether a provided event date " +
 			"has a duration less than or equal to a calendar year.")
 	@Specification(value = "Compliant if event date has a duration equal to or less than 365 days if a standard year, 366 days if a leap year. " +
 			"Internal prerequisites not met if eventDate is empty or not valid.")
@@ -734,7 +734,7 @@ public class DwCEventDQ {
      * @param day to check
      * @return an DQValidationResponse object describing whether day exists in year-month-day.
      */
-    @Provides(value="urn:uuid:5618f083-d55a-4ac2-92b5-b9fb227b832f")
+    @Provides(value="urn:uuid:9f05540b-3783-4e0f-8e52-8d2a1f93d9d7")
     @Validation( label = "VALIDATION_DAY_OUTOFRANGE", description="The value of dwc:day is a valid day given the month and year.")
     @Specification(value="The value of dwc:day is a valid day given the month and year. The value of dwc:day is a integer. If present, dwc:month and dwc:year must be integers.")
     //@Specification(value="The provided values for year, month, day and start and end days of year (dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayofYear) are within the range of the supplied dwc:eventDate The dwc:eventDate is not EMPTY and at least one of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear is not EMPTY")
@@ -797,7 +797,7 @@ public class DwCEventDQ {
      * @return an EventDQAmmendment which may contain a proposed ammendment.
      */
     @Provides(value = "urn:uuid:f98a54eb-59e7-44c7-b96f-200e6af1c895")
-	@Amendment(label = "Day Month Transposition", description = "Check of month is out of range for months, but day is " +
+	@Amendment(label = "DAY_MONTH_TRANSPOSED", description = "Check of month is out of range for months, but day is " +
 			"in range for months, and propose a transposition of the two if this is the case.")
 	@Specification("If dwc:month and dwc:day are provided, propose a transposition if day is in range for months, and " +
 			"month is in range for days")
@@ -1225,8 +1225,11 @@ public class DwCEventDQ {
      * @return an DQValidationResponse object describing whether the event terms represent one temporal interval or
      *   whether they are inconsistent with each other.
      */
-    @Provides(value="5618f083-d55a-4ac2-92b5-b9fb227b832f")
-    public static DQResponse<ComplianceValue> isEventDateConsistentWithAtomic(
+    @Provides(value="urn:uuid:5618f083-d55a-4ac2-92b5-b9fb227b832f")
+	@Validation(label = "VALIDATION_EVENT_INCONSISTENT", description = "The provided values for year, month, day and start and end days of year (dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayofYear) are within the range of the supplied dwc:eventDate")
+	@Specification("Check that the value for dwc:eventDate is consistent with the values for atomic parts (dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayofYear)")
+	
+	public static DQResponse<ComplianceValue> isEventDateConsistentWithAtomic(
     		@ActedUpon(value = "dwc:eventDate") String eventDate,
 			@ActedUpon(value = "dwc:verbatimEventDate") String verbatimEventDate,
 			@ActedUpon(value = "dwc:year") String year,
@@ -1425,7 +1428,7 @@ public class DwCEventDQ {
      * @param endDayOfYear to examine
      * @return an EventDQMeasurement object describing the completeness of the temporal terms of the event.
      */
-	@Provides(value = "9dc97514-3b88-4afc-931d-5fc386be21ee") // locally generated
+	@Provides(value = "urn:uuid:9dc97514-3b88-4afc-931d-5fc386be21ee") // locally generated
 	@Measure(dimension = Dimension.COMPLETENESS, label = "Event Completeness", description = "Measure the completeness of the temporal terms in an Event.")
 	@Specification(value = "For values of dwc:eventDate, year, month, day, startDayOfYear, endDayOfYear, verbatimEventDate, eventTime, check is not empty.")
 	public static DQResponse<CompletenessValue> measureEventCompleteness(
