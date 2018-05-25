@@ -1468,6 +1468,12 @@ public class DateUtilsTest {
     	/*
     	 Not yet supported cases: 
     	 
+    	 Day/month between century and year, from "Date Format" thread
+    	 on NHCOLL started by Paul Callomon
+    	 19 3/viii 25
+    	 18 25/7 73
+    	 18 12/7 96 
+    	 
     	 8-15 to 20, 1884
     	 II-VIII-1913
     	 
