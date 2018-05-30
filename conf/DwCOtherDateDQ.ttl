@@ -1,0 +1,173 @@
+@prefix rdfbeans: <http://viceversatech.com/rdfbeans/2.0/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sesame: <http://www.openrdf.org/schema/sesame#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix fn: <http://www.w3.org/2005/xpath-functions#> .
+
+<http://example.com/ffdq/Implementation> rdfbeans:bindingClass "org.datakurator.ffdq.model.solutions.Implementation" .
+
+<http://example.com/ffdq/Mechanism> rdfbeans:bindingClass "org.datakurator.ffdq.model.Mechanism" .
+
+<http://example.com/ffdq/Specification> rdfbeans:bindingClass "org.datakurator.ffdq.model.Specification" .
+
+<urn:uuid:373281d1-77ec-4858-bfb3-158114fe7700> <http://example.com/ffdq/hasSpecification> <urn:uuid:urn:uuid:39bb2280-1215-447b-9221-fd13bc990641> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:bf5b7706-d0a6-4c65-9644-c750e7188ee0> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<urn:uuid:bf5b7706-d0a6-4c65-9644-c750e7188ee0> a <http://example.com/ffdq/Mechanism> ;
+	rdfs:label "Kurator: Date Validator - DwCOtherDateDQ" .
+
+<urn:uuid:urn:uuid:39bb2280-1215-447b-9221-fd13bc990641> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "Check dwc:dateIdentified to see if it is empty or contains a valid date value. If it contains a value that is not a valid date, propose a properly formatted dateIdentified as an amendment." ;
+	rdfs:label "AMENDMENT_DATEIDENTIFIED_STANDARDIZED" .
+
+<ffdq:ResourceType> rdfbeans:bindingClass "org.datakurator.ffdq.model.ResourceType" .
+
+<http://example.com/ffdq/AmendmentMethod> rdfbeans:bindingClass "org.datakurator.ffdq.model.solutions.AmendmentMethod" .
+
+<http://example.com/ffdq/ContextualizedEnhancement> rdfbeans:bindingClass "org.datakurator.ffdq.model.context.ContextualizedEnhancement" .
+
+<http://example.com/ffdq/Enhancement> rdfbeans:bindingClass "org.datakurator.ffdq.model.Enhancement" .
+
+<http://example.com/ffdq/InformationElement> rdfbeans:bindingClass "org.datakurator.ffdq.model.InformationElement" .
+
+<rt:SingleRecord> a <ffdq:ResourceType> ;
+	rdfs:label "SingleRecord" .
+
+<urn:uuid:1527b431-52de-4eb5-a986-4917b0dbf217> a <http://example.com/ffdq/Enhancement> ;
+	rdfs:label "The value of dwc:dateIdentified was amended to conform with the ISO 8601:2004(E) date format" .
+
+<urn:uuid:53dd358c-9f15-4b8c-b2c9-89ff67394559> <http://example.com/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/dateIdentified> ;
+	a <http://example.com/ffdq/InformationElement> .
+
+<urn:uuid:e615f7f8-81fe-46c9-ad1f-5fd4943b7be5> <http://example.com/ffdq/hasEnhancement> <urn:uuid:1527b431-52de-4eb5-a986-4917b0dbf217> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:53dd358c-9f15-4b8c-b2c9-89ff67394559> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedEnhancement> .
+
+<urn:uuid:fbac986e-288d-4b24-9f92-15e57da4f6dd> <http://example.com/ffdq/enhancementInContext> <urn:uuid:e615f7f8-81fe-46c9-ad1f-5fd4943b7be5> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:urn:uuid:39bb2280-1215-447b-9221-fd13bc990641> ;
+	a <http://example.com/ffdq/AmendmentMethod> .
+
+<urn:uuid:ef349399-8d89-489d-80e1-f83d0f28e24b> <http://example.com/ffdq/hasSpecification> <urn:uuid:urn:uuid:367bf43f-9cb6-45b2-b45f-b8152f1d334a> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:bf5b7706-d0a6-4c65-9644-c750e7188ee0> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<urn:uuid:urn:uuid:367bf43f-9cb6-45b2-b45f-b8152f1d334a> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "Check dcterms:modified to see if it is empty or contains a valid date value. If it contains a value that is not a valid date, propose a properly formatted dcterms:modified as an amendment." ;
+	rdfs:label "Date Modified Format Correction" .
+
+<urn:uuid:80358edf-d2c5-43b7-8bca-f68940dcf091> a <http://example.com/ffdq/Enhancement> ;
+	rdfs:label "Try to propose a correction for a date modified" .
+
+<urn:uuid:a506d7af-f607-4308-8dd5-ff2ae06e7e4c> <http://example.com/ffdq/hasEnhancement> <urn:uuid:80358edf-d2c5-43b7-8bca-f68940dcf091> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:b8a897ed-6eaf-4536-9fab-01e911cbbcb4> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedEnhancement> .
+
+<urn:uuid:b8a897ed-6eaf-4536-9fab-01e911cbbcb4> <http://example.com/ffdq/composedOf> <http://purl.org/dc/terms/modified> ;
+	a <http://example.com/ffdq/InformationElement> .
+
+<urn:uuid:e6eeca84-2f90-4f08-91fa-d8ad6849d8b9> <http://example.com/ffdq/enhancementInContext> <urn:uuid:a506d7af-f607-4308-8dd5-ff2ae06e7e4c> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:urn:uuid:367bf43f-9cb6-45b2-b45f-b8152f1d334a> ;
+	a <http://example.com/ffdq/AmendmentMethod> .
+
+<urn:uuid:7bfe0474-21f1-407e-94ac-15cffbe5f062> <http://example.com/ffdq/hasSpecification> <urn:uuid:urn:uuid:62a9c256-43e4-41ee-8938-d2d2e99479ef> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:bf5b7706-d0a6-4c65-9644-c750e7188ee0> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<urn:uuid:urn:uuid:62a9c256-43e4-41ee-8938-d2d2e99479ef> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "Compliant if dcterms:modified can to parsed to an explicit date/time, otherwise not compliant. Internal prerequisites not met if dcterms:modified is empty." ;
+	rdfs:label "Modified date correctly formatted" .
+
+<http://example.com/ffdq/ContextualizedCriterion> rdfbeans:bindingClass "org.datakurator.ffdq.model.context.ContextualizedCriterion" .
+
+<http://example.com/ffdq/Criterion> rdfbeans:bindingClass "org.datakurator.ffdq.model.Criterion" .
+
+<http://example.com/ffdq/ValidationMethod> rdfbeans:bindingClass "org.datakurator.ffdq.model.solutions.ValidationMethod" .
+
+<urn:uuid:205a03b6-0aec-4b4a-bc6a-8c9f5d9c5499> <http://example.com/ffdq/composedOf> <http://purl.org/dc/terms/modified> ;
+	a <http://example.com/ffdq/InformationElement> .
+
+<urn:uuid:4b309bbd-a94d-4e55-8d3e-0a93880a29d2> <http://example.com/ffdq/hasCriterion> <urn:uuid:9a1976f1-d33d-4de0-806e-26d514f7748b> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:205a03b6-0aec-4b4a-bc6a-8c9f5d9c5499> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedCriterion> .
+
+<urn:uuid:9a1976f1-d33d-4de0-806e-26d514f7748b> a <http://example.com/ffdq/Criterion> ;
+	rdfs:label "Test to see whether a provided dcterms:modified is a validly formated ISO date/time." .
+
+<urn:uuid:d628c22a-ff6d-45cb-8c06-f53563011112> <http://example.com/ffdq/criterionInContext> <urn:uuid:4b309bbd-a94d-4e55-8d3e-0a93880a29d2> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:urn:uuid:62a9c256-43e4-41ee-8938-d2d2e99479ef> ;
+	a <http://example.com/ffdq/ValidationMethod> .
+
+<urn:uuid:4034028e-0b4b-4831-aac6-b94a040f0627> <http://example.com/ffdq/hasSpecification> <urn:uuid:urn:uuid:dc8aae4b-134f-4d75-8a71-c4186239178e> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:bf5b7706-d0a6-4c65-9644-c750e7188ee0> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<urn:uuid:urn:uuid:dc8aae4b-134f-4d75-8a71-c4186239178e> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "The value of dwc:dateIdentified is between 1753-01-01 date and the current date, inclusive The field dwc:dateIdentified is a valid ISO 8601:2004(E) date." ;
+	rdfs:label "VALIDATION_DATEIDENTIFIED_OUTOFRANGE" .
+
+<urn:uuid:08d641b3-1ba1-4865-8297-e5ff1657fcba> <http://example.com/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/dateIdentified> ;
+	a <http://example.com/ffdq/InformationElement> .
+
+<urn:uuid:4869e2b2-76bf-446d-bfb2-f6b1652e4fcc> <http://example.com/ffdq/hasCriterion> <urn:uuid:bb65f79b-82d6-4754-8e99-fd127f0cb340> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:08d641b3-1ba1-4865-8297-e5ff1657fcba> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedCriterion> .
+
+<urn:uuid:5fb827d6-cbbf-44f3-a1a4-1416d0981b49> <http://example.com/ffdq/criterionInContext> <urn:uuid:4869e2b2-76bf-446d-bfb2-f6b1652e4fcc> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:urn:uuid:dc8aae4b-134f-4d75-8a71-c4186239178e> ;
+	a <http://example.com/ffdq/ValidationMethod> .
+
+<urn:uuid:bb65f79b-82d6-4754-8e99-fd127f0cb340> a <http://example.com/ffdq/Criterion> ;
+	rdfs:label "The value of dwc:dateIdentified is between 1753-01-01 date and the current date, inclusive" .
+
+<urn:uuid:2c9eaba9-f9d9-4f37-8088-7172d3e75af3> <http://example.com/ffdq/hasSpecification> <urn:uuid:urn:uuid:66269bdd-9271-4e76-b25c-7ab81eebe1d8> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:bf5b7706-d0a6-4c65-9644-c750e7188ee0> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<urn:uuid:urn:uuid:66269bdd-9271-4e76-b25c-7ab81eebe1d8> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "The value of dwc:dateIdentified is a valid ISO 8601:2004(E) date The field dwc:dateIdentified is not EMPTY." ;
+	rdfs:label "VALIDATION_DATEIDENTIFIED_NOTSTANDARD" .
+
+<urn:uuid:2e671b42-c102-43cb-9e7c-875e0b9ac91c> <http://example.com/ffdq/hasCriterion> <urn:uuid:32b4a167-efa2-4a03-8ff9-7df5a492e344> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:746cb7a7-31a1-435f-8652-f3ea97a1cf2b> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedCriterion> .
+
+<urn:uuid:32b4a167-efa2-4a03-8ff9-7df5a492e344> a <http://example.com/ffdq/Criterion> ;
+	rdfs:label "The value of dwc:dateIdentified is a valid ISO 8601:2004(E) date" .
+
+<urn:uuid:746cb7a7-31a1-435f-8652-f3ea97a1cf2b> <http://example.com/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/dateIdentified> ;
+	a <http://example.com/ffdq/InformationElement> .
+
+<urn:uuid:e8aabfed-1846-4b43-8aa8-3d1d3be8b2fc> <http://example.com/ffdq/criterionInContext> <urn:uuid:2e671b42-c102-43cb-9e7c-875e0b9ac91c> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:urn:uuid:66269bdd-9271-4e76-b25c-7ab81eebe1d8> ;
+	a <http://example.com/ffdq/ValidationMethod> .
+
+<urn:uuid:01e51491-676e-49f2-a089-1716796de279> <http://example.com/ffdq/hasSpecification> <urn:uuid:urn:uuid:391ca46d-3842-4a18-970c-0434cbc17f07> ;
+	<http://example.com/ffdq/implementedBy> <urn:uuid:bf5b7706-d0a6-4c65-9644-c750e7188ee0> ;
+	a <http://example.com/ffdq/Implementation> .
+
+<urn:uuid:urn:uuid:391ca46d-3842-4a18-970c-0434cbc17f07> a <http://example.com/ffdq/Specification> ;
+	rdfs:description "The date specified by dwc:dateIdentified is not entirely earlier than the date specified by dwc:eventDate The fields dwc:dateIdentified and dwc:eventDate are both interpretable as ISO 8601:2004(E) dates" ;
+	rdfs:label "VALIDATION_DATEIDENTIFIED_PREEVENTDATE" .
+
+<urn:uuid:002d17af-decf-4952-b3f3-070313ad1259> <http://example.com/ffdq/criterionInContext> <urn:uuid:20eb9345-dcb2-47bb-924c-fab885e12c3c> ;
+	<http://example.com/ffdq/hasSpecification> <urn:uuid:urn:uuid:391ca46d-3842-4a18-970c-0434cbc17f07> ;
+	a <http://example.com/ffdq/ValidationMethod> .
+
+<urn:uuid:0f10ef6e-e123-4ca9-8d57-72bb4c78aab0> a <http://example.com/ffdq/Criterion> ;
+	rdfs:label "The date specified by dwc:dateIdentified is not entirely earlier than the date specified by dwc:eventDate" .
+
+<urn:uuid:20eb9345-dcb2-47bb-924c-fab885e12c3c> <http://example.com/ffdq/hasCriterion> <urn:uuid:0f10ef6e-e123-4ca9-8d57-72bb4c78aab0> ;
+	<http://example.com/ffdq/hasInformationElement> <urn:uuid:f48a8099-16a3-414a-8122-d365e2242edf> ;
+	<http://example.com/ffdq/hasResourceType> <rt:SingleRecord> ;
+	a <http://example.com/ffdq/ContextualizedCriterion> .
+
+<urn:uuid:f48a8099-16a3-414a-8122-d365e2242edf> <http://example.com/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/dateIdentified> , <http://rs.tdwg.org/dwc/terms/eventDate> ;
+	a <http://example.com/ffdq/InformationElement> .
