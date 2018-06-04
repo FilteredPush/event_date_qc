@@ -2630,14 +2630,22 @@ public class DateUtils {
         	   URL datesURI = DateUtils.class.getResource("/example_dates.csv");
         	   datesFile = new File(datesURI.toURI());
         	} catch (NullPointerException e){ 
-    			logger.error(e.getMessage());
+    			logger.debug(e.getMessage());
     		} catch (URISyntaxException e) {
     			logger.error(e.getMessage());
         	}
-        	if (args[0]!=null && args[0].toLowerCase().equals("-f")) {
+        	if (args!=null && args.length>0 && args[0]!=null && args[0].toLowerCase().equals("-f")) {
         		if (args[1]!=null) { 
         			datesFile = new File(args[1]);
         		}
+            }
+            if (datesFile==null) { 
+    			System.out.println("Check a file consisting of verbatim dates, one date per line.");
+    			System.out.println("Specify a file to check with: -f filename");
+    			System.out.println("Add no additional options to see only non-matched lines.");
+    			System.out.println("Show only matching lines with -m");
+    			System.out.println("Show both matching and non-matching lines with -a");
+                System.exit(1);
             }
         	boolean showMatches = false;
         	boolean showAll = false;
