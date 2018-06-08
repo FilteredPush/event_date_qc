@@ -1749,7 +1749,7 @@ public class DateUtils {
     				logger.debug(startDayOfYear + " is not an integer."); 
     				result = false; 
     			} 
-    			if (DateUtils.extractDate(eventDate).getDayOfYear() == startDayInt) { 
+    			if (DateUtils.extractDate(eventDate)!=null && DateUtils.extractDate(eventDate).getDayOfYear() == startDayInt) { 
     				result=true;
     			} else { 
     				result = false;
