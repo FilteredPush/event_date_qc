@@ -34,6 +34,7 @@ import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeFieldType;
+import org.joda.time.IllegalFieldValueException;
 import org.joda.time.Instant;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
@@ -1616,10 +1617,12 @@ public class DateUtils {
                } else { 
                   result = new Interval(startDate,startDate.plusDays(1));
                }
+    		} catch (IllegalFieldValueException ex) {
+    			// can parse as a date but some token has an out of range value
+    			logger.debug(ex);
     		} catch (Exception e) { 
     			// not a date
-    			e.printStackTrace();
-               logger.error(e.getMessage());
+               logger.error(e.getMessage(),e);
     		}
     	}
     	return result;
@@ -2608,6 +2611,9 @@ public class DateUtils {
 			logger.debug(interval.toString());
 			logger.debug(secondInterval.toString());
             result = interval.equals(secondInterval);
+		} catch (IllegalFieldValueException ex) { 
+			// field format error, can't parse as date, log at debug level.
+			logger.debug(ex.getMessage());
 		} catch (Exception e) { 
 			logger.error(e.getMessage());
 		}
