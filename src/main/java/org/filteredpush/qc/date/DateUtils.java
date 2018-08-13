@@ -17,6 +17,7 @@
 package org.filteredpush.qc.date;
 
 import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -2629,60 +2630,92 @@ public class DateUtils {
      *    -m to show matched dates and their interpretations otherwise lists non-matched lines.  
      *    -a to show all lines, matched or not with their interpretations.
      */
-    public static void main(String[] args) { 
-        try {
-        	File datesFile = null;
-        	try { 
-        	   URL datesURI = DateUtils.class.getResource("/example_dates.csv");
-        	   datesFile = new File(datesURI.toURI());
-        	} catch (NullPointerException e){ 
-    			logger.debug(e.getMessage());
-    		} catch (URISyntaxException e) {
-    			logger.error(e.getMessage());
-        	}
-        	if (args!=null && args.length>0 && args[0]!=null && args[0].toLowerCase().equals("-f")) {
-        		if (args[1]!=null) { 
-        			datesFile = new File(args[1]);
-        		}
-            }
-            if (datesFile==null) { 
-    			System.out.println("Check a file consisting of verbatim dates, one date per line.");
-    			System.out.println("Specify a file to check with: -f filename");
-    			System.out.println("Add no additional options to see only non-matched lines.");
-    			System.out.println("Show only matching lines with -m");
-    			System.out.println("Show both matching and non-matching lines with -a");
-                System.exit(1);
-            }
-        	boolean showMatches = false;
-        	boolean showAll = false;
-        	for (int i=0; i<args.length; i++) {
-        		if (args[i].equals("-m")) { showMatches = true; } 
-        		if (args[i].equals("-a")) { showAll = true; } 
-        	}
-			BufferedReader reader = new BufferedReader(new FileReader(datesFile));
+	public static void main(String[] args) { 
+		try {
+			File datesFile = null;
+			try { 
+				URL datesURI = DateUtils.class.getResource("/example_dates.csv");
+				datesFile = new File(datesURI.toURI());
+			} catch (NullPointerException e){ 
+				logger.debug(e.getMessage());
+			} catch (URISyntaxException e) {
+				logger.error(e.getMessage());
+			}
+			if (args!=null && args.length>0 && args[0]!=null && args[0].toLowerCase().equals("-f")) {
+				if (args[1]!=null) { 
+					datesFile = new File(args[1]);
+				}
+			}
+			boolean standardIn = false;
+			if (datesFile==null) { 
+				if (args!=null && args.length>0 && args[0]!=null && args[0].toLowerCase().equals("-i")) {
+					standardIn = true;
+				} else if (args!=null && args.length>1 && args[0]!=null && args[0].toLowerCase().equals("-v")) {
+					StringBuffer verbatim = new StringBuffer();  // support presence of absence of quotes
+					for (int i=1; i<args.length; i++) { 
+						verbatim.append(args[i]).append(" ");
+					}
+				    EventResult result = DateUtils.extractDateFromVerbatimER(verbatim.toString().trim());
+				    String retval = result.getResult();
+				    if (retval==null) { retval=""; }
+					System.out.println(retval);
+				    System.exit(0);;
+				} else { 
+					System.out.println("Check a file consisting of verbatim dates, one date per line.");
+					System.out.println("Specify a file to check with: -f filename");
+					System.out.println("Add no additional options to see only non-matched lines.");
+					System.out.println("Show only matching lines with -m");
+					System.out.println("Show both matching and non-matching lines with -a");
+					System.out.println("Read one line from standard input with: -i");
+					System.out.println("Interpret one date with: -v \"{date}\", e.g. -v \"Feb, 2012\", no other parameters. ");
+					System.exit(1);
+				}
+			}
+			boolean showMatches = false;
+			boolean showAll = false;
+			for (int i=0; i<args.length; i++) {
+				if (args[i].equals("-m")) { showMatches = true; } 
+				if (args[i].equals("-a")) { showAll = true; } 
+			}
+			BufferedReader reader = null;
+			if (standardIn) { 
+				reader = new BufferedReader(new InputStreamReader(System.in)); 
+			} else { 
+				reader =  new BufferedReader(new FileReader(datesFile));
+			}
 			String line = null;
 			int unmatched = 0;
 			int matched = 0;
-			while ((line=reader.readLine())!=null) {
+			boolean done = false;
+			while (!done && (line=reader.readLine())!=null) {
 				EventResult result = DateUtils.extractDateFromVerbatimER(line.trim());
 				if (result==null || result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
 					if (!showMatches && !showAll) {
-					   System.out.println(line);
+						System.out.println(line);
 					}
 					if (showAll) { 
-					   System.out.println(line +  "\t" + result.getResultState());
-					}
+						System.out.println(line +  "\t" + result.getResultState());
+					} 
 					unmatched++;
 				} else { 
 					matched++;
-				   if (showMatches || showAll) { 
-					   System.out.println(line + "\t" + result.getResultState() + "\t" + result.getResult());
-				   }
+					if (standardIn) { 
+						System.out.println(result.getResult());
+					} else { 
+						if (showMatches || showAll) { 
+							System.out.println(line + "\t" + result.getResultState() + "\t" + result.getResult());
+						}
+					}
+				}
+				if (standardIn) { 
+					done = true;  // only read one line of text in this mode.
 				}
 			}
 			reader.close();
-			System.out.println("Unmatched lines: " + unmatched);
-			System.out.println("Matched lines: " + matched);
+			if (!standardIn) { 
+				System.out.println("Unmatched lines: " + unmatched);
+				System.out.println("Matched lines: " + matched);
+			}
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage());
 			System.out.println(e.getMessage());
@@ -2691,8 +2724,8 @@ public class DateUtils {
 			System.out.println(e.getMessage());
 
 		}
-        
-    }
+
+	}
     
     
     
