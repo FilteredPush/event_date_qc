@@ -96,22 +96,37 @@ public class DwcEventDQTest {
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 
 		result = DwCEventDQ.isDayInRange(null);
-		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		
 		result = DwCEventDQ.isDayInRange("");
-		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+	
 		result = DwCEventDQ.isDayInRange(" ");
-		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		
 		result = DwCEventDQ.isDayInRange("A");
-		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		
 		result = DwCEventDQ.isDayInRange("1.5");
-		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		
 		result = DwCEventDQ.isDayInRange("**");
-		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 		
 		result = DwCEventDQ.isDayInRange("1st");
-		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		
 		result = DwCEventDQ.isDayInRange("2nd");
-		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		
 	}
 
 	/**

@@ -35,6 +35,10 @@ import java.util.Map;
 /**
  * Darwin Core Event eventDate related Data Quality Measures, Validations, and Enhancements. 
  * 
+ * Provides support for the following TDWG DQIG TG1 validations and amendments: 
+ * 
+ * VALIDATION_DAY_NOTSTANDARD  47ff73ba-0028-4f79-9ce1-ee7008d66498
+ * 
  *  Provides support for the following draft TDWG DQIG TG2 validations and amendments.  
  *  
  * TG2-VALIDATION_EVENTDATE_EMPTY  f51e15a6-a67d-4729-9c28-3766299d2985
@@ -557,25 +561,30 @@ public class DwCEventDQ {
      * Test to see whether a provided day is an integer in the range of values that can be
      * a day of a month.
      *
-     * Provides: DAY_IN_RANGE.  Is not the same as TG2-VALIDATION_DAY_OUTOFRANGE which includes year and month
+     * Provides: TG2-VALIDATION_DAY_NOTSTANDARD.  Is not the same as TG2-VALIDATION_DAY_OUTOFRANGE which includes year and month
+     * 
+     * Prerequistites check returning INTERNAL_PREREQUSISITES_NOT_MET if day term is not present must be provided 
+     * by upstream or wrapping code that checks the terms present in the record.
      *
      * @param day  a string to test
-     * @return COMPLIANT if day is an integer in the range 1 to 31 inclusive, NOT_COMPLIANT if day is
-     *     an integer outside this range, INTERNAL_PREREQUSISITES_NOT_MET if day is empty or an integer
-     *     cannot be parsed from day.
+     * @return COMPLIANT if day is an integer in the range 1 to 31 inclusive, otherwise NOT_COMPLIANT
+     * @see DwCEventDQ.isDayPossibleForMonthYear 
+     *     
      */
     //@Provides(value = "DAY_IN_RANGE")
-    @Provides(value = "urn:uuid:48aa7d66-36d1-4662-a503-df170f11b03f")   // GUID for DAY_INVALID/DAY_IN_RANGE
-	@Validation(label = "DAY_IN_RANGE", description = "Test to see whether a provided day is an integer in the range " +
+    @Provides(value = "urn:uuid:47ff73ba-0028-4f79-9ce1-ee7008d66498")   // GUID for VALIDATION_DAY_NOTSTANDAR
+	@Validation(label = "VALIDATION_DAY_NOTSTANDARD", description = "Test to see whether a provided day is an integer in the range " +
 			"of values that can be a day of a month.")
-	@Specification(value = "Compliant if dwc:day is an integer in the range 1 to 31 inclusive, not compliant otherwise. " +
-			"Internal prerequisites not met if day is empty or an integer cannot be parsed from day.")
+	@Specification(value = "INTERNAL_PREREQUISITES_NOT_MET if the field dwc:day is not present; " + 
+			"COMPLIANT if the value of the field dwc:day is an integer between 1 and 31 inclusive; " + 
+			"otherwise NOT_COMPLIANT.")
     public static DQResponse<ComplianceValue> isDayInRange(@ActedUpon(value = "dwc:day") String day) {
 		DQResponse<ComplianceValue> result = new DQResponse<>();
 
 		if (DateUtils.isEmpty(day)) {
 			result.addComment("No value provided for day.");
-			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+			result.setValue(ComplianceValue.NOT_COMPLIANT);
+			result.setResultState(ResultState.RUN_HAS_RESULT);
 		} else {
 			try {
 				int numericDay = Integer.parseInt(day.trim());
@@ -589,7 +598,8 @@ public class DwCEventDQ {
 				result.setResultState(ResultState.RUN_HAS_RESULT);
 			} catch (NumberFormatException e) {
 				logger.debug(e.getMessage());
-				result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+				result.setValue(ComplianceValue.NOT_COMPLIANT);
+				result.setResultState(ResultState.RUN_HAS_RESULT);
 				result.addComment(e.getMessage());
 			}
 		}
