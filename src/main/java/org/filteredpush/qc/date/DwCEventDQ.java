@@ -570,7 +570,7 @@ public class DwCEventDQ {
      *
      * @param day  a string to test
      * @return COMPLIANT if day is an integer in the range 1 to 31 inclusive, otherwise NOT_COMPLIANT
-     * @see DwCEventDQ.isDayPossibleForMonthYear 
+     * @see DwCEventDQ#isDayPossibleForMonthYear(String year, String month, String day)
      *     
      */
     //@Provides(value = "DAY_IN_RANGE")
