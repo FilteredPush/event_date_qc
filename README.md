@@ -13,7 +13,7 @@ This library provides two classes each with a set of static methods which provid
 
 Obtain a v1.2.x or newer build, or checkout and run mvn package, then execute jar file, e.g. with: 
 
-    java -jar event_date_qc-1.2.0.jar -f src/test/resources/example_dates.csv
+    java -jar event_date_qc-2.0.0.jar -f src/test/resources/example_dates.csv
 
 Dates from the corpus of example dates that aren't yet recognized will be printed.  To show only matched dates add -m as an option, to show both matched and un-matched dates, use -a as an option.
 
@@ -122,7 +122,7 @@ Available in Maven Central.
     <dependency>
         <groupId>org.filteredpush</groupId>
         <artifactId>event_date_qc</artifactId>
-        <version>1.0.5</version>
+        <version>2.0.0</version>
     </dependency>
 
 # Building
