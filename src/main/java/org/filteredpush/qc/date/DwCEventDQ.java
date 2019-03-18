@@ -35,11 +35,13 @@ import java.util.Map;
 /**
  * Darwin Core Event eventDate related Data Quality Measures, Validations, and Enhancements. 
  * 
- * Provides support for the following TDWG DQIG TG1 validations and amendments: 
+ * Provides support for the following TDWG DQIG TG2 validations and amendments: 
  * 
  * VALIDATION_DAY_NOTSTANDARD  47ff73ba-0028-4f79-9ce1-ee7008d66498
+ * VALIDATION_DAY_OUTOFRANGE   5618f083-d55a-4ac2-92b5-b9fb227b832f   ** Differs
  * 
- *  Provides support for the following draft TDWG DQIG TG2 validations and amendments.  
+ * 
+ * Provides support for the following draft TDWG DQIG TG2 validations and amendments.  
  *  
  * TG2-VALIDATION_EVENTDATE_EMPTY  f51e15a6-a67d-4729-9c28-3766299d2985
  * TG2-VALIDATION_YEAR_EMPTY  c09ecbf9-34e3-4f3e-b74a-8796af15e59f
@@ -731,7 +733,8 @@ public class DwCEventDQ {
     }
 
 
-    // TODO: Confirm GUID, this may be 9f05540b-3783-4e0f-8e52-8d2a1f93d9d7 or  5618f083-d55a-4ac2-92b5-b9fb227b832f
+    // TODO: Handling of invalid year/month differs from current standard description, but proposed that 
+    // as defect of standard description.
     /**
      * Check if a value for day is consistent with a provided month and year.
      *
@@ -744,12 +747,11 @@ public class DwCEventDQ {
      * @param day to check
      * @return an DQValidationResponse object describing whether day exists in year-month-day.
      */
-    @Provides(value="urn:uuid:9f05540b-3783-4e0f-8e52-8d2a1f93d9d7")
+    @Provides(value="urn:uuid:5618f083-d55a-4ac2-92b5-b9fb227b832f")
     @Validation( label = "VALIDATION_DAY_OUTOFRANGE", description="The value of dwc:day is a valid day given the month and year.")
-    @Specification(value="The value of dwc:day is a valid day given the month and year. The value of dwc:day is a integer. If present, dwc:month and dwc:year must be integers.")
-    //@Specification(value="The provided values for year, month, day and start and end days of year (dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayofYear) are within the range of the supplied dwc:eventDate The dwc:eventDate is not EMPTY and at least one of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear is not EMPTY")
-	//@Specification("Check that the value of dwc:eventDate is consistent with the values for dwc:month and dwc:year. " +
-	//		"Requires valid values for month and year.")
+    @Specification(value="INTERNAL_PREREQUISITES_NOT_MET if any of the fields dwc:day, dwc:month and dwc:year are not " +
+            "present or are EMPTY; COMPLIANT if the value of the field dwc:day is a valid day given the month and year; " + 
+    		"otherwise NOT_COMPLIANT")
     public static DQResponse<ComplianceValue> isDayPossibleForMonthYear(@Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) {
     	DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
@@ -777,7 +779,8 @@ public class DwCEventDQ {
     	        		    result.addComment("Unable to parse integer from provided value for year " + year + " " + e.getMessage());;
     	        		}
     	        	} else {
-    	        		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    	        		result.setResultState(ResultState.RUN_HAS_RESULT);
+    	        	    result.setValue(ComplianceValue.NOT_COMPLIANT);
     	        		result.addComment("Provided value for day " + day + " is outside the range 1-31.");;
     	        	}
     	        } else {
