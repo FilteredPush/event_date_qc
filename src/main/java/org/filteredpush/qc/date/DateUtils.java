@@ -2213,6 +2213,9 @@ public class DateUtils {
     		cleaned = cleaned.replace("mARCH", "March");
     		cleaned = cleaned.replace("fEBRUARY", "February");
     		cleaned = cleaned.replace("jANUARY", "January");    		
+            // uncommon abbreviations
+    		cleaned = cleaned.replace("Mrch", "March");
+    		cleaned = cleaned.replace("Jnry", "January");
     		
     		// Italian months are lower case, if capitalized, skip a step and go right to english.
     		cleaned = cleaned.replace("Dicembre", "December");
