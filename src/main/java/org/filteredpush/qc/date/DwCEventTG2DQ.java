@@ -247,7 +247,7 @@ public class DwCEventTG2DQ {
         // (evenly divisible by 400 or (evenly divisible by 4 but not 
         //evenly divisible by 100)); otherwise NOT_COMPLIANT 
 
-    	DQResponse<ComplianceValue> monthResult =  isMonthInRange(month);
+    	DQResponse<ComplianceValue> monthResult =  validationMonthNotstandard(month);
     	DQResponse<ComplianceValue> dayResult =  isDayInRange(day);
 
     	if (monthResult.getResultState().equals(ResultState.RUN_HAS_RESULT)) {
@@ -318,33 +318,6 @@ public class DwCEventTG2DQ {
 			}
 		}
 		return result;
-    }    
-
-    // TODO: Check implimentation status of issue, distinct from validation month not standard
-    private static DQResponse<ComplianceValue> isMonthInRange(@ActedUpon(value="dwc:month") String month) {
-    	DQResponse<ComplianceValue> result = new DQResponse<>();
-
-    	if (DateUtils.isEmpty(month)) {
-    		result.addComment("No value provided for month.");
-    		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-    	} else {
-    		try {
-    			int numericMonth = Integer.parseInt(month.trim());
-    			if (DateUtils.isMonthInRange(numericMonth)) {
-    				result.setValue(ComplianceValue.COMPLIANT);
-    				result.addComment("Provided value for month '" + month + "' is an integer in the range 1 to 12.");
-    			} else {
-    				result.setValue(ComplianceValue.NOT_COMPLIANT);
-    				result.addComment("Provided value for month '" + month + "' is not an integer in the range 1 to 12.");
-    			}
-    			result.setResultState(ResultState.RUN_HAS_RESULT);
-    		} catch (NumberFormatException e) {
-    			logger.debug(e.getMessage());
-    			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-    			result.addComment(e.getMessage());
-    		}
-    	}
-    	return result;
     }    
     
     /**
@@ -844,14 +817,13 @@ public class DwCEventTG2DQ {
     		@Consulted("dwc:year") String year) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
-        // TODO: Problem with specification Added comment to issue #131, year only needed if day =366
-        // Seems agreement in issue, accepting the logic that is here.  Check that specification is changed.
-        
         // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if the fields dwc:year or 
-        // dwc:startDayOfYear are either not present or are EMPTY; 
-        // COMPLIANT if the value of the field dwc:startDayOfYear is 
-        // a valid day given the year; otherwise NOT_COMPLIANT 
+        // INTERNAL_PREREQUISITES_NOT_MET if the field dwc:startDayOfYear 
+        // is either not present or is EMPTY, or if the value of 
+        // dwc:startDayOfYear = 366 and dwc:year is either not present 
+        // or is EMPTY; COMPLIANT if the value of the field 
+        // dwc:startDayOfYear is a valid day given the year; 
+        // otherwise NOT_COMPLIANT
         
         if (DateUtils.isEmpty(startDayOfYear)) {
         	result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -870,6 +842,7 @@ public class DwCEventTG2DQ {
         			} else {
         				String potentialDay = DateUtils.createEventDateFromParts("", startDayOfYear, "", year, "", "");
         				if (DateUtils.isEmpty(potentialDay)) {
+        					// createEventDateFromParts will return null and we end up here if value of year can't be interpreted as a year.
         					result.setValue(ComplianceValue.NOT_COMPLIANT);
         					result.setResultState(ResultState.RUN_HAS_RESULT);
         					result.addComment("startDayOfYear [" + startDayOfYear + "] is out of range for year ["+ year +"].");
@@ -889,7 +862,7 @@ public class DwCEventTG2DQ {
         			result.addComment("startDayOfYear [" + startDayOfYear + "] is out of range for days in the year.");
         		}
         	} catch (NumberFormatException e) {
-        		// result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);  specification chanes this to not compliant
+        		// result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);  specification changes this to not compliant
         		result.setValue(ComplianceValue.NOT_COMPLIANT);
         		result.setResultState(ResultState.RUN_HAS_RESULT);
         		result.addComment("startDayOfYear [" + startDayOfYear + "] is not a number, comparison to year is meaningless.");
@@ -933,52 +906,65 @@ public class DwCEventTG2DQ {
     }
 
     /**
-     * #141 Validation SingleRecord Conformance: year notstandard
+     * #84 Validation SingleRecord Conformance: year outofrange
      *
-     * Provides: VALIDATION_YEAR_NOTSTANDARD
+     * Provides: VALIDATION_YEAR_OUTOFRANGE
      *
      * @param year the provided dwc:year to evaluate
      * @return DQResponse<ComplianceValue>
      */
-    @Provides("8e74db19-cfb3-4426-a3ab-e89249712681")
-    public DQResponse<ComplianceValue> validationYearNotstandard(@ActedUpon("dwc:year") String year) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+    @Provides("ad0c8855-de69-4843-a80c-a5387d20fbc8")
+    public DQResponse<ComplianceValue> validationYearOutofRange(@ActedUpon("dwc:year") String year) {
+    	Integer earliestYear = Integer.valueOf(1600);
+    	return validationYearOutofRange(year, earliestYear, true);
+    }
 
-        //TODO: Problem with issue, one to implement should be #84 not #141
+	private DQResponse<ComplianceValue> validationYearOutofRange(@ActedUpon("dwc:year") String year, 
+    		@Parameter(name="bdq:earliestDate") Integer earliestDate, 
+    		@Parameter(name="bdq:useEarliestDate") boolean useEarliestDate) {
+        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
         
         // Specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:year is not present, 
-        // or is EMPTY or can not be cast as an integer; COMPLIANT 
-        // if the value of dwc:year cast as an integer does not extend 
-        // outside optionally-provided begin and end years; otherwise 
-        // NOT_COMPLIANT 
+        // or is EMPTY or cannot be interpreted as an integer; 
+        // COMPLIANT if the value of dwc:year is within the Parameter 
+        // range; otherwise NOT_COMPLIANT
 
-        //TODO: Parameters. This test is defined as parameterized.
-        // Default values: earliest year = 1600, latest year = current year
+        // Parameters. This test is defined as parameterized.
+        // Default Values: bdq:earliestDate = 1600, bdq:latestDate = current year
+        
+        // Notes: The results of this test are time-dependent. Next year is not valid now.
+        // Next year it will be. This test provides the option to designate lower and upper 
+        // limits to the year. The upper limit, if not provided, should default to the year 
+        // when the test is run. NB By convention, use 1600 as a lower limit for collecting 
+        // dates of biological specimens.
         
         Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        Integer earliestYear = Integer.valueOf(1600);
+        if (earliestDate!=null) { 
+            earliestYear =  earliestDate;
+        }
         
         if (!DateUtils.isEmpty(year)) { 
-        try { 
-        	Integer yeari = Integer.valueOf(year);
-        	if (yeari < 1600) { 
-        		result.addComment("Value provided for dwc:year ["+ year +"] is before the lower bound [" + yeari.toString() + "].");
-        		result.setValue(ComplianceValue.NOT_COMPLIANT);
-        		result.setResultState(ResultState.RUN_HAS_RESULT);
-        	} else if (yeari > currentYear ) { 
-        		result.addComment("Value provided for dwc:year ["+ year +"] is in the future.");
-        		result.setValue(ComplianceValue.NOT_COMPLIANT);
-        		result.setResultState(ResultState.RUN_HAS_RESULT);
-        	} else { 
-        		result.addComment("Value provided for dwc:year ["+ year +"] is an integer between [" + yeari.toString() + "] and [" + currentYear.toString() + "].");
-        		result.setValue(ComplianceValue.COMPLIANT);
-        		result.setResultState(ResultState.RUN_HAS_RESULT);
+        	try { 
+        		Integer yeari = Integer.valueOf(year);
+        		if (yeari < earliestYear && useEarliestDate) { 
+        			result.addComment("Value provided for dwc:year ["+ year +"] is before the lower bound [" + yeari.toString() + "].");
+        			result.setValue(ComplianceValue.NOT_COMPLIANT);
+        			result.setResultState(ResultState.RUN_HAS_RESULT);
+        		} else if (yeari > currentYear ) { 
+        			result.addComment("Value provided for dwc:year ["+ year +"] is in the future.");
+        			result.setValue(ComplianceValue.NOT_COMPLIANT);
+        			result.setResultState(ResultState.RUN_HAS_RESULT);
+        		} else { 
+        			result.addComment("Value provided for dwc:year ["+ year +"] is an integer between [" + yeari.toString() + "] and [" + currentYear.toString() + "].");
+        			result.setValue(ComplianceValue.COMPLIANT);
+        			result.setResultState(ResultState.RUN_HAS_RESULT);
+        		}
+        	} catch (NumberFormatException e) { 
+        		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+        		result.addComment("The value of dwc:year provided ["+year+"] could not be cast as an integer.");
         	}
-        
-        } catch (NumberFormatException e) { 
-        	result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-        	result.addComment("The value of dwc:year provided ["+year+"] could not be cast as an integer.");
-        }
         } else { 
         	result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
         	result.addComment("A value for dwc:year was not provided.");
@@ -999,15 +985,11 @@ public class DwCEventTG2DQ {
     public DQResponse<AmendmentValue> amendmentDateidentifiedStandardized(@ActedUpon("dwc:dateIdentified") String dateIdentified) {
         DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
 
-        //TODO: Copy/paste error in specification, references "target source authority"
-        
-        //TODO:  Implement specification
-        // EXTERNAL_PREREQUESITES_NOT_MET if the specified target source 
-        // authority was not found; INTERNAL_PREREQUISITES_NOT_MET 
-        // if the field dwc:dateIdentified was not present or is EMPTY; 
-        // AMENDED if the value of dwc:dateIdentified was altered to 
-        // conform with the ISO 8601-1:2019 date format; otherwise 
-        //NOT_CHANGED 
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if the field dwc:dateIdentified was 
+        // not present or is EMPTY; AMENDED if the value of dwc:dateIdentified 
+        // was altered to unambiguously conform with the ISO 8601-1:2019 date format; 
+        // otherwise NOT_CHANGED 
         
 		if (DateUtils.eventDateValid(dateIdentified)) {
 			result.setResultState(ResultState.NO_CHANGE);
@@ -1029,17 +1011,21 @@ public class DwCEventTG2DQ {
 					Map<String, String> correctedValues = new HashMap<>();
 					correctedValues.put("dwc:dateIdentified", extractResponse.getResult());
 
-					result.setValue(new AmendmentValue(correctedValues));
-
 					if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
-						result.setResultState(ResultState.AMBIGUOUS);
+						result.setResultState(ResultState.NO_CHANGE); 
+						// result.setResultState(ResultState.AMBIGUOUS); // Excluded to conform with AMENDMENT_EVENTDATE_STANDARDIZED
+						result.addComment("Potential interpretation of dwc:dateIdentified [" + dateIdentified + "] as ["+ extractResponse.getResult() +"], but such interpretation is ambiguous." );
 						result.addComment(extractResponse.getComment());
 					} else {
 						if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
-							result.addComment("Interpretation of dwc:dateIdentified [" + dateIdentified + "] is suspect.");
+							result.setResultState(ResultState.NO_CHANGE); 
+							result.addComment("Potential interpretation of dwc:dateIdentified [" + dateIdentified + "] as ["+ extractResponse.getResult() +"] is suspect.");
 							result.addComment(extractResponse.getComment());
-						}
-						result.setResultState(ResultState.CHANGED);
+						} else { 
+							result.addComment("Unabmiguous interpretation of dwc:dateIdentified [" + dateIdentified + "] as ["+ extractResponse.getResult() +"].");
+							result.setResultState(ResultState.CHANGED);
+							result.setValue(new AmendmentValue(correctedValues));
+						} 
 					}
 				} else {
 					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -1509,20 +1495,21 @@ public class DwCEventTG2DQ {
 				{
 					Map<String, String> correctedValues = new HashMap<>();
 					correctedValues.put("dwc:eventDate", extractResponse.getResult());
-					result.setValue(new AmendmentValue(correctedValues));
 
 					if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
+						result.addComment("Interpretation of eventDate [" + eventDate + "] as ["+ extractResponse.getResult() +"] possible, but is ambiguous.");
 						result.setResultState(ResultState.NO_CHANGE); 
 						// result.setResultState(ResultState.AMBIGUOUS);   // now excluded by the specification.
 						result.addComment(extractResponse.getComment());
 					} else {
 						if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
-							result.addComment("Interpretation of eventDate [" + eventDate + "] is suspect.");
+							result.addComment("Interpretation of eventDate [" + eventDate + "] as ["+ extractResponse.getResult() +"] possible, but suspect.");
 							result.addComment(extractResponse.getComment());
 							result.setResultState(ResultState.NO_CHANGE); 
 						} else { 
 							result.addComment("Unabmiguous Interpretation of eventDate [" + eventDate + "] as [" + extractResponse.getResult() + "].");
 							result.setResultState(ResultState.CHANGED);
+							result.setValue(new AmendmentValue(correctedValues));
 						}
 					}
 				} else {
