@@ -39,6 +39,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -107,11 +108,13 @@ public class Runner {
 				}
 
 				int recordCount = 0;
+				int skippedLineCount = 0;
 				Long totalTimeSecs = 0l;
 				Long totalTimeSecsPost = 0l;
 
 				Reader reader = new InputStreamReader(new FileInputStream(inputFile));
-				Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader);
+				//Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader);
+				CSVParser records = CSVFormat.TDF.withFirstRecordAsHeader().parse(reader);
 
 				HashMap<String,Integer> counter = new HashMap<String,Integer>();
 				HashMap<String,Integer> acounter = new HashMap<String,Integer>();
@@ -136,17 +139,44 @@ public class Runner {
 				Instant startTime = new Instant();
 				System.out.println("Start time: " + startTime.toString());
 
-				for (CSVRecord record : records) {            
+				Iterator<CSVRecord> recordIterator = records.iterator();
+				boolean hasNext = recordIterator.hasNext();
+				while (hasNext && (limit==0 || recordCount < limit)) {
+					CSVRecord record = null;
+					try { 
+						record = recordIterator.next();
+						hasNext = recordIterator.hasNext();
+					} catch (IllegalStateException linereadexception) {
+						try { 
+							record = recordIterator.next();
+						} catch (Exception e) { 
+							// skip
+						}
+						// skip line
+						skippedLineCount++;
+						continue;
+					}
 
-					String eventDate = record.get("eventDate");
-					String day = record.get("day");
-					String month = record.get("month");
-					String year = record.get("year");
-					String startDayOfYear = record.get("startDayOfYear");
-					String endDayOfYear = record.get("endDayOfYear");
-					String verbatimEventDate = record.get("verbatimEventDate");
-					String dateIdentified = record.get("dateIdentified");
-
+					String eventDate = "";
+					String day = "";
+					String month = "";
+					String year = "";
+					String startDayOfYear = "";
+					String endDayOfYear = "";
+					String verbatimEventDate = "";
+					String dateIdentified = "";
+					try { 
+						eventDate = record.get("eventDate");
+						day = record.get("day");
+						month = record.get("month");
+						year = record.get("year");
+						startDayOfYear = record.get("startDayOfYear");
+						endDayOfYear = record.get("endDayOfYear");
+						verbatimEventDate = record.get("verbatimEventDate");
+						dateIdentified = record.get("dateIdentified");
+					} catch (IllegalArgumentException valueReadEx) { 
+						logger.debug(valueReadEx.getMessage());
+					}
 
 					DQResponse response = null;
 					DQResponse<NumericalValue> measureResponse = null;
@@ -622,7 +652,6 @@ public class Runner {
 					}
 
 					recordCount++;
-					if (limit>0 && recordCount >= limit) { break; }
 				}
 
 				Instant endTime = new Instant();
@@ -631,6 +660,7 @@ public class Runner {
 				System.out.println("Runtime: " + (runtime.toDuration().getMillis()/100)/10d + " seconds") ;
 
 				System.out.println("Records examined:" + Integer.toString(recordCount));
+				System.out.println("Lines skipped:" + Integer.toString(skippedLineCount));
 
 				System.out.println("Pre-amendment phase");
 				System.out.println("Measure: Mean Duration (seconds) of eventDate over MultiRecord: " + totalTimeSecs/recordCount);
