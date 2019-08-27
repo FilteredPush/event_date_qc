@@ -21,6 +21,14 @@ import org.datakurator.ffdq.annotations.Consulted;
 import org.datakurator.ffdq.annotations.Mechanism;
 import org.datakurator.ffdq.annotations.Parameter;
 import org.datakurator.ffdq.annotations.Provides;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.datakurator.ffdq.api.DQResponse;
@@ -30,13 +38,27 @@ import org.datakurator.ffdq.api.result.CompletenessValue;
 import org.datakurator.ffdq.api.result.ComplianceValue;
 import org.datakurator.ffdq.api.result.NumericalValue;
 import org.joda.time.DateTime;
+import org.joda.time.Instant;
 import org.joda.time.Interval;
 import org.joda.time.LocalDateTime;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -54,9 +76,9 @@ import java.util.Map;
  */
 @Mechanism(label="Kurator: Date Validator - DwCEventDQ", value="b844059f-87cf-4c31-b4d7-9a52003eef84")
 public class DwCEventTG2DQ {
-	
-	private static final Log logger = LogFactory.getLog(DwCEventDQ.class);
 
+	private static final Log logger = LogFactory.getLog(DwCEventDQ.class);
+	
     /**
      * #140 Measure SingleRecord Resolution: eventdate precisioninseconds
      *
@@ -731,7 +753,7 @@ public class DwCEventTG2DQ {
      * @param latestValidDate the latest valid eventDate.
      * @return DQResponse the ComplianceValue
      */
-     public DQResponse<ComplianceValue> validationEventdateOutofrange(
+     private DQResponse<ComplianceValue> validationEventdateOutofrange(
         		@ActedUpon("dwc:eventDate") String eventDate,
         		@Parameter(name="bdq:earliestValidDate") String earliestValidDate,
         		@Parameter(name="bdq:latestValidDate") String latestValidDate
@@ -1313,7 +1335,7 @@ public class DwCEventTG2DQ {
 							result.addComment("Interpretation of verbatimEventDate [" + verbatimEventDate + "] is suspect.");
 							result.addComment(extractResponse.getComment());
 						}
-						result.setResultState(ResultState.CHANGED);
+						result.setResultState(ResultState.FILLED_IN);
 						result.setValue(new AmendmentValue(extractedValues));
 					}
 				} else {

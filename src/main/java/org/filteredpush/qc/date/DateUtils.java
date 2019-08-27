@@ -1687,7 +1687,7 @@ public class DateUtils {
                }
     		} catch (Exception e) { 
     			// not a date
-               logger.error(e.getMessage());
+               logger.debug(e.getMessage());
     		}
     	}
     	return result;
@@ -1714,7 +1714,7 @@ public class DateUtils {
     		logger.debug(result);
     	} catch (Exception e) { 
     		// not a date
-    		logger.error(e.getMessage());
+    		logger.debug(e.getMessage());
     	}
     	return result;
     }      
@@ -2634,7 +2634,11 @@ public class DateUtils {
      *    -a to show all lines, matched or not with their interpretations.
      */
 	public static void main(String[] args) { 
-		try {
+		DateUtils.interpretDates(args);
+	} 
+	
+	public static void interpretDates(String[] args) {
+ 		try {
 			File datesFile = null;
 			try { 
 				URL datesURI = DateUtils.class.getResource("/example_dates.csv");
