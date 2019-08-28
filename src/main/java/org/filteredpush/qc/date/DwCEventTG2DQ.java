@@ -1225,22 +1225,12 @@ public class DwCEventTG2DQ {
     						result.addComment("Added month ["+ newMonth +"] from eventDate ["+eventDate+"].");
     					}
     				}
-    				if (DateUtils.isEmpty(month)) {
-    					String newMonth = Integer.toString(interval.getStart().getMonthOfYear());
-    					values.put("dwc:month", newMonth );
-    					result.setResultState(ResultState.FILLED_IN);
-    					if (isRange) {
-    						result.addComment("Added month ["+ newMonth +"] from start month of eventDate ["+eventDate+"].");
-    					} else {
-    						result.addComment("Added month ["+ newMonth +"] from eventDate ["+eventDate+"].");
-    					}
-    				}
     				if (DateUtils.isEmpty(year)) {
     					String newYear = Integer.toString(interval.getStart().getYear());
     					values.put("dwc:year", newYear );
     					result.setResultState(ResultState.FILLED_IN);
     					if (isRange) {
-    						result.addComment("Added year ["+ newYear +"] from start month of eventDate ["+eventDate+"].");
+    						result.addComment("Added year ["+ newYear +"] from start year of eventDate ["+eventDate+"].");
     					} else {
     						result.addComment("Added year ["+ newYear +"] from eventDate ["+eventDate+"].");
     					}

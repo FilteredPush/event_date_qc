@@ -935,7 +935,7 @@ public class DwcEventDQTest {
 		
 		result = DwCEventDQ.isEventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());		
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());		
 		
 		eventDate = "text";
 		verbatimEventDate = "";
@@ -1071,7 +1071,7 @@ public class DwcEventDQTest {
 		
 		result = DwCEventDQ.measureEventCompleteness(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(CompletenessValue.NOT_COMPLETE, result.getValue());	
+		assertEquals(CompletenessValue.COMPLETE, result.getValue());	
 		
 		eventDate = "text";
 		verbatimEventDate = "";
@@ -1389,7 +1389,7 @@ public class DwcEventDQTest {
 		
 		eventDate = "NULL";
 		result = DwCEventDQ.isEventDateEmpty(eventDate);
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
 		
 		eventDate = "1840-01-05";
 		result = DwCEventDQ.isEventDateEmpty(eventDate);
@@ -1417,7 +1417,7 @@ public class DwcEventDQTest {
 		
 		year="NULL";
 		result = DwCEventDQ.isYearEmpty(year);
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
 		
 		year="1880";
 		result = DwCEventDQ.isYearEmpty(year);
@@ -1588,11 +1588,7 @@ public class DwcEventDQTest {
 		startDayOfYear = "NULL";
 		endDayOfYear = "NULL";		
 		result = DwCEventDQ.fillInEventFromEventDate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.FILLED_IN, result.getResultState());
-		assertEquals("1884",result.getValue().getObject().get("dwc:year"));
-		assertEquals("15",result.getValue().getObject().get("dwc:startDayOfYear"));
-		assertEquals("15",result.getValue().getObject().get("dwc:endDayOfYear"));
-		assertEquals(3,result.getValue().getObject().size());			
+		assertEquals(ResultState.NO_CHANGE, result.getResultState());
 
 		eventDate = "1884-01-15";
 		year = " ";

@@ -39,14 +39,16 @@ public class DateUtilsTest {
 		assertEquals(true,DateUtils.isEmpty(" "));
 		assertEquals(true,DateUtils.isEmpty("   "));
 		assertEquals(true,DateUtils.isEmpty("\t"));
-		assertEquals(true,DateUtils.isEmpty("NULL"));
-		assertEquals(true,DateUtils.isEmpty("null"));
-		assertEquals(true,DateUtils.isEmpty(" null "));
 		
 		assertEquals(false,DateUtils.isEmpty("1"));
 		assertEquals(false,DateUtils.isEmpty("A"));
 		assertEquals(false,DateUtils.isEmpty(" 2"));
 		assertEquals(false,DateUtils.isEmpty(" 5 "));
+		
+		assertEquals(false,DateUtils.isEmpty("NULL"));
+		assertEquals(false,DateUtils.isEmpty("null"));
+		assertEquals(false,DateUtils.isEmpty(" null "));
+		assertEquals(false,DateUtils.isEmpty("\\N"));
 	}
 	
 	/**

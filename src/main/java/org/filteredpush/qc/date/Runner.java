@@ -46,6 +46,7 @@ import org.apache.commons.logging.LogFactory;
 import org.datakurator.ffdq.annotations.Provides;
 import org.datakurator.ffdq.api.DQResponse;
 import org.datakurator.ffdq.api.result.AmendmentValue;
+import org.datakurator.ffdq.api.result.ComplianceValue;
 import org.datakurator.ffdq.api.result.NumericalValue;
 import org.datakurator.ffdq.model.ResultState;
 import org.joda.time.Instant;
@@ -185,9 +186,8 @@ public class Runner {
 					if (measureResponse.getResultState().equals(ResultState.RUN_HAS_RESULT)) { 
 						totalTimeSecs = totalTimeSecs + measureResponse.getValue().getObject().longValue();
 					}
-
-					try { 
-						String method = tester.getClass().getMethod("validationDateidentifiedNotstandard",oneParam).getName();
+					{
+						String method = "VALIDATION_DATEIDENTIFIED_NOTSTANDARD";
 						response = tester.validationDateidentifiedNotstandard(dateIdentified);
 						String name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
@@ -195,165 +195,123 @@ public class Runner {
 						if (current==null) { current = 0; }
 						current = current + 1;
 						counter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}
-					try { 
-						String method = tester.getClass().getMethod("validationDateidentifiedOutofrange",twoParam).getName();
+						
+						method = "VALIDATION_DATEIDENTIFIED_OUTOFRANGE";
 						response = tester.validationDateidentifiedOutofrange(dateIdentified,eventDate);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = counter.get(name);
+						current = counter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						counter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}
 
-					try { 
-						String method = tester.getClass().getMethod("validationEventEmpty",sevenParam).getName();
+						method = "VALIDATION_EVENT_EMPTY";
 						response = tester.validationEventEmpty(startDayOfYear,eventDate,year, verbatimEventDate,month,day, endDayOfYear); 
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = counter.get(name);
+						current = counter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						counter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}
-					try { 
-						String method = tester.getClass().getMethod("validationEventInconsistent",sixParam).getName();
+						
+						method = "VALIDATION_EVENT_INCONSISTENT";
 						response = tester.validationEventInconsistent(startDayOfYear, eventDate, year,month,day,endDayOfYear);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = counter.get(name);
+						current = counter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						counter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}
-					try { 
-						String method = tester.getClass().getMethod("validationEventdateEmpty",oneParam).getName();
+						
+						method = "VALIDATION_EVENTDATE_EMPTY";
 						response = tester.validationEventdateEmpty(eventDate);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = counter.get(name);
+						current = counter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						counter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}              	
-					try { 
-						String method = tester.getClass().getMethod("validationEventdateNotstandard",oneParam).getName();
+					              	
+						method = "VALIDATION_EVENTDATE_NOTSTANDARD";
 						response = tester.validationEventdateNotstandard(eventDate);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = counter.get(name);
+						current = counter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						counter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}            	
-					try { 
-						String method = tester.getClass().getMethod("validationEventdateOutofrange",oneParam).getName();
+					            	
+						method = "VALIDATION_EVENTDATE_OUTOFRANGE";
 						response = tester.validationEventdateOutofrange(eventDate);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = counter.get(name);
+						current = counter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						counter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}            	
-					try { 
-						String method = tester.getClass().getMethod("validationDayNotstandard",oneParam).getName();
+					 
+						method = "VALIDATION_DAY_NOTSTANDARD"; 
 						response = tester.validationDayNotstandard(day);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = counter.get(name);
+						current = counter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						counter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}
-					try { 
-						String method = tester.getClass().getMethod("validationDayOutofrange",threeParam).getName();
+						
+						method = "VALIDATION_DAY_OUTOFRANGE"; 
 						response = tester.validationDayOutofrange(year,month,day);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = counter.get(name);
+						current = counter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						counter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}
-					try { 
-						String method = tester.getClass().getMethod("validationMonthNotstandard",oneParam).getName();
+					
+						method = "VALIDATION_MONTH_NOTSTANDARD"; 
 						response = tester.validationMonthNotstandard(month);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = counter.get(name);
+						current = counter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						counter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}
-					try { 
-						String method = tester.getClass().getMethod("validationYearEmpty",oneParam).getName();
+					
+						method = "VALIDATION_YEAR_EMPTY"; 
 						response = tester.validationYearEmpty(year);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = counter.get(name);
+						current = counter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						counter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}
-					try { 
-						String method = tester.getClass().getMethod("validationYearOutofRange",oneParam).getName();
+					
+						method = "VALIDATION_YEAR_OUTOFRANGE"; 
 						response = tester.validationYearOutofRange(year); 
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = counter.get(name);
+						current = counter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						counter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}
-					try { 
-						String method = tester.getClass().getMethod("validationStartdayofyearOutofrange",twoParam).getName();
+						
+						method = "VALIDATION_STARTDAYOFYEAR_OUTOFRANGE"; 
 						response = tester.validationStartdayofyearOutofrange(startDayOfYear, year);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = counter.get(name);
+						current = counter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						counter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}
-					try { 
-						String method = tester.getClass().getMethod("validationEnddayofyearOutofrange",twoParam).getName();
+					
+						method = "VALIDATION_ENDDAYOFYEAR_OUTOFRANGE";
 						response = tester.validationEnddayofyearOutofrange(year,endDayOfYear);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = counter.get(name);
+						current = counter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						counter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
 					}
 
 					// Amendments   
@@ -481,8 +439,8 @@ public class Runner {
 						totalTimeSecsPost = totalTimeSecsPost + measureResponse.getValue().getObject().longValue();
 					}
 
-					try { 
-						String method = tester.getClass().getMethod("validationDateidentifiedNotstandard",oneParam).getName();
+					{
+						String method = "VALIDATION_DATEIDENTIFIED_NOTSTANDARD";
 						response = tester.validationDateidentifiedNotstandard(dateIdentified);
 						String name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
@@ -490,165 +448,123 @@ public class Runner {
 						if (current==null) { current = 0; }
 						current = current + 1;
 						postcounter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}
-					try { 
-						String method = tester.getClass().getMethod("validationDateidentifiedOutofrange",twoParam).getName();
+						
+						method = "VALIDATION_DATEIDENTIFIED_OUTOFRANGE";
 						response = tester.validationDateidentifiedOutofrange(dateIdentified,eventDate);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = postcounter.get(name);
+						current = postcounter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						postcounter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}
 
-					try { 
-						String method = tester.getClass().getMethod("validationEventEmpty",sevenParam).getName();
+						method = "VALIDATION_EVENT_EMPTY";
 						response = tester.validationEventEmpty(startDayOfYear,eventDate,year, verbatimEventDate,month,day, endDayOfYear); 
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = postcounter.get(name);
+						current = postcounter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						postcounter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}
-					try { 
-						String method = tester.getClass().getMethod("validationEventInconsistent",sixParam).getName();
+						
+						method = "VALIDATION_EVENT_INCONSISTENT";
 						response = tester.validationEventInconsistent(startDayOfYear, eventDate, year,month,day,endDayOfYear);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = postcounter.get(name);
+						current = postcounter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						postcounter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}
-					try { 
-						String method = tester.getClass().getMethod("validationEventdateEmpty",oneParam).getName();
+						
+						method = "VALIDATION_EVENTDATE_EMPTY";
 						response = tester.validationEventdateEmpty(eventDate);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = postcounter.get(name);
+						current = postcounter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						postcounter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}              	
-					try { 
-						String method = tester.getClass().getMethod("validationEventdateNotstandard",oneParam).getName();
+					              	
+						method = "VALIDATION_EVENTDATE_NOTSTANDARD";
 						response = tester.validationEventdateNotstandard(eventDate);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = postcounter.get(name);
+						current = postcounter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						postcounter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}            	
-					try { 
-						String method = tester.getClass().getMethod("validationEventdateOutofrange",oneParam).getName();
+					            	
+						method = "VALIDATION_EVENTDATE_OUTOFRANGE";
 						response = tester.validationEventdateOutofrange(eventDate);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = postcounter.get(name);
+						current = postcounter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						postcounter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}            	
-					try { 
-						String method = tester.getClass().getMethod("validationDayNotstandard",oneParam).getName();
+					 
+						method = "VALIDATION_DAY_NOTSTANDARD"; 
 						response = tester.validationDayNotstandard(day);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = postcounter.get(name);
+						current = postcounter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						postcounter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}
-					try { 
-						String method = tester.getClass().getMethod("validationDayOutofrange",threeParam).getName();
+						
+						method = "VALIDATION_DAY_OUTOFRANGE"; 
 						response = tester.validationDayOutofrange(year,month,day);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = postcounter.get(name);
+						current = postcounter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						postcounter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}
-					try { 
-						String method = tester.getClass().getMethod("validationMonthNotstandard",oneParam).getName();
+					
+						method = "VALIDATION_MONTH_NOTSTANDARD"; 
 						response = tester.validationMonthNotstandard(month);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = postcounter.get(name);
+						current = postcounter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						postcounter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}
-					try { 
-						String method = tester.getClass().getMethod("validationYearEmpty",oneParam).getName();
+					
+						method = "VALIDATION_YEAR_EMPTY"; 
 						response = tester.validationYearEmpty(year);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = postcounter.get(name);
+						current = postcounter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						postcounter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}
-					try { 
-						String method = tester.getClass().getMethod("validationYearOutofRange",oneParam).getName();
+					
+						method = "VALIDATION_YEAR_OUTOFRANGE"; 
 						response = tester.validationYearOutofRange(year); 
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = postcounter.get(name);
+						current = postcounter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						postcounter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}
-					try { 
-						String method = tester.getClass().getMethod("validationStartdayofyearOutofrange",twoParam).getName();
+						
+						method = "VALIDATION_STARTDAYOFYEAR_OUTOFRANGE"; 
 						response = tester.validationStartdayofyearOutofrange(startDayOfYear, year);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = postcounter.get(name);
+						current = postcounter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						postcounter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
-					}
-					try { 
-						String method = tester.getClass().getMethod("validationEnddayofyearOutofrange",twoParam).getName();
+					
+						method = "VALIDATION_ENDDAYOFYEAR_OUTOFRANGE";
 						response = tester.validationEnddayofyearOutofrange(year,endDayOfYear);
-						String name = method + " " + response.getResultState().getLabel() + " ";
+						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
-						Integer current = postcounter.get(name);
+						current = postcounter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						postcounter.put(name, current);
-					} catch (NoSuchMethodException e) { 
-						logger.error("test not found", e);
 					}
 
 					recordCount++;
@@ -663,7 +579,7 @@ public class Runner {
 				System.out.println("Lines skipped:" + Integer.toString(skippedLineCount));
 
 				System.out.println("Pre-amendment phase");
-				System.out.println("Measure: Mean Duration (seconds) of eventDate over MultiRecord: " + totalTimeSecs/recordCount);
+				System.out.println("Measure: Mean Duration (seconds) of eventDate over MultiRecord: " + totalTimeSecs/(recordCount-skippedLineCount));
 				Set<String> keys = counter.keySet();
 				List<String> skeys = new ArrayList<String>();
 				for (String s :  keys) { skeys.add(s); } 

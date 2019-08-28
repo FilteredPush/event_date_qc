@@ -1523,7 +1523,7 @@ public class DateUtils {
     				}
     			} catch (Exception e) { 
     				// not a date range
-    				e.printStackTrace();
+    				// e.printStackTrace();
     				logger.debug(e.getMessage());
     			}
     		} else if (dateBits!=null && dateBits.length==1) { 
@@ -1604,7 +1604,7 @@ public class DateUtils {
     			}
     		} catch (Exception e) { 
     			// not a date range
-               logger.error(e.getMessage());
+               logger.debug(e.getMessage());
     		}
     	} else {
     		try { 
@@ -1623,7 +1623,7 @@ public class DateUtils {
     			logger.debug(ex);
     		} catch (Exception e) { 
     			// not a date
-               logger.error(e.getMessage(),e);
+               logger.debug(e.getMessage(),e);
     		}
     	}
     	return result;
@@ -1666,7 +1666,7 @@ public class DateUtils {
     			}
     		} catch (Exception e) { 
     			// not a date range
-               logger.error(e.getMessage());
+               logger.debug(e.getMessage());
     		}
     	} else {
     		try { 
@@ -1851,15 +1851,16 @@ public class DateUtils {
      * Does a string contain a non-blank value.
      * 
      * @param aString to check
-     * @return true if the string is null, is an empty string, is equal to the value 'NULL'
+     * @return true if the string is null, is an empty string, 
      *     or contains only whitespace.
      */
     public static boolean isEmpty(String aString)  {
     	boolean result = true;
     	if (aString != null && aString.trim().length()>0) { 
-    		if (!aString.trim().toUpperCase().equals("NULL")) { 
+    		// TG2, do not consider string representations of NULL as null, consider as data.
+    		//if (!aString.trim().toUpperCase().equals("NULL")) { 
     		   result = false;
-    		}
+    		//}
     	}
     	return result;
     }
@@ -1948,7 +1949,7 @@ public class DateUtils {
     				logger.debug(result);
     			} catch (Exception e) { 
     				// not a date with a time
-    				logger.error(e.getMessage());
+    				logger.debug(e.getMessage());
     			}    		
     		}
     		if (isRange(eventDate) && eventDate.contains("/") && result!=null) { 
