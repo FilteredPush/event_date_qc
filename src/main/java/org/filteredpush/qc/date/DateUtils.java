@@ -1767,11 +1767,13 @@ public class DateUtils {
     			} 
     			Interval eventDateInterval = DateUtils.extractDateInterval(eventDate);
     			logger.debug(eventDateInterval);
-    			int endDayOfInterval = eventDateInterval.getEnd().getDayOfYear();  // midnight on the next day, so subtract 1 to get the same integer day.
-    			if (eventDateInterval.getStart().getDayOfYear() == startDayInt && endDayOfInterval == endDayInt ) { 
-    				result=true;
-    			} else { 
-    				result = false;
+    			if (eventDateInterval!=null && eventDateInterval.getEnd()!=null) { 
+    				int endDayOfInterval = eventDateInterval.getEnd().getDayOfYear();  // midnight on the next day, so subtract 1 to get the same integer day.
+    				if (eventDateInterval.getStart().getDayOfYear() == startDayInt && endDayOfInterval == endDayInt ) { 
+    					result=true;
+    				} else { 
+    					result = false;
+    				}
     			}
     		}
     	}
