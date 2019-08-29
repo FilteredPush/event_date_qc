@@ -422,11 +422,21 @@ public class Runner {
 						current = current + 1;
 						acounter.put(name, current);
 						if (response.getResultState().equals(ResultState.FILLED_IN)) { 
-							day = ((AmendmentValue)response.getValue()).getObject().get("dwc:day");
-							month = ((AmendmentValue)response.getValue()).getObject().get("dwc:month");
-							year = ((AmendmentValue)response.getValue()).getObject().get("dwc:year");
-							startDayOfYear = ((AmendmentValue)response.getValue()).getObject().get("dwc:startDayOfYear");
-							endDayOfYear = ((AmendmentValue)response.getValue()).getObject().get("dwc:endDayOfYear");
+							if (((AmendmentValue)response.getValue()).getObject().get("dwc:day")!=null) { 
+							   day = ((AmendmentValue)response.getValue()).getObject().get("dwc:day");
+							}
+							if (((AmendmentValue)response.getValue()).getObject().get("dwc:month")!=null) { 
+								month = ((AmendmentValue)response.getValue()).getObject().get("dwc:month");
+							}
+							if (((AmendmentValue)response.getValue()).getObject().get("dwc:year")!=null) { 
+								year = ((AmendmentValue)response.getValue()).getObject().get("dwc:year");
+							}
+							if (((AmendmentValue)response.getValue()).getObject().get("dwc:startDayOfYear")!=null) { 
+								startDayOfYear = ((AmendmentValue)response.getValue()).getObject().get("dwc:startDayOfYear");
+							}
+							if (((AmendmentValue)response.getValue()).getObject().get("dwc:endDayOfYear")!=null) { 
+								endDayOfYear = ((AmendmentValue)response.getValue()).getObject().get("dwc:endDayOfYear");
+							}
 						}
 					} catch (NoSuchMethodException e) { 
 						logger.error("test not found", e);

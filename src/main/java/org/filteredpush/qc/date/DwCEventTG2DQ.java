@@ -171,64 +171,67 @@ public class DwCEventTG2DQ {
     		@ActedUpon("dwc:dateIdentified") String dateIdentified,
     		@Consulted("dwc:eventDate") String eventDate
     		) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+    	DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
-        // Parameters. This test is defined as parameterized.
-        // Default values: earliest date = 1753-01-01, latest date = current day
-        String earliestDate = "1753-01-01";
-        DateTime latestDate = new DateTime();
-        String latest = Integer.toString(latestDate.getYear()) + "-" + Integer.toString(latestDate.getMonthOfYear()) + "-" + Integer.toString(latestDate.getDayOfMonth());
+    	// Parameters. This test is defined as parameterized.
+    	// Default values: earliest date = 1753-01-01, latest date = current day
+    	String earliestDate = "1753-01-01";
+    	DateTime latestDate = new DateTime();
+    	String latest = Integer.toString(latestDate.getYear()) + "-" + Integer.toString(latestDate.getMonthOfYear()) + "-" + Integer.toString(latestDate.getDayOfMonth());
     	Interval withinInterval = DateUtils.extractInterval(earliestDate + "/" + latest);
-        
-        // Specification
+
+    	// Specification
     	// INTERNAL_PREREQUISITES_NOT_MET if the field dwc:dateIdentified is 
-    	// either not present, is EMPTY or is not a valid ISO 8601-1:2019 
-    	// date, or if the field dwc:eventDate is non-EMPTY and is not a 
-    	// valid ISO 8601-1:2019 date; COMPLIANT if the value of the field 
-    	// dwc:dateIdentified is not prior to the eventDate, does not extend 
-    	// into the future, or optionally does not extend before a date designated
-    	// when the test is run (e.g., prior to 1753-01-01); otherwise NOT_COMPLIANT
+    	// EMPTY or is not a valid ISO 8601-1:2019 date, or if the field 
+    	// dwc:eventDate is not EMPTY and is not a valid ISO 8601-1:2019 date; 
+    	// COMPLIANT if the value of the field dwc:dateIdentified is not prior to 
+    	// dwc:eventDate, and is within the Parameter range; 
+    	// otherwise NOT_COMPLIANT
+
+    	// TODO: In test specification need be explicit about ranges (typical case, eventDate is date, dateIdentified is year, in same year.
+    	//    Current implementation assumes overlap is compliant, test specification not yet clear.
 
     	if (DateUtils.isEmpty(dateIdentified)) {
     		result.addComment("No value provided for dwc:dateIdentified.");
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-    	} else { 
-    		if (! DateUtils.eventDateValid(dateIdentified)) { 
-    			result.addComment("Value provided for dwc:dateIdentified ["+dateIdentified+"] not recognized as a valid date.");
+    	} else if (!DateUtils.eventDateValid(dateIdentified)) {
+    		result.addComment("Value provided for dwc:dateIdentified ["+dateIdentified+"] is not a valid date.");
+    		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    	} else {
+    		Interval identifiedInterval = DateUtils.extractInterval(dateIdentified);
+    		if (!withinInterval.contains(identifiedInterval)) {
+    			result.setValue(ComplianceValue.NOT_COMPLIANT);
+    			result.setResultState(ResultState.RUN_HAS_RESULT);
+    			result.addComment("Provided value for dateIdentified [" + dateIdentified + "] starts extends beyond the limits ["+earliestDate +"]-["+latestDate.toString("yyyy-MM-dd") +"].");
+    		} else if (DateUtils.isEmpty(eventDate)) {
+    			result.addComment("No value provided for dwc:eventDate, unable to compare with dwc:dateIdentified.");
+    			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		} else if (!DateUtils.eventDateValid(eventDate)) { 
+    			result.addComment("Provided value for dwc:eventDate ["+eventDate+"] is not a valid date, unable to compare with dwc:dateIdentified.");
     			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		} else { 
-    			Interval identifiedInterval = DateUtils.extractInterval(dateIdentified);
-    			if (withinInterval.contains(identifiedInterval)) {
-    				if (!DateUtils.isEmpty(eventDate)) {
-    					if (! DateUtils.eventDateValid(eventDate)) { 
-    						Interval eventInterval = DateUtils.extractInterval(eventDate);
-    						if (identifiedInterval.contains(eventInterval)) { 
-    	        	    		result.setValue(ComplianceValue.COMPLIANT);
-    	        	    		result.addComment("Provided value for dateIdentified [" + dateIdentified + "] is within range and does not preceede the eventDate.");;
-    						} else { 
-    	        	    		result.setValue(ComplianceValue.NOT_COMPLIANT);
-    	        	    		result.addComment("Provided value for dateIdentified [" + dateIdentified + "] is within range but is more recent than the eventDate ["+eventDate+"].");;
-    						}
-    						result.setResultState(ResultState.RUN_HAS_RESULT);
-    					} else { 
-    						result.addComment("Value provided for dwc:eventDate ["+eventDate+"] not recognized as a valid date, unable to compare with dwc:dateIdentified.");
-    						result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-    					}
-    				} else { 
-    					result.setResultState(ResultState.RUN_HAS_RESULT);
-    	        	    result.setValue(ComplianceValue.COMPLIANT);
-    	        	    result.addComment("Provided value for dateIdentified [" + dateIdentified + "] is within range (and there is no value of eventDate to compare with).");
-    				}
+    			Interval eventInterval = DateUtils.extractInterval(eventDate);
+    			if (eventInterval.contains(identifiedInterval)) {
+    				result.setValue(ComplianceValue.COMPLIANT);
+    				result.addComment("Provided value for dateIdentified [" + dateIdentified + "] falls within the eventDate ["+eventDate+"].");
+    			} else if (identifiedInterval.getStart().isAfter(eventInterval.getEnd())) {
+    				result.setValue(ComplianceValue.COMPLIANT);
+    				result.addComment("Provided value for dateIdentified [" + dateIdentified + "] is after the end of the eventDate ["+eventDate+"].");;
+    			} else if (identifiedInterval.getStart().equals(eventInterval.getStart())) {
+    				result.setValue(ComplianceValue.COMPLIANT);
+    				result.addComment("Provided value for dateIdentified [" + dateIdentified + "] starts at the same time as the eventDate ["+eventDate+"].");;
+    			} else if (identifiedInterval.getStart().isBefore(eventInterval.getStart())) { 
+    				result.setValue(ComplianceValue.NOT_COMPLIANT);
+    				result.addComment("Provided value for dateIdentified [" + dateIdentified + "] starts before the eventDate starts.");
     			} else { 
-    				result.setResultState(ResultState.RUN_HAS_RESULT);
-    	        	result.setValue(ComplianceValue.NOT_COMPLIANT);
-    	        	result.addComment("Provided value for dateIdentified [" + dateIdentified + "] is or extends outside the allowed range of ["+ withinInterval.toString() +"].");
-    				
+    				result.setValue(ComplianceValue.NOT_COMPLIANT);
+    				result.addComment("Provided value for dateIdentified [" + dateIdentified + "] is within allowed range but is not more recent than the eventDate ["+eventDate+"].");
     			}
+    			result.setResultState(ResultState.RUN_HAS_RESULT);
     		}
     	}        
-        
-        return result;
+
+    	return result;
     }
 
     /**
@@ -899,9 +902,8 @@ public class DwCEventTG2DQ {
         				String potentialDay = DateUtils.createEventDateFromParts("", startDayOfYear, "", year, "", "");
         				if (DateUtils.isEmpty(potentialDay)) {
         					// createEventDateFromParts will return null and we end up here if value of year can't be interpreted as a year.
-        					result.setValue(ComplianceValue.NOT_COMPLIANT);
-        					result.setResultState(ResultState.RUN_HAS_RESULT);
-        					result.addComment("startDayOfYear [" + startDayOfYear + "] is out of range for year ["+ year +"].");
+        					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+        					result.addComment("startDayOfYear is 366 and the provided value for year ["+ year +"] could not be interpreted.");
         				} else if (DateUtils.eventDateValid(potentialDay)) {
         					result.setValue(ComplianceValue.COMPLIANT);
         					result.setResultState(ResultState.RUN_HAS_RESULT);
@@ -1158,12 +1160,12 @@ public class DwCEventTG2DQ {
      *
      * Provides: AMENDMENT_EVENT_FROM_EVENTDATE
      *
-     * @param startDayOfYear the provided dwc:startDayOfYear to evaluate
+     * @param startDayOfYear the provided dwc:startDayOfYear to update
      * @param eventDate the provided dwc:eventDate to evaluate
-     * @param year the provided dwc:year to evaluate
-     * @param month the provided dwc:month to evaluate
-     * @param day the provided dwc:day to evaluate
-     * @param endDayOfYear the provided dwc:endDayOfYear to evaluate
+     * @param year the provided dwc:year to update
+     * @param month the provided dwc:month to update
+     * @param day the provided dwc:day to update
+     * @param endDayOfYear the provided dwc:endDayOfYear to update
      * @return DQResponse the AmendmentValue 
      */
     @Provides("710fe118-17e1-440f-b428-88ba3f547d6d")
@@ -1176,6 +1178,8 @@ public class DwCEventTG2DQ {
     		@ActedUpon("dwc:endDayOfYear") String endDayOfYear) {
         DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
 
+        
+        
         // Specification
         // INTERNAL_PREREQUESITES_NOT_MET if the field dwc:eventDate 
         // is EMPTY or does not contain a valid ISO 8601-1:2019 date; 
