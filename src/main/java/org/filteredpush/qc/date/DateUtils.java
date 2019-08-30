@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateMidnight;
@@ -95,18 +96,24 @@ public class DateUtils {
 	 * @param eventDate string to test for expected format.
 	 * @return true if eventDate is in an expected format for eventDate, otherwise false.
 	 */
-    public static boolean eventDateValid(String eventDate) {
-    	boolean result = false; 
-    	if (extractDate(eventDate)!=null) { 
-    		result = true;
-    	} else { 
-    		Interval interval = extractInterval(eventDate);
-    		if (interval!=null) { 
-    			if (interval.getStart().isBefore(interval.getEnd())) { 
-    			   result = true;
-    			}
-    		}
-    	}
+	public static boolean eventDateValid(String eventDate) {
+		boolean result = false; 
+		logger.debug(eventDate);
+		if (!DateUtils.isEmpty(eventDate)) { 
+			if (!eventDate.contains("/") && extractDate(eventDate)!=null) { 
+				result = true;
+				logger.debug(eventDate);    		
+			} else { 
+				Interval interval = extractInterval(eventDate);
+				if (interval!=null) { 
+					logger.debug(interval.getStart());
+					logger.debug(interval.getEnd());
+					if (interval.getStart().isBefore(interval.getEnd())) { 
+						result = true;
+					}
+				}
+			}
+		}
     	return result;
     }
 	
@@ -1668,6 +1675,20 @@ public class DateUtils {
     			// not a date range
                logger.debug(e.getMessage());
     		}
+    		if (dateBits[1]!=null && dateBits[1].trim() != "") { 
+    			if (result!=null && dateBits[1].matches("^[0-9]{4}-[0-9]{1}$")) {
+    				// ISO requires 2 digit, zero padded month and day, single digit not allowed.
+    				result = null;
+    			}
+    			if (result!=null && dateBits[1].matches("^[0-9]{4}-[0-9]{1}-.+")) {
+    				// ISO requires 2 digit, zero padded month and day, single digit not allowed.
+    				result = null;
+    			}
+    			if (result!=null && dateBits[1].matches("^[0-9]{4}-[0-9]{1,2}-[0-9]{1}$")) {
+    				// ISO requires 2 digit, zero padded month and day, single digit not allowed.
+    				result = null;
+    			}
+    		}
     	} else {
     		try { 
                DateMidnight startDate = DateMidnight.parse(eventDate, formatter);
@@ -1690,6 +1711,22 @@ public class DateUtils {
                logger.debug(e.getMessage());
     		}
     	}
+    	if (result!=null && eventDate.matches("^[0-9]{4}-[0-9]{1}$")) {
+    		// ISO requires 2 digit, zero padded month and day, single digit not allowed.
+    		result = null;
+    	}
+    	if (result!=null && eventDate.matches("^[0-9]{4}-[0-9]{1}-.+")) {
+    		// ISO requires 2 digit, zero padded month and day, single digit not allowed.
+    		result = null;
+    	}
+    	if (result!=null && eventDate.matches("^[0-9]{4}-[0-9]{1,2}-[0-9]{1}$")) {
+    		// ISO requires 2 digit, zero padded month and day, single digit not allowed.
+    		result = null;
+    	}
+    	if (result!=null && eventDate.matches("^[0-9]{4}-[0-9]{1,2}-[0-9]{1}/.+")) {
+    		// ISO requires 2 digit, zero padded month and day, single digit not allowed.
+    		result = null;
+    	}
     	return result;
     }  
     
@@ -1711,11 +1748,27 @@ public class DateUtils {
     	DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
     	try { 
     		result = DateMidnight.parse(eventDate, formatter);
-    		logger.debug(result);
     	} catch (Exception e) { 
     		// not a date
     		logger.debug(e.getMessage());
     	}
+    	if (result!=null && eventDate.matches("^[0-9]{4}-[0-9]{1}$")) {
+    		// ISO requires 2 digit, zero padded month and day, single digit not allowed.
+    		result = null;
+    	}
+    	if (result!=null && eventDate.matches("^[0-9]{4}-[0-9]{1}-.+")) {
+    		// ISO requires 2 digit, zero padded month and day, single digit not allowed.
+    		result = null;
+    	}
+    	if (result!=null && eventDate.matches("^[0-9]{4}-[0-9]{1,2}-[0-9]{1}$")) {
+    		// ISO requires 2 digit, zero padded month and day, single digit not allowed.
+    		result = null;
+    	}
+    	if (result!=null && eventDate.matches("^[0-9]{4}-[0-9]{1,2}-[0-9]{1}/.+")) {
+    		// ISO requires 2 digit, zero padded month and day, single digit not allowed.
+    		result = null;
+    	}
+    	logger.debug(result);
     	return result;
     }      
     
@@ -1802,6 +1855,9 @@ public class DateUtils {
     public static boolean isConsistent(String eventDate, String year, String month, String day) {
     	boolean result = false;
     	StringBuffer date = new StringBuffer();
+    	if (!isEmpty(year)) { year = StringUtils.leftPad(year,4,"0"); } 
+    	if (!isEmpty(month)) { month = StringUtils.leftPad(month,2,"0"); } 
+    	if (!isEmpty(day)) { day = StringUtils.leftPad(day,2,"0"); } 
     	if (!isEmpty(eventDate)) {
     		if (!isEmpty(year) && !isEmpty(month) && !isEmpty(day)) { 
     			date.append(year).append("-").append(month).append("-").append(day);

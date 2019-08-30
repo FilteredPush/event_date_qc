@@ -264,6 +264,17 @@ public class DateUtilsTest {
     	
        	test = DateUtils.extractInterval("1880-01-05/1880-02-05");
     	assertEquals(86400*(32)-1, test.toDuration().getStandardSeconds());
+    	
+       	test = DateUtils.extractInterval("1880-1");
+    	assertNull(test);
+       	test = DateUtils.extractInterval("1880-1-5");
+    	assertNull(test);
+       	test = DateUtils.extractInterval("1880-01-5");
+    	assertNull(test);
+       	test = DateUtils.extractInterval("1880-1-5/1880-2-5");
+    	assertNull(test);
+       	test = DateUtils.extractInterval("1880-11-25/1881-2-5");
+    	assertNull(test);
 	}
     	
 	/**
@@ -289,6 +300,12 @@ public class DateUtilsTest {
     	assertEquals(8, test.getMonthOfYear());
     	assertEquals(234, test.getDayOfYear());
     	assertEquals(21, test.getDayOfMonth());
+    	test = DateUtils.extractDate("1980-4");
+    	assertNull(test);
+    	test = DateUtils.extractDate("1980-4-1");
+    	assertNull(test);
+    	test = DateUtils.extractDate("1980-04-1");
+    	assertNull(test);
     	
     }
     
@@ -1578,7 +1595,10 @@ public class DateUtilsTest {
 		assertEquals(false,DateUtils.eventDateValid("1880-03-32")); // Doesn't parse as a date.
 		assertEquals(false,DateUtils.eventDateValid("1880-02-31")); // Doesn't parse as a date.
 		
-    	assertEquals(false, DateUtils.eventDateValid("1905-04-08T04UTC"));  
+    	assertEquals(false, DateUtils.eventDateValid("1905-04-08T04UTC")); 
+    	
+    	assertEquals(false, DateUtils.eventDateValid("2008-11-01/2008-10-09"));  // end before start
+    	assertEquals(false, DateUtils.eventDateValid("1937-08-23/1037-09-09"));  // end before start
     }
     
     @Test 

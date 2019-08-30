@@ -8,7 +8,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({ 
 	DateUtilsTest.class,
-	DwcEventDQTest.class
+	DwcEventDQTest.class,
+	DwCOtherDateDQTest.class
 	})
 public class AllTests {
 

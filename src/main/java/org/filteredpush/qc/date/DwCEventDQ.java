@@ -16,6 +16,7 @@
  */
 package org.filteredpush.qc.date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.datakurator.ffdq.annotations.*;
@@ -763,6 +764,8 @@ public class DwCEventDQ {
     	        if (dayResult.getResultState().equals(ResultState.RUN_HAS_RESULT)) {
     	        	if (dayResult.getValue().equals(ComplianceValue.COMPLIANT)) {
     	        		try {
+    	        			if (!DateUtils.isEmpty(month)) { month = StringUtils.leftPad(month,2,"0"); } 
+    	        			if (!DateUtils.isEmpty(day)) { day = StringUtils.leftPad(day,2,"0"); } 
     	        		    Integer numericYear = Integer.parseInt(year);
     	        		    String date = String.format("%04d", numericYear) + "-" + month.trim() + "-" + day.trim();
 
@@ -1323,6 +1326,9 @@ public class DwCEventDQ {
 
 		// compare year month day with start day of year
 		if (!DateUtils.isEmpty(year) && !DateUtils.isEmpty(month) && !DateUtils.isEmpty(day) && !DateUtils.isEmpty(startDayOfYear)) {
+			if (!DateUtils.isEmpty(year)) { year = StringUtils.leftPad(year,4,"0"); } 
+			if (!DateUtils.isEmpty(month)) { month = StringUtils.leftPad(month,2,"0"); } 
+			if (!DateUtils.isEmpty(day)) { day = StringUtils.leftPad(day,2,"0"); } 
 			StringBuilder tempDate = new StringBuilder().append(year)
 					.append("-").append(month).append("-").append(day);
 			if (!DateUtils.isConsistent(tempDate.toString(), startDayOfYear, "", year, month, day)) {

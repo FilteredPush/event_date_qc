@@ -29,6 +29,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.datakurator.ffdq.api.DQResponse;
@@ -74,7 +75,7 @@ import java.util.Set;
  * @author mole
  *
  */
-@Mechanism(label="Kurator: Date Validator - DwCEventDQ", value="b844059f-87cf-4c31-b4d7-9a52003eef84")
+@Mechanism(label="Kurator: Date Validator - DwCEventTG2DQ", value="a4f74c51-01ad-4dc1-bb91-a1d18c4221da")
 public class DwCEventTG2DQ {
 
 	private static final Log logger = LogFactory.getLog(DwCEventDQ.class);
@@ -126,37 +127,14 @@ public class DwCEventTG2DQ {
      */
     @Provides("66269bdd-9271-4e76-b25c-7ab81eebe1d8")
     public DQResponse<ComplianceValue> validationDateidentifiedNotstandard(@ActedUpon("dwc:dateIdentified") String dateIdentified) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
-
         // Specification
         // INTERNAL_PREREQUISITES_NOT_MET if the field dwc:dateIdentified 
         // is either not present or is EMPTY; COMPLIANT if the value 
         // of the field dwc:dateIdentified is a valid ISO 8601-1:2019 
         //date; otherwise NOT_COMPLIANT 
-
-    	if (DateUtils.isEmpty(dateIdentified)) {
-    		result.addComment("No value provided for dwc:dateIdentified.");
-    		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-    	} else {
-    		try {
-    	        if (DateUtils.eventDateValid(dateIdentified)) {
-    				result.setValue(ComplianceValue.COMPLIANT);
-    				result.addComment("Provided value for dwc:dateIdentified '" + dateIdentified + "' is formated as an ISO date. ");
-    			} else {
-    				result.setValue(ComplianceValue.NOT_COMPLIANT);
-    				result.addComment("Provided value for dwc:dateIdentified '" + dateIdentified + "' is not a validly formatted ISO date .");
-    			}
-    			result.setResultState(ResultState.RUN_HAS_RESULT);
-    		} catch (Exception e) {
-    			logger.debug(e.getMessage());
-    			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-    			result.addComment(e.getMessage());
-    		}
-    	}        
-        
-        return result;
+    	return DwCOtherDateDQ.validationDateidentifiedNotstandard(dateIdentified); 
     }
-
+    	
     /**
      * #76 Validation SingleRecord Likelihood: dateidentified outofrange
      *
@@ -171,15 +149,6 @@ public class DwCEventTG2DQ {
     		@ActedUpon("dwc:dateIdentified") String dateIdentified,
     		@Consulted("dwc:eventDate") String eventDate
     		) {
-    	DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
-
-    	// Parameters. This test is defined as parameterized.
-    	// Default values: earliest date = 1753-01-01, latest date = current day
-    	String earliestDate = "1753-01-01";
-    	DateTime latestDate = new DateTime();
-    	String latest = Integer.toString(latestDate.getYear()) + "-" + Integer.toString(latestDate.getMonthOfYear()) + "-" + Integer.toString(latestDate.getDayOfMonth());
-    	Interval withinInterval = DateUtils.extractInterval(earliestDate + "/" + latest);
-
     	// Specification
     	// INTERNAL_PREREQUISITES_NOT_MET if the field dwc:dateIdentified is 
     	// EMPTY or is not a valid ISO 8601-1:2019 date, or if the field 
@@ -187,51 +156,8 @@ public class DwCEventTG2DQ {
     	// COMPLIANT if the value of the field dwc:dateIdentified is not prior to 
     	// dwc:eventDate, and is within the Parameter range; 
     	// otherwise NOT_COMPLIANT
-
-    	// TODO: In test specification need be explicit about ranges (typical case, eventDate is date, dateIdentified is year, in same year.
-    	//    Current implementation assumes overlap is compliant, test specification not yet clear.
-
-    	if (DateUtils.isEmpty(dateIdentified)) {
-    		result.addComment("No value provided for dwc:dateIdentified.");
-    		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-    	} else if (!DateUtils.eventDateValid(dateIdentified)) {
-    		result.addComment("Value provided for dwc:dateIdentified ["+dateIdentified+"] is not a valid date.");
-    		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-    	} else {
-    		Interval identifiedInterval = DateUtils.extractInterval(dateIdentified);
-    		if (!withinInterval.contains(identifiedInterval)) {
-    			result.setValue(ComplianceValue.NOT_COMPLIANT);
-    			result.setResultState(ResultState.RUN_HAS_RESULT);
-    			result.addComment("Provided value for dateIdentified [" + dateIdentified + "] starts extends beyond the limits ["+earliestDate +"]-["+latestDate.toString("yyyy-MM-dd") +"].");
-    		} else if (DateUtils.isEmpty(eventDate)) {
-    			result.addComment("No value provided for dwc:eventDate, unable to compare with dwc:dateIdentified.");
-    			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-    		} else if (!DateUtils.eventDateValid(eventDate)) { 
-    			result.addComment("Provided value for dwc:eventDate ["+eventDate+"] is not a valid date, unable to compare with dwc:dateIdentified.");
-    			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-    		} else { 
-    			Interval eventInterval = DateUtils.extractInterval(eventDate);
-    			if (eventInterval.contains(identifiedInterval)) {
-    				result.setValue(ComplianceValue.COMPLIANT);
-    				result.addComment("Provided value for dateIdentified [" + dateIdentified + "] falls within the eventDate ["+eventDate+"].");
-    			} else if (identifiedInterval.getStart().isAfter(eventInterval.getEnd())) {
-    				result.setValue(ComplianceValue.COMPLIANT);
-    				result.addComment("Provided value for dateIdentified [" + dateIdentified + "] is after the end of the eventDate ["+eventDate+"].");;
-    			} else if (identifiedInterval.getStart().equals(eventInterval.getStart())) {
-    				result.setValue(ComplianceValue.COMPLIANT);
-    				result.addComment("Provided value for dateIdentified [" + dateIdentified + "] starts at the same time as the eventDate ["+eventDate+"].");;
-    			} else if (identifiedInterval.getStart().isBefore(eventInterval.getStart())) { 
-    				result.setValue(ComplianceValue.NOT_COMPLIANT);
-    				result.addComment("Provided value for dateIdentified [" + dateIdentified + "] starts before the eventDate starts.");
-    			} else { 
-    				result.setValue(ComplianceValue.NOT_COMPLIANT);
-    				result.addComment("Provided value for dateIdentified [" + dateIdentified + "] is within allowed range but is not more recent than the eventDate ["+eventDate+"].");
-    			}
-    			result.setResultState(ResultState.RUN_HAS_RESULT);
-    		}
-    	}        
-
-    	return result;
+    	
+    	return DwCOtherDateDQ.validationDateidentifiedOutofrange(dateIdentified, eventDate);
     }
 
     /**
@@ -351,6 +277,8 @@ public class DwCEventTG2DQ {
     							result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);        	
     							result.addComment("Provided value for day [" + day + "] requires year for evaluation of leap day, but provided value of year ["+ year +"] is not an integer.");;
     						} else { 
+    							if (!DateUtils.isEmpty(month)) { month = StringUtils.leftPad(month,2,"0"); } 
+    							if (!DateUtils.isEmpty(day)) { day = StringUtils.leftPad(day,2,"0"); } 
     							String date = String.format("%04d", numericYear) + "-" + month.trim() + "-" + day.trim();
     							if (DateUtils.eventDateValid(date)) {
     								result.setValue(ComplianceValue.COMPLIANT);
@@ -610,6 +538,9 @@ public class DwCEventTG2DQ {
 
 		// compare year month day with start day of year
 		if (!DateUtils.isEmpty(year) && !DateUtils.isEmpty(month) && !DateUtils.isEmpty(day) && !DateUtils.isEmpty(startDayOfYear)) {
+			if (!DateUtils.isEmpty(year)) { year = StringUtils.leftPad(year,4,"0"); } 
+			if (!DateUtils.isEmpty(month)) { month = StringUtils.leftPad(month,2,"0"); } 
+			if (!DateUtils.isEmpty(day)) { day = StringUtils.leftPad(day,2,"0"); } 
 			StringBuilder tempDate = new StringBuilder().append(year)
 					.append("-").append(month).append("-").append(day);
 			if (!DateUtils.isConsistent(tempDate.toString(), startDayOfYear, "", year, month, day)) {
@@ -1123,8 +1054,8 @@ public class DwCEventTG2DQ {
     			result.setResultState(ResultState.NO_CHANGE);
     			result.addComment("A value for dwc:day parsable as an integer was provided.");
     		} catch (NumberFormatException e) {
-    			// Strip off any trailing non-numeric characters.
-    			String dayTrimmed = day.replaceAll("[^0-9]+$", "");
+    			// Strip off any leading/trailing whitespace, then trailing letters.
+    			String dayTrimmed = day.trim().replaceAll("[a-zA-Z]+$", "");
     			// Try again
     			try {
     				Integer dayNumeric = Integer.parseInt(dayTrimmed);
@@ -1136,12 +1067,12 @@ public class DwCEventTG2DQ {
 						result.setValue(new AmendmentValue(values));
     					result.addComment("Interpreted provided value for dwc:day ["+day+"] as ["+dayNumeric.toString()+"].");
     				} else {
-    					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    					result.setResultState(ResultState.NO_CHANGE);
     					result.addComment("Unable to parse a meaningfull value for day of month from dwc:day ["+day+"].");
 
     				}
     			} catch (NumberFormatException ex) {
-    				result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    				result.setResultState(ResultState.NO_CHANGE);
     				result.addComment("Unable to interpret value provided for dwc:day ["+ day + "] as an integer between 1 and 31.");
     			}
     		}
@@ -1563,7 +1494,14 @@ public class DwCEventTG2DQ {
 						}
 					}
 				} else {
-					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+					// We end up here if eventDate is a range in the form {start}/{end} where end is earlier than start.
+					// Could correct this by flipping them, but we don't want to, as "1937-08-23/1037-09-09" 
+					// probably represents a typo rather than a transposition, and likewise we 
+					// can't tell if "2011-01-05/2010-01-11" is a typo (s/2010/2011/ or s/2011/2010/) or transposition
+					// under general principle of avoiding interpreting ambiguity, make no change.
+					
+					// change in specification, internal prerequisites not met only if empty.
+					result.setResultState(ResultState.NO_CHANGE);
 					result.addComment("Unable to extract a date from " + eventDate);
 				}
 			}

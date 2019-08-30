@@ -1216,6 +1216,7 @@ public class DwcEventDQTest {
 		eventTime = "";
 		
 		result = DwCEventDQ.isEventDateConsistentWithAtomic(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear, eventTime);
+		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
 		
@@ -1603,7 +1604,7 @@ public class DwcEventDQTest {
 		assertEquals("15",result.getValue().getObject().get("dwc:endDayOfYear"));
 		assertEquals(3,result.getValue().getObject().size());			
 		
-		eventDate = "1884-01-15/1884-02-3";
+		eventDate = "1884-01-15/1884-02-03";
 		year = "";
 		month = "";
 		day = "";
@@ -1616,7 +1617,16 @@ public class DwcEventDQTest {
 		assertEquals("15",result.getValue().getObject().get("dwc:day"));
 		assertEquals("15",result.getValue().getObject().get("dwc:startDayOfYear"));
 		assertEquals("34",result.getValue().getObject().get("dwc:endDayOfYear"));
-		assertEquals(5,result.getValue().getObject().size());		
+		assertEquals(5,result.getValue().getObject().size());
+		
+		eventDate = "1884-01-15/1884-02-3";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";		
+		result = DwCEventDQ.fillInEventFromEventDate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
 		
 		eventDate = "1955-12-31/1956-01-03";
 		year = "";
