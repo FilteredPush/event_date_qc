@@ -972,58 +972,7 @@ public class DwCEventTG2DQ {
      */
     @Provides("39bb2280-1215-447b-9221-fd13bc990641")
     public static DQResponse<AmendmentValue> amendmentDateidentifiedStandardized(@ActedUpon("dwc:dateIdentified") String dateIdentified) {
-        DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
-
-        // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if the field dwc:dateIdentified was 
-        // not present or is EMPTY; AMENDED if the value of dwc:dateIdentified 
-        // was altered to unambiguously conform with the ISO 8601-1:2019 date format; 
-        // otherwise NOT_CHANGED 
-        
-		if (DateUtils.eventDateValid(dateIdentified)) {
-			result.setResultState(ResultState.NO_CHANGE);
-			result.addComment("dwc:dateIdentified contains a correctly formatted date, not changing.");
-		} else {
-			if (DateUtils.isEmpty(dateIdentified)) {
-				result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-				result.addComment("dwc:dateIdentified does not contains a value.");
-			} else {
-				EventResult extractResponse = DateUtils.extractDateFromVerbatimER(dateIdentified);
-				if (!extractResponse.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
-						(extractResponse.getResultState().equals(EventResult.EventQCResultState.RANGE) ||
-								extractResponse.getResultState().equals(EventResult.EventQCResultState.DATE) ||
-								extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS) ||
-								extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)
-						)
-						)
-				{
-					Map<String, String> correctedValues = new HashMap<>();
-					correctedValues.put("dwc:dateIdentified", extractResponse.getResult());
-
-					if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
-						result.setResultState(ResultState.NO_CHANGE); 
-						// result.setResultState(ResultState.AMBIGUOUS); // Excluded to conform with AMENDMENT_EVENTDATE_STANDARDIZED
-						result.addComment("Potential interpretation of dwc:dateIdentified [" + dateIdentified + "] as ["+ extractResponse.getResult() +"], but such interpretation is ambiguous." );
-						result.addComment(extractResponse.getComment());
-					} else {
-						if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
-							result.setResultState(ResultState.NO_CHANGE); 
-							result.addComment("Potential interpretation of dwc:dateIdentified [" + dateIdentified + "] as ["+ extractResponse.getResult() +"] is suspect.");
-							result.addComment(extractResponse.getComment());
-						} else { 
-							result.addComment("Unabmiguous interpretation of dwc:dateIdentified [" + dateIdentified + "] as ["+ extractResponse.getResult() +"].");
-							result.setResultState(ResultState.CHANGED);
-							result.setValue(new AmendmentValue(correctedValues));
-						} 
-					}
-				} else {
-					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-					result.addComment("Unable to extract a date from " + dateIdentified);
-				}
-			}
-		}        
-
-        return result;
+        return DwCOtherDateDQ.amendmentDateidentifiedStandardized(dateIdentified);	
     }
 
     /**

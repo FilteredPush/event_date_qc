@@ -176,25 +176,24 @@ public class DwCOtherDateDQ {
     	return result;
     }
 	
-	/**
-	 * Given a dateIdentified, check to see if it is empty or contains a valid date value.  If it contains
-	 * a value that is not a valid (ISO formatted) date, propose a properly formatted dateModified as an amendment.
-	 * 
-	 * TG2-AMENDMENT_DATEIDENTIFIED_STANDARDIZED
-	 * 
-	 * @param dateIdentified to check
-	 * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
-	 *    resultState is CHANGED if a new value is proposed.
-	 * 
-	 */
-	//@Provides(value = "AMENDMENT_DATEIDENTIFIED_STANDARDIZED")
+    /**
+     * #26 Amendment SingleRecord Conformance: dateidentified standardized
+     *
+     * Provides: AMENDMENT_DATEIDENTIFIED_STANDARDIZED
+     *
+     * @param dateIdentified the provided dwc:dateIdentified to evaluate
+     * @return DQResponse the AmendmentValue 
+     */
 	@Provides(value = "urn:uuid:39bb2280-1215-447b-9221-fd13bc990641")
-    @Amendment( label = "AMENDMENT_DATEIDENTIFIED_STANDARDIZED", description="The value of dwc:dateIdentified was amended to conform with the ISO 8601:2004(E) date format")
-	@Specification(value = "Check dwc:dateIdentified to see if it is empty or contains a valid date value. If it contains a " +
-	        "value that is not a valid date, propose a properly formatted dateIdentified as an amendment.")
-	public static DQResponse<AmendmentValue> correctIdentifiedDateFormat(@ActedUpon(value = "dwc:dateIdentified") String dateIdentified) {
-		DQResponse<AmendmentValue> result = new DQResponse<>();
+    public static DQResponse<AmendmentValue> amendmentDateidentifiedStandardized(@ActedUpon("dwc:dateIdentified") String dateIdentified) {
+        DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
 
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if the field dwc:dateIdentified was 
+        // not present or is EMPTY; AMENDED if the value of dwc:dateIdentified 
+        // was altered to unambiguously conform with the ISO 8601-1:2019 date format; 
+        // otherwise NOT_CHANGED 
+        
 		if (DateUtils.eventDateValid(dateIdentified)) {
 			result.setResultState(ResultState.NO_CHANGE);
 			result.addComment("dwc:dateIdentified contains a correctly formatted date, not changing.");
@@ -215,27 +214,32 @@ public class DwCOtherDateDQ {
 					Map<String, String> correctedValues = new HashMap<>();
 					correctedValues.put("dwc:dateIdentified", extractResponse.getResult());
 
-					result.setValue(new AmendmentValue(correctedValues));
-
 					if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
-						result.setResultState(ResultState.AMBIGUOUS);
+						result.setResultState(ResultState.NO_CHANGE); 
+						// result.setResultState(ResultState.AMBIGUOUS); // Excluded to conform with AMENDMENT_EVENTDATE_STANDARDIZED
+						result.addComment("Potential interpretation of dwc:dateIdentified [" + dateIdentified + "] as ["+ extractResponse.getResult() +"], but such interpretation is ambiguous." );
 						result.addComment(extractResponse.getComment());
 					} else {
 						if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
-							result.addComment("Interpretation of dwc:dateIdentified [" + dateIdentified + "] is suspect.");
+							result.setResultState(ResultState.NO_CHANGE); 
+							result.addComment("Potential interpretation of dwc:dateIdentified [" + dateIdentified + "] as ["+ extractResponse.getResult() +"] is suspect.");
 							result.addComment(extractResponse.getComment());
-						}
-						result.setResultState(ResultState.CHANGED);
+						} else { 
+							result.addComment("Unabmiguous interpretation of dwc:dateIdentified [" + dateIdentified + "] as ["+ extractResponse.getResult() +"].");
+							result.setResultState(ResultState.CHANGED);
+							result.setValue(new AmendmentValue(correctedValues));
+						} 
 					}
 				} else {
 					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
 					result.addComment("Unable to extract a date from " + dateIdentified);
 				}
 			}
-		}
-		return result;
-	}
+		}        
 
+        return result;
+    }
+	
 	/**
 	 * Given a dateModified, check to see if it is empty or contains a valid date value.  If it contains
 	 * a value that is not a valid date, propose a properly formatted dateModified as an amendment.
