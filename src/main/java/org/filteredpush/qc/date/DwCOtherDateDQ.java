@@ -104,8 +104,9 @@ public class DwCOtherDateDQ {
     	// Default values: earliest date = 1753-01-01, latest date = current day
     	String earliestDate = "1753-01-01";
     	DateTime latestDate = new DateTime();
-    	String latest = Integer.toString(latestDate.getYear()) + "-" + Integer.toString(latestDate.getMonthOfYear()) + "-" + Integer.toString(latestDate.getDayOfMonth());
-    	Interval withinInterval = DateUtils.extractInterval(earliestDate + "/" + latest);
+    	String latest = latestDate.toString("yyyy-MM-dd");
+    	String range = earliestDate + "/" + latest;
+    	Interval withinInterval = DateUtils.extractInterval(range);
 
     	// Specification
     	// INTERNAL_PREREQUISITES_NOT_MET if the field dwc:dateIdentified is 
@@ -126,7 +127,14 @@ public class DwCOtherDateDQ {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     	} else {
     		Interval identifiedInterval = DateUtils.extractInterval(dateIdentified);
-    		if (!withinInterval.contains(identifiedInterval)) {
+    		if (identifiedInterval==null) { 
+    			result.addComment("Value provided for dwc:dateIdentified ["+dateIdentified+"] is not a valid date.");
+    			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		} else if (withinInterval==null) { 
+    			logger.error("Error Constructing interval from earliest date to latest date");
+    			result.addComment("Error constructing an interpretable earliest/latest date range to test against ["+range+"] .");
+    			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		} else if (!withinInterval.contains(identifiedInterval)) {
     			result.setValue(ComplianceValue.NOT_COMPLIANT);
     			result.setResultState(ResultState.RUN_HAS_RESULT);
     			result.addComment("Provided value for dateIdentified [" + dateIdentified + "] starts extends beyond the limits ["+earliestDate +"]-["+latestDate.toString("yyyy-MM-dd") +"].");

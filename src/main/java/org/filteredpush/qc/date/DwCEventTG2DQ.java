@@ -89,7 +89,7 @@ public class DwCEventTG2DQ {
      * @return DQResponse the NumericalValue consisting of the duration of the eventDate in seconds.
      */
     @Provides("56b6c695-adf1-418e-95d2-da04cad7be53")
-    public DQResponse<NumericalValue> measureEventdatePrecisioninseconds(@ActedUpon("dwc:eventDate") String eventDate) {
+    public static DQResponse<NumericalValue> measureEventdatePrecisioninseconds(@ActedUpon("dwc:eventDate") String eventDate) {
         DQResponse<NumericalValue> result = new DQResponse<NumericalValue>();
 
         // Specification:
@@ -126,7 +126,7 @@ public class DwCEventTG2DQ {
      * @return DQResponse the ComplianceValue
      */
     @Provides("66269bdd-9271-4e76-b25c-7ab81eebe1d8")
-    public DQResponse<ComplianceValue> validationDateidentifiedNotstandard(@ActedUpon("dwc:dateIdentified") String dateIdentified) {
+    public static DQResponse<ComplianceValue> validationDateidentifiedNotstandard(@ActedUpon("dwc:dateIdentified") String dateIdentified) {
         // Specification
         // INTERNAL_PREREQUISITES_NOT_MET if the field dwc:dateIdentified 
         // is either not present or is EMPTY; COMPLIANT if the value 
@@ -145,7 +145,7 @@ public class DwCEventTG2DQ {
      * @return DQResponse the ComplianceValue
      */
     @Provides("dc8aae4b-134f-4d75-8a71-c4186239178e")
-    public DQResponse<ComplianceValue> validationDateidentifiedOutofrange(
+    public static DQResponse<ComplianceValue> validationDateidentifiedOutofrange(
     		@ActedUpon("dwc:dateIdentified") String dateIdentified,
     		@Consulted("dwc:eventDate") String eventDate
     		) {
@@ -169,7 +169,7 @@ public class DwCEventTG2DQ {
      * @return DQResponse the ComplianceValue 
      */
     @Provides("47ff73ba-0028-4f79-9ce1-ee7008d66498")
-    public DQResponse<ComplianceValue> validationDayNotstandard(
+    public static DQResponse<ComplianceValue> validationDayNotstandard(
     		@ActedUpon("dwc:day") String day) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
@@ -215,7 +215,7 @@ public class DwCEventTG2DQ {
      * @return DQResponse the ComplianceValue
      */
     @Provides("5618f083-d55a-4ac2-92b5-b9fb227b832f")
-    public DQResponse<ComplianceValue> validationDayOutofrange(
+    public static DQResponse<ComplianceValue> validationDayOutofrange(
     		@Consulted("dwc:year") String year, 
     		@Consulted("dwc:month") String month, 
     		@ActedUpon("dwc:day") String day) {
@@ -332,7 +332,7 @@ public class DwCEventTG2DQ {
      * @return DQResponse the ComplianceValue
      */
     @Provides("9a39d88c-7eee-46df-b32a-c109f9f81fb8")
-    public DQResponse<ComplianceValue> validationEnddayofyearOutofrange(@ActedUpon("dwc:year") String year, @ActedUpon("dwc:endDayOfYear") String endDayOfYear) {
+    public static DQResponse<ComplianceValue> validationEnddayofyearOutofrange(@ActedUpon("dwc:year") String year, @ActedUpon("dwc:endDayOfYear") String endDayOfYear) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
         // Specification
@@ -400,7 +400,7 @@ public class DwCEventTG2DQ {
      * @return DQResponse the ComplianceValue
      */
     @Provides("41267642-60ff-4116-90eb-499fee2cd83f")
-    public DQResponse<ComplianceValue> validationEventEmpty(@ActedUpon("dwc:startDayOfYear") String startDayOfYear, 
+    public static DQResponse<ComplianceValue> validationEventEmpty(@ActedUpon("dwc:startDayOfYear") String startDayOfYear, 
     		@ActedUpon("dwc:eventDate") String eventDate, 
     		@ActedUpon("dwc:year") String year, 
     		@ActedUpon("dwc:verbatimEventDate") String verbatimEventDate, 
@@ -447,7 +447,7 @@ public class DwCEventTG2DQ {
      * @return DQResponse the ComplianceValue
      */
     @Provides("5618f083-d55a-4ac2-92b5-b9fb227b832f")
-    public DQResponse<ComplianceValue> validationEventInconsistent(
+    public static DQResponse<ComplianceValue> validationEventInconsistent(
     		@ActedUpon("dwc:startDayOfYear") String startDayOfYear, 
     		@ActedUpon("dwc:eventDate") String eventDate, 
     		@ActedUpon("dwc:year") String year, 
@@ -599,7 +599,7 @@ public class DwCEventTG2DQ {
      * @return DQResponse the ComplianceValue
      */
     @Provides("f51e15a6-a67d-4729-9c28-3766299d2985")
-    public DQResponse<ComplianceValue> validationEventdateEmpty(@ActedUpon("dwc:eventDate") String eventDate) {
+    public static DQResponse<ComplianceValue> validationEventdateEmpty(@ActedUpon("dwc:eventDate") String eventDate) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
         // Specification
@@ -629,7 +629,7 @@ public class DwCEventTG2DQ {
      * @return DQResponse the ComplianceValue
      */
     @Provides("4f2bf8fd-fc5c-493f-a44c-e7b16153c803")
-    public DQResponse<ComplianceValue> validationEventdateNotstandard(@ActedUpon("dwc:eventDate") String eventDate) {
+    public static DQResponse<ComplianceValue> validationEventdateNotstandard(@ActedUpon("dwc:eventDate") String eventDate) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
         // Specification
@@ -670,11 +670,11 @@ public class DwCEventTG2DQ {
      * @return DQResponse the ComplianceValue
      */
     @Provides("3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
-    public DQResponse<ComplianceValue> validationEventdateOutofrange(
+    public static DQResponse<ComplianceValue> validationEventdateOutofrange(
     		@ActedUpon("dwc:eventDate") String eventDate
     		) {
         String latestValidDate = LocalDateTime.now().toString("yyyy-MM-dd");
-    	return validationEventdateOutofrange(eventDate, "1600-01-01", latestValidDate);
+    	return DwCEventTG2DQ.validationEventdateOutofrange(eventDate, "1600-01-01", latestValidDate);
     }
     
     /**
@@ -687,7 +687,7 @@ public class DwCEventTG2DQ {
      * @param latestValidDate the latest valid eventDate.
      * @return DQResponse the ComplianceValue
      */
-     private DQResponse<ComplianceValue> validationEventdateOutofrange(
+     protected static DQResponse<ComplianceValue> validationEventdateOutofrange(
         		@ActedUpon("dwc:eventDate") String eventDate,
         		@Parameter(name="bdq:earliestValidDate") String earliestValidDate,
         		@Parameter(name="bdq:latestValidDate") String latestValidDate
@@ -757,7 +757,7 @@ public class DwCEventTG2DQ {
      * @return DQResponse the ComplianceValue
      */
     @Provides("01c6dafa-0886-4b7e-9881-2c3018c98bdc")
-    public DQResponse<ComplianceValue> validationMonthNotstandard(@ActedUpon("dwc:month") String month) {
+    public static DQResponse<ComplianceValue> validationMonthNotstandard(@ActedUpon("dwc:month") String month) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
         // Specification
@@ -802,7 +802,7 @@ public class DwCEventTG2DQ {
      * @return DQResponse the ComplianceValue
      */
     @Provides("85803c7e-2a5a-42e1-b8d3-299a44cafc46")
-    public DQResponse<ComplianceValue> validationStartdayofyearOutofrange(
+    public static DQResponse<ComplianceValue> validationStartdayofyearOutofrange(
     		@ActedUpon("dwc:startDayOfYear") String startDayOfYear, 
     		@Consulted("dwc:year") String year) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
@@ -870,7 +870,7 @@ public class DwCEventTG2DQ {
      * @return DQResponse the ComplianceValue
      */
     @Provides("c09ecbf9-34e3-4f3e-b74a-8796af15e59f")
-    public DQResponse<ComplianceValue> validationYearEmpty(@ActedUpon("dwc:year") String year) {
+    public static DQResponse<ComplianceValue> validationYearEmpty(@ActedUpon("dwc:year") String year) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
         // Specification
@@ -903,12 +903,12 @@ public class DwCEventTG2DQ {
      * @return DQResponse the ComplianceValue
      */
     @Provides("ad0c8855-de69-4843-a80c-a5387d20fbc8")
-    public DQResponse<ComplianceValue> validationYearOutofRange(@ActedUpon("dwc:year") String year) {
+    public static DQResponse<ComplianceValue> validationYearOutofRange(@ActedUpon("dwc:year") String year) {
     	Integer earliestYear = Integer.valueOf(1600);
-    	return validationYearOutofRange(year, earliestYear, true);
+    	return DwCEventTG2DQ.validationYearOutofRange(year, earliestYear, true);
     }
 
-	private DQResponse<ComplianceValue> validationYearOutofRange(@ActedUpon("dwc:year") String year, 
+	protected static DQResponse<ComplianceValue> validationYearOutofRange(@ActedUpon("dwc:year") String year, 
     		@Parameter(name="bdq:earliestDate") Integer earliestDate, 
     		@Parameter(name="bdq:useEarliestDate") boolean useEarliestDate) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
@@ -971,7 +971,7 @@ public class DwCEventTG2DQ {
      * @return DQResponse the AmendmentValue 
      */
     @Provides("39bb2280-1215-447b-9221-fd13bc990641")
-    public DQResponse<AmendmentValue> amendmentDateidentifiedStandardized(@ActedUpon("dwc:dateIdentified") String dateIdentified) {
+    public static DQResponse<AmendmentValue> amendmentDateidentifiedStandardized(@ActedUpon("dwc:dateIdentified") String dateIdentified) {
         DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
 
         // Specification
@@ -1035,7 +1035,7 @@ public class DwCEventTG2DQ {
      * @return DQResponse the AmendmentValue 
      */
     @Provides("b129fa4d-b25b-43f7-9645-5ed4d44b357b")
-    public DQResponse<AmendmentValue> amendmentDayStandardized(@ActedUpon("dwc:day") String day) {
+    public static DQResponse<AmendmentValue> amendmentDayStandardized(@ActedUpon("dwc:day") String day) {
         DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
 
         // Specification
@@ -1100,7 +1100,7 @@ public class DwCEventTG2DQ {
      * @return DQResponse the AmendmentValue 
      */
     @Provides("710fe118-17e1-440f-b428-88ba3f547d6d")
-    public DQResponse<AmendmentValue> amendmentEventFromEventdate(
+    public static DQResponse<AmendmentValue> amendmentEventFromEventdate(
     		@Consulted("dwc:eventDate") String eventDate, 
     		@ActedUpon("dwc:startDayOfYear") String startDayOfYear, 
     		@ActedUpon("dwc:year") String year, 
@@ -1225,7 +1225,7 @@ public class DwCEventTG2DQ {
      * @return DQResponse the AmendmentValue 
      */
     @Provides("6d0a0c10-5e4a-4759-b448-88932f399812")
-    public DQResponse<AmendmentValue> amendmentEventdateFromVerbatim(@ActedUpon("dwc:eventDate") String eventDate, @ActedUpon("dwc:verbatimEventDate") String verbatimEventDate) {
+    public static DQResponse<AmendmentValue> amendmentEventdateFromVerbatim(@ActedUpon("dwc:eventDate") String eventDate, @ActedUpon("dwc:verbatimEventDate") String verbatimEventDate) {
         DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
 
         // Specification
@@ -1295,7 +1295,7 @@ public class DwCEventTG2DQ {
      * @return DQResponse the AmendmentValue 
      */
     @Provides("3892f432-ddd0-4a0a-b713-f2e2ecbd879d")
-    public DQResponse<AmendmentValue> amendmentEventdateFromYearmonthday(
+    public static DQResponse<AmendmentValue> amendmentEventdateFromYearmonthday(
     		@ActedUpon("dwc:eventDate") String eventDate, 
     		@Consulted("dwc:year") String year, 
     		@Consulted("dwc:month") String month, 
@@ -1384,7 +1384,7 @@ public class DwCEventTG2DQ {
      * @return DQResponse the AmendmentValue 
      */
     @Provides("eb0a44fa-241c-4d64-98df-ad4aa837307b")
-    public DQResponse<AmendmentValue> amendmentEventdateFromYearstartdayofyearenddayofyear(
+    public static DQResponse<AmendmentValue> amendmentEventdateFromYearstartdayofyearenddayofyear(
     		@ActedUpon("dwc:eventDate") String eventDate, 
     		@Consulted("dwc:startDayOfYear") String startDayOfYear, 
     		@Consulted("dwc:year") String year, 
@@ -1448,7 +1448,7 @@ public class DwCEventTG2DQ {
      * @return DQResponse the AmendmentValue 
      */
     @Provides("718dfc3c-cb52-4fca-b8e2-0e722f375da7")
-    public DQResponse<AmendmentValue> amendmentEventdateStandardized(@ActedUpon("dwc:eventDate") String eventDate) {
+    public static DQResponse<AmendmentValue> amendmentEventdateStandardized(@ActedUpon("dwc:eventDate") String eventDate) {
         DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
 
         // Specification
@@ -1519,7 +1519,7 @@ public class DwCEventTG2DQ {
      * @return DQResponse the AmendmentValue 
      */
     @Provides("2e371d57-1eb3-4fe3-8a61-dff43ced50cf")
-    public DQResponse<AmendmentValue> amendmentMonthStandardized(@ActedUpon("dwc:month") String month) {
+    public static DQResponse<AmendmentValue> amendmentMonthStandardized(@ActedUpon("dwc:month") String month) {
         DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
 
         // Specification

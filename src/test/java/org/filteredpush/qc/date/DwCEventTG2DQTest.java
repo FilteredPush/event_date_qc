@@ -33,18 +33,7 @@ import org.junit.Test;
  */
 public class DwCEventTG2DQTest {
 	private static final Log logger = LogFactory.getLog(DwCEventTG2DQTest.class);
-
-	DwCEventTG2DQ tg2;
 	
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		// TODO: Make methods static.
-		tg2 = new DwCEventTG2DQ();
-	}
-
 	/**
 	 * Test method for {@link org.filteredpush.qc.date.DwCEventTG2DQ#measureEventdatePrecisioninseconds(java.lang.String)}.
 	 */
@@ -74,7 +63,57 @@ public class DwCEventTG2DQTest {
 	 */
 	@Test
 	public void testValidationEnddayofyearOutofrange() {
-		fail("Not yet implemented");
+		
+		String year = null;
+		String endDayOfYear = null;
+		DQResponse<ComplianceValue> result = DwCEventTG2DQ.validationEnddayofyearOutofrange(year, endDayOfYear);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+	
+		year = "2000";
+		endDayOfYear = "1";
+		result = DwCEventTG2DQ.validationEnddayofyearOutofrange(year, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		year = "2000";
+		endDayOfYear = "365";
+		result = DwCEventTG2DQ.validationEnddayofyearOutofrange(year, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		year = "2000";
+		endDayOfYear = "3000";
+		result = DwCEventTG2DQ.validationEnddayofyearOutofrange(year, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		
+		year = "2000";
+		endDayOfYear = "";
+		result = DwCEventTG2DQ.validationEnddayofyearOutofrange(year, endDayOfYear);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		
+		year = "";
+		endDayOfYear = "10";
+		result = DwCEventTG2DQ.validationEnddayofyearOutofrange(year, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		year = "";
+		endDayOfYear = "365";
+		result = DwCEventTG2DQ.validationEnddayofyearOutofrange(year, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		year = "";
+		endDayOfYear = "366";
+		result = DwCEventTG2DQ.validationEnddayofyearOutofrange(year, endDayOfYear);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		
+		year = "";
+		endDayOfYear = "380";
+		result = DwCEventTG2DQ.validationEnddayofyearOutofrange(year, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 	}
 
 	/**
@@ -145,35 +184,35 @@ public class DwCEventTG2DQTest {
         //is not EMPTY; otherwise NOT_COMPLIANT 
 		
 		String year = null;
-		DQResponse<ComplianceValue> result = tg2.validationYearEmpty(year);
+		DQResponse<ComplianceValue> result = DwCEventTG2DQ.validationYearEmpty(year);
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		
 		year="";
-		result = tg2.validationYearEmpty(year);
+		result = DwCEventTG2DQ.validationYearEmpty(year);
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		
 		year=" ";
-		result = tg2.validationYearEmpty(year);
+		result = DwCEventTG2DQ.validationYearEmpty(year);
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		
 		year="\n";
-		result = tg2.validationYearEmpty(year);
+		result = DwCEventTG2DQ.validationYearEmpty(year);
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		
 		year="NULL";
-		result = tg2.validationYearEmpty(year);
+		result = DwCEventTG2DQ.validationYearEmpty(year);
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
 		
 		year="1880";
-		result = tg2.validationYearEmpty(year);
+		result = DwCEventTG2DQ.validationYearEmpty(year);
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());				
 
 	    year = "-1";
-		result = tg2.validationYearEmpty(year);
+		result = DwCEventTG2DQ.validationYearEmpty(year);
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());				
 				
 		year = "text";
-		result = tg2.validationYearEmpty(year);
+		result = DwCEventTG2DQ.validationYearEmpty(year);
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());				
 		
 	}
@@ -208,81 +247,81 @@ public class DwCEventTG2DQTest {
 		String proposed;
 		
 		String day = "";  
-		DQResponse<AmendmentValue> result = tg2.amendmentDayStandardized(day);
+		DQResponse<AmendmentValue> result = DwCEventTG2DQ.amendmentDayStandardized(day);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
 		
 		day = null;  
-		result = tg2.amendmentDayStandardized(day);
+		result = DwCEventTG2DQ.amendmentDayStandardized(day);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
 		
 		day = " ";  
-		result = tg2.amendmentDayStandardized(day);
+		result = DwCEventTG2DQ.amendmentDayStandardized(day);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
 		
 		day = "\n";  
-		result = tg2.amendmentDayStandardized(day);
+		result = DwCEventTG2DQ.amendmentDayStandardized(day);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
 		
 		day = "1";  
-		result = tg2.amendmentDayStandardized(day);
+		result = DwCEventTG2DQ.amendmentDayStandardized(day);
 		assertEquals(ResultState.NO_CHANGE, result.getResultState());	
 		
 		day = "30";  
-		result = tg2.amendmentDayStandardized(day);
+		result = DwCEventTG2DQ.amendmentDayStandardized(day);
 		assertEquals(ResultState.NO_CHANGE, result.getResultState());	
 		
 		day = "0";  
-		result = tg2.amendmentDayStandardized(day);
+		result = DwCEventTG2DQ.amendmentDayStandardized(day);
 		assertEquals(ResultState.NO_CHANGE, result.getResultState());	
 		
 		day = "33";  
-		result = tg2.amendmentDayStandardized(day);
+		result = DwCEventTG2DQ.amendmentDayStandardized(day);
 		assertEquals(ResultState.NO_CHANGE, result.getResultState());	
 		
 		day = "?3";  // could represent uncertainty or a placeholder for an illegible character  
-		result = tg2.amendmentDayStandardized(day);
+		result = DwCEventTG2DQ.amendmentDayStandardized(day);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.NO_CHANGE, result.getResultState());	
 		
 		day = "3?";  // could represent uncertainty or a placeholder for an illegible character
-		result = tg2.amendmentDayStandardized(day);
+		result = DwCEventTG2DQ.amendmentDayStandardized(day);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.NO_CHANGE, result.getResultState());	
 		
 		day = "??";  // common no-values marker
-		result = tg2.amendmentDayStandardized(day);
+		result = DwCEventTG2DQ.amendmentDayStandardized(day);
 		assertEquals(ResultState.NO_CHANGE, result.getResultState());	
 		
 		day = "**";  // common no-values marker
-		result = tg2.amendmentDayStandardized(day);
+		result = DwCEventTG2DQ.amendmentDayStandardized(day);
 		assertEquals(ResultState.NO_CHANGE, result.getResultState());	
 		
 		day = "1st";  
-		result = tg2.amendmentDayStandardized(day);
+		result = DwCEventTG2DQ.amendmentDayStandardized(day);
 		assertEquals(ResultState.CHANGED, result.getResultState());	
 		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:day");
 		assertEquals("1", proposed);
 		
 		day = "3rd";  
-		result = tg2.amendmentDayStandardized(day);
+		result = DwCEventTG2DQ.amendmentDayStandardized(day);
 		assertEquals(ResultState.CHANGED, result.getResultState());	
 		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:day");
 		assertEquals("3", proposed);
 		
 		day = "1 ";  
-		result = tg2.amendmentDayStandardized(day);
+		result = DwCEventTG2DQ.amendmentDayStandardized(day);
 		assertEquals(ResultState.CHANGED, result.getResultState());	
 		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:day");
 		assertEquals("1", proposed);
 		
 		day = " 1 ";  
-		result = tg2.amendmentDayStandardized(day);
+		result = DwCEventTG2DQ.amendmentDayStandardized(day);
 		assertEquals(ResultState.CHANGED, result.getResultState());	
 		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:day");
 		assertEquals("1", proposed);
 		
 		day = " 1\n";  
-		result = tg2.amendmentDayStandardized(day);
+		result = DwCEventTG2DQ.amendmentDayStandardized(day);
 		assertEquals(ResultState.CHANGED, result.getResultState());	
 		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:day");
 		assertEquals("1", proposed);
@@ -334,75 +373,75 @@ public class DwCEventTG2DQTest {
 		String proposed;
 		
 		String eventDate = "";  
-		DQResponse<AmendmentValue> result = tg2.amendmentEventdateStandardized(eventDate);
+		DQResponse<AmendmentValue> result = DwCEventTG2DQ.amendmentEventdateStandardized(eventDate);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
 		
 		eventDate = null;  
-		result = tg2.amendmentEventdateStandardized(eventDate);
+		result = DwCEventTG2DQ.amendmentEventdateStandardized(eventDate);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
 		
 		eventDate = "\n";  
-		result = tg2.amendmentEventdateStandardized(eventDate);
+		result = DwCEventTG2DQ.amendmentEventdateStandardized(eventDate);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
 		
 		eventDate = "1937-08-23/1037-09-09";  // range with end before start
-		result = tg2.amendmentEventdateStandardized(eventDate);
+		result = DwCEventTG2DQ.amendmentEventdateStandardized(eventDate);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.NO_CHANGE, result.getResultState());	
 		
 		eventDate = "1937-08-23";  
-		result = tg2.amendmentEventdateStandardized(eventDate);
+		result = DwCEventTG2DQ.amendmentEventdateStandardized(eventDate);
 		assertEquals(ResultState.NO_CHANGE, result.getResultState());	
 		
 		eventDate = "1937-08-23/1938-01-04";  
-		result = tg2.amendmentEventdateStandardized(eventDate);
+		result = DwCEventTG2DQ.amendmentEventdateStandardized(eventDate);
 		assertEquals(ResultState.NO_CHANGE, result.getResultState());	
 		
 		eventDate = "string";  
-		result = tg2.amendmentEventdateStandardized(eventDate);
+		result = DwCEventTG2DQ.amendmentEventdateStandardized(eventDate);
 		assertEquals(ResultState.NO_CHANGE, result.getResultState());	
 		
 		eventDate = "1937-8-23";  
-		result = tg2.amendmentEventdateStandardized(eventDate);
+		result = DwCEventTG2DQ.amendmentEventdateStandardized(eventDate);
 		assertEquals(ResultState.CHANGED, result.getResultState());
 		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:eventDate");
 		assertEquals("1937-08-23", proposed);
 		
 		eventDate = "1937-Feb-23";  
-		result = tg2.amendmentEventdateStandardized(eventDate);
+		result = DwCEventTG2DQ.amendmentEventdateStandardized(eventDate);
 		assertEquals(ResultState.CHANGED, result.getResultState());	
 		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:eventDate");
 		assertEquals("1937-02-23", proposed);
 		
 		eventDate = "Feb 23, 1937";  
-		result = tg2.amendmentEventdateStandardized(eventDate);
+		result = DwCEventTG2DQ.amendmentEventdateStandardized(eventDate);
 		assertEquals(ResultState.CHANGED, result.getResultState());	
 		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:eventDate");
 		assertEquals("1937-02-23", proposed);
 
 		eventDate = "2-23-1937";  
-		result = tg2.amendmentEventdateStandardized(eventDate);
+		result = DwCEventTG2DQ.amendmentEventdateStandardized(eventDate);
 		assertEquals(ResultState.CHANGED, result.getResultState());	
 		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:eventDate");
 		assertEquals("1937-02-23", proposed);
 		
 		eventDate = "April 1937";  
-		result = tg2.amendmentEventdateStandardized(eventDate);
+		result = DwCEventTG2DQ.amendmentEventdateStandardized(eventDate);
 		assertEquals(ResultState.CHANGED, result.getResultState());	
 		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:eventDate");
 		assertEquals("1937-04", proposed);
 
     	eventDate = "11-VII-1885";
-		result = tg2.amendmentEventdateStandardized(eventDate);
+		result = DwCEventTG2DQ.amendmentEventdateStandardized(eventDate);
 		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:eventDate");
     	assertEquals("1885-07-11", proposed);
 		
 		eventDate = "2-3-1937"; // ambiguous m-d or d-m 
-		result = tg2.amendmentEventdateStandardized(eventDate);
+		result = DwCEventTG2DQ.amendmentEventdateStandardized(eventDate);
 		assertEquals(ResultState.NO_CHANGE, result.getResultState());	
 		
 		eventDate = "April 137"; // suspect 
-		result = tg2.amendmentEventdateStandardized(eventDate);
+		result = DwCEventTG2DQ.amendmentEventdateStandardized(eventDate);
 		assertEquals(ResultState.NO_CHANGE, result.getResultState());	
 		
 	}

@@ -2154,56 +2154,55 @@ public class DwcEventDQTest {
 	
 	@Test
 	public void testvalidationEnddayofyearOutofrange() {
-		DwCEventTG2DQ eventTest = new DwCEventTG2DQ();
 		
 		String year = null;
 		String endDayOfYear = null;
-		DQResponse<ComplianceValue> result = eventTest.validationEnddayofyearOutofrange(year, endDayOfYear);
+		DQResponse<ComplianceValue> result = DwCEventTG2DQ.validationEnddayofyearOutofrange(year, endDayOfYear);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
 	
 		year = "2000";
 		endDayOfYear = "1";
-		result = eventTest.validationEnddayofyearOutofrange(year, endDayOfYear);
+		result = DwCEventTG2DQ.validationEnddayofyearOutofrange(year, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
 		year = "2000";
 		endDayOfYear = "365";
-		result = eventTest.validationEnddayofyearOutofrange(year, endDayOfYear);
+		result = DwCEventTG2DQ.validationEnddayofyearOutofrange(year, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
 		year = "2000";
 		endDayOfYear = "3000";
-		result = eventTest.validationEnddayofyearOutofrange(year, endDayOfYear);
+		result = DwCEventTG2DQ.validationEnddayofyearOutofrange(year, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 		
 		year = "2000";
 		endDayOfYear = "";
-		result = eventTest.validationEnddayofyearOutofrange(year, endDayOfYear);
+		result = DwCEventTG2DQ.validationEnddayofyearOutofrange(year, endDayOfYear);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
 		
 		year = "";
 		endDayOfYear = "10";
-		result = eventTest.validationEnddayofyearOutofrange(year, endDayOfYear);
+		result = DwCEventTG2DQ.validationEnddayofyearOutofrange(year, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
 		year = "";
 		endDayOfYear = "365";
-		result = eventTest.validationEnddayofyearOutofrange(year, endDayOfYear);
+		result = DwCEventTG2DQ.validationEnddayofyearOutofrange(year, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
 		year = "";
 		endDayOfYear = "366";
-		result = eventTest.validationEnddayofyearOutofrange(year, endDayOfYear);
+		result = DwCEventTG2DQ.validationEnddayofyearOutofrange(year, endDayOfYear);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
 		
 		year = "";
 		endDayOfYear = "380";
-		result = eventTest.validationEnddayofyearOutofrange(year, endDayOfYear);
+		result = DwCEventTG2DQ.validationEnddayofyearOutofrange(year, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 	}
