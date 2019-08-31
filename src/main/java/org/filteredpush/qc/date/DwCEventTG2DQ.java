@@ -273,7 +273,7 @@ public class DwCEventTG2DQ {
     				if (monthResult.getResultState().equals(ResultState.RUN_HAS_RESULT) && monthResult.getValue().equals(ComplianceValue.COMPLIANT) && monthParsable) {
     					if (numericMonth == 2 && numericDay == 29) { 
     						// Februrary 29, only valid in leap years, need to know year to evaluate.
-    						if (yearParsable) { 
+    						if (!yearParsable) { 
     							result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);        	
     							result.addComment("Provided value for day [" + day + "] requires year for evaluation of leap day, but provided value of year ["+ year +"] is not an integer.");;
     						} else { 
@@ -281,17 +281,23 @@ public class DwCEventTG2DQ {
     							if (!DateUtils.isEmpty(day)) { day = StringUtils.leftPad(day,2,"0"); } 
     							String date = String.format("%04d", numericYear) + "-" + month.trim() + "-" + day.trim();
     							if (DateUtils.eventDateValid(date)) {
+    								result.setResultState(ResultState.RUN_HAS_RESULT);
     								result.setValue(ComplianceValue.COMPLIANT);
-    								result.addComment("Provided value for year-month-day " + date + " parses to a valid (leap) day.");;
+    								result.addComment("Provided value for year-month-day " + date + " parses to a valid (leap) day.");
+    							} else if (numericYear == null) { 
+    								result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);        	
+    								result.addComment("Provided value for day [" + day + "] requires year for evaluation of leap day, but provided value of year ["+ year +"] is not an integer.");;
     							} else {
+    								result.setResultState(ResultState.RUN_HAS_RESULT);
     								result.setValue(ComplianceValue.NOT_COMPLIANT);
-    								result.addComment("Provided value for year-month-day " + date + " does not parse to a valid day (there is no leap day in "+year+".");;
+    								result.addComment("Provided value for year-month-day " + date + " does not parse to a valid day (there is no leap day in "+year+".)");;
     							}
-    							result.setResultState(ResultState.RUN_HAS_RESULT);
     						}
     					} else {
     						// day = 29-31, except February 28, check month (in any year)
-    						String date =  "1950-" + month.trim() + "-" + day.trim();
+    						String date =  "1950-" + StringUtils.leftPad(month.trim(),2,"0") + "-" + StringUtils.leftPad(day.trim(),2,"0");
+    						logger.debug(date);
+    						logger.debug(DateUtils.eventDateValid(date));
     						if (DateUtils.eventDateValid(date)) {
     							result.setValue(ComplianceValue.COMPLIANT);
     							result.addComment("Provided value for month ["+month+"] and day [" + day + "] is a valid day in any year.");;
