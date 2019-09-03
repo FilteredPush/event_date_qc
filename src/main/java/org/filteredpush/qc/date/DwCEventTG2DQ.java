@@ -730,7 +730,9 @@ public class DwCEventTG2DQ {
         }
         String validRangeString = earliestValidDate + "/" + latestValidDate;
         
-        Interval validInterval = DateUtils.extractDateInterval(validRangeString);
+        Interval validInterval = DateUtils.extractInterval(validRangeString);
+        
+        logger.debug(validInterval);
         
     	if (DateUtils.isEmpty(eventDate)) {
     		result.addComment("No value provided for dwc:eventDate.");

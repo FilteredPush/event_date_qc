@@ -29,6 +29,7 @@ import org.datakurator.ffdq.api.result.ComplianceValue;
 import org.datakurator.ffdq.api.result.NumericalValue;
 import org.datakurator.ffdq.model.ResultState;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -711,7 +712,138 @@ public class DwCEventTG2DQTest {
 	 */
 	@Test
 	public void testValidationEventdateOutofrange() {
-		fail("Not yet implemented");
+		
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or if 
+        // the value of dwc:eventDate is not a valid ISO 8601-1:2019 date; 
+        // COMPLIANT if the range of dwc:eventDate is within the parameter 
+        // range, otherwise NOT_COMPLIANT
+		
+		String eventDate = null;
+		DQResponse<ComplianceValue> result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		assertEquals(null, result.getValue());
+		
+		eventDate = "";
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		assertEquals(null, result.getValue());
+		
+		eventDate = " ";
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		assertEquals(null, result.getValue());
+		
+		eventDate = "string";
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		assertEquals(null, result.getValue());
+		
+		eventDate = "1-3-1700";
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		assertEquals(null, result.getValue());
+		
+		eventDate = "1700-1-3";
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		assertEquals(null, result.getValue());
+		
+		eventDate = "Jan 1, 1835";
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		assertEquals(null, result.getValue());
+		
+		eventDate = "\n";
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		assertEquals(null, result.getValue());
+		
+		eventDate = "\t";
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		assertEquals(null, result.getValue());
+		
+		eventDate = "1599-12-31";
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		
+		eventDate = "1600-01-01";
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "1685-03-15";
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "1700-01-01";
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "1812-05-22";
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "1900-01-01";
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "1935-12-31";
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "2000-08-05";
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "2004-02-29";
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+        eventDate= LocalDateTime.now().toString("yyyy-MM-dd");
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "1600-01-01/"+ LocalDateTime.now().toString("yyyy-MM-dd");
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "1599-12-31/"+ LocalDateTime.now().toString("yyyy-MM-dd");
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		
+		eventDate = "1703-08-16/2004-02-29";
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "1503-08-16/1602-02-29";
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		assertEquals(null, result.getValue());
+		
+		eventDate = "1503-08-16/1602-02-28";
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		
+		eventDate = LocalDateTime.now().toString("yyyy-MM-dd") + "/" + LocalDateTime.now().plusDays(1).toString("yyyy-MM-dd");;
+		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		
 	}
 
 	/**
@@ -729,6 +861,7 @@ public class DwCEventTG2DQTest {
 		String month = null;
 		DQResponse<ComplianceValue> result = DwCEventTG2DQ.validationMonthNotstandard(month);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		assertEquals(null, result.getValue());
 		
 		for (int i=1; i<13; i++) {
 			month = Integer.toString(i);
