@@ -487,7 +487,145 @@ public class DwCEventTG2DQTest {
 	 */
 	@Test
 	public void testValidationEventEmpty() {
-		fail("Not yet implemented");
+		
+        // Specification
+        // COMPLIANT if at least one field needed to determine the 
+        // event date exists and is not EMPTY; otherwise NOT_COMPLIANT
+		
+		String eventDate = null;
+		String year = null;
+		String month = null;
+		String day = null;
+		String startDayOfYear = null;
+		String endDayOfYear = null;
+		String verbatimEventDate = null;
+		DQResponse<ComplianceValue> result = DwCEventTG2DQ.validationEventEmpty(startDayOfYear, eventDate, year, verbatimEventDate, month, day, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		
+		eventDate = "";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		verbatimEventDate = "";
+		result = DwCEventTG2DQ.validationEventEmpty(startDayOfYear, eventDate, year, verbatimEventDate, month, day, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		
+		eventDate = "1872";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		verbatimEventDate = "";
+		result = DwCEventTG2DQ.validationEventEmpty(startDayOfYear, eventDate, year, verbatimEventDate, month, day, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "";
+		year = "1872";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		verbatimEventDate = "";
+		result = DwCEventTG2DQ.validationEventEmpty(startDayOfYear, eventDate, year, verbatimEventDate, month, day, endDayOfYear);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		verbatimEventDate = "1872";
+		result = DwCEventTG2DQ.validationEventEmpty(startDayOfYear, eventDate, year, verbatimEventDate, month, day, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "";
+		year = "";
+		month = "12";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		verbatimEventDate = "";
+		result = DwCEventTG2DQ.validationEventEmpty(startDayOfYear, eventDate, year, verbatimEventDate, month, day, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "";
+		year = "";
+		month = "";
+		day = "10";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		verbatimEventDate = "";
+		result = DwCEventTG2DQ.validationEventEmpty(startDayOfYear, eventDate, year, verbatimEventDate, month, day, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "10";
+		endDayOfYear = "";
+		verbatimEventDate = "";
+		result = DwCEventTG2DQ.validationEventEmpty(startDayOfYear, eventDate, year, verbatimEventDate, month, day, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "15";
+		verbatimEventDate = "";
+		result = DwCEventTG2DQ.validationEventEmpty(startDayOfYear, eventDate, year, verbatimEventDate, month, day, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+	
+		
+		eventDate = "1872-12-02";
+		year = "1872";
+		month = "12";
+		day = "2";
+		startDayOfYear = "336";
+		endDayOfYear = "336";
+		verbatimEventDate = "Dec, 2 1872";
+		result = DwCEventTG2DQ.validationEventEmpty(startDayOfYear, eventDate, year, verbatimEventDate, month, day, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "string";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		verbatimEventDate = "";
+		result = DwCEventTG2DQ.validationEventEmpty(startDayOfYear, eventDate, year, verbatimEventDate, month, day, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "1872-12-02";
+		year = "1900";
+		month = "5";
+		day = "23";
+		startDayOfYear = "46";
+		endDayOfYear = "22";
+		verbatimEventDate = "Dec, 5 1872";
+		result = DwCEventTG2DQ.validationEventEmpty(startDayOfYear, eventDate, year, verbatimEventDate, month, day, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
 	}
 
 	/**
