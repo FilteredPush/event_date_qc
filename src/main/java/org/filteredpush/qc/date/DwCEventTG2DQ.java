@@ -473,6 +473,7 @@ public class DwCEventTG2DQ {
         // are within the range of the supplied dwc:eventDate; otherwise 
         // NOT_COMPLIANT 
         
+        // TODO: Specification is not specific enough, range of supplied date is unclear.
         
 		boolean inconsistencyFound = false;
 		boolean interpretationProblem = false;
@@ -496,6 +497,7 @@ public class DwCEventTG2DQ {
 //				}
 //			}
 //		}
+		
 		// compare eventDate and year, month, day
 		if (!DateUtils.isEmpty(eventDate) && !DateUtils.isEmpty(year)) {
 			if (!DateUtils.isEmpty(month)) {
@@ -523,16 +525,18 @@ public class DwCEventTG2DQ {
 				}
 			}
 		}
-
+		logger.debug(inconsistencyFound);
 
 		// compare eventDate and start/end day of year
 		if (!DateUtils.isEmpty(eventDate) && !DateUtils.isEmpty(startDayOfYear)) {
+			logger.debug(startDayOfYear);
 			if (!DateUtils.isConsistent(eventDate, startDayOfYear, endDayOfYear, "", "", "")) {
 				inconsistencyFound = true;
 				result.addComment("Provided value for eventDate '" + eventDate + "' appears to represent a date inconsistent with startDayOfYear [" + startDayOfYear + "] or endDayOfYear [" + endDayOfYear +"].");
 			}
 
 		}
+		logger.debug(inconsistencyFound);
 
 		// compare eventDate and month day (if year is empty)
 		if (!DateUtils.isEmpty(eventDate) && DateUtils.isEmpty(year) && (!DateUtils.isEmpty(month) || !DateUtils.isEmpty(day))) {
@@ -541,6 +545,7 @@ public class DwCEventTG2DQ {
 				result.addComment("Provided value for eventDate '" + eventDate + "' appears to represent a date inconsistent with  the month ["+ month +" or day [" + day + "], no year provided.");
 			}
 		}
+		logger.debug(inconsistencyFound);
 
 		// compare year month day with start day of year
 		if (!DateUtils.isEmpty(year) && !DateUtils.isEmpty(month) && !DateUtils.isEmpty(day) && !DateUtils.isEmpty(startDayOfYear)) {
@@ -554,6 +559,7 @@ public class DwCEventTG2DQ {
 				result.addComment("Provided value for year month and day'" + tempDate + "' appear to represent a date inconsistent with startDayOfYear [" + startDayOfYear + "] .");
 			}
 		}
+		logger.debug(inconsistencyFound);
 
         // Note: Does not validate against verbatim date, just atomized date fields.
 		// compare eventDate with verbatimEventDate
@@ -567,8 +573,7 @@ public class DwCEventTG2DQ {
 //			}
 //		}
 
-		if (DateUtils.isEmpty(eventDate) &&
-				DateUtils.isEmpty(year) &&
+		if (	DateUtils.isEmpty(year) &&
 				DateUtils.isEmpty(month) &&
 				DateUtils.isEmpty(day) &&
 				DateUtils.isEmpty(startDayOfYear) &&
@@ -576,8 +581,11 @@ public class DwCEventTG2DQ {
 			 )
 		{
 			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-			result.addComment("All provided event terms are empty, can't assess consistency.");
+			result.addComment("Provided event terms are empty, nothing to compare with eventDate to assess consistency.");
 			logger.debug("All terms empty.");
+		} else if (DateUtils.isEmpty(eventDate)) { 
+			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+			result.addComment("Provided value for eventDate is empty, can't assess consistency with other terms.");
 		} else {
 			if (inconsistencyFound) {
 				// inconsistency trumps interpretation problem, return result as NOT COMPLIANT

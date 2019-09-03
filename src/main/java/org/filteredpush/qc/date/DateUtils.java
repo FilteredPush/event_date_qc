@@ -1803,6 +1803,8 @@ public class DateUtils {
     				logger.debug(startDayOfYear + " is not an integer."); 
     				result = false; 
     			} 
+    			logger.debug(startDayInt);
+    			logger.debug(startDayOfYear);
     			if (DateUtils.extractDate(eventDate)!=null && DateUtils.extractDate(eventDate).getDayOfYear() == startDayInt) { 
     				result=true;
     			} else { 
@@ -1818,10 +1820,12 @@ public class DateUtils {
     				logger.debug(e.getMessage());
     				result = false; 
     			} 
-    			Interval eventDateInterval = DateUtils.extractDateInterval(eventDate);
+    			Interval eventDateInterval = DateUtils.extractInterval(eventDate);
     			logger.debug(eventDateInterval);
+    			logger.debug(endDayInt);
     			if (eventDateInterval!=null && eventDateInterval.getEnd()!=null) { 
-    				int endDayOfInterval = eventDateInterval.getEnd().getDayOfYear();  // midnight on the next day, so subtract 1 to get the same integer day.
+    				int endDayOfInterval = eventDateInterval.getEnd().getDayOfYear(); 
+    				logger.debug(endDayOfInterval);
     				if (eventDateInterval.getStart().getDayOfYear() == startDayInt && endDayOfInterval == endDayInt ) { 
     					result=true;
     				} else { 
