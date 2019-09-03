@@ -1550,7 +1550,227 @@ public class DwCEventTG2DQTest {
 	 */
 	@Test
 	public void testAmendmentEventFromEventdate() {
-		fail("Not yet implemented");
+		
+        // INTERNAL_PREREQUESITES_NOT_MET if the field dwc:eventDate 
+        // is EMPTY or does not contain a valid ISO 8601-1:2019 date; 
+        // AMENDED if one or more EMPTY terms of the dwc:Event class 
+        // (dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear) 
+        // have been filled in from a valid unambiguously interpretable 
+        // value in dwc:eventDate; otherwise NOT_CHANGED
+		
+		String proposed = "";
+		
+		String eventDate = "";
+		String year = null;
+		String month = null;
+		String day = null;
+		String startDayOfYear = null;
+		String endDayOfYear = null;
+		DQResponse<AmendmentValue> result = DwCEventTG2DQ.amendmentEventFromEventdate(eventDate, startDayOfYear, year, month, day, endDayOfYear);;
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		
+		eventDate = "string";
+		result = DwCEventTG2DQ.amendmentEventFromEventdate(eventDate, startDayOfYear, year, month, day, endDayOfYear);;
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		
+		eventDate = "string";
+		year = "1880";
+		month = null;
+		day = null;
+		startDayOfYear = null;
+		endDayOfYear = null;
+		result = DwCEventTG2DQ.amendmentEventFromEventdate(eventDate, startDayOfYear, year, month, day, endDayOfYear);;
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		
+		eventDate = "1835-1-12";
+		year = "";
+		month = null;
+		day = null;
+		startDayOfYear = null;
+		endDayOfYear = null;
+		result = DwCEventTG2DQ.amendmentEventFromEventdate(eventDate, startDayOfYear, year, month, day, endDayOfYear);;
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		
+		eventDate = "January 1, 1835";
+		year = "";
+		month = null;
+		day = null;
+		startDayOfYear = null;
+		endDayOfYear = null;
+		result = DwCEventTG2DQ.amendmentEventFromEventdate(eventDate, startDayOfYear, year, month, day, endDayOfYear);;
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		
+		eventDate = "1835-01-12";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		result = DwCEventTG2DQ.amendmentEventFromEventdate(eventDate, startDayOfYear, year, month, day, endDayOfYear);;
+		assertEquals(ResultState.FILLED_IN, result.getResultState());	
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:year");
+		assertEquals("1835", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:month");
+		assertEquals("1", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:day");
+		assertEquals("12", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:startDayOfYear");
+		assertEquals("12", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:endDayOfYear");
+		assertEquals("12", proposed);
+		
+		eventDate = "1835-01-12";
+		year = "1900";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		result = DwCEventTG2DQ.amendmentEventFromEventdate(eventDate, startDayOfYear, year, month, day, endDayOfYear);;
+		assertEquals(ResultState.FILLED_IN, result.getResultState());	
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:year");
+		assertEquals(null, proposed);
+		assertEquals("1900", year);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:month");
+		assertEquals("1", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:day");
+		assertEquals("12", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:startDayOfYear");
+		assertEquals("12", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:endDayOfYear");
+		assertEquals("12", proposed);	
+		
+		eventDate = "1835-01-12";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "1";
+		endDayOfYear = "";
+		result = DwCEventTG2DQ.amendmentEventFromEventdate(eventDate, startDayOfYear, year, month, day, endDayOfYear);;
+		assertEquals(ResultState.FILLED_IN, result.getResultState());	
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:year");
+		assertEquals("1835", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:month");
+		assertEquals("1", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:day");
+		assertEquals("12", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:startDayOfYear");
+		assertEquals(null, proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:endDayOfYear");
+		assertEquals("12", proposed);			
+		
+		eventDate = "1835-01-12/1836-01-05";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		result = DwCEventTG2DQ.amendmentEventFromEventdate(eventDate, startDayOfYear, year, month, day, endDayOfYear);;
+		assertEquals(ResultState.FILLED_IN, result.getResultState());	
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:year");
+		assertEquals("1835", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:month");
+		assertEquals("1", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:day");
+		assertEquals("12", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:startDayOfYear");
+		assertEquals("12", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:endDayOfYear");
+		assertEquals("5", proposed);			
+		
+		eventDate = "1835-01";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		result = DwCEventTG2DQ.amendmentEventFromEventdate(eventDate, startDayOfYear, year, month, day, endDayOfYear);;
+		assertEquals(ResultState.FILLED_IN, result.getResultState());	
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:year");
+		assertEquals("1835", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:month");
+		assertEquals("1", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:day");
+		assertEquals("1", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:startDayOfYear");
+		assertEquals("1", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:endDayOfYear");
+		assertEquals("31", proposed);		
+		
+		eventDate = "1835";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		result = DwCEventTG2DQ.amendmentEventFromEventdate(eventDate, startDayOfYear, year, month, day, endDayOfYear);;
+		assertEquals(ResultState.FILLED_IN, result.getResultState());	
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:year");
+		assertEquals("1835", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:month");
+		assertEquals("1", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:day");
+		assertEquals("1", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:startDayOfYear");
+		assertEquals("1", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:endDayOfYear");
+		assertEquals("365", proposed);		
+	
+		eventDate = "1835";
+		year = "1835";
+		month = "1";
+		day = "1";
+		startDayOfYear = "1";
+		endDayOfYear = "365";
+		result = DwCEventTG2DQ.amendmentEventFromEventdate(eventDate, startDayOfYear, year, month, day, endDayOfYear);;
+		assertEquals(ResultState.NO_CHANGE, result.getResultState());		
+		
+		eventDate = "1835";
+		year = "string";
+		month = "string";
+		day = "string";
+		startDayOfYear = "string";
+		endDayOfYear = "string";
+		result = DwCEventTG2DQ.amendmentEventFromEventdate(eventDate, startDayOfYear, year, month, day, endDayOfYear);;
+		assertEquals(ResultState.NO_CHANGE, result.getResultState());		
+		
+		eventDate = "1835-01-12/1836";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		result = DwCEventTG2DQ.amendmentEventFromEventdate(eventDate, startDayOfYear, year, month, day, endDayOfYear);;
+		assertEquals(ResultState.FILLED_IN, result.getResultState());	
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:year");
+		assertEquals("1835", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:month");
+		assertEquals("1", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:day");
+		assertEquals("12", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:startDayOfYear");
+		assertEquals("12", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:endDayOfYear");
+		assertEquals("366", proposed);		
+		
+		eventDate = "1834-01-12/1835";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		result = DwCEventTG2DQ.amendmentEventFromEventdate(eventDate, startDayOfYear, year, month, day, endDayOfYear);;
+		assertEquals(ResultState.FILLED_IN, result.getResultState());	
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:year");
+		assertEquals("1834", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:month");
+		assertEquals("1", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:day");
+		assertEquals("12", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:startDayOfYear");
+		assertEquals("12", proposed);
+		proposed = ((AmendmentValue)result.getValue()).getObject().get("dwc:endDayOfYear");
+		assertEquals("365", proposed);			
+		
 	}
 
 	/**
