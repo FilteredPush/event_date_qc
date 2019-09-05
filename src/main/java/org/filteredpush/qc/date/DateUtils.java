@@ -1675,19 +1675,27 @@ public class DateUtils {
     			// not a date range
                logger.debug(e.getMessage());
     		}
-    		if (dateBits[1]!=null && dateBits[1].trim() != "") { 
-    			if (result!=null && dateBits[1].matches("^[0-9]{4}-[0-9]{1}$")) {
-    				// ISO requires 2 digit, zero padded month and day, single digit not allowed.
-    				result = null;
-    			}
-    			if (result!=null && dateBits[1].matches("^[0-9]{4}-[0-9]{1}-.+")) {
-    				// ISO requires 2 digit, zero padded month and day, single digit not allowed.
-    				result = null;
-    			}
-    			if (result!=null && dateBits[1].matches("^[0-9]{4}-[0-9]{1,2}-[0-9]{1}$")) {
-    				// ISO requires 2 digit, zero padded month and day, single digit not allowed.
-    				result = null;
-    			}
+            try { 
+                if (dateBits.length == 1) { 
+                    // handle case of startDate/ with no end date.
+                    logger.debug("eventDate ["+eventDate+"] is not a properly formed range");
+	    		} else if (dateBits[1]!=null && dateBits[1].trim() != "") { 
+	    			if (result!=null && dateBits[1].matches("^[0-9]{4}-[0-9]{1}$")) {
+	    				// ISO requires 2 digit, zero padded month and day, single digit not allowed.
+	    				result = null;
+	    			}
+	    			if (result!=null && dateBits[1].matches("^[0-9]{4}-[0-9]{1}-.+")) {
+	    				// ISO requires 2 digit, zero padded month and day, single digit not allowed.
+	    				result = null;
+	    			}
+	    			if (result!=null && dateBits[1].matches("^[0-9]{4}-[0-9]{1,2}-[0-9]{1}$")) {
+	    				// ISO requires 2 digit, zero padded month and day, single digit not allowed.
+	    				result = null;
+	    			}
+	    		}
+    		} catch (Exception e) { 
+    			// not a date range
+               logger.debug(e.getMessage());
     		}
     	} else {
     		try { 
