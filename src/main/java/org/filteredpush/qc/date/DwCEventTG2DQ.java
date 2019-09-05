@@ -1273,13 +1273,16 @@ public class DwCEventTG2DQ {
         // as a valid year; AMENDED if the value of dwc:eventDate was 
         // interpreted from the values in dwc:year, dwc:month and dwc:day; 
         // otherwise NOT_CHANGED 
+        
+        // TODO: Change specificaiton to not changed if event date is not empty.
+        // TODO: Soecificaiton mute on how to handle day/month/year that doesn't exist.
 
-        if (DateUtils.isEmpty(year)) {
+        if (!DateUtils.isEmpty(eventDate)) {
+        	result.setResultState(ResultState.NO_CHANGE);
+        	result.addComment("A value exists in dwc:eventDate, ammendment not attempted.");
+        } else if (DateUtils.isEmpty(year)) {
         	result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
         	result.addComment("No value for dwc:year was provided.");
-        } else if (!DateUtils.isEmpty(eventDate)) {
-        	result.setResultState(ResultState.NOT_RUN);
-        	result.addComment("A value exists in dwc:eventDate, ammendment not attempted.");
         } else {
         	try {
         		// Try to parse integer out of year, throw exception on failure
@@ -1368,7 +1371,7 @@ public class DwCEventTG2DQ {
         	result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
         	result.addComment("Either year or startDayOfYear was not provided.");
         } else if (!DateUtils.isEmpty(eventDate)) {
-        	result.setResultState(ResultState.NOT_RUN);
+        	result.setResultState(ResultState.NO_CHANGE);
         	result.addComment("A value exists in dwc:eventDate, ammendment not attempted.");
         } else {
         	try {
@@ -1514,7 +1517,7 @@ public class DwCEventTG2DQ {
     			// Strip any trailing period off of month name.
     			String monthTrim = monthConverted.replaceFirst("\\.$", "").trim();
     			if (DateUtils.isEmpty(monthTrim)) {
-    				result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    				result.setResultState(ResultState.NO_CHANGE);
     				result.addComment("Unable to parse a meaningfull value for month from dwc:month ["+month+"].");
     			} else {
     				// Add the month string into the first day of that month in 1800, and see if
@@ -1533,7 +1536,7 @@ public class DwCEventTG2DQ {
 						result.setValue(new AmendmentValue(values));
     					result.addComment("Interpreted provided value for dwc:month ["+month+"] as ["+monthNumeric.toString()+"].");
     				} else {
-    					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    					result.setResultState(ResultState.NO_CHANGE);
     					result.addComment("Unable to parse a meaningfull value for month from dwc:month ["+month+"].");
     				}
     			}

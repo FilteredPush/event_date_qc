@@ -231,7 +231,8 @@ public class DwCOtherDateDQ {
 						} 
 					}
 				} else {
-					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+					// change in specification, internal prerequisites not met only if empty.
+					result.setResultState(ResultState.NO_CHANGE);
 					result.addComment("Unable to extract a date from " + dateIdentified);
 				}
 			}
