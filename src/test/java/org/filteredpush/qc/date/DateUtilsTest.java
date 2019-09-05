@@ -265,7 +265,29 @@ public class DateUtilsTest {
        	test = DateUtils.extractInterval("1880-01-05/1880-02-05");
     	assertEquals(86400*(32)-1, test.toDuration().getStandardSeconds());
     	
-       	test = DateUtils.extractInterval("1880-1");
+       	test = DateUtils.extractInterval("1880-01-01/");
+    	assertNull(test);
+       	test = DateUtils.extractInterval("1880-01/");
+    	assertNull(test);
+       	test = DateUtils.extractInterval("1880/");
+    	assertNull(test);
+       	test = DateUtils.extractInterval("/1880-01-01");
+    	assertNull(test);
+       	test = DateUtils.extractInterval("/");
+    	assertNull(test);
+       	test = DateUtils.extractInterval("1980-01-01/1880-01-01");  // end before start
+    	assertNull(test);
+    	
+       	test = DateUtils.extractInterval("");
+    	assertNull(test);
+       	test = DateUtils.extractInterval(" ");
+    	assertNull(test);
+       	test = DateUtils.extractInterval(Integer.toString(Integer.MAX_VALUE));
+    	assertNull(test);
+       	test = DateUtils.extractInterval(Integer.toString(Integer.MIN_VALUE));
+    	assertNull(test);
+    	
+       	test = DateUtils.extractInterval("1880-1");  // improperly formed ISO dates
     	assertNull(test);
        	test = DateUtils.extractInterval("1880-1-5");
     	assertNull(test);
