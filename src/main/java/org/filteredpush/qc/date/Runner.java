@@ -554,6 +554,11 @@ public class Runner {
 					}
 
 					recordCount++;
+					if (recordCount % 1000000 == 0) { 
+						Instant nowTime = new Instant();
+						Interval runtime = new Interval(startTime,nowTime);
+						System.out.println("Rows processed: " + recordCount + " in " + (runtime.toDuration().getMillis()/100)/10d + "seconds.");
+					}
 				}
 
 				Instant endTime = new Instant();
