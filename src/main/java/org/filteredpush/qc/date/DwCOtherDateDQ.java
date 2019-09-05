@@ -125,6 +125,9 @@ public class DwCOtherDateDQ {
     	} else if (!DateUtils.eventDateValid(dateIdentified)) {
     		result.addComment("Value provided for dwc:dateIdentified ["+dateIdentified+"] is not a valid date.");
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    	} else if (!DateUtils.isEmpty(eventDate) && !DateUtils.eventDateValid(eventDate)) {
+    		result.addComment("Value provided for dwc:eventDate ["+eventDate+"] is not a valid date, unable to compare with dateIdentified.");
+    		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     	} else {
     		Interval identifiedInterval = DateUtils.extractInterval(dateIdentified);
     		if (identifiedInterval==null) { 
