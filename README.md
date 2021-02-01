@@ -9,7 +9,7 @@ DOI: 10.5281/zenodo.166329
 
 This library provides two classes each with a set of static methods which provide functions to support data quality control of date data in the context of biodiversity.  DateUtils provides a set of primitive methods for working with event date data, and DwCEventQC provides a wrapper set of annotated methods for making assertions about event date data in terms of the Fittness for Use Framework.  
 
-## Quick Start: Find verbatiom dates that can't be parsed.
+## Quick Start: Find verbatim dates that can't be parsed.
 
 Obtain a v1.2.x or newer build, or checkout and run mvn package, then execute jar file, e.g. with: 
 
