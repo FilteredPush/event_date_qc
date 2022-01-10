@@ -76,6 +76,7 @@ import java.util.Set;
  *
  */
 @Mechanism(label="Kurator: Date Validator - DwCEventTG2DQ", value="a4f74c51-01ad-4dc1-bb91-a1d18c4221da")
+@Deprecated
 public class DwCEventTG2DQ {
 
 	private static final Log logger = LogFactory.getLog(DwCEventDQ.class);
