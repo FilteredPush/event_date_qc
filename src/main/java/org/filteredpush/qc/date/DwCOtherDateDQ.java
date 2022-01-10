@@ -38,11 +38,23 @@ import java.util.Map;
  */
 @Mechanism(
 		value = "urn:uuid:bf5b7706-d0a6-4c65-9644-c750e7188ee0",
-		label = "Kurator: Date Validator - DwCOtherDateDQ")
+		label = "Kurator: Date Validator - DwCOtherDateDQ:v2.1.0")
 public class DwCOtherDateDQ {
 	
 	private static final Log logger = LogFactory.getLog(DwCOtherDateDQ.class);
+	
+	/** TODO: Current definitions 2022 Jan 4 
 
+	@Provides(value="urn:uuid:66269bdd-9271-4e76-b25c-7ab81eebe1d8")
+	@Validation( label = "VALIDATION_DATEIDENTIFIED_NOTSTANDARD", description="#69 Validation SingleRecord Conformance: dateidentified notstandard")
+	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is EMPTY; COMPLIANT if the value of dwc:dateIdentified is a valid ISO 8601-1:2019 date; otherwise NOT_COMPLIANT")
+	--
+	@Provides(value="urn:uuid:dc8aae4b-134f-4d75-8a71-c4186239178e")
+	@Validation( label = "VALIDATION_DATEIDENTIFIED_OUTOFRANGE", description="#76 Validation SingleRecord Likelihood: dateidentified outofrange")
+	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is EMPTY or is not a valid ISO 8601-1:2019 date, or if dwc:eventDate is not EMPTY and is not a valid ISO 8601-1:2019 date; COMPLIANT if the value of dwc:dateIdentified overlaps or follows the dwc:eventDate, and is within the Parameter range; otherwise NOT_COMPLIANT")
+	--
+	*/
+	
 	 /**
      * #69 Validation SingleRecord Conformance: dateidentified notstandard
      *
