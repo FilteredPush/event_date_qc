@@ -238,13 +238,18 @@ public class DwCOtherDateDQTest {
 		
 		dateIdentified = "1700-1-3";
 		eventDate = "1700-01-03";
+		logger.debug(DateUtils.eventDateValid(dateIdentified));
 		result = DwCOtherDateDQ.validationDateidentifiedOutofrange(dateIdentified,eventDate);
+		logger.debug(result.getResultState().getLabel());
+		logger.debug(result.getComment());
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
 		assertEquals(null, result.getValue());
 		
 		dateIdentified = "1700-01-03";
 		eventDate = "1700-1-3";
 		result = DwCOtherDateDQ.validationDateidentifiedOutofrange(dateIdentified,eventDate);
+		logger.debug(result.getResultState().getLabel());
+		logger.debug(result.getComment());
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
 		assertEquals(null, result.getValue());
 		

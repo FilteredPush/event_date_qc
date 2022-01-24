@@ -187,7 +187,7 @@ public class Runner {
 					}
 					{
 						String method = "VALIDATION_DATEIDENTIFIED_NOTSTANDARD";
-						response = DwCEventTG2DQ.validationDateidentifiedNotstandard(dateIdentified);
+						response = DwCOtherDateDQ.validationDateidentifiedNotstandard(dateIdentified);
 						String name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						Integer current = counter.get(name);
@@ -196,7 +196,7 @@ public class Runner {
 						counter.put(name, current);
 						
 						method = "VALIDATION_DATEIDENTIFIED_OUTOFRANGE";
-						response = DwCEventTG2DQ.validationDateidentifiedOutofrange(dateIdentified,eventDate);
+						response = DwCOtherDateDQ.validationDateidentifiedOutofrange(dateIdentified,eventDate);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -316,7 +316,7 @@ public class Runner {
 					// Amendments  ********************************************  
 					{
 						String method = "AMENDMENT_DATEIDENTIFIED_STANDARDIZED";
-						response = DwCEventTG2DQ.amendmentDateidentifiedStandardized(dateIdentified);
+						response = DwCOtherDateDQ.amendmentDateidentifiedStandardized(dateIdentified);
 						String name = method + " " + response.getResultState().getLabel();
 						Integer current = acounter.get(name);
 						if (current==null) { current = 0; }
@@ -427,7 +427,7 @@ public class Runner {
 
 					{
 						String method = "VALIDATION_DATEIDENTIFIED_NOTSTANDARD";
-						response = DwCEventTG2DQ.validationDateidentifiedNotstandard(dateIdentified);
+						response = DwCOtherDateDQ.validationDateidentifiedNotstandard(dateIdentified);
 						String name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						Integer current = postcounter.get(name);
@@ -436,7 +436,7 @@ public class Runner {
 						postcounter.put(name, current);
 						
 						method = "VALIDATION_DATEIDENTIFIED_OUTOFRANGE";
-						response = DwCEventTG2DQ.validationDateidentifiedOutofrange(dateIdentified,eventDate);
+						response = DwCOtherDateDQ.validationDateidentifiedOutofrange(dateIdentified,eventDate);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);

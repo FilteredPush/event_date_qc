@@ -2695,6 +2695,64 @@ public class DateUtils {
         return result;
 	}
 	
+	/**
+	 * Test to see if a string matches the expectations for an ISO date or date range,
+	 * without any time information, in one of the forms for a date or a date range expected
+	 * by the TDWG BDQ TG2 tests (e.g. yyyy, yyyy-mm-dd, yyyy/yyyy, yyyy-mm-dd/yyyy-mm-dd).
+	 * 
+	 * @param aDateString a string which might be a date to be tested.
+	 * @return true if the provided string is in one of the expected forms for an ISO date or date range,
+	 *    otherwise false.
+	 */
+	public static Boolean stringIsISOFormattedDate(String aDateString) { 
+		boolean result = false;
+		
+		try { 
+			DateTimeParser[] parsers = { 
+					DateTimeFormat.forPattern("yyyy").getParser(),
+					DateTimeFormat.forPattern("yyyy-mm").getParser(),
+					DateTimeFormat.forPattern("yyyy-mm-dd").getParser(),
+					DateTimeFormat.forPattern("yyyy-mm-dd").getParser(),
+					DateTimeFormat.forPattern("yyyy-mm-dd/yyyy").getParser(),
+					DateTimeFormat.forPattern("yyyy-mm-dd/yyyy-mm").getParser(),
+					DateTimeFormat.forPattern("yyyy/yyyy").getParser(),
+					DateTimeFormat.forPattern("yyyy-mm/yyyy").getParser(),
+					DateTimeFormat.forPattern("yyyy-mm/yyyy-mm").getParser(),
+					DateTimeFormat.forPattern("yyyy-mm/yyyy-mm-dd").getParser(),
+					DateTimeFormat.forPattern("yyyy/yyyy-mm").getParser(),
+					DateTimeFormat.forPattern("yyyy/yyyy-mm-dd").getParser(),
+					DateTimeFormat.forPattern("yyyy-mm-dd/yyyy-mm-dd").getParser()
+			};
+			DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
+			DateMidnight parseDate = LocalDate.parse(aDateString,formatter).toDateMidnight();
+			
+			result=true;
+			
+	    	if (aDateString.matches("^[0-9]{4}-[0-9]{1}-[0-9]{1,2}$")) {
+	    		result = false;
+	    	} else if (aDateString.matches("^[0-9]{4}-[0-9]{1,22}-[0-9]{1}$")) { 
+	    		result = false;
+	    	} else if (aDateString.matches("^[0-9]{4}-[0-9]{1}$")) {
+	    		result = false;
+	    	} else if (aDateString.matches("^.*/[0-9]{4}-[0-9]{1}$")) { 
+	    		result = false;
+	    	} else if (aDateString.matches("^.*/[0-9]{4}-[0-9]{1,2}-[0-9]{1}$")) { 
+	    		result = false;
+	    	} else if (aDateString.matches("^.*/[0-9]{4}-[0-9]{1}-[0-9]{1,2}$")) { 
+	    		result = false;
+	    	} else if (aDateString.matches("^-[0-9]{1}-[0-9]{0,2}$")) { 
+	    		result = false;
+	    	} else if (aDateString.matches("^-[0-9]{0,2}-[0-9]{1}$")) { 
+	    		result = false;
+	    	}
+			
+		} catch (Exception e) { 
+			logger.debug(e.getMessage());
+		}
+		
+		return result;
+	}
+	
     /**
      * Run from the command line, arguments -f to specify a file, -m to show matches. 
      * Converts dates in a specified input file from verbatim form to format expected by dwc:eventDate.

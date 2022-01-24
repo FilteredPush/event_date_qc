@@ -52,6 +52,36 @@ public class DateUtilsTest {
 	}
 	
 	/**
+	 * Test method for {@link org.filteredpush.qc.date.DateUtils#stringIsISOFormattedDate(java.lang.String)}.
+	 */
+	@Test
+	public void teststringIsISOFormattedDate() {
+		assertEquals(false,DateUtils.stringIsISOFormattedDate(""));
+		assertEquals(false,DateUtils.stringIsISOFormattedDate(" "));
+		assertEquals(false,DateUtils.stringIsISOFormattedDate("a"));
+		assertEquals(false,DateUtils.stringIsISOFormattedDate(" 1700"));
+		
+		assertEquals(true,DateUtils.stringIsISOFormattedDate("900"));
+		assertEquals(true,DateUtils.stringIsISOFormattedDate("1800"));
+		assertEquals(true,DateUtils.stringIsISOFormattedDate("1800-01"));
+		assertEquals(true,DateUtils.stringIsISOFormattedDate("1800-01-01"));
+		assertEquals(true,DateUtils.stringIsISOFormattedDate("1800/1801"));
+		assertEquals(true,DateUtils.stringIsISOFormattedDate("1800-01/1801"));
+		assertEquals(true,DateUtils.stringIsISOFormattedDate("1800/1801-01"));
+		assertEquals(true,DateUtils.stringIsISOFormattedDate("1800-01-01/1801"));
+		assertEquals(true,DateUtils.stringIsISOFormattedDate("1800/1801-01-10"));
+		assertEquals(true,DateUtils.stringIsISOFormattedDate("1800-01/1801"));
+		assertEquals(true,DateUtils.stringIsISOFormattedDate("1800-01-01/1801-01"));
+		assertEquals(true,DateUtils.stringIsISOFormattedDate("1800-01/1801-01"));
+		assertEquals(true,DateUtils.stringIsISOFormattedDate("1800-01-01/1801-01-01"));
+		
+		assertEquals(false,DateUtils.stringIsISOFormattedDate("1800-01-42"));
+		assertEquals(false,DateUtils.stringIsISOFormattedDate("1800-1-2"));
+		assertEquals(false,DateUtils.stringIsISOFormattedDate("-1-2"));
+		assertEquals(false,DateUtils.stringIsISOFormattedDate("--"));
+	}
+	
+	/**
 	 * Test method for {@link org.filteredpush.qc.date.DateUtils#createEventDateFromParts(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
 	 */
 	@Test
@@ -1618,6 +1648,9 @@ public class DateUtilsTest {
 		assertEquals(false,DateUtils.eventDateValid("1880-02-31")); // Doesn't parse as a date.
 		
     	assertEquals(false, DateUtils.eventDateValid("1905-04-08T04UTC")); 
+    	
+    	assertEquals(false, DateUtils.eventDateValid("1701-2-3"));
+    	assertEquals(false, DateUtils.eventDateValid("1701-2"));
     	
     	assertEquals(false, DateUtils.eventDateValid("2008-11-01/2008-10-09"));  // end before start
     	assertEquals(false, DateUtils.eventDateValid("1937-08-23/1037-09-09"));  // end before start
