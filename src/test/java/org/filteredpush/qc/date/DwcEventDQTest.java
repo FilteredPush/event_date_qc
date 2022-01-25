@@ -1373,35 +1373,35 @@ public class DwcEventDQTest {
 	@Test
 	public void testEventDateEmpty() {
 		String eventDate = null;
-		DQResponse<ComplianceValue> result = DwCEventDQ.isEventDateEmpty(eventDate);
+		DQResponse<ComplianceValue> result = DwCEventDQ.validationEventdateEmpty(eventDate);
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		
 		eventDate = "";
-		result = DwCEventDQ.isEventDateEmpty(eventDate);
+		result = DwCEventDQ.validationEventdateEmpty(eventDate);
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		
 		eventDate = "\n";
-		result = DwCEventDQ.isEventDateEmpty(eventDate);
+		result = DwCEventDQ.validationEventdateEmpty(eventDate);
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		
 		eventDate = " ";
-		result = DwCEventDQ.isEventDateEmpty(eventDate);
+		result = DwCEventDQ.validationEventdateEmpty(eventDate);
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		
 		eventDate = "NULL";
-		result = DwCEventDQ.isEventDateEmpty(eventDate);
+		result = DwCEventDQ.validationEventdateEmpty(eventDate);
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
 		
 		eventDate = "1840-01-05";
-		result = DwCEventDQ.isEventDateEmpty(eventDate);
+		result = DwCEventDQ.validationEventdateEmpty(eventDate);
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
 		
 		eventDate = "-1";
-		result = DwCEventDQ.isEventDateEmpty(eventDate);
+		result = DwCEventDQ.validationEventdateEmpty(eventDate);
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
 		
 		eventDate = "text";
-		result = DwCEventDQ.isEventDateEmpty(eventDate);
+		result = DwCEventDQ.validationEventdateEmpty(eventDate);
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
 		
 	}

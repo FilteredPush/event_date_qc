@@ -249,20 +249,22 @@ public class DwCEventDQ {
 	}
 
 	/**
+	 * #33 Validation SingleRecord Completeness: eventdate empty
 	 * Test to see whether or not a dwc:eventDate contains any value.
-	 * 
-	 * validation corresponding to TG2-VALIDATION_EVENTDATE_EMPTY  f51e15a6-a67d-4729-9c28-3766299d2985
 	 *
-	 * @param eventDate to assess for emptiness
-     * @return an object implementing DQValidationResponse describing whether any value is present dwc:eventDate.
+	 * Provides: VALIDATION_EVENTDATE_EMPTY
+	 *
+	 * @param eventDate the provided dwc:eventDate to evaluate for emptyness
+	 * @return DQResponse the response of type ComplianceValue  to return
 	 */
+	@Provides("urn:uuid:f51e15a6-a67d-4729-9c28-3766299d2985")
+	@Validation( label = "VALIDATION_EVENTDATE_EMPTY", description="The field dwc:eventDate is not EMPTY")
+	@Specification(value="COMPLIANT if dwc:eventDate is not EMPTY; otherwise NOT_COMPLIANT")
+	public static DQResponse<ComplianceValue> validationEventdateEmpty(@ActedUpon("dwc:eventDate") String eventDate) {
+		DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
-    @Provides(value="urn:uuid:f51e15a6-a67d-4729-9c28-3766299d2985")
-    @Validation( label = "VALIDATION_EVENTDATE_EMPTY", description="The field dwc:eventDate is not EMPTY")
-    @Specification(value="The field dwc:eventDate is not EMPTY The field dwc:eventDate exists in the record.")
-
-	public static DQResponse<ComplianceValue> isEventDateEmpty(@ActedUpon(value = "dwc:eventDate") String eventDate) {
-		DQResponse<ComplianceValue> result = new DQResponse<>();
+		// Specification
+		// COMPLIANT if dwc:eventDate is not EMPTY; otherwise NOT_COMPLIANT 
 
 		if (DateUtils.isEmpty(eventDate)) {
 			result.addComment("No value provided for eventDate.");

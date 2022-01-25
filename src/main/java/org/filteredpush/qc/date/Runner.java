@@ -223,7 +223,7 @@ public class Runner {
 						counter.put(name, current);
 						
 						method = "VALIDATION_EVENTDATE_EMPTY";
-						response = DwCEventTG2DQ.validationEventdateEmpty(eventDate);
+						response = DwCEventDQ.validationEventdateEmpty(eventDate);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -463,7 +463,7 @@ public class Runner {
 						postcounter.put(name, current);
 						
 						method = "VALIDATION_EVENTDATE_EMPTY";
-						response = DwCEventTG2DQ.validationEventdateEmpty(eventDate);
+						response = DwCEventDQ.validationEventdateEmpty(eventDate);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);

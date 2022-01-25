@@ -13,24 +13,6 @@ import org.datakurator.ffdq.api.result.*;
 @Mechanism(value="a5fdf476-2e84-4004-bdc1-fc606a5ca2c8",label="Kurator: Date Validator - DwCEventDQ:v2.1.0")
 public class DwCEventDQ_stubs {
 
-    /**
-     * #33 Validation SingleRecord Completeness: eventdate empty
-     *
-     * Provides: VALIDATION_EVENTDATE_EMPTY
-     *
-     * @param eventDate the provided dwc:eventDate to evaluate
-     * @return DQResponse the response of type ComplianceValue  to return
-     */
-    @Provides("f51e15a6-a67d-4729-9c28-3766299d2985")
-    public DQResponse<ComplianceValue> validationEventdateEmpty(@ActedUpon("dwc:eventDate") String eventDate) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
-
-        //TODO:  Implement specification
-        // COMPLIANT if dwc:eventDate is not EMPTY; otherwise NOT_COMPLIANT 
-        //
-
-        return result;
-    }
 
     /**
      * #36 Validation SingleRecord Conformance: eventdate outofrange
