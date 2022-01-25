@@ -9,7 +9,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ 
 	DateUtilsTest.class,
 	DwcEventDQTest.class,
-	DwCOtherDateDQTest.class
+	DwCOtherDateDQTest.class,
+	DwCOtherDateDQTestDefinitions.class
 	})
 public class AllTests {
 

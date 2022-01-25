@@ -17,7 +17,6 @@ import org.datakurator.ffdq.model.ResultState;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Interval;
-import org.joda.time.LocalDateTime;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -154,26 +153,6 @@ public class DwCOtherDateDQ {
 		if (DateUtils.isEmpty(earliestValidDate)) { 
 			latestValidDate  = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
 		}
-		if (!DateUtils.isEmpty(eventDate)) {
-			// there is some value to event date
-			if (!eventDate.matches("^[0-9]{4}-[0-9]{1}-[0-9]{2}$")) {
-				// and event date isn't in the form yyyy-mm-dd
-				if (DateUtils.stringIsISOFormattedDate(eventDate)) {
-					// but event date is in some valid form 
-					// handle eventDate values that are valid ISO date ranges rather than a single day.
-					try { 
-						DateTime eventDateDateTime = DateUtils.extractDateInterval(eventDate).getStart().withZone(DateTimeZone.UTC);
-						eventDate = LocalDate.of(eventDateDateTime.getYear(), eventDateDateTime.getMonthOfYear(), eventDateDateTime.getDayOfMonth()).format(DateTimeFormatter.ISO_LOCAL_DATE);
-					} catch (Exception e) { 
-						result.addComment("Value provided for dwc:eventDate ["+eventDate+"] not interpretable as a valid date.");
-						eventDate = "";
-					}
-				} else {
-					// Note: If eventDate contains a time, results will not be as expected
-					logger.debug(eventDate);
-				}
-			}
-    	}
 
     	String range = earliestValidDate + "/" + latestValidDate;
     	Interval withinInterval = DateUtils.extractInterval(range);
@@ -187,12 +166,22 @@ public class DwCOtherDateDQ {
     	} else if (!DateUtils.eventDateValid(dateIdentified)) {
     		result.addComment("Value provided for dwc:dateIdentified ["+dateIdentified+"] is not a valid date.");
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-    	} else if (!DateUtils.eventDateValid(eventDate)) {
-    		result.addComment("No valid value provided for dwc:eventDate to compare with dwc:dateIdentified.");
-    		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     	} else if (!DateUtils.isEmpty(eventDate) && !DateUtils.eventDateValid(eventDate)) {
     		result.addComment("Value provided for dwc:eventDate ["+eventDate+"] is not a valid date, unable to compare with dateIdentified.");
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    	} else if (DateUtils.isEmpty(eventDate)) {
+    		result.addComment("No valid value provided for dwc:eventDate to compare with dwc:dateIdentified.");
+    		Interval identifiedInterval = DateUtils.extractInterval(dateIdentified);
+    		if (withinInterval.overlaps(identifiedInterval)) {
+    			result.setValue(ComplianceValue.COMPLIANT);
+    			result.setResultState(ResultState.RUN_HAS_RESULT);
+    			result.addComment("Provided value for dateIdentified [" + dateIdentified + "] overlaps the limits ["+earliestValidDate +"]-["+latestValidDate +"].");
+    		} else { 
+    			result.setValue(ComplianceValue.NOT_COMPLIANT);
+    			result.setResultState(ResultState.RUN_HAS_RESULT);
+    			result.addComment("Provided value for dateIdentified [" + dateIdentified + "] is outside the limits ["+earliestValidDate +"]-["+latestValidDate +"].");
+    			
+    		}
     	} else {
     		Interval identifiedInterval = DateUtils.extractInterval(dateIdentified);
     		if (identifiedInterval==null) { 
@@ -229,9 +218,13 @@ public class DwCOtherDateDQ {
     				result.setValue(ComplianceValue.COMPLIANT);
     				result.addComment("Provided value for dateIdentified [" + dateIdentified + "] starts at the same time as the eventDate ["+eventDate+"].");;
     				result.setResultState(ResultState.RUN_HAS_RESULT);
-    			} else if (identifiedInterval.getStart().isBefore(eventInterval.getStart())) { 
+    			} else if (identifiedInterval.overlaps(eventInterval)) { 
+    				result.setValue(ComplianceValue.COMPLIANT);
+    				result.addComment("Provided value for dateIdentified [" + dateIdentified + "] overlaps the eventDate ["+eventDate+"].");;
+    				result.setResultState(ResultState.RUN_HAS_RESULT);
+    			} else if (identifiedInterval.getEnd().isBefore(eventInterval.getStart())) { 
     				result.setValue(ComplianceValue.NOT_COMPLIANT);
-    				result.addComment("Provided value for dateIdentified [" + dateIdentified + "] starts before the eventDate starts.");
+    				result.addComment("Provided value for dateIdentified [" + dateIdentified + "] ends before the eventDate starts.");
     				result.setResultState(ResultState.RUN_HAS_RESULT);
     			} else { 
     				result.setValue(ComplianceValue.NOT_COMPLIANT);

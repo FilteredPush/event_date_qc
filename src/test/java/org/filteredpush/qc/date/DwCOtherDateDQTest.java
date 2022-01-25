@@ -501,9 +501,8 @@ public class DwCOtherDateDQTest {
 		result = DwCOtherDateDQ.validationDateidentifiedOutofrange(dateIdentified,eventDate);
 		logger.debug(result.getComment());
 		logger.debug(result.getResultState().getLabel());
-		// TODO: This case needs clarification in the specification
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
 		
 		dateIdentified = "1503-08-16/1602-02-29";
 		eventDate = "1500";
