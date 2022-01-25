@@ -15,30 +15,6 @@ public class DwCEventDQ_stubs {
 
 
     /**
-     * #36 Validation SingleRecord Conformance: eventdate outofrange
-     *
-     * Provides: VALIDATION_EVENTDATE_OUTOFRANGE
-     *
-     * @param eventDate the provided dwc:eventDate to evaluate
-     * @return DQResponse the response of type ComplianceValue  to return
-     */
-    @Provides("3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
-    public DQResponse<ComplianceValue> validationEventdateOutofrange(@ActedUpon("dwc:eventDate") String eventDate) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
-
-        //TODO:  Implement specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
-        // or if the value of dwc:eventDate is not a valid ISO 8601-1:2019 
-        // date; COMPLIANT if the range of dwc:eventDate is entirely 
-        //within the parameter range, otherwise NOT_COMPLIANT 
-
-        //TODO: Parameters. This test is defined as parameterized.
-        // Default values: bdq:earliestValidDate="1600"; bdq:latestValidDate=current year
-
-        return result;
-    }
-
-    /**
      * #49 Validation SingleRecord Completeness: year empty
      *
      * Provides: VALIDATION_YEAR_EMPTY

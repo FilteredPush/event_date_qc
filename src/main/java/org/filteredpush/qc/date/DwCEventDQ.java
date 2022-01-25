@@ -29,6 +29,8 @@ import org.datakurator.ffdq.model.ResultState;
 import org.joda.time.Interval;
 import org.joda.time.LocalDateTime;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -1743,33 +1745,67 @@ public class DwCEventDQ {
     }		
 	
     /**
+     * #36 Validation SingleRecord Conformance: eventdate outofrange
      * Given an eventDate check to see if that event date falls entirely outside a range from a
-     * specified lower bound (1700-01-01 by default) and the present.  
-     * 
-     * TODO: This may or may not be consistent with the standard test, current implementation here fails
-     * only if the eventDate has no overlap with the lowerBound to the present, not if the eventDate has 
-     * any overlap outside the lowerBound to the present.
-     * TG2-VALIDATION_EVENTDATE_OUTOFRANGE ?  probably not
-     * 
-     * 
-     * @param eventDate to check
-     * @param lowerBound integer representing the year to use as the lower boundary, if null, then uses 1700
-     * @param useLowerBound if false, no lower limit, otherwise uses supplied lower bound.
-     * @return an DQValidationResponse object describing whether the provided value is in range.
+     * specified lower bound (1600-01-01 by default) and a specified upper bound (the end of the 
+     * current year by default)   
+     *
+     * Provides: VALIDATION_EVENTDATE_OUTOFRANGE
+     *
+     * @param eventDate the provided dwc:eventDate to evaluate
+     * @return DQResponse the response of type ComplianceValue  to return
      */
-    @Provides(value="urn:uuid:bc8d1ffb-d074-4b4b-919c-f0c8fbe1a618")  // new guid, probably not the test as specified 
-    @Validation( label = "VALIDATION_EVENTDATE_WHOLLYOUTOFRANGE", description="The range of dwc:eventDate does not fall entirely into the future and optionally does not fall entirely before a date designated when the test is run")
-    @Specification(value="The range of dwc:eventDate is not entirely the future and optionally does not entirely fall before a date designated when the test is run The field dwc:eventDate is not EMPTY.")
-    public static DQResponse<ComplianceValue> isEventDateInRange(@ActedUpon(value = "dwc:eventDate") String eventDate, @Parameter(name = "whollyOutOfRangeLowerBound") Integer lowerBound, @Parameter(name = "whollyOutOfRangeUseLowerBound") Boolean useLowerBound) {
-    	DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
-    	// TODO: Implementation may be too tightly bound to year, may need to extract first/last day for finer granularity test
-    	if (lowerBound==null) { 
-    		lowerBound = 1700;
-    	}
-    	if (useLowerBound==null) { 
-    		useLowerBound = true;
-    	}
-    	Integer upperBound = LocalDateTime.now().getYear();
+    @Provides("urn:uuid:3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
+    public static DQResponse<ComplianceValue> validationEventdateOutofrange(@ActedUpon("dwc:eventDate") String eventDate) {
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
+        // or if the value of dwc:eventDate is not a valid ISO 8601-1:2019 
+        // date; COMPLIANT if the range of dwc:eventDate is entirely 
+        // within the parameter range, otherwise NOT_COMPLIANT 
+
+        // Parameters. This test is defined as parameterized.
+        // Default values: bdq:earliestValidDate="1600"; bdq:latestValidDate=current year
+    	
+    	String currentYear = String.format("%04d",Calendar.getInstance().get(Calendar.YEAR)) + "-12-31";
+    	return DwCEventDQ.validationEventdateOutofrange(eventDate,"1600-01-01",currentYear);
+    }
+    	
+        
+    /**
+     * #36 Validation SingleRecord Conformance: eventdate outofrange
+     * 
+     * Given an eventDate check to see if that event date falls entirely outside a range from a
+     * specified lower bound (1600-01-01 by default) and a specified upper bound (the end of the 
+     * current year by default)   
+     *
+     * Provides: VALIDATION_EVENTDATE_OUTOFRANGE
+     *
+     * @param eventDate the provided dwc:eventDate to evaluate
+     * @param earlyestValidDate the earlyest date for which eventDate can be valid
+     * @param latestValidDate the  latest date for which eventDate can be valid
+     * @return DQResponse the response of type ComplianceValue  to return
+     */
+    @Provides("urn:uuid:3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
+    @Validation( label = "VALIDATION_EVENTDATE_OUTOFRANGE", description="The range of dwc:eventDate does not fall entirely within a specified range")
+    @Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY  or if the value of dwc:eventDate is not a valid ISO 8601-1:2019  date; COMPLIANT if the range of dwc:eventDate is entirely  within the parameter range, otherwise NOT_COMPLIANT")
+    public static DQResponse<ComplianceValue> validationEventdateOutofrange(@ActedUpon("dwc:eventDate") String eventDate, @Parameter(name="bdq:earliestValidDate") String earlyestValidDate, @Parameter(name="bdq:latestValidDate") String latestValidDate ) {
+        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+ 
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
+        // or if the value of dwc:eventDate is not a valid ISO 8601-1:2019 
+        // date; COMPLIANT if the range of dwc:eventDate is entirely 
+        // within the parameter range, otherwise NOT_COMPLIANT 
+
+        // Parameters. This test is defined as parameterized.
+        // Default values: bdq:earliestValidDate="1600"; bdq:latestValidDate=current year
+        if (DateUtils.isEmpty(latestValidDate)) {
+        	latestValidDate = String.format("%04d",Calendar.getInstance().get(Calendar.YEAR)) + "-12-31";
+        }
+        if (DateUtils.isEmpty(earlyestValidDate)) { 
+        	earlyestValidDate = "1600-01-01";
+        }
+        
     	if (DateUtils.isEmpty(eventDate)) {
     		result.addComment("No value provided for dwc:eventDate.");
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -1778,137 +1814,23 @@ public class DwCEventDQ {
     			result.addComment("Value provided for dwc:eventDate ["+eventDate+"] not recognized as a valid date.");
     			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		} else { 
-    			int startYear = 0;
     			Interval interval = DateUtils.extractInterval(eventDate);
-    			if (DateUtils.isRange(eventDate)) {
-    				int endYear = interval.getEnd().getYear();
-    				startYear = interval.getStart().getYear();
-    				if (useLowerBound) { 
-    					if (endYear<lowerBound|| startYear>upperBound) { 
-    						result.setValue(ComplianceValue.NOT_COMPLIANT);
-    						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is not a range spanning part of the range " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");
-    					} else { 
-    						result.setValue(ComplianceValue.COMPLIANT);
-    						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is a range spanning at least part of " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");
-    					}    				
+    			Interval bounds = DateUtils.extractInterval(earlyestValidDate + "/" + latestValidDate );
+    			if (bounds.contains(interval)) { 
+    				result.setValue(ComplianceValue.COMPLIANT);
+    				result.addComment("Provided value for dwc:eventDate '" + eventDate + "' falls entirely within the range " + earlyestValidDate + " to " + latestValidDate + ".");
+    			} else { 
+    				result.setValue(ComplianceValue.NOT_COMPLIANT);
+    				if (bounds.overlaps(interval)) { 
+    					result.addComment("Provided value for dwc:eventDate '" + eventDate + "' extends outside the range " + earlyestValidDate + " to " + latestValidDate + ".");
     				} else { 
-    					if (startYear>upperBound) { 
-    						result.setValue(ComplianceValue.NOT_COMPLIANT);
-    						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is not a range spanning part of the range " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");
-    					} else { 
-    						result.setValue(ComplianceValue.COMPLIANT);
-    						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is a range spanning at least part of " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");
-    					}       					
+    					result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is outside the range " + earlyestValidDate + " to " + latestValidDate + ".");
     				}
-    			} else {
-    				startYear = interval.getStart().getYear();
-    				if (useLowerBound) { 
-    					if (startYear<lowerBound || startYear>upperBound) { 
-    						result.setValue(ComplianceValue.NOT_COMPLIANT);
-    						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' does not have a year in the range " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");
-    					} else { 
-    						result.setValue(ComplianceValue.COMPLIANT);
-    						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' does not have a year in the range " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");
-    					} 
-    				} else { 
-    					if (startYear>upperBound) { 
-    						result.setValue(ComplianceValue.NOT_COMPLIANT);
-    						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is not after  " + upperBound.toString() + " (current year).");
-    					} else { 
-    						result.setValue(ComplianceValue.COMPLIANT);
-    						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is after " + upperBound.toString() + " (current year).");
-    					}     					
-    				}
-    			}
+    			} 
     			result.setResultState(ResultState.RUN_HAS_RESULT);
     		}
     	}
     	return result;
     }	    
-
-    /**
-     * Given an eventDate check to see if that event date crosses outside a range from a
-     * specified lower bound (1700-01-01 by default) and the present.  
-     * 
-     * TODO: This may or may not be consistent with the standard test
-     * TG2-VALIDATION_EVENTDATE_OUTOFRANGE 
-     * 
-     * 
-     * @param eventDate to check
-     * @param lowerBound integer representing the year to use as the lower boundary, if null, then uses 1700
-     * @param useLowerBound if false, no lower limit, otherwise uses supplied lower bound.
-     * @return an DQValidationResponse object describing whether the provided value is in range.
-     */
-    @Provides(value="urn:uuid:3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
-    @Validation( label = "VALIDATION_EVENTDATE_EXTENDSOUTOFRANGE", description="The range of dwc:eventDate does not extend into the future and optionally does not extend before a date designated when the test is run")
-    @Specification(value="The range of dwc:eventDate does not extend into the future and optionally does not extend before a date designated when the test is run The field dwc:eventDate is not EMPTY.")
-    public static DQResponse<ComplianceValue> isEventDateAtAllInRange(@ActedUpon(value = "dwc:eventDate") String eventDate, @Parameter(name = "extendsOutOfRangeLowerBound") Integer lowerBound, @Parameter(name = "extendsOutOfRangeUseLowerBound") Boolean useLowerBound) {
-    	DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
-    	// TODO: Implementation may be too tightly bound to year, may need to extract first/last day for finer granularity test
-    	if (lowerBound==null) { 
-    		lowerBound = 1700;
-    	}
-    	if (useLowerBound==null) { 
-    		useLowerBound = true;
-    	}
-    	Integer upperBound = LocalDateTime.now().getYear();
-    	if (DateUtils.isEmpty(eventDate)) {
-    		result.addComment("No value provided for dwc:eventDate.");
-    		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-    	} else { 
-    		if (! DateUtils.eventDateValid(eventDate)) { 
-    			result.addComment("Value provided for dwc:eventDate ["+eventDate+"] not recognized as a valid date.");
-    			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-    		} else { 
-    			int startYear = 0;
-    			Interval interval = DateUtils.extractInterval(eventDate);
-    			if (DateUtils.isRange(eventDate)) {
-    				int endYear = interval.getEnd().getYear();
-    				startYear = interval.getStart().getYear();
-    				if (endYear > upperBound ) { 
-    					result.setValue(ComplianceValue.NOT_COMPLIANT);
-    					result.addComment("Provided value for dwc:eventDate '" + eventDate + "' extends outside the range " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");
-    				} else { 
-    					if (useLowerBound) { 
-        					if (startYear<lowerBound) {
-            					result.setValue(ComplianceValue.NOT_COMPLIANT);
-            					result.addComment("Provided value for dwc:eventDate '" + eventDate + "' extends outside the range " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");
-        					} else { 
-        						result.setValue(ComplianceValue.COMPLIANT);
-        						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is a range spanning at least part of " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");    						
-        					}
-    					} else { 
-    						result.setValue(ComplianceValue.COMPLIANT);
-    						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is a range spanning at least part of " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");    						
-    					}
-    				} 
-    			} else {
-    				startYear = interval.getStart().getYear();
-    				if (useLowerBound) { 
-    					if (startYear<lowerBound || startYear>upperBound) { 
-    						result.setValue(ComplianceValue.NOT_COMPLIANT);
-    						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' does not have a year in the range " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");
-    					} else { 
-    						result.setValue(ComplianceValue.COMPLIANT);
-    						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' does not have a year in the range " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");
-    					} 
-    				} else { 
-    					if (startYear>upperBound) { 
-    						result.setValue(ComplianceValue.NOT_COMPLIANT);
-    						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is not after  " + upperBound.toString() + " (current year).");
-    					} else { 
-    						result.setValue(ComplianceValue.COMPLIANT);
-    						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is after " + upperBound.toString() + " (current year).");
-    					}     					
-    				}
-    			}
-    			result.setResultState(ResultState.RUN_HAS_RESULT);
-    		}
-    	}
-    	return result;
-    }	
-
-
-
 
 }
