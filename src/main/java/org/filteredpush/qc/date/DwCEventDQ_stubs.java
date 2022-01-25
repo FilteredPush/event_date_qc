@@ -15,25 +15,6 @@ public class DwCEventDQ_stubs {
 
 
     /**
-     * #49 Validation SingleRecord Completeness: year empty
-     *
-     * Provides: VALIDATION_YEAR_EMPTY
-     *
-     * @param year the provided dwc:year to evaluate
-     * @return DQResponse the response of type ComplianceValue  to return
-     */
-    @Provides("c09ecbf9-34e3-4f3e-b74a-8796af15e59f")
-    public DQResponse<ComplianceValue> validationYearEmpty(@ActedUpon("dwc:year") String year) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
-
-        //TODO:  Implement specification
-        // COMPLIANT if dwc:year is not EMPTY; otherwise NOT_COMPLIANT 
-        //
-
-        return result;
-    }
-
-    /**
      * #52 Amendment SingleRecord Completeness: event from eventdate
      *
      * Provides: AMENDMENT_EVENT_FROM_EVENTDATE

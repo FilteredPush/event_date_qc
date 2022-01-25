@@ -280,22 +280,25 @@ public class DwCEventDQ {
 		return result;
 	}
 
+	
 	/**
+     * #49 Validation SingleRecord Completeness: year empty
 	 * Test to see whether or not a dwc:year contains any value.
 	 * 
-	 * validation corresponding to  TG2-VALIDATION_YEAR_EMPTY  c09ecbf9-34e3-4f3e-b74a-8796af15e59f
-	 * 
 	 * @param year to check for emptyness
-     * @return an object implementing DQValidationResponse describing whether any value is present dwc:year.
+     * @param year the provided dwc:year to evaluate for the presence of some value
+     * @return DQVResponse of type ComplianceValue describing whether any value is present dwc:year.
 	 */
-
 	@Provides(value="urn:uuid:c09ecbf9-34e3-4f3e-b74a-8796af15e59f")
     @Validation( label = "VALIDATION_YEAR_EMPTY", description="The field dwc:year is not EMPTY")
     @Specification(value="The field dwc:year is not EMPTY The field dwc:year exists in the record.")
-
-	public static DQResponse<ComplianceValue> isYearEmpty(@ActedUpon(value = "dwc:year") String year) {
+	public static DQResponse<ComplianceValue> validationYearEmpty(@ActedUpon(value = "dwc:year") String year) {
 		DQResponse<ComplianceValue> result = new DQResponse<>();
 
+        // Specification
+        // COMPLIANT if dwc:year is not EMPTY; otherwise NOT_COMPLIANT 
+        //
+		
 		if (DateUtils.isEmpty(year)) {
 			result.addComment("No value provided for dwc:year.");
 			result.setValue(ComplianceValue.NOT_COMPLIANT);

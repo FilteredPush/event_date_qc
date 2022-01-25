@@ -1409,27 +1409,27 @@ public class DwcEventDQTest {
 	@Test
 	public void testYearEmpty() {
 		String year = null;
-		DQResponse<ComplianceValue> result = DwCEventDQ.isYearEmpty(year);
+		DQResponse<ComplianceValue> result = DwCEventDQ.validationYearEmpty(year);
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		
 		year="";
-		result = DwCEventDQ.isYearEmpty(year);
+		result = DwCEventDQ.validationYearEmpty(year);
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		
 		year="NULL";
-		result = DwCEventDQ.isYearEmpty(year);
+		result = DwCEventDQ.validationYearEmpty(year);
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
 		
 		year="1880";
-		result = DwCEventDQ.isYearEmpty(year);
+		result = DwCEventDQ.validationYearEmpty(year);
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());				
 
 	    year = "-1";
-		result = DwCEventDQ.isYearEmpty(year);
+		result = DwCEventDQ.validationYearEmpty(year);
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());				
 				
 		year = "text";
-		result = DwCEventDQ.isYearEmpty(year);
+		result = DwCEventDQ.validationYearEmpty(year);
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());				
 	}
 	
