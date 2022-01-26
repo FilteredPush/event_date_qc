@@ -1,4 +1,5 @@
 target/
+event_date_qc-*-executable.jar
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
