@@ -2763,10 +2763,15 @@ public class DateUtils {
      *    -a to show all lines, matched or not with their interpretations.
      */
 	public static void main(String[] args) { 
-		DateUtils.interpretDates(args);
+		DateUtils.interpretDates(args,true);
 	} 
 	
 	public static void interpretDates(String[] args) {
+		DateUtils.interpretDates(args,true);
+	}
+
+	public static void interpretDates(String[] args,Boolean showSummaryLines) {
+		if (showSummaryLines == null) { showSummaryLines=true; } 
  		try {
 			File datesFile = null;
 			try { 
@@ -2849,8 +2854,10 @@ public class DateUtils {
 			}
 			reader.close();
 			if (!standardIn) { 
-				System.out.println("Unmatched lines: " + unmatched);
-				System.out.println("Matched lines: " + matched);
+				if (showSummaryLines) { 
+					System.out.println("Unmatched lines: " + unmatched);
+ 					System.out.println("Matched lines: " + matched);
+				}
 			}
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage());

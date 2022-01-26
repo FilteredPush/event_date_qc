@@ -9,38 +9,57 @@ DOI: 10.5281/zenodo.166329
 
 This library provides two classes each with a set of static methods which provide functions to support data quality control of date data in the context of biodiversity.  DateUtils provides a set of primitive methods for working with event date data, and DwCEventQC provides a wrapper set of annotated methods for making assertions about event date data in terms of the Fittness for Use Framework.  
 
-## Quick Start: Find verbatim dates that can't be parsed.
+# Include using maven
 
-Obtain a v1.2.x or newer build, or checkout and run mvn package, then execute jar file, e.g. with: 
+Available in Maven Central.
 
-    java -jar event_date_qc-2.0.3.jar -f src/test/resources/example_dates.csv
+    <dependency>
+        <groupId>org.filteredpush</groupId>
+        <artifactId>event_date_qc</artifactId>
+        <version>2.0.0</version>
+    </dependency>
+
+# Building
+
+    mvn package
+
+Library jar will be produced in /target/event_date_qc-{version}.jar
+
+An executable jar will be produced in /event_date_qc-{version}-{gitcommit}-executable.jar.  This jar is not installed in the local maven repository or deployed to maven central with maven install or maven deploy.
+
+
+# Quick Start: Find verbatim dates that can't be parsed.
+
+Checkout and run mvn package, then execute jar file, e.g. with: 
+
+    java -jar event_date_qc-2.1.0-SNAPSHOT-97344b4-executable.jar -f src/test/resources/example_dates.csv
 
 Dates from the corpus of example dates that aren't yet recognized will be printed.  To show only matched dates add -m as an option, to show both matched and un-matched dates, use -a as an option.
 
 Example output from 
 
-    java -jar target/event_date_qc-1.2.0-SNAPSHOT.jar -f src/test/resources/example_dates.csv -a 
+    java -jar event_date_qc-2.1.0-SNAPSHOT-97344b4-executable.jar -f src/test/resources/example_dates_for_readme.csv -a -e verbatimDates
 
-is tab separated lines listing the original value, a result code, and the interpreted date.  For example:
+consists of tab separated lines listing the original value, a result code, and the interpreted date, with the last two lines summarizing the results:
 
-    June 9 1906 DATE    1906-06-09
-    VIII/13/1938    DATE    1938-08-13
-    VIII/1892   RANGE   1892-08
-    VIII/1893   RANGE   1893-08
-    VIII/28 1895    DATE    1895-08-28
-    VIII/30 1896    DATE    1896-08-30
-    winter  NOT_RUN
-    [18 June 1863]  DATE    1863-06-18
-    [1800's]    RANGE   1800-01-01/1899-12-31
-    September 9. 1913   DATE    1913-09-09
-    September, 1862 RANGE   1862-09
-    September, 1882 RANGE   1882-09
-    11/8 1899   AMBIGUOUS   1899-08-11/1899-11-08
-    11/8, 1883  AMBIGUOUS   1883-08-11/1883-11-08
-    12-1-1915   AMBIGUOUS   1915-01-12/1915-12-01
-    12-11-1937  AMBIGUOUS   1937-11-12/1937-12-11
-    1-2 fevrier 1963    RANGE   1963-02-01/1963-02-02
-    11 et 14 VII 1910   RANGE   1910-07-11/1910-07-14
+    June 9 1906	DATE	1906-06-09
+    VIII/13/1938	DATE	1938-08-13
+    VIII/1892	RANGE	1892-08
+    VIII/1893	RANGE	1893-08
+    VIII/28 1895	DATE	1895-08-28
+    VIII/30 1896	DATE	1896-08-30
+    winter	NOT_RUN
+    [18 June 1863]	DATE	1863-06-18
+    [1800's]	RANGE	1800-01-01/1899-12-31
+    September 9. 1913	DATE	1913-09-09
+    September, 1862	RANGE	1862-09
+    September, 1882	RANGE	1882-09
+    11/8 1899	AMBIGUOUS	1899-08-11/1899-11-08
+    11/8, 1883	AMBIGUOUS	1883-08-11/1883-11-08
+    12-1-1915	AMBIGUOUS	1915-01-12/1915-12-01
+    12-11-1937	AMBIGUOUS	1937-11-12/1937-12-11
+    1-2 fevrier 1963	RANGE	1963-02-01/1963-02-02
+    11 et 14 VII 1910	RANGE	1910-07-11/1910-07-14
 
 This command line functionality is primarily intended for development use to assess and expand the coverage of different forms of verbatim dates.  The primary intent of this project is as a library.
 
@@ -114,20 +133,6 @@ The unit test below shows an example of a call on DwCEventDQ.measureDurationSeco
     }
     
 The APIs for both the java annotations for the framework and the result objects for the framework are expected to change.    
-
-# Include using maven
-
-Available in Maven Central.
-
-    <dependency>
-        <groupId>org.filteredpush</groupId>
-        <artifactId>event_date_qc</artifactId>
-        <version>2.0.0</version>
-    </dependency>
-
-# Building
-
-    mvn package
 
 # Developer deployment: 
 

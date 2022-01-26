@@ -75,7 +75,9 @@ public class Runner {
 		options.addRequiredOption("f", null, true, "Input file containing dates or darwin core data to test.");
 		options.addOption("m", "(verbatimDates) show matched dates and their interpretations otheriwse lists non-matched lines");
 		options.addOption("a","(verbatimDates) to show all lines, matched or not with their interpretations.");	
+		options.addOption("s","(verbatimDates) include summary lines at end of output");	
 		options.addOption("l","limit",true,"Limit processing to the specified number of rows");
+		options.addOption("h","help",false,"Show help.");
 
 		try { 
 			// Get option values
@@ -84,7 +86,11 @@ public class Runner {
 
 			String execution = cmd.getOptionValue("e","runTests");
 			if (execution.equals("verbatimDates")) {
-				DateUtils.interpretDates(args);
+				Boolean showSummaryLines = cmd.hasOption("s");
+				DateUtils.interpretDates(args,showSummaryLines);
+			} else if (execution.equals("help")) { 
+				HelpFormatter formatter = new HelpFormatter();
+				formatter.printHelp( "java -jar event_date_qc-{version}-{gitcommit}-executable.jar", options);
 			} else { 
 				List<Method> methods = Arrays.asList(DwCEventTG2DQ.class.getDeclaredMethods());
 				methods.get(0).isAnnotationPresent(Provides.class);
@@ -610,7 +616,7 @@ public class Runner {
 		} catch (ParseException e) {
 			System.out.println("ERROR: " + e.getMessage() + "\n");
 			HelpFormatter formatter = new HelpFormatter();
-			formatter.printHelp( "java -jar TestUtil.jar", options);
+			formatter.printHelp( "java -jar event_date_qc-{version}-{gitcommit}-executable.jar", options);
 		} catch (FileNotFoundException e1) {
 			logger.error("File not found", e1);
 			System.out.println("ERROR: File not found: " + e1.getMessage() + "\n");
