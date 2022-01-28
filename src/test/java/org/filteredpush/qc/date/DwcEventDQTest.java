@@ -38,92 +38,117 @@ public class DwcEventDQTest {
 
 	@Test
 	public void testMeasureDuration() { 
-		DQResponse<NumericalValue> measure = DwCEventDQ.measureDurationSeconds("1880-05-08");
+		DQResponse<NumericalValue> measure = DwCEventDQ.measureEventdatePrecisioninseconds("1880-05-08");
 		Long seconds = (60l*60l*24l)-1l; 
 		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
 		
-		measure = DwCEventDQ.measureDurationSeconds("1880-05");
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1880-05");
 		seconds = (60l*60l*24l*31)-1l; 
 		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
 		
-		measure = DwCEventDQ.measureDurationSeconds("");
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1881");
+		seconds = (60l*60l*24l*365)-1l; 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
+		
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1880"); // leap year
+		seconds = (60l*60l*24l*366)-1l; 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
+		
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1880-02");  // Feb in leap year
+		seconds = (60l*60l*24l*29)-1l; 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());		
+		
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1881-02");
+		seconds = (60l*60l*24l*28)-1l; 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());			
+		
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("");
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, measure.getResultState());
 	}
 	
 	/**
-	 * Test method for {@link org.filteredpush.qc.date.DwCEventDQ#isDayInRange(java.lang.String)}.
+	 * Test method for {@link org.filteredpush.qc.date.DwCEventDQ#validationDayNotstandard(java.lang.String)}.
 	 */
 	@Test
 	public void testIsDayInRange() {
 		DQResponse<ComplianceValue> result = null;
 		for (int i = 1; i<=31; i++) { 
-			result = DwCEventDQ.isDayInRange(Integer.toString(i));
+			result = DwCEventDQ.validationDayNotstandard(Integer.toString(i));
 			assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 			assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		}
-		result = DwCEventDQ.isDayInRange(" 1 ");
+		for (int i = 33; i<=40; i++) { 
+			result = DwCEventDQ.validationDayNotstandard(Integer.toString(i));
+			assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+			assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		}
+		result = DwCEventDQ.validationDayNotstandard(" 1 ");
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
-		result = DwCEventDQ.isDayInRange("01");
+		result = DwCEventDQ.validationDayNotstandard("01");
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 
 		int i=0;
-		result = DwCEventDQ.isDayInRange(Integer.toString(i));
+		result = DwCEventDQ.validationDayNotstandard(Integer.toString(i));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 
 		i=32;
-		result = DwCEventDQ.isDayInRange(Integer.toString(i));
+		result = DwCEventDQ.validationDayNotstandard(Integer.toString(i));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 
 		i=-1;
-		result = DwCEventDQ.isDayInRange(Integer.toString(i));
+		result = DwCEventDQ.validationDayNotstandard(Integer.toString(i));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 
 		i=Integer.MAX_VALUE;
-		result = DwCEventDQ.isDayInRange(Integer.toString(i));
+		result = DwCEventDQ.validationDayNotstandard(Integer.toString(i));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 
 		i=Integer.MIN_VALUE;
-		result = DwCEventDQ.isDayInRange(Integer.toString(i));
+		result = DwCEventDQ.validationDayNotstandard(Integer.toString(i));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 
-		result = DwCEventDQ.isDayInRange(null);
+		result = DwCEventDQ.validationDayNotstandard(null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 		
-		result = DwCEventDQ.isDayInRange("");
+		result = DwCEventDQ.validationDayNotstandard("");
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 	
-		result = DwCEventDQ.isDayInRange(" ");
+		result = DwCEventDQ.validationDayNotstandard(" ");
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 		
-		result = DwCEventDQ.isDayInRange("A");
+		result = DwCEventDQ.validationDayNotstandard("A");
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 		
-		result = DwCEventDQ.isDayInRange("1.5");
+		result = DwCEventDQ.validationDayNotstandard("1.5");
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 		
-		result = DwCEventDQ.isDayInRange("**");
+		result = DwCEventDQ.validationDayNotstandard("**");
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 		
-		result = DwCEventDQ.isDayInRange("1st");
+		result = DwCEventDQ.validationDayNotstandard("1st");
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 		
-		result = DwCEventDQ.isDayInRange("2nd");
+		result = DwCEventDQ.validationDayNotstandard("2nd");
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 		

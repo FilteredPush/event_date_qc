@@ -42,7 +42,8 @@ import java.util.Map;
  *
  * MEASURE_EVENTDATE_PRECISIONINSECONDS urn:uuid:56b6c695-adf1-418e-95d2-da04cad7be53
  * 
- * Provides support for the following TDWG DQIG TG2 validations and amendments TODO: Update: 
+ * Provides support for the following TDWG DQIG TG2 validations and amendments 
+ * TODO: Update: 
  * 
  * VALIDATION_DAY_NOTSTANDARD  47ff73ba-0028-4f79-9ce1-ee7008d66498
  * VALIDATION_DAY_OUTOFRANGE   5618f083-d55a-4ac2-92b5-b9fb227b832f   ** Differs
@@ -187,22 +188,26 @@ public class DwCEventDQ {
 */
 	
 	private static final Log logger = LogFactory.getLog(DwCEventDQ.class);
-
-	/**
+	
+    /**
+     * #140 Measure SingleRecord Resolution: eventdate precisioninseconds
 	 * Measure the duration of an event date in seconds.
-	 *
-	 * Provides: EVENT_DATE_DURATION_SECONDS
-	 *
-	 * @param eventDate to measure duration in seconds
-	 * @return EventDQMeasurement object, which if state is COMPLETE has a value of type Long.
-	 */
-	@Provides(value="urn:uuid:56b6c695-adf1-418e-95d2-da04cad7be53")
-	@Measure( label = "MEASURE_EVENTDATE_PRECISIONINSECONDS", 
-		description="#140 Measure SingleRecord Resolution: eventdate precisioninseconds", 
-		dimension=Dimension.RESOLUTION)
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or does not contain a valid ISO 8601-1:2019 date; REPORT on the length of the period expressed in the dwc:eventDate in seconds; otherwise NOT_REPORTED")
-	public static DQResponse<NumericalValue> measureDurationSeconds(@ActedUpon(value = "dwc:eventDate") String eventDate) {
-		DQResponse<NumericalValue> result = new DQResponse<>();
+     *
+     * Provides: MEASURE_EVENTDATE_PRECISIONINSECONDS
+     *
+     * @param eventDate the provided dwc:eventDate to measure duration in seconds
+     * @return DQResponse the response of type NumericalValue  to return
+	 *   which if state is RUN_HAS_RESULT has a value of type Long.
+     */
+    @Provides("urn:uuid:56b6c695-adf1-418e-95d2-da04cad7be53")
+    public static DQResponse<NumericalValue> measureEventdatePrecisioninseconds(@ActedUpon("dwc:eventDate") String eventDate) {
+        DQResponse<NumericalValue> result = new DQResponse<NumericalValue>();
+
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
+        // or does not contain a valid ISO 8601-1:2019 date; REPORT 
+        // on the length of the period expressed in the dwc:eventDate 
+        //in seconds; otherwise NOT_REPORTED 
 
     	if (DateUtils.isEmpty(eventDate)) {
     		result.addComment("No value provided for eventDate.");
@@ -652,29 +657,27 @@ public class DwCEventDQ {
 		return result;
     }
 
-	/**
+    /**
+     * #147 Validation SingleRecord Conformance: day notstandard
+     * 
      * Test to see whether a provided day is an integer in the range of values that can be
      * a day of a month.
      *
-     * Provides: TG2-VALIDATION_DAY_NOTSTANDARD.  Is not the same as TG2-VALIDATION_DAY_OUTOFRANGE which includes year and month
-     * 
-     * Prerequistites check returning INTERNAL_PREREQUSISITES_NOT_MET if day term is not present must be provided 
-     * by upstream or wrapping code that checks the terms present in the record.
+     * Provides: VALIDATION_DAY_NOTSTANDARD
      *
-     * @param day  a string to test
-     * @return COMPLIANT if day is an integer in the range 1 to 31 inclusive, otherwise NOT_COMPLIANT
-     * @see DwCEventDQ#isDayPossibleForMonthYear(String year, String month, String day)
-     *     
+     * @param day the provided dwc:day to evaluate
+     * @return DQResponse the response of type ComplianceValue  to return
+     *    COMPLIANT if day is an integer in the range 1 to 31 inclusive, otherwise NOT_COMPLIANT
+     * @see DwCEventDQ.validationDayOutofrange(String year, String month, String day) providing VALIDATION_DAY_OUTOFRANGE
      */
-    //@Provides(value = "DAY_IN_RANGE")
-    @Provides(value = "urn:uuid:47ff73ba-0028-4f79-9ce1-ee7008d66498")   // GUID for VALIDATION_DAY_NOTSTANDAR
-	@Validation(label = "VALIDATION_DAY_NOTSTANDARD", description = "Test to see whether a provided day is an integer in the range " +
-			"of values that can be a day of a month.")
-	@Specification(value = "INTERNAL_PREREQUISITES_NOT_MET if the field dwc:day is not present; " + 
-			"COMPLIANT if the value of the field dwc:day is an integer between 1 and 31 inclusive; " + 
-			"otherwise NOT_COMPLIANT.")
-    public static DQResponse<ComplianceValue> isDayInRange(@ActedUpon(value = "dwc:day") String day) {
-		DQResponse<ComplianceValue> result = new DQResponse<>();
+    @Provides("urn:uuid:47ff73ba-0028-4f79-9ce1-ee7008d66498")
+    public static DQResponse<ComplianceValue> validationDayNotstandard(@ActedUpon("dwc:day") String day) {
+        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; COMPLIANT 
+        // if the value of the field dwc:day is an integer between 
+        // 1 and 31 inclusive; otherwise NOT_COMPLIANT. 
 
 		if (DateUtils.isEmpty(day)) {
 			result.addComment("No value provided for day.");
@@ -849,7 +852,7 @@ public class DwCEventDQ {
     	DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
     	DQResponse<ComplianceValue> monthResult =  isMonthInRange(month);
-    	DQResponse<ComplianceValue> dayResult =  isDayInRange(day);
+    	DQResponse<ComplianceValue> dayResult =  validationDayNotstandard(day);
 
     	if (monthResult.getResultState().equals(ResultState.RUN_HAS_RESULT)) {
     		if (monthResult.getValue().equals(ComplianceValue.COMPLIANT)) {
@@ -917,7 +920,7 @@ public class DwCEventDQ {
 			result.addComment("Either month or day was not provided.");
 		} else {
 			DQResponse<ComplianceValue> monthResult =  isMonthInRange(month);
-			DQResponse<ComplianceValue> dayResult =  isDayInRange(day);
+			DQResponse<ComplianceValue> dayResult =  validationDayNotstandard(day);
 
 			if (monthResult.getResultState().equals(ResultState.RUN_HAS_RESULT)) {
 				if (monthResult.getValue().equals(ComplianceValue.NOT_COMPLIANT)) {
@@ -1748,6 +1751,7 @@ public class DwCEventDQ {
 	
     /**
      * #36 Validation SingleRecord Conformance: eventdate outofrange
+     * 
      * Given an eventDate check to see if that event date falls entirely outside a range from a
      * specified lower bound (1600-01-01 by default) and a specified upper bound (the end of the 
      * current year by default)   
@@ -1788,8 +1792,6 @@ public class DwCEventDQ {
      * @return DQResponse the response of type ComplianceValue  to return
      */
     @Provides("urn:uuid:3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
-    @Validation( label = "VALIDATION_EVENTDATE_OUTOFRANGE", description="The range of dwc:eventDate does not fall entirely within a specified range")
-    @Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY  or if the value of dwc:eventDate is not a valid ISO 8601-1:2019  date; COMPLIANT if the range of dwc:eventDate is entirely  within the parameter range, otherwise NOT_COMPLIANT")
     public static DQResponse<ComplianceValue> validationEventdateOutofrange(@ActedUpon("dwc:eventDate") String eventDate, @Parameter(name="bdq:earliestValidDate") String earlyestValidDate, @Parameter(name="bdq:latestValidDate") String latestValidDate ) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
  
@@ -1801,6 +1803,7 @@ public class DwCEventDQ {
 
         // Parameters. This test is defined as parameterized.
         // Default values: bdq:earliestValidDate="1600"; bdq:latestValidDate=current year
+        
         if (DateUtils.isEmpty(latestValidDate)) {
         	latestValidDate = String.format("%04d",Calendar.getInstance().get(Calendar.YEAR)) + "-12-31";
         }

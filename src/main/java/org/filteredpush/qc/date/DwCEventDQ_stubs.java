@@ -392,46 +392,5 @@ public class DwCEventDQ_stubs {
 
         return result;
     }
-
-    /**
-     * #140 Measure SingleRecord Resolution: eventdate precisioninseconds
-     *
-     * Provides: MEASURE_EVENTDATE_PRECISIONINSECONDS
-     *
-     * @param eventDate the provided dwc:eventDate to evaluate
-     * @return DQResponse the response of type NumericalValue  to return
-     */
-    @Provides("56b6c695-adf1-418e-95d2-da04cad7be53")
-    public DQResponse<NumericalValue> measureEventdatePrecisioninseconds(@ActedUpon("dwc:eventDate") String eventDate) {
-        DQResponse<NumericalValue> result = new DQResponse<NumericalValue>();
-
-        //TODO:  Implement specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
-        // or does not contain a valid ISO 8601-1:2019 date; REPORT 
-        // on the length of the period expressed in the dwc:eventDate 
-        //in seconds; otherwise NOT_REPORTED 
-
-        return result;
-    }
-
-    /**
-     * #147 Validation SingleRecord Conformance: day notstandard
-     *
-     * Provides: VALIDATION_DAY_NOTSTANDARD
-     *
-     * @param day the provided dwc:day to evaluate
-     * @return DQResponse the response of type ComplianceValue  to return
-     */
-    @Provides("47ff73ba-0028-4f79-9ce1-ee7008d66498")
-    public DQResponse<ComplianceValue> validationDayNotstandard(@ActedUpon("dwc:day") String day) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
-
-        //TODO:  Implement specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; COMPLIANT 
-        // if the value of the field dwc:day is an integer between 
-        //1 and 31 inclusive; otherwise NOT_COMPLIANT. 
-
-        return result;
-    }
-
+    
 }

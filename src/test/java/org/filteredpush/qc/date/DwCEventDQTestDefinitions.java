@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.datakurator.ffdq.api.DQResponse;
 import org.datakurator.ffdq.api.result.ComplianceValue;
+import org.datakurator.ffdq.api.result.NumericalValue;
 import org.datakurator.ffdq.model.ResultState;
 import org.junit.Test;
 
@@ -227,6 +228,22 @@ public class DwCEventDQTestDefinitions {
 	 */
 	@Test
 	public void testMeasureEventdatePrecisioninseconds() {
+		
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
+        // or does not contain a valid ISO 8601-1:2019 date; REPORT 
+        // on the length of the period expressed in the dwc:eventDate 
+        //in seconds; otherwise NOT_REPORTED 
+		
+		DQResponse<NumericalValue> measure = DwCEventDQ.measureEventdatePrecisioninseconds("1880-05-08");
+		Long seconds = (60l*60l*24l)-1l; 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
+		
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("");
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, measure.getResultState());
+		
+		
 		fail("Not yet implemented");
 	}
 
@@ -235,6 +252,31 @@ public class DwCEventDQTestDefinitions {
 	 */
 	@Test
 	public void testValidationDayNotstandard() {
+		
+        //TODO:  Implement specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; COMPLIANT 
+        // if the value of the field dwc:day is an integer between 
+        //1 and 31 inclusive; otherwise NOT_COMPLIANT. 
+		
+		String day = "1";
+		DQResponse<ComplianceValue> result = DwCEventDQ.validationDayNotstandard(day);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		day = "33";
+		result = DwCEventDQ.validationDayNotstandard(day);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		day = "";
+		result = DwCEventDQ.validationDayNotstandard(day);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		assertNull(result.getValue());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
 		fail("Not yet implemented");
 	}
 
