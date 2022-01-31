@@ -187,7 +187,7 @@ public class Runner {
 					DQResponse response = null;
 					DQResponse<NumericalValue> measureResponse = null;
 
-					measureResponse = DwCEventTG2DQ.measureEventdatePrecisioninseconds(eventDate); 
+					measureResponse = DwCEventDQ.measureEventdatePrecisioninseconds(eventDate); 
 					if (measureResponse.getResultState().equals(ResultState.RUN_HAS_RESULT)) { 
 						totalTimeSecs = totalTimeSecs + measureResponse.getValue().getObject().longValue();
 					}
@@ -256,7 +256,7 @@ public class Runner {
 						counter.put(name, current);
 					 
 						method = "VALIDATION_DAY_NOTSTANDARD"; 
-						response = DwCEventTG2DQ.validationDayNotstandard(day);
+						response = DwCEventDQ.validationDayNotstandard(day);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -426,7 +426,7 @@ public class Runner {
 					}
 					// repeat validations post amendment   ****************************
 
-					measureResponse = DwCEventTG2DQ.measureEventdatePrecisioninseconds(eventDate); 
+					measureResponse = DwCEventDQ.measureEventdatePrecisioninseconds(eventDate); 
 					if (measureResponse.getResultState().equals(ResultState.RUN_HAS_RESULT)) { 
 						totalTimeSecsPost = totalTimeSecsPost + measureResponse.getValue().getObject().longValue();
 					}
@@ -496,7 +496,7 @@ public class Runner {
 						postcounter.put(name, current);
 					 
 						method = "VALIDATION_DAY_NOTSTANDARD"; 
-						response = DwCEventTG2DQ.validationDayNotstandard(day);
+						response = DwCEventDQ.validationDayNotstandard(day);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);
