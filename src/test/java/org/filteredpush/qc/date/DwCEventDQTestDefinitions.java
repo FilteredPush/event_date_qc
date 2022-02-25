@@ -229,11 +229,11 @@ public class DwCEventDQTestDefinitions {
 	@Test
 	public void testMeasureEventdatePrecisioninseconds() {
 		
-        // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
-        // or does not contain a valid ISO 8601-1:2019 date; REPORT 
-        // on the length of the period expressed in the dwc:eventDate 
-        //in seconds; otherwise NOT_REPORTED 
+        // Specification (updated as of 2022 Feb 21)
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or does not 
+        // contain a valid ISO 8601-1:2019 date; otherwise RUN_HAS_RESULT with the 
+        // result value being the length of the period expressed in the dwc:eventDate 
+        // in seconds
 		
 		DQResponse<NumericalValue> measure = DwCEventDQ.measureEventdatePrecisioninseconds("1880-05-08");
 		Long seconds = (60l*60l*24l)-1l; 

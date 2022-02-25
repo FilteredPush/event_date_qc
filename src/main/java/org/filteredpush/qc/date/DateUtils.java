@@ -24,7 +24,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.Period;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -33,18 +38,17 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.joda.time.DateMidnight;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeFieldType;
-import org.joda.time.IllegalFieldValueException;
-import org.joda.time.Instant;
-import org.joda.time.Interval;
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeFormatterBuilder;
-import org.joda.time.format.DateTimeParser;
-import org.joda.time.format.ISODateTimeFormat;
+
+import java.time.LocalTime;
+import java.time.Instant;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
+import java.time.temporal.ChronoField;
+import java.time.temporal.TemporalUnit;
 
 /**
  * Utility functions for working with DarwinCore date concepts.
@@ -91,7 +95,8 @@ public class DateUtils {
 	
 	
 	/**
-	 * Test to see whether an eventDate contains a string in an expected ISO format.
+	 * Test to see whether an eventDate contains a string in an expected ISO format
+	 * which is represents an actual date or date range.
 	 * 
 	 * @param eventDate string to test for expected format.
 	 * @return true if eventDate is in an expected format for eventDate, otherwise false.
@@ -104,11 +109,12 @@ public class DateUtils {
 				result = true;
 				logger.debug(eventDate);    		
 			} else { 
-				Interval interval = extractInterval(eventDate);
+				LocalDateInterval interval = extractInterval(eventDate);
 				if (interval!=null) { 
-					logger.debug(interval.getStart());
-					logger.debug(interval.getEnd());
-					if (interval.getStart().isBefore(interval.getEnd())) { 
+					logger.debug(interval.getStartDate());
+					logger.debug(interval.getEndDate());
+					if (interval.getStartDate().isBefore(interval.getEndDate()) 
+							|| interval.getStartDate().isEqual(interval.getEndDate())) { 
 						result = true;
 					}
 				}
@@ -265,9 +271,9 @@ public class DateUtils {
 		if (result!=null && result.getResultState().equals(EventResult.EventQCResultState.RANGE)) {
 			String dateRange = result.getResult();
 			try { 
-				   Interval parseDate = extractDateInterval(dateRange);
+				   LocalDateInterval parseDate = extractDateInterval(dateRange);
 				   logger.debug(parseDate);
-				   String resultDate =  parseDate.getStart().toString("yyyy-MM-dd") + "/" + parseDate.getEnd().toString("yyyy-MM-dd");
+				   String resultDate =  parseDate.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE) + "/" + parseDate.getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
 				   result.setResult(resultDate);
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
@@ -293,9 +299,10 @@ public class DateUtils {
 		if (result.size()>0 && result.get("resultState").equals("range")) {
 			String dateRange = result.get("result");
 			try { 
-				   Interval parseDate = extractDateInterval(dateRange);
-				   logger.debug(parseDate);
-				   String resultDate =  parseDate.getStart().toString("yyyy-MM-dd") + "/" + parseDate.getEnd().toString("yyyy-MM-dd");
+				   LocalDateInterval parseDate = extractDateInterval(dateRange);
+				   logger.debug(parseDate.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE) );
+				   logger.debug(parseDate.getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE) );
+				   String resultDate =  parseDate.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE) + "/" + parseDate.getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE) ;
 				   result.put("result",resultDate);
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
@@ -426,37 +433,52 @@ public class DateUtils {
 			// Example 1982-02-05
 			// Example 1982-02-05T05:03:06
 			try { 
-				DateTimeParser[] parsers = { 
-						DateTimeFormat.forPattern("yyyy/MM/dd").getParser(),
-						DateTimeFormat.forPattern("yyyy/MMM/dd").getParser(),
-						DateTimeFormat.forPattern("yyyy-MMM-dd").getParser(),
-						ISODateTimeFormat.dateOptionalTimeParser().getParser()
-				};
-				DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
-				DateMidnight parseDate = LocalDate.parse(verbatimEventDate,formatter).toDateMidnight();
-				resultDate = parseDate.toString("yyyy-MM-dd");
+				DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+	    				.append(DateTimeFormatter.ofPattern("yyyy'-'MM'-'dd"))
+	    				.append(DateTimeFormatter.ofPattern("yyyy'-'MMM'-'dd"))
+	    				.append(DateTimeFormatter.ISO_DATE)
+	    				.append(DateTimeFormatter.ISO_DATE_TIME)
+	    				.append(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+	    				.append(DateTimeFormatter.ISO_ZONED_DATE_TIME)
+	    				.toFormatter().withResolverStyle(ResolverStyle.STRICT);
+	    		LocalDate startDateBit = LocalDate.parse(verbatimEventDate, formatter);
+				resultDate = startDateBit.format(DateTimeFormatter.ISO_LOCAL_DATE) ;
 				result.setResultState(EventResult.EventQCResultState.DATE);
 				result.setResult(resultDate);
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
 			}
 		}
-		if (verbatimEventDate.matches("^[0-9]{4}[/]([0-9]{1,2}|[A-Za-z]+)[/][0-9]{1,2}.*")) {
+		if (verbatimEventDate.matches("^[0-9]{4}[/]([0-9]{1,2}|[A-Za-z]+)[/][0-9]{1,2}$")) {
 			// Both separators are the same.
 			// Example 1982/02/05
 			// Example 1982/Feb/05
-			// Example 1982-02-05
 			// Example 1982/02/05T05:03:06
 			try { 
-				DateTimeParser[] parsers = { 
-						DateTimeFormat.forPattern("yyyy/MM/dd").getParser(),
-						DateTimeFormat.forPattern("yyyy/MMM/dd").getParser(),
-						DateTimeFormat.forPattern("yyyy-MMM-dd").getParser(),
-						ISODateTimeFormat.dateOptionalTimeParser().getParser()
-				};
-				DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
-				DateMidnight parseDate = LocalDate.parse(verbatimEventDate,formatter).toDateMidnight();
-				resultDate = parseDate.toString("yyyy-MM-dd");
+				DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+	    				.append(DateTimeFormatter.ofPattern("yyyy'/'MM'/'dd"))
+	    				.append(DateTimeFormatter.ofPattern("yyyy'/'MMM'/'dd"))
+	    				.toFormatter().withResolverStyle(ResolverStyle.STRICT);
+	    		LocalDate startDateBit = LocalDate.parse(verbatimEventDate, formatter);
+				resultDate = startDateBit.format(DateTimeFormatter.ISO_LOCAL_DATE) ;
+				result.setResultState(EventResult.EventQCResultState.DATE);
+				result.setResult(resultDate);
+			} catch (Exception e) { 
+				logger.debug(e.getMessage());
+			}
+		}
+		if (verbatimEventDate.matches("^[0-9]{4}[/]([0-9]{1,2}|[A-Za-z]+)[/][0-9]{1,2}T.*$")) {
+			// Both separators are the same, date and time
+			// Example 1982/02/05T05:03:06
+			// replace('/','-') below to parse with yyyy-MM-dd...
+			try { 
+				DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+	    				.append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+	    				.append(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+	    				.append(DateTimeFormatter.ISO_ZONED_DATE_TIME)
+	    				.toFormatter().withResolverStyle(ResolverStyle.STRICT);
+	    		LocalDate startDateBit = LocalDate.parse(verbatimEventDate.replace("/", "-"), formatter);
+				resultDate = startDateBit.format(DateTimeFormatter.ISO_LOCAL_DATE) ;
 				result.setResultState(EventResult.EventQCResultState.DATE);
 				result.setResult(resultDate);
 			} catch (Exception e) { 
@@ -469,34 +491,32 @@ public class DateUtils {
 			// Cases where the 1-2 digit numbers are both smaller than 12 are treated as ambiguous.
 			String resultDateMD = null;
 			String resultDateDM = null;
-			DateMidnight parseDate1 = null;
-			DateMidnight parseDate2 = null;
+			LocalDate parseDate1 = null;
+			LocalDate parseDate2 = null;
 			try { 
-					DateTimeParser[] parsers = { 
-						DateTimeFormat.forPattern("yyyy.MM.dd").getParser(),
-						DateTimeFormat.forPattern("yyyy,MM,dd").getParser(),
-						DateTimeFormat.forPattern("yyyy,MM.dd").getParser(),
-						DateTimeFormat.forPattern("yyyy.MM,dd").getParser()
-					};
-					DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
-					parseDate1 = LocalDate.parse(verbatimEventDate,formatter).toDateMidnight();
-					resultDateMD = parseDate1.toString("yyyy-MM-dd");
-				} catch (Exception e) { 
-					logger.debug(e.getMessage());
-				}
-				try { 
-					DateTimeParser[] parsers = { 
-						DateTimeFormat.forPattern("yyyy.dd.MM").getParser(),
-						DateTimeFormat.forPattern("yyyy,dd,MM").getParser(),
-						DateTimeFormat.forPattern("yyyy,dd.MM").getParser(),
-						DateTimeFormat.forPattern("yyyy.dd,MM").getParser()
-					};
-					DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
-					parseDate2 = LocalDate.parse(verbatimEventDate,formatter).toDateMidnight();
-					resultDateDM = parseDate2.toString("yyyy-MM-dd");
-				} catch (Exception e) { 
-					logger.debug(e.getMessage());
-				}			
+				DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+	    				.append(DateTimeFormatter.ofPattern("yyyy'.'MM'.'dd"))
+	    				.append(DateTimeFormatter.ofPattern("yyyy','MM','dd"))
+	    				.append(DateTimeFormatter.ofPattern("yyyy'.'MM','dd"))
+	    				.append(DateTimeFormatter.ofPattern("yyyy','MM'.'dd"))
+	    				.toFormatter().withResolverStyle(ResolverStyle.STRICT);
+	    		parseDate1 = LocalDate.parse(verbatimEventDate, formatter);
+				resultDateMD = parseDate1.format(DateTimeFormatter.ISO_LOCAL_DATE);
+			} catch (Exception e) { 
+				logger.debug(e.getMessage());
+			}
+			try { 
+				DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+	    				.append(DateTimeFormatter.ofPattern("yyyy'.'dd'.'MM"))
+	    				.append(DateTimeFormatter.ofPattern("yyyy','dd','MM"))
+	    				.append(DateTimeFormatter.ofPattern("yyyy'.'dd','MM"))
+	    				.append(DateTimeFormatter.ofPattern("yyyy','dd'.'MM"))
+	    				.toFormatter().withResolverStyle(ResolverStyle.STRICT);
+	    		parseDate2 = LocalDate.parse(verbatimEventDate, formatter);
+				resultDateDM = parseDate2.format(DateTimeFormatter.ISO_LOCAL_DATE);
+			} catch (Exception e) { 
+				logger.debug(e.getMessage());
+			}			
 			if (resultDateMD!=null && resultDateDM==null) {
 				result.setResultState(EventResult.EventQCResultState.DATE);
 				result.setResult(resultDateMD);
@@ -509,7 +529,7 @@ public class DateUtils {
 					result.setResult(resultDateDM);
 				} else { 
 					result.setResultState(EventResult.EventQCResultState.AMBIGUOUS);
-				    Interval range = null;
+				    LocalDateInterval range = null;
 				    if (parseDate1.isBefore(parseDate2)) { 
 				        result.setResult(resultDateMD + "/" + resultDateDM);
 				    } else { 
@@ -519,6 +539,8 @@ public class DateUtils {
 			} 			
 			
 		}
+		
+/*		
 		if (verbatimEventDate.matches("^[0-9]{1,2}[-/ ][0-9]{4}")) { 
 			// Example 02/1982
 			try { 
@@ -553,6 +575,7 @@ public class DateUtils {
 				logger.debug(e.getMessage());
 			}
 		}		
+		
 		if (verbatimEventDate.matches("^[0-9]{4}[-][0-9]{3}/[0-9]{4}[-][0-9]{3}$")) { 
 			// Example: 1982-145
 			try { 
@@ -1498,6 +1521,7 @@ public class DateUtils {
 				logger.debug(result.getResult());
 			}
 		}
+*/		
 		
 		return result;
 	}
@@ -1510,6 +1534,7 @@ public class DateUtils {
      */
     public static boolean isRange(String eventDate) { 
     	boolean isRange = false;
+/*    	
     	if (eventDate!=null) { 
     		String[] dateBits = eventDate.split("/");
     		if (dateBits!=null && dateBits.length==2) { 
@@ -1567,6 +1592,7 @@ public class DateUtils {
     			
     		}
     	}
+*/    	
     	return isRange;
     }	
 	
@@ -1586,8 +1612,9 @@ public class DateUtils {
      * @param eventDate a string containing a dwc:eventDate from which to extract an interval.
      * @return An interval from one DateMidnight to another DateMidnight, null if no interval can be extracted.
      */
-    public static Interval extractDateInterval(String eventDate) {
-    	Interval result = null;
+    public static LocalDateInterval extractDateInterval(String eventDate) {
+    	LocalDateInterval result = null;
+/*    	
     	DateTimeParser[] parsers = { 
     			DateTimeFormat.forPattern("yyyy-MM").getParser(),
     			DateTimeFormat.forPattern("yyyy").getParser(),
@@ -1633,6 +1660,7 @@ public class DateUtils {
                logger.debug(e.getMessage(),e);
     		}
     	}
+*/    	
     	return result;
     }
     
@@ -1645,29 +1673,37 @@ public class DateUtils {
      * @param eventDate a string containing a dwc:eventDate from which to extract an interval.
      * @return an interval from the beginning of event date to the end of event date.
      */
-    public static Interval extractInterval(String eventDate) {
-    	Interval result = null;
-    	DateTimeParser[] parsers = { 
-    			DateTimeFormat.forPattern("yyyy-MM").getParser(),
-    			DateTimeFormat.forPattern("yyyy").getParser(),
-    			ISODateTimeFormat.dateOptionalTimeParser().getParser() 
-    	};
-    	DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
+    public static LocalDateInterval extractInterval(String eventDate) {
+    	LocalDateInterval result = null;
+    	
+    	try {
+			result = new LocalDateInterval(eventDate);
+		} catch (DateTimeParseException | EmptyDateException e) {
+			logger.debug(e.getMessage());
+		}
+/*    	
+    	DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+    			.append(DateTimeFormatter.ofPattern("yyyy-MM"))
+    			.append(DateTimeFormatter.ofPattern("yyyy"))
+    			.append(DateTimeFormatter.ISO_LOCAL_DATE)
+    			.append(DateTimeFormatter.ISO_DATE_TIME)
+    			.append(DateTimeFormatter.ISO_DATE)
+	    		.toFormatter().withResolverStyle(ResolverStyle.STRICT);
     	if (eventDate!=null && eventDate.contains("/") && isRange(eventDate)) {
     		String[] dateBits = eventDate.split("/");
     		try { 
     			// must be at least a 4 digit year.
     			if (dateBits[0].length()>3 && dateBits[1].length()>3) { 
-    				DateMidnight startDate = DateMidnight.parse(dateBits[0],formatter);
-    				DateTime endDate = DateTime.parse(dateBits[1],formatter);
+    				LocalDate startDate = LocalDate.parse(dateBits[0],formatter);
+    				LocalDate endDate = LocalDate.parse(dateBits[1],formatter);
     				logger.debug(startDate);
     				logger.debug(endDate);
     				if (dateBits[1].length()==4) { 
-    					result = new Interval(startDate,endDate.plusMonths(12).minus(1l));
+    					result = new LocalDateInterval(startDate,endDate.plusMonths(12).minus(1l));
     				} else if (dateBits[1].length()==7) { 
-    					result = new Interval(startDate,endDate.plusMonths(1).minus(1l));
+    					result = new LocalDateInterval(startDate,endDate.plusMonths(1).minus(1l));
     				} else { 
-    					result = new Interval(startDate, endDate.plusDays(1).minus(1l));
+    					result = new LocalDateInterval(startDate, endDate.plusDays(1).minus(1l));
     				}
     				logger.debug(result);
     			}
@@ -1699,20 +1735,20 @@ public class DateUtils {
     		}
     	} else {
     		try { 
-               DateMidnight startDate = DateMidnight.parse(eventDate, formatter);
+               LocalDate startDate = LocalDate.parse(eventDate, formatter);
                logger.debug(startDate);
                if (eventDate.length()==4) { 
-                  DateTime endDate = startDate.toDateTime().plusMonths(12).minus(1l);
-                  result = new Interval(startDate, endDate);
-                  logger.debug(result);
+                  LocalDate endDate = startDate.toDateTime().plusMonths(12).minus(1l);
+                  result = new LocalDateInterval(startDate, endDate);
+                  logger.debug(result.toString());
                } else if (eventDate.length()==7) { 
-                  DateTime endDate = startDate.toDateTime().plusMonths(1).minus(1l);
-                  result = new Interval(startDate,endDate);
-                  logger.debug(result);
+                  LocalDate endDate = startDate.toDateTime().plusMonths(1).minus(1l);
+                  result = new LocalDateInterval(startDate,endDate);
+                  logger.debug(result.toString());
                } else { 
                   DateTime endDate = startDate.toDateTime().plusDays(1).minus(1l);
-                  result = new Interval(startDate,endDate);
-                  logger.debug(result);
+                  result = new LocalDateInterval(startDate,endDate);
+                  logger.debug(result.toString());
                }
     		} catch (Exception e) { 
     			// not a date
@@ -1735,31 +1771,81 @@ public class DateUtils {
     		// ISO requires 2 digit, zero padded month and day, single digit not allowed.
     		result = null;
     	}
+*/    	
     	return result;
     }  
     
     /**
-     * Extract a single joda date from an event date.
+     * Extract a single LocalDate date from an event date, if given a range, 
+     * returns a local date for the start of the range.
      * 
-     * @param eventDate an event date from which to try to extract a DateMidnight
-     * @return a DateMidnight or null if a date cannot be extracted
+     * @param eventDate an event date from which to try to extract a LocalDAte
+     * @return a LocalDate or null if a date cannot be extracted
      */
-    public static DateMidnight extractDate(String eventDate) {
-    	DateMidnight result = null;
-    	DateTimeParser[] parsers = { 
-    			DateTimeFormat.forPattern("yyyy-MM").getParser(),
-    			DateTimeFormat.forPattern("yyyy").getParser(),
-				DateTimeFormat.forPattern("yyyy-MM-dd/yyyy-MM-dd").getParser(),
-    			ISODateTimeFormat.dateOptionalTimeParser().getParser(), 
-    			ISODateTimeFormat.date().getParser() 
-    	};
-    	DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
-    	try { 
-    		result = DateMidnight.parse(eventDate, formatter);
-    	} catch (Exception e) { 
-    		// not a date
-    		logger.debug(e.getMessage());
-    	}
+    public static LocalDate extractDate(String eventDate) {
+    	LocalDate result = null;
+    	if (eventDate!=null && eventDate.matches("^[0-9]{1,4}$")) {
+        	DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+        			.append(DateTimeFormatter.ISO_LOCAL_DATE)
+        			.toFormatter().withResolverStyle(ResolverStyle.STRICT);
+        	try { 
+        		result = LocalDate.parse(eventDate + "-01-01", formatter);
+        	} catch (Exception e) { 
+        		// not a date
+        		logger.debug(e.getMessage());
+        	}		
+    	} else if (eventDate!=null && eventDate.matches("^[0-9]{4}-[0-9]{2}$")) {
+            	DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+            			.append(DateTimeFormatter.ISO_LOCAL_DATE)
+            			.toFormatter().withResolverStyle(ResolverStyle.STRICT);
+            	try { 
+            		result = LocalDate.parse(eventDate + "-01", formatter);
+            	} catch (Exception e) { 
+            		// not a date
+            		logger.debug(e.getMessage());
+            	}		
+    	} else if (eventDate!=null && eventDate.matches("^[0-9]{4}-[0-9]{2}-[0-9]{2}/[0-9]{4}-[0-9]{2}-[0-9]{2}$")) {
+        	DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+        			.append(DateTimeFormatter.ISO_LOCAL_DATE)
+        			.toFormatter().withResolverStyle(ResolverStyle.STRICT);
+        	try { 
+        		String[] bits = eventDate.split("/");
+        		result = LocalDate.parse(bits[0], formatter);
+        	} catch (Exception e) { 
+        		// not a date
+        		logger.debug(e.getMessage());
+        	}            	
+    	} else { 
+    		List<DateTimeFormatter> formatters = new ArrayList<DateTimeFormatter>();
+    		DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+    			.append(DateTimeFormatter.ISO_LOCAL_DATE)
+    			.toFormatter().withResolverStyle(ResolverStyle.STRICT);
+    		formatters.add(formatter);
+    		DateTimeFormatter formatter1 = new DateTimeFormatterBuilder()
+    			.append(DateTimeFormatter.ISO_ORDINAL_DATE)
+    			.toFormatter().withResolverStyle(ResolverStyle.STRICT);
+    		formatters.add(formatter1);
+    		DateTimeFormatter formatter2 = new DateTimeFormatterBuilder()
+        			.append(DateTimeFormatter.ISO_DATE_TIME)
+        			.toFormatter().withResolverStyle(ResolverStyle.STRICT);
+        		formatters.add(formatter2);
+    		DateTimeFormatter formatter3 = new DateTimeFormatterBuilder()
+        			.append(DateTimeFormatter.ISO_DATE)
+        			.toFormatter().withResolverStyle(ResolverStyle.STRICT);
+        		formatters.add(formatter3);
+    		
+    		Iterator<DateTimeFormatter> i = formatters.iterator();
+    		while (i.hasNext()) { 
+    			try { 
+    				DateTimeFormatter parser = i.next();
+    				//logger.debug(parser.toString());
+    				result = LocalDate.parse(eventDate, parser);
+    			} catch (Exception e) { 
+            		// not parsable with that formatter
+            		logger.debug(e.getMessage());
+            	}
+    		}
+    	} 
     	if (result!=null && eventDate.matches("^[0-9]{4}-[0-9]{1}$")) {
     		// ISO requires 2 digit, zero padded month and day, single digit not allowed.
     		result = null;
@@ -1828,13 +1914,13 @@ public class DateUtils {
     				logger.debug(e.getMessage());
     				result = false; 
     			} 
-    			Interval eventDateInterval = DateUtils.extractInterval(eventDate);
-    			logger.debug(eventDateInterval);
+    			LocalDateInterval eventDateInterval = DateUtils.extractInterval(eventDate);
+    			logger.debug(eventDateInterval.toString());
     			logger.debug(endDayInt);
-    			if (eventDateInterval!=null && eventDateInterval.getEnd()!=null) { 
-    				int endDayOfInterval = eventDateInterval.getEnd().getDayOfYear(); 
+    			if (eventDateInterval!=null && eventDateInterval.getEndDate()!=null) { 
+    				int endDayOfInterval = eventDateInterval.getEndDate().getDayOfYear(); 
     				logger.debug(endDayOfInterval);
-    				if (eventDateInterval.getStart().getDayOfYear() == startDayInt && endDayOfInterval == endDayInt ) { 
+    				if (eventDateInterval.getStartDate().getDayOfYear() == startDayInt && endDayOfInterval == endDayInt ) { 
     					result=true;
     				} else { 
     					result = false;
@@ -1866,6 +1952,7 @@ public class DateUtils {
      */
     public static boolean isConsistent(String eventDate, String year, String month, String day) {
     	boolean result = false;
+/*    	
     	StringBuffer date = new StringBuffer();
     	if (!isEmpty(year)) { year = StringUtils.leftPad(year,4,"0"); } 
     	if (!isEmpty(month)) { month = StringUtils.leftPad(month,2,"0"); } 
@@ -1874,10 +1961,10 @@ public class DateUtils {
     		if (!isEmpty(year) && !isEmpty(month) && !isEmpty(day)) { 
     			date.append(year).append("-").append(month).append("-").append(day);
     			if (!isRange(eventDate)) { 
-    				DateMidnight eventDateDate = extractDate(eventDate);
-    				DateMidnight bitsDate = extractDate(date.toString());
+    				LocalDate eventDateDate = extractDate(eventDate);
+    				LocalDate bitsDate = extractDate(date.toString());
     				if (eventDateDate!=null && bitsDate !=null) { 
-    					if (eventDateDate.year().compareTo(bitsDate)==0 && eventDateDate.monthOfYear().compareTo(bitsDate)==0 && eventDateDate.dayOfMonth().compareTo(bitsDate)==0) {
+    					if (eventDateDate.getYear().compareTo(bitsDate)==0 && eventDateDate.monthOfYear().compareTo(bitsDate)==0 && eventDateDate.dayOfMonth().compareTo(bitsDate)==0) {
     						result = true;   
     					}	   
     				}
@@ -1914,6 +2001,7 @@ public class DateUtils {
     			result = true;
     		}
     	}
+*/    	
         return result;
     }
     
@@ -1945,6 +2033,7 @@ public class DateUtils {
      */
     public static boolean containsTime(String eventDate) {
     	boolean result = false;
+/*    	
     	if (!isEmpty(eventDate)) { 
     		if (eventDate.endsWith("UTC")) { eventDate = eventDate.replace("UTC", "Z"); } 
     		DateTimeParser[] parsers = { 
@@ -1992,6 +2081,7 @@ public class DateUtils {
     			}
     		}
     	}
+*/
     	return result;
     }
     
@@ -2003,6 +2093,7 @@ public class DateUtils {
      */
     public static String extractZuluTime(String eventDate) {
     	String result = null;
+/*    	
     	if (!isEmpty(eventDate)) { 
     		if (eventDate.endsWith("UTC")) { eventDate = eventDate.replace("UTC", "Z"); } 
     		DateTimeParser[] parsers = { 
@@ -2047,6 +2138,7 @@ public class DateUtils {
     			}
     		}
     	}
+*/    	
     	return result;
     }    
     
@@ -2059,14 +2151,15 @@ public class DateUtils {
     public static boolean specificToDay(String eventDate) { 
     	boolean result = false;
     	if (!isEmpty(eventDate)) { 
-    	    Interval eventDateInterval = extractInterval(eventDate);
+/*    		
+    	    Duration eventDateInterval = extractInterval(eventDate);
     	    logger.debug(eventDateInterval);
-    	    logger.debug(eventDateInterval.toDuration());
-    	    if (eventDateInterval.toDuration().getStandardDays()<1l) { 
+    	    if (eventDateInterval.toDays()<1l) { 
     	    	result = true;
-    	    } else if (eventDateInterval.toDuration().getStandardDays()==1l && eventDateInterval.getStart().getDayOfYear()==eventDateInterval.getEnd().getDayOfYear()) {
+    	    } else if (eventDateInterval.toDays()==1l && eventDateInterval.getStart().getDayOfYear()==eventDateInterval.getEnd().getDayOfYear()) {
     	    	result = true;
     	    }
+*/    	    
     	}
     	return result;
     }
@@ -2082,10 +2175,12 @@ public class DateUtils {
     public static boolean specificToMonthScale(String eventDate) { 
     	boolean result = false;
     	if (!isEmpty(eventDate)) { 
-    	    Interval eventDateInterval = extractDateInterval(eventDate);
+/*    		
+    	    Duration eventDateInterval = extractDateInterval(eventDate);
     	    if (eventDateInterval.toDuration().getStandardDays()<=31l) { 
     	    	result = true;
     	    }
+*/    	    
     	}
     	return result;
     }    
@@ -2101,8 +2196,8 @@ public class DateUtils {
     public static boolean specificToYearScale(String eventDate) { 
     	boolean result = false;
     	if (!isEmpty(eventDate)) { 
-    	    Interval eventDateInterval = extractDateInterval(eventDate);
-    	    if (eventDateInterval.toDuration().getStandardDays()<=365l) { 
+    	    LocalDateInterval eventDateInterval = extractDateInterval(eventDate);
+    	    if (eventDateInterval.getStartDate().until(eventDateInterval.getEndDate()).getDays()<=365) { 
     	    	result = true;
     	    }
     	}
@@ -2118,8 +2213,9 @@ public class DateUtils {
     public static boolean specificToDecadeScale(String eventDate) { 
     	boolean result = false;
     	if (!isEmpty(eventDate)) { 
-    	    Interval eventDateInterval = extractDateInterval(eventDate);
-    	    if (eventDateInterval.toDuration().getStandardDays()<=3650l) { 
+    	    LocalDateInterval eventDateInterval = extractDateInterval(eventDate);
+    	    Period eventDatePeriod = eventDateInterval.getStartDate().until(eventDateInterval.getEndDate());
+    	    if (eventDatePeriod.toTotalMonths()<=120l) { 
     	    	result = true;
     	    }
     	}
@@ -2130,10 +2226,9 @@ public class DateUtils {
      * Measure the duration of an event date in seconds, when a time is 
      * specified, ceiling to the nearest second, when a time is not 
      * specified, from the date midnight at the beginning of a date 
-     * range to the last second of the day at the end of the range.  This 
-     * may return one second less than your expectation for the number 
-     * of seconds in the interval (e.g. 86399 seconds for the duration of 
-     * a day specified as 1980-01-01.
+     * range to the end of the last second of the day at the end of the 
+     * range.  This will return 86400 seconds for the duration of 
+     * a day specified as 1980-01-01.  Excludes leap seconds.
      * 
      * Provides: EVENT_DATE_DURATION_SECONDS
      * 
@@ -2145,11 +2240,19 @@ public class DateUtils {
     public static long measureDurationSeconds(String eventDate) { 
     	long result = 0l;
     	if (!isEmpty(eventDate)) { 
+    		if (eventDate.matches("^[0-9]{4}-[0-9]{2}-[0-9]{2}$")) { 
+    			java.time.LocalDate localDate = java.time.LocalDate.parse(eventDate,java.time.format.DateTimeFormatter.ISO_LOCAL_DATE);
+    			result = 86400;
+    		} else { 
+    			// TODO: implement with times.
+/*    			
     		Interval eventDateInterval = DateUtils.extractInterval(eventDate);
     		logger.debug(eventDateInterval.toDuration().getStandardDays());
     		logger.debug(eventDateInterval);
     		long mills = eventDateInterval.toDurationMillis();
     		result = (long)Math.ceil(mills/1000l);
+*/    		
+    		} 
     	}
     	return result;
     }    
@@ -2164,16 +2267,12 @@ public class DateUtils {
     	String result = "";
     	if (instant!=null) { 
     		StringBuffer time = new StringBuffer();
-    		time.append(String.format("%02d",instant.get(DateTimeFieldType.hourOfDay())));
-    		time.append(":").append(String.format("%02d",instant.get(DateTimeFieldType.minuteOfHour())));
-    		time.append(":").append(String.format("%02d",instant.get(DateTimeFieldType.secondOfMinute())));
-    		time.append(".").append(String.format("%03d",instant.get(DateTimeFieldType.millisOfSecond())));
-    		String timeZone = instant.getZone().getID();
-    		if (timeZone.equals("UTC")) { 
-    		    time.append("Z"); 
-    		} else { 
-    			time.append(timeZone);
-    		}
+    		time.append(String.format("%02d",instant.get(ChronoField.CLOCK_HOUR_OF_DAY)));
+    		time.append(":").append(String.format("%02d",instant.get(ChronoField.MINUTE_OF_HOUR)));
+    		time.append(":").append(String.format("%02d",instant.get(ChronoField.SECOND_OF_MINUTE)));
+    		time.append(".").append(String.format("%03d",instant.get(ChronoField.MILLI_OF_SECOND)));
+    		// java.time.Instant doesn't include time zone, so treat as UTC
+    		time.append("Z"); 
     		result = time.toString();
     	}
     	return result;
@@ -2552,44 +2651,13 @@ public class DateUtils {
 	 * eventDate value.
 	 * 
 	 * @param eventDate to check for a leap day
-	 * @return true if a leap day is present in the eventDate range, otherwise false.
+	 * @return true if at least one leap day is present in the eventDate range, otherwise false.
 	 */
 	public static boolean includesLeapDay(String eventDate) {
 		boolean result = false;
 		if (!DateUtils.isEmpty(eventDate) && DateUtils.eventDateValid(eventDate)) { 
-			Interval interval = extractInterval(eventDate);
-			Integer sYear = interval.getStart().getYear();
-			Integer eYear = interval.getEnd().getYear();
-			String startYear = Integer.toString(sYear).trim();
-			String endYear = Integer.toString(eYear).trim();
-			String leapDay = startYear + "-02-29";
-			logger.debug(leapDay);
-			if (DateUtils.eventDateValid(leapDay)) { 
-				if (interval.contains(DateUtils.extractInterval(leapDay))) { 
-					result = true;
-				}
-			}
-			// Range spanning more than one year, check last year
-			if (!endYear.equals(startYear)) { 
-				leapDay = endYear + "-02-29";
-				logger.debug(leapDay);
-				if (DateUtils.eventDateValid(leapDay)) { 
-					if (interval.contains(DateUtils.extractInterval(leapDay))) { 
-						result = true;
-					}
-				}				
-			}
-			// Ranges of more than two years, check intermediate years
-			if (eYear > sYear + 1) { 
-				for (int testYear = sYear+1; testYear<eYear; testYear++) { 
-					leapDay = Integer.toString(testYear).trim() + "-02-29";
-					logger.debug(leapDay);
-					if (DateUtils.eventDateValid(leapDay)) { 
-						if (interval.contains(DateUtils.extractInterval(leapDay))) { 
-							result = true;
-						}
-					}				
-				}
+			if (countLeapDays(eventDate) > 0) {
+				result = true;
 			}
 		}
 		return result;
@@ -2605,15 +2673,18 @@ public class DateUtils {
 	public static int countLeapDays(String eventDate) {
 		int result = 0;
 		if (!DateUtils.isEmpty(eventDate) && DateUtils.eventDateValid(eventDate)) {
-			Interval interval = extractInterval(eventDate);
-			Integer sYear = interval.getStart().getYear();
-			Integer eYear = interval.getEnd().getYear();
+			LocalDateInterval interval = extractInterval(eventDate);
+			Instant startInstant = interval.getStartDate().atStartOfDay().toInstant(ZoneOffset.UTC);
+			Instant endInstant = interval.getEndDate().atStartOfDay().toInstant(ZoneOffset.UTC).plusSeconds(86399);
+			Integer sYear = interval.getStartDate().getYear();
+			Integer eYear = interval.getEndDate().getYear();
 			String startYear = Integer.toString(sYear).trim();
 			String endYear = Integer.toString(eYear).trim();
 			String leapDay = startYear + "-02-29";
 			logger.debug(leapDay);
-			if (DateUtils.eventDateValid(leapDay)) { 
-				if (interval.contains(DateUtils.extractInterval(leapDay))) { 
+			if (DateUtils.eventDateValid(leapDay)) {
+				Instant instantInLeapDay = extractInterval(leapDay).getStartDate().atStartOfDay().toInstant(ZoneOffset.UTC).plusSeconds(10);
+				if (startInstant.isBefore(instantInLeapDay) && endInstant.isAfter(instantInLeapDay)) { 
 					result = 1;
 				}
 			}
@@ -2622,7 +2693,8 @@ public class DateUtils {
 				leapDay = endYear + "-02-29";
 				logger.debug(leapDay);
 				if (DateUtils.eventDateValid(leapDay)) { 
-					if (interval.contains(DateUtils.extractInterval(leapDay))) { 
+					Instant instantInLeapDay = extractInterval(leapDay).getStartDate().atStartOfDay().toInstant(ZoneOffset.UTC).plusSeconds(10);
+					if (startInstant.isBefore(instantInLeapDay) && endInstant.isAfter(instantInLeapDay)) { 
 						result++;
 					}
 				}				
@@ -2633,7 +2705,8 @@ public class DateUtils {
 					leapDay = Integer.toString(testYear).trim() + "-02-29";
 					logger.debug(leapDay);
 					if (DateUtils.eventDateValid(leapDay)) { 
-						if (interval.contains(DateUtils.extractInterval(leapDay))) { 
+						Instant instantInLeapDay = extractInterval(leapDay).getStartDate().atStartOfDay().toInstant(ZoneOffset.UTC).plusSeconds(10);
+						if (startInstant.isBefore(instantInLeapDay) && endInstant.isAfter(instantInLeapDay)) { 
 							result++;
 						}
 					}				
@@ -2679,16 +2752,13 @@ public class DateUtils {
 	public static Boolean eventsAreSameInterval(String eventDate, String secondEventDate) {
 		boolean result = false;
 		try {
-			Interval interval = null;
-			Interval secondInterval = null;
+			LocalDateInterval interval = null;
+			LocalDateInterval secondInterval = null;
             interval = DateUtils.extractDateInterval(eventDate);
             secondInterval = DateUtils.extractDateInterval(secondEventDate);
 			logger.debug(interval.toString());
 			logger.debug(secondInterval.toString());
             result = interval.equals(secondInterval);
-		} catch (IllegalFieldValueException ex) { 
-			// field format error, can't parse as date, log at debug level.
-			logger.debug(ex.getMessage());
 		} catch (Exception e) { 
 			logger.error(e.getMessage());
 		}
@@ -2708,29 +2778,28 @@ public class DateUtils {
 		boolean result = false;
 		
 		try { 
-			DateTimeParser[] parsers = { 
-					DateTimeFormat.forPattern("yyyy").getParser(),
-					DateTimeFormat.forPattern("yyyy-mm").getParser(),
-					DateTimeFormat.forPattern("yyyy-mm-dd").getParser(),
-					DateTimeFormat.forPattern("yyyy-mm-dd").getParser(),
-					DateTimeFormat.forPattern("yyyy-mm-dd/yyyy").getParser(),
-					DateTimeFormat.forPattern("yyyy-mm-dd/yyyy-mm").getParser(),
-					DateTimeFormat.forPattern("yyyy/yyyy").getParser(),
-					DateTimeFormat.forPattern("yyyy-mm/yyyy").getParser(),
-					DateTimeFormat.forPattern("yyyy-mm/yyyy-mm").getParser(),
-					DateTimeFormat.forPattern("yyyy-mm/yyyy-mm-dd").getParser(),
-					DateTimeFormat.forPattern("yyyy/yyyy-mm").getParser(),
-					DateTimeFormat.forPattern("yyyy/yyyy-mm-dd").getParser(),
-					DateTimeFormat.forPattern("yyyy-mm-dd/yyyy-mm-dd").getParser()
-			};
-			DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
-			DateMidnight parseDate = LocalDate.parse(aDateString,formatter).toDateMidnight();
+			DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+    				.append(DateTimeFormatter.ofPattern("yyyy"))
+    				.append(DateTimeFormatter.ofPattern("yyyy-MM"))
+    				.append(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+    				.append(DateTimeFormatter.ofPattern("yyyy-MM-dd/yyyy"))
+    				.append(DateTimeFormatter.ofPattern("yyyy-MM-dd/yyyy-MM"))
+    				.append(DateTimeFormatter.ofPattern("yyyy-MM-dd/yyyy-MM-dd"))
+    				.append(DateTimeFormatter.ofPattern("yyyy/yyyy"))
+    				.append(DateTimeFormatter.ofPattern("yyyy-MM/yyyy"))
+    				.append(DateTimeFormatter.ofPattern("yyyy-MM/yyyy-MM"))
+    				.append(DateTimeFormatter.ofPattern("yyyy-MM/yyyy-MM-dd"))
+    				.append(DateTimeFormatter.ofPattern("yyyy/yyyy-MM"))
+    				.append(DateTimeFormatter.ofPattern("yyyy/yyyy-MM-dd"))
+    				.toFormatter().withResolverStyle(ResolverStyle.STRICT);
+    		LocalDate startDateBit = LocalDate.parse(aDateString, formatter);
 			
-			result=true;
+    		result=true;
 			
+    		// exclude any successful parses where month or day is one digit
 	    	if (aDateString.matches("^[0-9]{4}-[0-9]{1}-[0-9]{1,2}$")) {
 	    		result = false;
-	    	} else if (aDateString.matches("^[0-9]{4}-[0-9]{1,22}-[0-9]{1}$")) { 
+	    	} else if (aDateString.matches("^[0-9]{4}-[0-9]{1,2}-[0-9]{1}$")) { 
 	    		result = false;
 	    	} else if (aDateString.matches("^[0-9]{4}-[0-9]{1}$")) {
 	    		result = false;
@@ -2865,11 +2934,7 @@ public class DateUtils {
 		} catch (IOException e) {
 			logger.error(e.getMessage());;
 			System.out.println(e.getMessage());
-
 		}
-
 	}
-    
-    
     
 }

@@ -18,6 +18,8 @@ package org.filteredpush.qc.date;
 
 import static org.junit.Assert.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -28,8 +30,6 @@ import org.datakurator.ffdq.api.result.AmendmentValue;
 import org.datakurator.ffdq.api.result.ComplianceValue;
 import org.datakurator.ffdq.api.result.NumericalValue;
 import org.datakurator.ffdq.model.ResultState;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -946,18 +946,18 @@ public class DwCEventTG2DQTest {
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 		
-		DateTime date = new DateTime("0986-01-01");
-		DateTime endDate = new DateTime("1005-12-31");
+		LocalDateTime date = LocalDateTime.parse("0986-01-01");
+		LocalDateTime endDate = LocalDateTime.parse("1005-12-31");
 		while (date.isBefore(endDate)) { 
-			eventDate=date.toString("yyyy-MM-dd");
+			eventDate=date.format(DateTimeFormatter.ISO_LOCAL_DATE);
 			result = DwCEventTG2DQ.validationEventdateNotstandard(eventDate);
 			assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 			assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 			date = date.plusDays(1);
 		}
-		date = new DateTime("1750-01-01");
-		while (date.isBeforeNow()) { 
-			eventDate=date.toString("yyyy-MM-dd");
+		date = LocalDateTime.parse("1750-01-01");
+		while (date.isBefore(LocalDateTime.now())) { 
+			eventDate=date.format(DateTimeFormatter.ISO_LOCAL_DATE);
 			result = DwCEventTG2DQ.validationEventdateNotstandard(eventDate);
 			assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 			assertEquals(ComplianceValue.COMPLIANT, result.getValue());
@@ -1127,18 +1127,18 @@ public class DwCEventTG2DQTest {
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
-        eventDate= LocalDateTime.now().toString("yyyy-MM-dd");
+        eventDate= LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
 		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
-		eventDate = "1600-01-01/"+ LocalDateTime.now().toString("yyyy-MM-dd");
+		eventDate = "1600-01-01/"+ LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
 		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
-		eventDate = "1599-12-31/"+ LocalDateTime.now().toString("yyyy-MM-dd");
+		eventDate = "1599-12-31/"+ LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
 		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
@@ -1158,7 +1158,7 @@ public class DwCEventTG2DQTest {
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 		
-		eventDate = LocalDateTime.now().toString("yyyy-MM-dd") + "/" + LocalDateTime.now().plusDays(1).toString("yyyy-MM-dd");;
+		eventDate = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE) + "/" + LocalDateTime.now().plusDays(1).format(DateTimeFormatter.ISO_LOCAL_DATE);
 		result = DwCEventTG2DQ.validationEventdateOutofrange(eventDate);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());

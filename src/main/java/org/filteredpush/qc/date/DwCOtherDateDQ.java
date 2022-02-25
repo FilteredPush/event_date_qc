@@ -14,9 +14,6 @@ import org.datakurator.ffdq.api.DQResponse;
 import org.datakurator.ffdq.api.result.AmendmentValue;
 import org.datakurator.ffdq.api.result.ComplianceValue;
 import org.datakurator.ffdq.model.ResultState;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Interval;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -86,6 +83,7 @@ public class DwCOtherDateDQ {
         
         return result;
     }
+    
     /**
      * #76 Validation SingleRecord Likelihood: dateidentified outofrange
      * with default values: bdq:earliestVaidDate="1753-01-01"; bdq:latestValidDate=current day
@@ -97,26 +95,13 @@ public class DwCOtherDateDQ {
      * @return DQResponse the response of type ComplianceValue  to return
      */
     @Provides("dc8aae4b-134f-4d75-8a71-c4186239178e")
-    @Validation(label="VALIDATION_DATEIDENTIFIED_OUTOFRANGE",description="dateIdentified within expected range")
-    @Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is EMPTY or is not a valid ISO 8601-1:2019 date, or if dwc:eventDate is not EMPTY and is not a valid ISO 8601-1:2019 date; COMPLIANT if the value of dwc:dateIdentified overlaps or follows the dwc:eventDate, and is within the Parameter range; otherwise NOT_COMPLIANT") 
     public static DQResponse<ComplianceValue> validationDateidentifiedOutofrange(
 		@ActedUpon("dwc:dateIdentified") String dateIdentified,
 		@Consulted("dwc:eventDate") String eventDate
 	) {
-
-        // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is 
-        // EMPTY or is not a valid ISO 8601-1:2019 date, or if dwc:eventDate 
-        // is not EMPTY and is not a valid ISO 8601-1:2019 date; COMPLIANT 
-        // if the value of dwc:dateIdentified overlaps or follows the 
-        // dwc:eventDate, and is within the Parameter range; otherwise 
-        // NOT_COMPLIANT 
-
         // Parameters. This test is defined as parameterized.
         // Default values: bdq:earliestVaidDate="1753-01-01"; bdq:latestValidDate=current day
-
 		String currentDay = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
-
 		return DwCOtherDateDQ.validationDateidentifiedOutofrange(dateIdentified, eventDate, "1753-01-01", currentDay);
 	} 
 
@@ -132,8 +117,6 @@ public class DwCOtherDateDQ {
      * @return DQResponse the response of type ComplianceValue  to return
      */
     @Provides("urn:uuid:dc8aae4b-134f-4d75-8a71-c4186239178e")
-    @Validation(label="VALIDATION_DATEIDENTIFIED_OUTOFRANGE",description="dateIdentified within expected range")
-    @Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is EMPTY or is not a valid ISO 8601-1:2019 date, or if dwc:eventDate is not EMPTY and is not a valid ISO 8601-1:2019 date; COMPLIANT if the value of dwc:dateIdentified overlaps or follows the dwc:eventDate, and is within the Parameter range; otherwise NOT_COMPLIANT") 
     public static DQResponse<ComplianceValue> validationDateidentifiedOutofrange(
 		@ActedUpon("dwc:dateIdentified") String dateIdentified,
 		@Consulted("dwc:eventDate") String eventDate, 
@@ -141,13 +124,14 @@ public class DwCOtherDateDQ {
 		@Parameter(name="bdq:latestValidDate") String latestValidDate
 	) {
 
-        // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is 
-        // EMPTY or is not a valid ISO 8601-1:2019 date, or if dwc:eventDate 
-        // is not EMPTY and is not a valid ISO 8601-1:2019 date; COMPLIANT 
-        // if the value of dwc:dateIdentified overlaps or follows the 
-        // dwc:eventDate, and is within the Parameter range; otherwise 
-        // NOT_COMPLIANT 
+        // Specification (updated as of 2022 Feb 21)
+        // INTERNAL_PREREQUISITES_NOT_MET if any of these three conditions are met 
+        // (1) dwc:dateIdentified is EMPTY, (2) dwc:dateIdentified is not a valid 
+        // ISO 8601-1:2019 date, (3) dwc:eventDate is not EMPTY and is not a valid
+        // ISO 8601-1:2019 date; COMPLIANT if the value of dwc:dateIdentified is 
+        // within the parameter ranges and either (1) dwcEventDate is EMPTY or 
+        // (2) if dwc:eventDate is a valid ISO 8601-1:2019 date and dwc:dateIdentified 
+        // overlaps or follows the dwc:eventDate; otherwise NOT_COMPLIANT
 
         // Parameters. This test is defined as parameterized.
         // Default values: bdq:earliestVaidDate="1753-01-01"; bdq:latestValidDate=current day
@@ -161,7 +145,7 @@ public class DwCOtherDateDQ {
 		}
 
     	String range = earliestValidDate + "/" + latestValidDate;
-    	Interval withinInterval = DateUtils.extractInterval(range);
+    	LocalDateInterval withinInterval = DateUtils.extractInterval(range);
 
     	logger.debug(dateIdentified);
     	logger.debug(eventDate);
@@ -177,7 +161,7 @@ public class DwCOtherDateDQ {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     	} else if (DateUtils.isEmpty(eventDate)) {
     		result.addComment("No valid value provided for dwc:eventDate to compare with dwc:dateIdentified.");
-    		Interval identifiedInterval = DateUtils.extractInterval(dateIdentified);
+    		LocalDateInterval identifiedInterval = DateUtils.extractInterval(dateIdentified);
     		if (withinInterval.overlaps(identifiedInterval)) {
     			result.setValue(ComplianceValue.COMPLIANT);
     			result.setResultState(ResultState.RUN_HAS_RESULT);
@@ -186,10 +170,9 @@ public class DwCOtherDateDQ {
     			result.setValue(ComplianceValue.NOT_COMPLIANT);
     			result.setResultState(ResultState.RUN_HAS_RESULT);
     			result.addComment("Provided value for dateIdentified [" + dateIdentified + "] is outside the limits ["+earliestValidDate +"]-["+latestValidDate +"].");
-    			
     		}
     	} else {
-    		Interval identifiedInterval = DateUtils.extractInterval(dateIdentified);
+    		LocalDateInterval identifiedInterval = DateUtils.extractInterval(dateIdentified);
     		if (identifiedInterval==null) { 
     			result.addComment("Value provided for dwc:dateIdentified ["+dateIdentified+"] is not a valid date.");
     			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -208,7 +191,7 @@ public class DwCOtherDateDQ {
     			result.addComment("Provided value for dwc:eventDate ["+eventDate+"] is not a valid date, unable to compare with dwc:dateIdentified.");
     			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		} else { 
-    			Interval eventInterval = DateUtils.extractInterval(eventDate);
+    			LocalDateInterval eventInterval = DateUtils.extractInterval(eventDate);
     			if (eventInterval==null) { 
     				result.addComment("Unable to extract date from provided value for dwc:eventDate ["+eventDate+"], unable to compare with dwc:dateIdentified.");
     				result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -216,11 +199,11 @@ public class DwCOtherDateDQ {
     				result.setValue(ComplianceValue.COMPLIANT);
     				result.addComment("Provided value for dateIdentified [" + dateIdentified + "] falls within the eventDate ["+eventDate+"].");
     				result.setResultState(ResultState.RUN_HAS_RESULT);
-    			} else if (identifiedInterval.getStart().isAfter(eventInterval.getEnd())) {
+    			} else if (identifiedInterval.getStartDate().isAfter(eventInterval.getEndDate())) {
     				result.setValue(ComplianceValue.COMPLIANT);
     				result.addComment("Provided value for dateIdentified [" + dateIdentified + "] is after the end of the eventDate ["+eventDate+"].");;
     				result.setResultState(ResultState.RUN_HAS_RESULT);
-    			} else if (identifiedInterval.getStart().equals(eventInterval.getStart())) {
+    			} else if (identifiedInterval.getStartDate().equals(eventInterval.getStartDate())) {
     				result.setValue(ComplianceValue.COMPLIANT);
     				result.addComment("Provided value for dateIdentified [" + dateIdentified + "] starts at the same time as the eventDate ["+eventDate+"].");;
     				result.setResultState(ResultState.RUN_HAS_RESULT);
@@ -228,7 +211,7 @@ public class DwCOtherDateDQ {
     				result.setValue(ComplianceValue.COMPLIANT);
     				result.addComment("Provided value for dateIdentified [" + dateIdentified + "] overlaps the eventDate ["+eventDate+"].");;
     				result.setResultState(ResultState.RUN_HAS_RESULT);
-    			} else if (identifiedInterval.getEnd().isBefore(eventInterval.getStart())) { 
+    			} else if (identifiedInterval.getEndDate().isBefore(eventInterval.getStartDate())) { 
     				result.setValue(ComplianceValue.NOT_COMPLIANT);
     				result.addComment("Provided value for dateIdentified [" + dateIdentified + "] ends before the eventDate starts.");
     				result.setResultState(ResultState.RUN_HAS_RESULT);

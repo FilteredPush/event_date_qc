@@ -18,12 +18,14 @@ package org.filteredpush.qc.date;
 
 import static org.junit.Assert.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.datakurator.ffdq.api.DQResponse;
 import org.datakurator.ffdq.api.result.ComplianceValue;
 import org.datakurator.ffdq.model.ResultState;
-import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -471,26 +473,26 @@ public class DwCOtherDateDQTest {
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
-		dateIdentified =  LocalDateTime.now().toString("yyyy-MM-dd"); 
-        eventDate= LocalDateTime.now().toString("yyyy-MM-dd");
+		dateIdentified =  LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE); 
+        eventDate= LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
 		result = DwCOtherDateDQ.validationDateidentifiedOutofrange(dateIdentified,eventDate);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
-		dateIdentified = "1753-01-01/"+ LocalDateTime.now().toString("yyyy-MM-dd");
+		dateIdentified = "1753-01-01/"+ LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
 		eventDate = dateIdentified;
 		result = DwCOtherDateDQ.validationDateidentifiedOutofrange(dateIdentified,eventDate);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
-		dateIdentified = "1753-01-01/"+ LocalDateTime.now().toString("yyyy-MM-dd");
+		dateIdentified = "1753-01-01/"+ LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
 		eventDate = "1753";
 		result = DwCOtherDateDQ.validationDateidentifiedOutofrange(dateIdentified,eventDate);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
-		dateIdentified = "1752-12-31/"+ LocalDateTime.now().toString("yyyy-MM-dd");
+		dateIdentified = "1752-12-31/"+ LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
 		eventDate = dateIdentified;
 		result = DwCOtherDateDQ.validationDateidentifiedOutofrange(dateIdentified,eventDate);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
@@ -516,7 +518,7 @@ public class DwCOtherDateDQTest {
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 		
-		dateIdentified = LocalDateTime.now().toString("yyyy-MM-dd") + "/" + LocalDateTime.now().plusDays(1).toString("yyyy-MM-dd");;
+		dateIdentified = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE) + "/" + LocalDateTime.now().plusDays(1).format(DateTimeFormatter.ISO_LOCAL_DATE);
 		eventDate = "1753";
 		result = DwCOtherDateDQ.validationDateidentifiedOutofrange(dateIdentified,eventDate);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());	

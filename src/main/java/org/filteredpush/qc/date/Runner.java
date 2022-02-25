@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Method;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,8 +51,6 @@ import org.datakurator.ffdq.api.result.AmendmentValue;
 import org.datakurator.ffdq.api.result.ComplianceValue;
 import org.datakurator.ffdq.api.result.NumericalValue;
 import org.datakurator.ffdq.model.ResultState;
-import org.joda.time.Instant;
-import org.joda.time.Interval;
 
 /**
  * Selfstanding execution of event_date_qc functionality.  Can run TG2 Date related tests on flat DarwinCore 
@@ -83,14 +83,17 @@ public class Runner {
 			// Get option values
 			CommandLineParser parser = new DefaultParser();
 			CommandLine cmd = parser.parse(options, args);
+			
+			if (cmd.hasOption("h")) { 
+				HelpFormatter formatter = new HelpFormatter();
+				formatter.printHelp( "java -jar event_date_qc-{version}-{gitcommit}-executable.jar", options);
+				System.exit(0);
+			}
 
 			String execution = cmd.getOptionValue("e","runTests");
 			if (execution.equals("verbatimDates")) {
 				Boolean showSummaryLines = cmd.hasOption("s");
 				DateUtils.interpretDates(args,showSummaryLines);
-			} else if (execution.equals("help")) { 
-				HelpFormatter formatter = new HelpFormatter();
-				formatter.printHelp( "java -jar event_date_qc-{version}-{gitcommit}-executable.jar", options);
 			} else { 
 				List<Method> methods = Arrays.asList(DwCEventTG2DQ.class.getDeclaredMethods());
 				methods.get(0).isAnnotationPresent(Provides.class);
@@ -142,7 +145,7 @@ public class Runner {
 				Class[] sevenParam = new Class[7];
 				for (int i=0; i<7; i++) { sevenParam[i] = String.class; }  
 
-				Instant startTime = new Instant();
+				Instant startTime = Instant.now();
 				System.out.println("Start time: " + startTime.toString());
 
 				Iterator<CSVRecord> recordIterator = records.iterator();
@@ -561,16 +564,16 @@ public class Runner {
 
 					recordCount++;
 					if (recordCount % 1000000 == 0) { 
-						Instant nowTime = new Instant();
-						Interval runtime = new Interval(startTime,nowTime);
-						System.out.println("Rows processed: " + recordCount + " in " + (runtime.toDuration().getMillis()/100)/10d + "seconds.");
+						Instant nowTime = Instant.now();
+						Duration runtime = Duration.between(startTime, nowTime);
+						System.out.println("Rows processed: " + recordCount + " in " + Long.toString(runtime.getSeconds()) + "seconds.");
 					}
 				}
 
-				Instant endTime = new Instant();
-				Interval runtime = new Interval(startTime,endTime);
+				Instant endTime = Instant.now();
+				Duration runtime =  Duration.between(startTime, endTime);
 				System.out.println("End time: " + endTime.toString());
-				System.out.println("Runtime: " + (runtime.toDuration().getMillis()/100)/10d + " seconds") ;
+				System.out.println("Runtime: " + Long.toString(runtime.getSeconds()) + " seconds") ;
 
 				System.out.println("Records examined:" + Integer.toString(recordCount));
 				System.out.println("Lines skipped:" + Integer.toString(skippedLineCount));

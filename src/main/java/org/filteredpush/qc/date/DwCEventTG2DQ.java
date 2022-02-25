@@ -38,10 +38,6 @@ import org.datakurator.ffdq.api.result.AmendmentValue;
 import org.datakurator.ffdq.api.result.CompletenessValue;
 import org.datakurator.ffdq.api.result.ComplianceValue;
 import org.datakurator.ffdq.api.result.NumericalValue;
-import org.joda.time.DateTime;
-import org.joda.time.Instant;
-import org.joda.time.Interval;
-import org.joda.time.LocalDateTime;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,6 +46,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -688,7 +686,7 @@ public class DwCEventTG2DQ {
     public static DQResponse<ComplianceValue> validationEventdateOutofrange(
     		@ActedUpon("dwc:eventDate") String eventDate
     		) {
-        String latestValidDate = LocalDateTime.now().toString("yyyy-MM-dd");
+        String latestValidDate = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
     	return DwCEventTG2DQ.validationEventdateOutofrange(eventDate, "1600-01-01", latestValidDate);
     }
     
@@ -735,11 +733,11 @@ public class DwCEventTG2DQ {
         	earliestValidDate = "1600-01-01";
         }
         if (latestValidDate==null) { 
-        	latestValidDate = LocalDateTime.now().toString("yyyy-MM-dd");
+        	latestValidDate = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
         }
         String validRangeString = earliestValidDate + "/" + latestValidDate;
         
-        Interval validInterval = DateUtils.extractInterval(validRangeString);
+        LocalDateInterval validInterval = DateUtils.extractInterval(validRangeString);
         
         logger.debug(validInterval);
         
@@ -751,7 +749,7 @@ public class DwCEventTG2DQ {
     			result.addComment("Value provided for dwc:eventDate ["+eventDate+"] not recognized as a valid date.");
     			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		} else { 
-    			Interval interval = DateUtils.extractInterval(eventDate);
+    			LocalDateInterval interval = DateUtils.extractInterval(eventDate);
     			if (validInterval.contains(interval)) { 
     				result.setValue(ComplianceValue.COMPLIANT);
     				result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is a range spanning at least part of " + earliestValidDate + " to " + latestValidDate + ".");
@@ -1098,7 +1096,7 @@ public class DwCEventTG2DQ {
     			if (DateUtils.isRange(eventDate)) {
     				isRange = true;
     			}
-    			Interval interval = DateUtils.extractInterval(eventDate);
+    			LocalDateInterval interval = DateUtils.extractInterval(eventDate);
     			if (interval==null) {
     				result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     				result.addComment("Provided value for dwc:eventDate ["+ eventDate +"] appears to be correctly formatted, but could not be interpreted as a valid date.");
@@ -1107,7 +1105,7 @@ public class DwCEventTG2DQ {
     				Map<String, String> values = new HashMap<>();
 
     				if (DateUtils.isEmpty(day)) {
-    					String newDay = Integer.toString(interval.getStart().getDayOfMonth());
+    					String newDay = Integer.toString(interval.getStartDate().getDayOfMonth());
 						values.put("dwc:day", newDay );
     					result.setResultState(ResultState.FILLED_IN);
     					if (isRange) {
@@ -1117,7 +1115,7 @@ public class DwCEventTG2DQ {
     					}
     				}
     				if (DateUtils.isEmpty(month)) {
-    					String newMonth = Integer.toString(interval.getStart().getMonthOfYear());
+    					String newMonth = Integer.toString(interval.getStartDate().getMonthValue());
     					values.put("dwc:month", newMonth );
     					result.setResultState(ResultState.FILLED_IN);
     					if (isRange) {
@@ -1127,7 +1125,7 @@ public class DwCEventTG2DQ {
     					}
     				}
     				if (DateUtils.isEmpty(year)) {
-    					String newYear = Integer.toString(interval.getStart().getYear());
+    					String newYear = Integer.toString(interval.getStartDate().getYear());
     					values.put("dwc:year", newYear );
     					result.setResultState(ResultState.FILLED_IN);
     					if (isRange) {
@@ -1138,7 +1136,7 @@ public class DwCEventTG2DQ {
     				}
 
     				if (DateUtils.isEmpty(startDayOfYear)) {
-    					String newDay = Integer.toString(interval.getStart().getDayOfYear());
+    					String newDay = Integer.toString(interval.getStartDate().getDayOfYear());
     					values.put("dwc:startDayOfYear", newDay );
     					result.setResultState(ResultState.FILLED_IN);
     					if (isRange) {
@@ -1149,7 +1147,7 @@ public class DwCEventTG2DQ {
     				}
 
     				if (DateUtils.isEmpty(endDayOfYear)) {
-    					String newDay = Integer.toString(interval.getEnd().getDayOfYear());
+    					String newDay = Integer.toString(interval.getEndDate().getDayOfYear());
     					values.put("dwc:endDayOfYear", newDay );
     					result.setResultState(ResultState.FILLED_IN);
     					if (isRange) {
@@ -1528,7 +1526,7 @@ public class DwCEventTG2DQ {
     				if (convertedDateResult.getResultState().equals(EventResult.EventQCResultState.DATE)) {
     					String convertedDate = convertedDateResult.getResult();
     					// Date could be parsed, extract the month.
-    					Integer monthNumeric = DateUtils.extractDate(convertedDate).getMonthOfYear();
+    					Integer monthNumeric = DateUtils.extractDate(convertedDate).getMonthValue();
     					result.setResultState(ResultState.CHANGED);
 
 						Map<String, String> values = new HashMap<>();

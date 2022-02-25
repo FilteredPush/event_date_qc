@@ -3,11 +3,16 @@
  */
 package org.filteredpush.qc.date;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -105,6 +110,9 @@ public class LocalDateInterval {
     		this.startDate = startResult.startOfPair;
     		DatePair endResult = parseDateBit(bits[1]);
     		this.endDate = endResult.endOfPair;
+    		if (endDate.isBefore(startDate)) { 
+    			throw new DateTimeParseException("provided dateString has a start date later than the end date.", dateString, dateString.indexOf("/"));
+    		}
     	} else { 
     		DatePair result = parseDateBit(dateString);
     		this.startDate = result.getStartOfPair();
@@ -120,38 +128,63 @@ public class LocalDateInterval {
     	if (dateBit.matches("^[0-9]{4}-[0-9]{2}-[0-9]{2}$")) { 
     		DateTimeFormatter formatter = new DateTimeFormatterBuilder()
     				.append(DateTimeFormatter.ISO_LOCAL_DATE)
-    				.toFormatter();
+    				.toFormatter().withResolverStyle(ResolverStyle.STRICT);
     		LocalDate startDateBit = LocalDate.parse(dateBit, formatter);
     		result = new DatePair(startDateBit, startDateBit);
     	} else if (dateBit.matches("^[0-9]{4}-[0-9]{3}$")) { 
     		DateTimeFormatter formatter = new DateTimeFormatterBuilder()
     				.append(DateTimeFormatter.ISO_ORDINAL_DATE)
-    				.toFormatter();
+    				.toFormatter().withResolverStyle(ResolverStyle.STRICT);
     		LocalDate startDateBit = LocalDate.parse(dateBit, formatter);
     		result = new DatePair(startDateBit, startDateBit);
     	} else { 
     		if (dateBit.matches("^[0-9]{4}-[0-9]{2}$")) {
     			DateTimeFormatter formatter = new DateTimeFormatterBuilder()
     				.append(DateTimeFormatter.ISO_LOCAL_DATE)
-    				.toFormatter();
+    				.toFormatter().withResolverStyle(ResolverStyle.STRICT);
     			LocalDate startDateBit = LocalDate.parse(dateBit+"-01", formatter);
     			result = new DatePair(startDateBit,startDateBit.with(TemporalAdjusters.lastDayOfMonth()));
-    		} else if (dateBit.matches("^[0-9]{4}$")) {
+    		} else if (dateBit.matches("^[0-9]{1,4}$")) {
     			DateTimeFormatter formatter = new DateTimeFormatterBuilder()
     				.append(DateTimeFormatter.ISO_LOCAL_DATE)
-    				.toFormatter();
+    				.toFormatter().withResolverStyle(ResolverStyle.STRICT);
+    			if (dateBit.matches("^[0-9]{1,3}$")) {
+    				dateBit = String.format("%04d", Integer.parseInt(dateBit));
+    			}
     			LocalDate startDateBit = LocalDate.parse(dateBit+"-01-01", formatter);
     			result = new DatePair(startDateBit,startDateBit.with(TemporalAdjusters.lastDayOfYear()));
     		} else { 
-    			DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-    				.append(DateTimeFormatter.ISO_DATE_TIME)
-    				.append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-    				.append(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
-    				.append(DateTimeFormatter.BASIC_ISO_DATE)
+    			List<DateTimeFormatter> formatters = new ArrayList<DateTimeFormatter>();
+    			
+    			formatters.add(new DateTimeFormatterBuilder()
     				.append(DateTimeFormatter.ISO_DATE)
-    				.toFormatter();
-    			LocalDate startDateBit = LocalDate.parse(dateBit, formatter);
-    			result = new DatePair(startDateBit, startDateBit);
+    				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+    			formatters.add(new DateTimeFormatterBuilder()
+    				.append(DateTimeFormatter.ISO_DATE_TIME)
+    				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+    			formatters.add(new DateTimeFormatterBuilder()
+        			.append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+    				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+    			formatters.add(new DateTimeFormatterBuilder()
+        			.append(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+    				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+    			formatters.add(new DateTimeFormatterBuilder()
+        			.append(DateTimeFormatter.BASIC_ISO_DATE)
+    				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+    			formatters.add(new DateTimeFormatterBuilder()
+        			.append(DateTimeFormatter.ISO_DATE)
+    				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+    			
+    			Iterator<DateTimeFormatter> i = formatters.iterator();
+    			while (i.hasNext()) {
+    				try { 
+    					LocalDate startDateBit = LocalDate.parse(dateBit, i.next());
+    					result = new DatePair(startDateBit, startDateBit);
+    				} catch (Exception e) { 
+    					logger.debug(e.getMessage());
+    				}
+    			}
+    			
     		}
     	}
     	if (result==null) { 
@@ -165,7 +198,15 @@ public class LocalDateInterval {
 	public LocalDate getStartDate() {
 		return startDate;
 	}
-
+	/**
+	 * Same as getStartDate().
+	 * 
+	 * @return the startDate
+	 */
+	public LocalDate getStart() { 
+		return startDate;
+	}
+	
 	/**
 	 * @param startDate the startDate to set
 	 */
@@ -179,6 +220,14 @@ public class LocalDateInterval {
 	public LocalDate getEndDate() {
 		return endDate;
 	}
+	/**
+	 * Same as getEndDate()
+	 * 
+	 * @return the endDate
+	 */
+	public LocalDate getEnd() {
+		return endDate;
+	}	
 
 	/**
 	 * @param endDate the endDate to set
@@ -250,6 +299,70 @@ public class LocalDateInterval {
 				}
 			}
 		}
+		return result;
+	}
+
+	/** 
+	 * Test to see if the specified interval is wholly contained within the 
+	 * current LocalDateInterval instance.
+	 * 
+	 * @param interval to compare 
+	 * @return true if interval is entirely contained within this, otherwise false,
+	 *   will return false if interval or any of the start/end dates are null;
+	 */
+	public boolean contains(LocalDateInterval interval) {
+		boolean result = false;
+		if (interval!=null && this.getStartDate()!=null && this.getEndDate()!=null && interval.getEndDate()!=null && interval.getStartDate()!=null)  {
+			if (interval.getStartDate().isAfter(this.getStartDate()) || interval.getStartDate().isEqual(this.getStartDate())) { 
+				if (interval.getEndDate().isBefore(this.getEndDate()) || interval.getEndDate().isEqual(this.getEndDate())) { 
+				   result = true;
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Test to see if the specified interval is partly overlaps but
+	 * is not wholly contained within the current LocalDateInterval instance.
+	 * 
+	 * @param interval to compare
+	 * @return true if the interval overlaps with but is not wholly contained within this, 
+	 *   otherwise false, will return false if interval or any of the start/end dates are null;
+	 */
+	public boolean overlaps(LocalDateInterval interval) {
+		boolean result = false;
+		if (!contains(interval)) {  
+			if (interval!=null && this.getStartDate()!=null && this.getEndDate()!=null && interval.getEndDate()!=null && interval.getStartDate()!=null)  {
+				if ((interval.getStartDate().isAfter(this.getStartDate()) || interval.getStartDate().isEqual(this.getStartDate())) &&
+						!interval.getStartDate().isAfter(this.getEndDate())  )
+				{ 
+					if (interval.getEndDate().isAfter(this.getEndDate())) { 
+						// this.start then interval.start then this.end then interval.end
+						result = true;
+					}
+				} else if (interval.getEndDate().isBefore(this.getEndDate()) || interval.getEndDate().isEqual(this.getEndDate()) && 
+						!interval.getEndDate().isBefore(this.getStartDate())  )
+				{
+					if (interval.getStartDate().isBefore(this.getStartDate())) { 
+						// interval.start then this.start then interval.end then this.end
+						result = true;
+					}
+				} else if (interval.getStartDate().isBefore(this.getStartDate()) && interval.getEndDate().isAfter(this.getEndDate())) { 
+					// interval.start then this.start then this.end then interval.end
+					// interval.contains(this) is true, but this.contains(interval) is false
+					result = true;
+				}
+			}
+		}
+		return result;
+	}
+
+	public Duration toDuration() {
+		Duration result = null;
+		
+		result = Duration.between(startDate.atStartOfDay(), endDate.atStartOfDay().plusDays(1).minusSeconds(1));
+		
 		return result;
 	}
 	

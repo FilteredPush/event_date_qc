@@ -18,6 +18,8 @@ package org.filteredpush.qc.date;
 
 import static org.junit.Assert.*;
 
+import java.time.LocalDateTime;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.datakurator.ffdq.api.DQResponse;
@@ -26,7 +28,6 @@ import org.datakurator.ffdq.api.result.CompletenessValue;
 import org.datakurator.ffdq.api.result.ComplianceValue;
 import org.datakurator.ffdq.api.result.NumericalValue;
 import org.datakurator.ffdq.model.ResultState;
-import org.joda.time.LocalDateTime;
 import org.junit.Test;
 
 /**
@@ -67,6 +68,29 @@ public class DwcEventDQTest {
 		seconds = (60l*60l*24l*28)-1l; 
 		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());			
+		
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1969");  
+		seconds = (60l*60l*24l*366l)-1l; 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
+		
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1972");  // leap year with two leap seconds
+		// if leap seconds were included would be 31622401, but guidance is to exclude leap seconds from this measure
+		// seconds = (60l*60l*24l*366l)+1l; 
+		seconds = (60l*60l*24l*366l)-1l; 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
+		
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1973-12-31"); // leap second
+		// if leap seconds were included would be 31622401, but guidance is to exclude leap seconds from this measure
+		seconds = (60l*60l*24l); 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());		
+		
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1881-02");
+		seconds = (60l*60l*24l*28)-1l; 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
 		
 		measure = DwCEventDQ.measureEventdatePrecisioninseconds("");
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, measure.getResultState());

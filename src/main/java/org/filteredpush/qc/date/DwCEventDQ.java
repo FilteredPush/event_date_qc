@@ -26,9 +26,8 @@ import org.datakurator.ffdq.api.result.CompletenessValue;
 import org.datakurator.ffdq.api.result.ComplianceValue;
 import org.datakurator.ffdq.api.result.NumericalValue;
 import org.datakurator.ffdq.model.ResultState;
-import org.joda.time.Interval;
-import org.joda.time.LocalDateTime;
 
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -203,12 +202,15 @@ public class DwCEventDQ {
     public static DQResponse<NumericalValue> measureEventdatePrecisioninseconds(@ActedUpon("dwc:eventDate") String eventDate) {
         DQResponse<NumericalValue> result = new DQResponse<NumericalValue>();
 
-        // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
-        // or does not contain a valid ISO 8601-1:2019 date; REPORT 
-        // on the length of the period expressed in the dwc:eventDate 
-        //in seconds; otherwise NOT_REPORTED 
-
+        // Specification (updated as of 2022 Feb 21)
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or does not 
+        // contain a valid ISO 8601-1:2019 date; otherwise RUN_HAS_RESULT with the 
+        // result value being the length of the period expressed in the dwc:eventDate 
+        // in seconds
+        
+        // In notes, exclude leap seconds.  
+        // The joda and java Time libraries exclude leap seconds.
+        
     	if (DateUtils.isEmpty(eventDate)) {
     		result.addComment("No value provided for eventDate.");
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -668,7 +670,8 @@ public class DwCEventDQ {
      * @param day the provided dwc:day to evaluate
      * @return DQResponse the response of type ComplianceValue  to return
      *    COMPLIANT if day is an integer in the range 1 to 31 inclusive, otherwise NOT_COMPLIANT
-     * @see DwCEventDQ.validationDayOutofrange(String year, String month, String day) providing VALIDATION_DAY_OUTOFRANGE
+     * see DwCEventDQ.validationDayOutofrange(String year, String month, String day) 
+	 *  providing VALIDATION_DAY_OUTOFRANGE
      */
     @Provides("urn:uuid:47ff73ba-0028-4f79-9ce1-ee7008d66498")
     public static DQResponse<ComplianceValue> validationDayNotstandard(@ActedUpon("dwc:day") String day) {
@@ -1240,7 +1243,7 @@ public class DwCEventDQ {
     				if (convertedDateResult.getResultState().equals(EventResult.EventQCResultState.DATE)) {
     					String convertedDate = convertedDateResult.getResult();
     					// Date could be parsed, extract the month.
-    					Integer monthNumeric = DateUtils.extractDate(convertedDate).getMonthOfYear();
+    					Integer monthNumeric = DateUtils.extractDate(convertedDate).getMonthValue();
     					result.setResultState(ResultState.CHANGED);
 
 						Map<String, String> values = new HashMap<>();
@@ -1610,7 +1613,7 @@ public class DwCEventDQ {
     			if (DateUtils.isRange(eventDate)) {
     				isRange = true;
     			}
-    			Interval interval = DateUtils.extractInterval(eventDate);
+    			LocalDateInterval interval = DateUtils.extractInterval(eventDate);
     			if (interval==null) {
     				result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     				result.addComment("Provided value for dwc:eventDate ["+ eventDate +"] appears to be correctly formatted, but could not be interpreted as a valid date.");
@@ -1619,7 +1622,7 @@ public class DwCEventDQ {
     				Map<String, String> values = new HashMap<>();
 
     				if (DateUtils.isEmpty(day)) {
-    					String newDay = Integer.toString(interval.getStart().getDayOfMonth());
+    					String newDay = Integer.toString(interval.getStartDate().getDayOfMonth());
 						values.put("dwc:day", newDay );
     					result.setResultState(ResultState.FILLED_IN);
     					if (isRange) {
@@ -1629,7 +1632,7 @@ public class DwCEventDQ {
     					}
     				}
     				if (DateUtils.isEmpty(month)) {
-    					String newMonth = Integer.toString(interval.getStart().getMonthOfYear());
+    					String newMonth = Integer.toString(interval.getStartDate().getMonthValue());
     					values.put("dwc:month", newMonth );
     					result.setResultState(ResultState.FILLED_IN);
     					if (isRange) {
@@ -1639,7 +1642,7 @@ public class DwCEventDQ {
     					}
     				}
     				if (DateUtils.isEmpty(month)) {
-    					String newMonth = Integer.toString(interval.getStart().getMonthOfYear());
+    					String newMonth = Integer.toString(interval.getStartDate().getMonthValue());
     					values.put("dwc:month", newMonth );
     					result.setResultState(ResultState.FILLED_IN);
     					if (isRange) {
@@ -1649,7 +1652,7 @@ public class DwCEventDQ {
     					}
     				}
     				if (DateUtils.isEmpty(year)) {
-    					String newYear = Integer.toString(interval.getStart().getYear());
+    					String newYear = Integer.toString(interval.getStartDate().getYear());
     					values.put("dwc:year", newYear );
     					result.setResultState(ResultState.FILLED_IN);
     					if (isRange) {
@@ -1660,7 +1663,7 @@ public class DwCEventDQ {
     				}
 
     				if (DateUtils.isEmpty(startDayOfYear)) {
-    					String newDay = Integer.toString(interval.getStart().getDayOfYear());
+    					String newDay = Integer.toString(interval.getStartDate().getDayOfYear());
     					values.put("dwc:startDayOfYear", newDay );
     					result.setResultState(ResultState.FILLED_IN);
     					if (isRange) {
@@ -1671,7 +1674,7 @@ public class DwCEventDQ {
     				}
 
     				if (DateUtils.isEmpty(endDayOfYear)) {
-    					String newDay = Integer.toString(interval.getEnd().getDayOfYear());
+    					String newDay = Integer.toString(interval.getEndDate().getDayOfYear());
     					values.put("dwc:endDayOfYear", newDay );
     					result.setResultState(ResultState.FILLED_IN);
     					if (isRange) {
@@ -1819,8 +1822,8 @@ public class DwCEventDQ {
     			result.addComment("Value provided for dwc:eventDate ["+eventDate+"] not recognized as a valid date.");
     			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		} else { 
-    			Interval interval = DateUtils.extractInterval(eventDate);
-    			Interval bounds = DateUtils.extractInterval(earlyestValidDate + "/" + latestValidDate );
+    			LocalDateInterval interval = DateUtils.extractInterval(eventDate);
+    			LocalDateInterval bounds = DateUtils.extractInterval(earlyestValidDate + "/" + latestValidDate );
     			if (bounds.contains(interval)) { 
     				result.setValue(ComplianceValue.COMPLIANT);
     				result.addComment("Provided value for dwc:eventDate '" + eventDate + "' falls entirely within the range " + earlyestValidDate + " to " + latestValidDate + ".");
