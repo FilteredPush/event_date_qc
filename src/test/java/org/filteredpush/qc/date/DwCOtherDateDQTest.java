@@ -26,7 +26,6 @@ import org.apache.commons.logging.LogFactory;
 import org.datakurator.ffdq.api.DQResponse;
 import org.datakurator.ffdq.api.result.ComplianceValue;
 import org.datakurator.ffdq.model.ResultState;
-import org.junit.Before;
 import org.junit.Test;
 
 /**

@@ -1534,6 +1534,11 @@ public class DateUtils {
      */
     public static boolean isRange(String eventDate) { 
     	boolean isRange = false;
+    	LocalDateInterval test = extractInterval(eventDate);
+    	if (test!=null && test.toDuration().getSeconds() > 86400l) { 
+    		isRange = true;
+    	}
+    	
 /*    	
     	if (eventDate!=null) { 
     		String[] dateBits = eventDate.split("/");
@@ -1600,73 +1605,26 @@ public class DateUtils {
     /**
      * Given a string that may be a date or a date range, extract a interval of
      * dates from that date range (ignoring time (thus the duration for the 
-     * interval will be from one date midnight to another).
+     * interval will be from one day to another).
      * 
-     * This probably is not the method you want - given 1950-01-05, it returns an
-     * interval from midnight as the start of the 5th to midnight on the start of the 6th,
-     * simply grabbing start end days from this interval will return 5 and 6, which
-     * probably isn't what you are expecting.  
-     * 
-     * @see DateUtils#extractInterval(String) which is probably the method you want.
+     * @see DateUtils#extractInterval(String) which now does the same thing.
      * 
      * @param eventDate a string containing a dwc:eventDate from which to extract an interval.
-     * @return An interval from one DateMidnight to another DateMidnight, null if no interval can be extracted.
+     * @return An interval from one LocalDate to another LocalDate, null if no interval can be extracted.
      */
     public static LocalDateInterval extractDateInterval(String eventDate) {
     	LocalDateInterval result = null;
-/*    	
-    	DateTimeParser[] parsers = { 
-    			DateTimeFormat.forPattern("yyyy-MM").getParser(),
-    			DateTimeFormat.forPattern("yyyy").getParser(),
-    			ISODateTimeFormat.dateOptionalTimeParser().getParser() 
-    	};
-    	DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
-    	if (eventDate!=null && eventDate.contains("/") && isRange(eventDate)) {
-    		String[] dateBits = eventDate.split("/");
-    		try { 
-    			// must be at least a 4 digit year.
-    			if (dateBits[0].length()>3 && dateBits[1].length()>3) { 
-    				DateMidnight startDate = DateMidnight.parse(dateBits[0],formatter);
-    				DateMidnight endDate = DateMidnight.parse(dateBits[1],formatter);
-    				if (dateBits[1].length()==4) { 
-    	                  result = new Interval(startDate,endDate.plusMonths(12).minusDays(1));
-    	               } else if (dateBits[1].length()==7) { 
-    	                  result = new Interval(startDate,endDate.plusMonths(1).minusDays(1));
-    	               } else { 
-    				      result = new Interval(startDate, endDate);
-    	               }
-    			}
-    		} catch (Exception e) { 
-    			// not a date range
-               logger.debug(e.getMessage());
-    		}
-    	} else {
-    		try { 
-               DateMidnight startDate = DateMidnight.parse(eventDate, formatter);
-               logger.debug(eventDate);
-               logger.debug(startDate);
-               if (eventDate.length()==4) { 
-                  result = new Interval(startDate,startDate.plusMonths(12).minusDays(1));
-               } else if (eventDate.length()==7) { 
-                  result = new Interval(startDate,startDate.plusMonths(1).minusDays(1));
-               } else { 
-                  result = new Interval(startDate,startDate.plusDays(1));
-               }
-    		} catch (IllegalFieldValueException ex) {
-    			// can parse as a date but some token has an out of range value
-    			logger.debug(ex);
-    		} catch (Exception e) { 
-    			// not a date
-               logger.debug(e.getMessage(),e);
-    		}
-    	}
-*/    	
+		try {
+			result = new LocalDateInterval(eventDate);
+		} catch (DateTimeParseException | EmptyDateException e) {
+			logger.debug(e.getMessage());
+		}
     	return result;
     }
     
     /**
      * Given a string that may be a date or a date range, extract a interval of
-     * dates from that date range, up to the end milisecond of the last day.
+     * dates from that date range, to the resolution of a day, but not finer.
      * 
      * @see DateUtils#extractDateInterval(String) which returns a pair of DateMidnights.
      * 
@@ -1681,97 +1639,6 @@ public class DateUtils {
 		} catch (DateTimeParseException | EmptyDateException e) {
 			logger.debug(e.getMessage());
 		}
-/*    	
-    	DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-    			.append(DateTimeFormatter.ofPattern("yyyy-MM"))
-    			.append(DateTimeFormatter.ofPattern("yyyy"))
-    			.append(DateTimeFormatter.ISO_LOCAL_DATE)
-    			.append(DateTimeFormatter.ISO_DATE_TIME)
-    			.append(DateTimeFormatter.ISO_DATE)
-	    		.toFormatter().withResolverStyle(ResolverStyle.STRICT);
-    	if (eventDate!=null && eventDate.contains("/") && isRange(eventDate)) {
-    		String[] dateBits = eventDate.split("/");
-    		try { 
-    			// must be at least a 4 digit year.
-    			if (dateBits[0].length()>3 && dateBits[1].length()>3) { 
-    				LocalDate startDate = LocalDate.parse(dateBits[0],formatter);
-    				LocalDate endDate = LocalDate.parse(dateBits[1],formatter);
-    				logger.debug(startDate);
-    				logger.debug(endDate);
-    				if (dateBits[1].length()==4) { 
-    					result = new LocalDateInterval(startDate,endDate.plusMonths(12).minus(1l));
-    				} else if (dateBits[1].length()==7) { 
-    					result = new LocalDateInterval(startDate,endDate.plusMonths(1).minus(1l));
-    				} else { 
-    					result = new LocalDateInterval(startDate, endDate.plusDays(1).minus(1l));
-    				}
-    				logger.debug(result);
-    			}
-    		} catch (Exception e) { 
-    			// not a date range
-               logger.debug(e.getMessage());
-    		}
-            try { 
-                if (dateBits.length == 1) { 
-                    // handle case of startDate/ with no end date.
-                    logger.debug("eventDate ["+eventDate+"] is not a properly formed range");
-	    		} else if (dateBits[1]!=null && dateBits[1].trim() != "") { 
-	    			if (result!=null && dateBits[1].matches("^[0-9]{4}-[0-9]{1}$")) {
-	    				// ISO requires 2 digit, zero padded month and day, single digit not allowed.
-	    				result = null;
-	    			}
-	    			if (result!=null && dateBits[1].matches("^[0-9]{4}-[0-9]{1}-.+")) {
-	    				// ISO requires 2 digit, zero padded month and day, single digit not allowed.
-	    				result = null;
-	    			}
-	    			if (result!=null && dateBits[1].matches("^[0-9]{4}-[0-9]{1,2}-[0-9]{1}$")) {
-	    				// ISO requires 2 digit, zero padded month and day, single digit not allowed.
-	    				result = null;
-	    			}
-	    		}
-    		} catch (Exception e) { 
-    			// not a date range
-               logger.debug(e.getMessage());
-    		}
-    	} else {
-    		try { 
-               LocalDate startDate = LocalDate.parse(eventDate, formatter);
-               logger.debug(startDate);
-               if (eventDate.length()==4) { 
-                  LocalDate endDate = startDate.toDateTime().plusMonths(12).minus(1l);
-                  result = new LocalDateInterval(startDate, endDate);
-                  logger.debug(result.toString());
-               } else if (eventDate.length()==7) { 
-                  LocalDate endDate = startDate.toDateTime().plusMonths(1).minus(1l);
-                  result = new LocalDateInterval(startDate,endDate);
-                  logger.debug(result.toString());
-               } else { 
-                  DateTime endDate = startDate.toDateTime().plusDays(1).minus(1l);
-                  result = new LocalDateInterval(startDate,endDate);
-                  logger.debug(result.toString());
-               }
-    		} catch (Exception e) { 
-    			// not a date
-               logger.debug(e.getMessage());
-    		}
-    	}
-    	if (result!=null && eventDate.matches("^[0-9]{4}-[0-9]{1}$")) {
-    		// ISO requires 2 digit, zero padded month and day, single digit not allowed.
-    		result = null;
-    	}
-    	if (result!=null && eventDate.matches("^[0-9]{4}-[0-9]{1}-.+")) {
-    		// ISO requires 2 digit, zero padded month and day, single digit not allowed.
-    		result = null;
-    	}
-    	if (result!=null && eventDate.matches("^[0-9]{4}-[0-9]{1,2}-[0-9]{1}$")) {
-    		// ISO requires 2 digit, zero padded month and day, single digit not allowed.
-    		result = null;
-    	}
-    	if (result!=null && eventDate.matches("^[0-9]{4}-[0-9]{1,2}-[0-9]{1}/.+")) {
-    		// ISO requires 2 digit, zero padded month and day, single digit not allowed.
-    		result = null;
-    	}
-*/    	
     	return result;
     }  
     
@@ -1952,6 +1819,40 @@ public class DateUtils {
      */
     public static boolean isConsistent(String eventDate, String year, String month, String day) {
     	boolean result = false;
+    	
+    	if (DateUtils.isEmpty(eventDate) && DateUtils.isEmpty(year) && DateUtils.isEmpty(month) && DateUtils.isEmpty(day)) {
+    		result = true;
+    	} else { 
+    		LocalDateInterval test = extractInterval(eventDate);
+    		logger.debug(test.toString());
+    		if (test!=null) {
+    			LocalDate start = test.getStartDate();
+    			try { 
+    				if (!DateUtils.isEmpty(year)) {
+    					if (start.getYear()==Integer.parseInt(year)) { 
+    						if (DateUtils.isEmpty(month)) { 
+    							if (DateUtils.isEmpty(day)) { 
+    								result = true;
+    							}
+    						} else { 
+    							if (start.getMonthValue()==Integer.parseInt(month)) { 
+    								if (DateUtils.isEmpty(day)) {
+    									result = true;
+    								} else {
+    									if (start.getDayOfMonth()==Integer.parseInt(day)) {
+    										result = true;
+    									}
+    								}
+    							}
+    						}
+    					}
+    				}
+    			} catch (NumberFormatException e) { 
+    				result = false;
+    			}
+    		}
+    	}
+    	
 /*    	
     	StringBuffer date = new StringBuffer();
     	if (!isEmpty(year)) { year = StringUtils.leftPad(year,4,"0"); } 
@@ -2241,9 +2142,20 @@ public class DateUtils {
     	long result = 0l;
     	if (!isEmpty(eventDate)) { 
     		if (eventDate.matches("^[0-9]{4}-[0-9]{2}-[0-9]{2}$")) { 
-    			java.time.LocalDate localDate = java.time.LocalDate.parse(eventDate,java.time.format.DateTimeFormatter.ISO_LOCAL_DATE);
+    			java.time.LocalDate localDate = java.time.LocalDate.parse(eventDate,java.time.format.DateTimeFormatter.ISO_LOCAL_DATE.withResolverStyle(ResolverStyle.STRICT));
+    			result = 86400;
+    		} else if (eventDate.matches("^[0-9]{4}-[0-9]{3}$")) { 
+    			java.time.LocalDate localDate = java.time.LocalDate.parse(eventDate,java.time.format.DateTimeFormatter.ISO_ORDINAL_DATE.withResolverStyle(ResolverStyle.STRICT));
     			result = 86400;
     		} else { 
+    			LocalDateInterval interval;
+				try {
+					interval = new LocalDateInterval(eventDate);
+					result = interval.toDuration().getSeconds();
+				} catch (DateTimeParseException | EmptyDateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
     			// TODO: implement with times.
 /*    			
     		Interval eventDateInterval = DateUtils.extractInterval(eventDate);
@@ -2778,21 +2690,7 @@ public class DateUtils {
 		boolean result = false;
 		
 		try { 
-			DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-    				.append(DateTimeFormatter.ofPattern("yyyy"))
-    				.append(DateTimeFormatter.ofPattern("yyyy-MM"))
-    				.append(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-    				.append(DateTimeFormatter.ofPattern("yyyy-MM-dd/yyyy"))
-    				.append(DateTimeFormatter.ofPattern("yyyy-MM-dd/yyyy-MM"))
-    				.append(DateTimeFormatter.ofPattern("yyyy-MM-dd/yyyy-MM-dd"))
-    				.append(DateTimeFormatter.ofPattern("yyyy/yyyy"))
-    				.append(DateTimeFormatter.ofPattern("yyyy-MM/yyyy"))
-    				.append(DateTimeFormatter.ofPattern("yyyy-MM/yyyy-MM"))
-    				.append(DateTimeFormatter.ofPattern("yyyy-MM/yyyy-MM-dd"))
-    				.append(DateTimeFormatter.ofPattern("yyyy/yyyy-MM"))
-    				.append(DateTimeFormatter.ofPattern("yyyy/yyyy-MM-dd"))
-    				.toFormatter().withResolverStyle(ResolverStyle.STRICT);
-    		LocalDate startDateBit = LocalDate.parse(aDateString, formatter);
+			LocalDateInterval testInterval = new LocalDateInterval(aDateString);
 			
     		result=true;
 			

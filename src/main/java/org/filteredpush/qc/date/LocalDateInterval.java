@@ -81,7 +81,10 @@ public class LocalDateInterval {
 	 * @param singleDay the day which is to be the startDate and endDate of the 
 	 * LocalDateInterval
 	 */
-	public LocalDateInterval(LocalDate singleDay) {
+	public LocalDateInterval(LocalDate singleDay) throws EmptyDateException {
+		if (singleDay==null) { 
+			throw new EmptyDateException("provided date was null");
+		}
 		this.startDate = singleDay;
 		this.endDate = singleDay;
 	}
@@ -120,11 +123,23 @@ public class LocalDateInterval {
     	}
 	}
 
+	/**
+	 * Extract a pair of days, representing the start and end of the specified dateBit
+	 * ignoring time.
+	 * 
+	 * @param dateBit a string representing a date or range of dates, without a / to parse
+	 * @return a date pair containing the start and end days of the range in dateBit, values are the
+	 * same if dateBit represents a single day or less.  
+	 */
 	protected DatePair parseDateBit(String dateBit)  throws EmptyDateException, DateTimeParseException { 
 		DatePair result = null;
 		if (DateUtils.isEmpty(dateBit)) { 
 			throw new EmptyDateException("Provided dateString value is empty");
 		} 
+		if (dateBit.contains("T")) { 
+			dateBit = dateBit.substring(0,dateBit.indexOf("T"));
+		}
+		logger.debug(dateBit);
     	if (dateBit.matches("^[0-9]{4}-[0-9]{2}-[0-9]{2}$")) { 
     		DateTimeFormatter formatter = new DateTimeFormatterBuilder()
     				.append(DateTimeFormatter.ISO_LOCAL_DATE)
@@ -210,7 +225,7 @@ public class LocalDateInterval {
 	/**
 	 * @param startDate the startDate to set
 	 */
-	public void setStartDate(LocalDate startDate) {
+	private void setStartDate(LocalDate startDate) {
 		this.startDate = startDate;
 	}
 
@@ -232,7 +247,7 @@ public class LocalDateInterval {
 	/**
 	 * @param endDate the endDate to set
 	 */
-	public void setEndDate(LocalDate endDate) {
+	private void setEndDate(LocalDate endDate) {
 		this.endDate = endDate;
 	}
 	
@@ -255,8 +270,7 @@ public class LocalDateInterval {
 		String result = null;
 		if (isSingleDay()) { 
 			result = startDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
-		}
-		if (startDate!=null && endDate!=null) {
+		} else if (startDate!=null && endDate!=null) {
 			result = startDate.format(DateTimeFormatter.ISO_LOCAL_DATE) + "/" + endDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
 		} else { 
 			if (startDate==null) { 
@@ -323,36 +337,37 @@ public class LocalDateInterval {
 	}
 
 	/**
-	 * Test to see if the specified interval is partly overlaps but
-	 * is not wholly contained within the current LocalDateInterval instance.
+	 * Test to see if the specified interval overlaps with the current LocalDateInterval instance
+	 * that is if there exists some non-empty portion of interval that lies outside of 
+	 * this and some non-empty portion of interval that lies within this.  
 	 * 
 	 * @param interval to compare
-	 * @return true if the interval overlaps with but is not wholly contained within this, 
-	 *   otherwise false, will return false if interval or any of the start/end dates are null;
+	 * @return true if the interval overlaps with this, otherwise false, will 
+	 *    return false if interval or any of the start/end dates are null.
 	 */
 	public boolean overlaps(LocalDateInterval interval) {
 		boolean result = false;
-		if (!contains(interval)) {  
-			if (interval!=null && this.getStartDate()!=null && this.getEndDate()!=null && interval.getEndDate()!=null && interval.getStartDate()!=null)  {
-				if ((interval.getStartDate().isAfter(this.getStartDate()) || interval.getStartDate().isEqual(this.getStartDate())) &&
-						!interval.getStartDate().isAfter(this.getEndDate())  )
-				{ 
-					if (interval.getEndDate().isAfter(this.getEndDate())) { 
-						// this.start then interval.start then this.end then interval.end
-						result = true;
-					}
-				} else if (interval.getEndDate().isBefore(this.getEndDate()) || interval.getEndDate().isEqual(this.getEndDate()) && 
-						!interval.getEndDate().isBefore(this.getStartDate())  )
-				{
-					if (interval.getStartDate().isBefore(this.getStartDate())) { 
-						// interval.start then this.start then interval.end then this.end
-						result = true;
-					}
-				} else if (interval.getStartDate().isBefore(this.getStartDate()) && interval.getEndDate().isAfter(this.getEndDate())) { 
-					// interval.start then this.start then this.end then interval.end
-					// interval.contains(this) is true, but this.contains(interval) is false
+		if (interval!=null) { 
+			if (interval.equals(this)) { 
+				result = true;
+			} else if (interval.contains(this)) {
+				result = true;
+			} else if (this.contains(interval)) {
+				result = true;
+			} else if (interval!=null && this.getStartDate()!=null && this.getEndDate()!=null && interval.getEndDate()!=null && interval.getStartDate()!=null)  {
+				if (interval.getStart().isBefore(this.getStart()) && interval.getEnd().isAfter(this.getStart())) { 
 					result = true;
-				}
+				} else if (interval.getStart().isBefore(this.getEnd()) && interval.getEnd().isAfter(this.getEnd())) { 
+					result = true;
+				} else if (interval.getStart().equals(this.getStart()) && interval.getEnd().isAfter(this.getStart())) { 
+					result = true;
+				} else if (interval.getStart().isBefore(this.getEnd()) && interval.getEnd().equals(this.getEnd())) { 
+					result = true;
+				} else if (interval.getStart().isBefore(this.getStart()) && interval.getEnd().equals(this.getStart())) { 
+					result = true;
+				} else if (interval.getStart().equals(this.getEnd()) && interval.getEnd().isAfter(this.getEnd())) { 
+					result = true;
+				} 
 			}
 		}
 		return result;
@@ -361,7 +376,7 @@ public class LocalDateInterval {
 	public Duration toDuration() {
 		Duration result = null;
 		
-		result = Duration.between(startDate.atStartOfDay(), endDate.atStartOfDay().plusDays(1).minusSeconds(1));
+		result = Duration.between(startDate.atStartOfDay(), endDate.atStartOfDay().plusDays(1));
 		
 		return result;
 	}

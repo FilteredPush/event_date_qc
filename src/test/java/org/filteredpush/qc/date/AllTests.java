@@ -9,8 +9,10 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ 
 	DateUtilsTest.class,
 	DwcEventDQTest.class,
+	DwCEventDQTestDefinitions.class,
 	DwCOtherDateDQTest.class,
-	DwCOtherDateDQTestDefinitions.class
+	DwCOtherDateDQTestDefinitions.class,
+	LocalDateIntervalTest.class
 	})
 public class AllTests {
 
