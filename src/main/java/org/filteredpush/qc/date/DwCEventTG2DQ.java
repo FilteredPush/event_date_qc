@@ -1006,7 +1006,7 @@ public class DwCEventTG2DQ {
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:day is not present 
         // or is EMPTY; AMENDED if the value of dwc:day was unambiguously 
         // interpreted to be an integer between 1 and 31 inclusive; 
-        // otherwise NOT_CHANGED 
+        // otherwise NOT_AMENDED 
 
       	if (DateUtils.isEmpty(day)) {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -1015,7 +1015,7 @@ public class DwCEventTG2DQ {
     		try {
     			@SuppressWarnings("unused")
 				Integer dayNumeric = Integer.parseInt(day);
-    			result.setResultState(ResultState.NO_CHANGE);
+    			result.setResultState(ResultState.NOT_AMENDED);
     			result.addComment("A value for dwc:day parsable as an integer was provided.");
     		} catch (NumberFormatException e) {
     			// Strip off any leading/trailing whitespace, then trailing letters.
@@ -1024,19 +1024,19 @@ public class DwCEventTG2DQ {
     			try {
     				Integer dayNumeric = Integer.parseInt(dayTrimmed);
     				if (dayNumeric>0 && dayNumeric<32) {
-    					result.setResultState(ResultState.CHANGED);
+    					result.setResultState(ResultState.AMENDED);
 
 						Map<String, String> values = new HashMap<>();
 						values.put("dwc:day", dayNumeric.toString());
 						result.setValue(new AmendmentValue(values));
     					result.addComment("Interpreted provided value for dwc:day ["+day+"] as ["+dayNumeric.toString()+"].");
     				} else {
-    					result.setResultState(ResultState.NO_CHANGE);
+    					result.setResultState(ResultState.NOT_AMENDED);
     					result.addComment("Unable to parse a meaningfull value for day of month from dwc:day ["+day+"].");
 
     				}
     			} catch (NumberFormatException ex) {
-    				result.setResultState(ResultState.NO_CHANGE);
+    				result.setResultState(ResultState.NOT_AMENDED);
     				result.addComment("Unable to interpret value provided for dwc:day ["+ day + "] as an integer between 1 and 31.");
     			}
     		}
@@ -1081,7 +1081,7 @@ public class DwCEventTG2DQ {
         // AMENDED if one or more EMPTY terms of the dwc:Event class 
         // (dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear) 
         // have been filled in from a valid unambiguously interpretable 
-        // value in dwc:eventDate; otherwise NOT_CHANGED
+        // value in dwc:eventDate; otherwise NOT_AMENDED
         // 
 
     	if (DateUtils.isEmpty(eventDate)) {
@@ -1169,7 +1169,7 @@ public class DwCEventTG2DQ {
     				//	}
     				//}
     				if (!result.getResultState().equals(ResultState.FILLED_IN)) {
-    					result.setResultState(ResultState.NO_CHANGE);
+    					result.setResultState(ResultState.NOT_AMENDED);
     					result.addComment("No changes proposed, all candidate fields to fill in contain values.");
     				}
     			} // end interval extraction
@@ -1197,7 +1197,7 @@ public class DwCEventTG2DQ {
         // is not EMPTY or the field dwc:verbatimEventDate is EMPTY 
         // or not unambiguously interpretable as an ISO 8601-1:2019 
         // date; AMENDED if the value of dwc:eventDate was unambiguously 
-        // interpreted from dwc:verbatimEventDate; otherwise NOT_CHANGED 
+        // interpreted from dwc:verbatimEventDate; otherwise NOT_AMENDED 
         //
 
 		if (DateUtils.isEmpty(eventDate)) {
@@ -1236,7 +1236,7 @@ public class DwCEventTG2DQ {
 				result.addComment("verbatimEventDate does not contains a value.");
 			}
 		} else {
-			result.setResultState(ResultState.NO_CHANGE);
+			result.setResultState(ResultState.NOT_AMENDED);
 			result.addComment("eventDate contains a value, not changing.");
 		}
 
@@ -1271,13 +1271,13 @@ public class DwCEventTG2DQ {
         // is not EMPTY or dwc:year is EMPTY or is uninterpretable 
         // as a valid year; AMENDED if the value of dwc:eventDate was 
         // interpreted from the values in dwc:year, dwc:month and dwc:day; 
-        // otherwise NOT_CHANGED 
+        // otherwise NOT_AMENDED 
         
         // TODO: Change specificaiton to not changed if event date is not empty.
         // TODO: Soecificaiton mute on how to handle day/month/year that doesn't exist.
 
         if (!DateUtils.isEmpty(eventDate)) {
-        	result.setResultState(ResultState.NO_CHANGE);
+        	result.setResultState(ResultState.NOT_AMENDED);
         	result.addComment("A value exists in dwc:eventDate, ammendment not attempted.");
         } else if (DateUtils.isEmpty(year)) {
         	result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -1364,13 +1364,13 @@ public class DwCEventTG2DQ {
         // and dwc:endDayOfYear were EMPTY or not interpretable; AMENDED 
         // if the value of dwc:eventDate was FILLED_IN from the values 
         // in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear; otherwise 
-        // NOT_CHANGED 
+        // NOT_AMENDED 
         
         if (DateUtils.isEmpty(year) || DateUtils.isEmpty(startDayOfYear)) {
         	result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
         	result.addComment("Either year or startDayOfYear was not provided.");
         } else if (!DateUtils.isEmpty(eventDate)) {
-        	result.setResultState(ResultState.NO_CHANGE);
+        	result.setResultState(ResultState.NOT_AMENDED);
         	result.addComment("A value exists in dwc:eventDate, ammendment not attempted.");
         } else {
         	try {
@@ -1422,10 +1422,10 @@ public class DwCEventTG2DQ {
         // INTERNAL_PREREQUESITES_NOT_MET if the field dwc:eventDate 
         // is EMPTY; AMENDED if the field dwc:eventDate was changed 
         // to unambiguously conform with an ISO 8601-1:2019 date; otherwise 
-        // NOT_CHANGED 
+        // NOT_AMENDED 
         
 		if (DateUtils.eventDateValid(eventDate)) {
-			result.setResultState(ResultState.NO_CHANGE);
+			result.setResultState(ResultState.NOT_AMENDED);
 			result.addComment("eventDate contains a correctly formatted date, not changing.");
 		} else {
 			if (DateUtils.isEmpty(eventDate)) {
@@ -1446,17 +1446,17 @@ public class DwCEventTG2DQ {
 
 					if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
 						result.addComment("Interpretation of eventDate [" + eventDate + "] as ["+ extractResponse.getResult() +"] possible, but is ambiguous.");
-						result.setResultState(ResultState.NO_CHANGE); 
+						result.setResultState(ResultState.NOT_AMENDED); 
 						// result.setResultState(ResultState.AMBIGUOUS);   // now excluded by the specification.
 						result.addComment(extractResponse.getComment());
 					} else {
 						if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
 							result.addComment("Interpretation of eventDate [" + eventDate + "] as ["+ extractResponse.getResult() +"] possible, but suspect.");
 							result.addComment(extractResponse.getComment());
-							result.setResultState(ResultState.NO_CHANGE); 
+							result.setResultState(ResultState.NOT_AMENDED); 
 						} else { 
 							result.addComment("Unabmiguous Interpretation of eventDate [" + eventDate + "] as [" + extractResponse.getResult() + "].");
-							result.setResultState(ResultState.CHANGED);
+							result.setResultState(ResultState.AMENDED);
 							result.setValue(new AmendmentValue(correctedValues));
 						}
 					}
@@ -1468,7 +1468,7 @@ public class DwCEventTG2DQ {
 					// under general principle of avoiding interpreting ambiguity, make no change.
 					
 					// change in specification, internal prerequisites not met only if empty.
-					result.setResultState(ResultState.NO_CHANGE);
+					result.setResultState(ResultState.NOT_AMENDED);
 					result.addComment("Unable to extract a date from " + eventDate);
 				}
 			}
@@ -1492,7 +1492,7 @@ public class DwCEventTG2DQ {
         // Specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:month is not present 
         // or is EMPTY; AMENDED if the value of dwc:month was interpreted 
-        // to be a integer between 1 and 12 inclusive; otherwise NOT_CHANGED 
+        // to be a integer between 1 and 12 inclusive; otherwise NOT_AMENDED 
         //
 
     	if (DateUtils.isEmpty(month)) {
@@ -1502,10 +1502,10 @@ public class DwCEventTG2DQ {
     		try {
     			Integer monthnumeric = Integer.parseInt(month);
     			if (monthnumeric < 1 || monthnumeric > 12) { 
-    				result.setResultState(ResultState.NO_CHANGE);
+    				result.setResultState(ResultState.NOT_AMENDED);
     				result.addComment("A value for dwc:month parsable as an integer was provided, but is outside the range 1-12");
     			} else { 
-    				result.setResultState(ResultState.NO_CHANGE);
+    				result.setResultState(ResultState.NOT_AMENDED);
     				result.addComment("A value for dwc:month parsable as an integer was provided.");
     			}
     		} catch (NumberFormatException e) {
@@ -1516,7 +1516,7 @@ public class DwCEventTG2DQ {
     			// Strip any trailing period off of month name.
     			String monthTrim = monthConverted.replaceFirst("\\.$", "").trim();
     			if (DateUtils.isEmpty(monthTrim)) {
-    				result.setResultState(ResultState.NO_CHANGE);
+    				result.setResultState(ResultState.NOT_AMENDED);
     				result.addComment("Unable to parse a meaningfull value for month from dwc:month ["+month+"].");
     			} else {
     				// Add the month string into the first day of that month in 1800, and see if
@@ -1527,7 +1527,7 @@ public class DwCEventTG2DQ {
     					String convertedDate = convertedDateResult.getResult();
     					// Date could be parsed, extract the month.
     					Integer monthNumeric = DateUtils.extractDate(convertedDate).getMonthValue();
-    					result.setResultState(ResultState.CHANGED);
+    					result.setResultState(ResultState.AMENDED);
 
 						Map<String, String> values = new HashMap<>();
 						values.put("dwc:month", monthNumeric.toString());
@@ -1535,7 +1535,7 @@ public class DwCEventTG2DQ {
 						result.setValue(new AmendmentValue(values));
     					result.addComment("Interpreted provided value for dwc:month ["+month+"] as ["+monthNumeric.toString()+"].");
     				} else {
-    					result.setResultState(ResultState.NO_CHANGE);
+    					result.setResultState(ResultState.NOT_AMENDED);
     					result.addComment("Unable to parse a meaningfull value for month from dwc:month ["+month+"].");
     				}
     			}

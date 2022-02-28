@@ -331,7 +331,7 @@ public class Runner {
 						if (current==null) { current = 0; }
 						current = current + 1;
 						acounter.put(name, current);
-						if (response.getResultState().equals(ResultState.CHANGED)) { 
+						if (response.getResultState().equals(ResultState.AMENDED)) { 
 							dateIdentified = ((AmendmentValue)response.getValue()).getObject().get("dwc:dateIdentified");
 						}
 					                    
@@ -342,7 +342,7 @@ public class Runner {
 						if (current==null) { current = 0; }
 						current = current + 1;
 						acounter.put(name, current);
-						if (response.getResultState().equals(ResultState.CHANGED)) { 
+						if (response.getResultState().equals(ResultState.AMENDED)) { 
 							eventDate = ((AmendmentValue)response.getValue()).getObject().get("dwc:eventDate");
 						}
 					                   
@@ -353,7 +353,7 @@ public class Runner {
 						if (current==null) { current = 0; }
 						current = current + 1;
 						acounter.put(name, current);
-						if (response.getResultState().equals(ResultState.CHANGED)) { 
+						if (response.getResultState().equals(ResultState.AMENDED)) { 
 							day = ((AmendmentValue)response.getValue()).getObject().get("dwc:day");
 						}
 					                    
@@ -364,7 +364,7 @@ public class Runner {
 						if (current==null) { current = 0; }
 						current = current + 1;
 						acounter.put(name, current);
-						if (response.getResultState().equals(ResultState.CHANGED)) { 
+						if (response.getResultState().equals(ResultState.AMENDED)) { 
 							month = ((AmendmentValue)response.getValue()).getObject().get("dwc:month");
 						}
 						

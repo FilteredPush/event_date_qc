@@ -244,11 +244,11 @@ public class DwCOtherDateDQ {
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is 
         // EMPTY; AMENDED if the value of dwc:dateIdentified was altered 
         // to unambiguously conform with the ISO 8601-1:2019 date format; 
-        // otherwise NOT_CHANGED 
+        // otherwise NOT_AMENDED 
         
 
 		if (DateUtils.eventDateValid(dateIdentified)) {
-			result.setResultState(ResultState.NO_CHANGE);
+			result.setResultState(ResultState.NOT_AMENDED);
 			result.addComment("dwc:dateIdentified contains a correctly formatted date, not changing.");
 		} else {
 			if (DateUtils.isEmpty(dateIdentified)) {
@@ -268,24 +268,24 @@ public class DwCOtherDateDQ {
 					correctedValues.put("dwc:dateIdentified", extractResponse.getResult());
 
 					if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
-						result.setResultState(ResultState.NO_CHANGE); 
+						result.setResultState(ResultState.NOT_AMENDED); 
 						// result.setResultState(ResultState.AMBIGUOUS); // Excluded to conform with AMENDMENT_EVENTDATE_STANDARDIZED
 						result.addComment("Potential interpretation of dwc:dateIdentified [" + dateIdentified + "] as ["+ extractResponse.getResult() +"], but such interpretation is ambiguous." );
 						result.addComment(extractResponse.getComment());
 					} else {
 						if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
-							result.setResultState(ResultState.NO_CHANGE); 
+							result.setResultState(ResultState.NOT_AMENDED); 
 							result.addComment("Potential interpretation of dwc:dateIdentified [" + dateIdentified + "] as ["+ extractResponse.getResult() +"] is suspect.");
 							result.addComment(extractResponse.getComment());
 						} else { 
 							result.addComment("Unabmiguous interpretation of dwc:dateIdentified [" + dateIdentified + "] as ["+ extractResponse.getResult() +"].");
-							result.setResultState(ResultState.CHANGED);
+							result.setResultState(ResultState.AMENDED);
 							result.setValue(new AmendmentValue(correctedValues));
 						} 
 					}
 				} else {
 					// change in specification, internal prerequisites not met only if empty.
-					result.setResultState(ResultState.NO_CHANGE);
+					result.setResultState(ResultState.NOT_AMENDED);
 					result.addComment("Unable to extract a date from " + dateIdentified);
 				}
 			}
@@ -300,7 +300,7 @@ public class DwCOtherDateDQ {
 	 *
 	 * @param modified dcterms:modified (date last modified) to check
 	 * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
-	 *    resultState is CHANGED if a new value is proposed.
+	 *    resultState is AMENDED if a new value is proposed.
 	 */
 	@Provides(value = "urn:uuid:367bf43f-9cb6-45b2-b45f-b8152f1d334a")
 	@Amendment(label = "Date Modified Format Correction", description = "Try to propose a correction for a date modified")
@@ -310,7 +310,7 @@ public class DwCOtherDateDQ {
 		DQResponse<AmendmentValue> result = new DQResponse<>();
 
 		if (DateUtils.eventDateValid(modified)) {
-			result.setResultState(ResultState.NO_CHANGE);
+			result.setResultState(ResultState.NOT_AMENDED);
 			result.addComment("dcterms:modified contains a correctly formatted date, not changing.");
 		} else {
 			if (DateUtils.isEmpty(modified)) {
@@ -339,7 +339,7 @@ public class DwCOtherDateDQ {
 							result.addComment("Interpretation of dcterms:modified [" + modified + "] is suspect.");
 							result.addComment(extractResponse.getComment());
 						}
-						result.setResultState(ResultState.CHANGED);
+						result.setResultState(ResultState.AMENDED);
 					}
 				} else {
 					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);

@@ -155,35 +155,35 @@ public class DwCEventDQ {
 	--
 	@Provides(value="urn:uuid:3892f432-ddd0-4a0a-b713-f2e2ecbd879d")
 	@Amendment( label = "AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY", description="#93 Amendment SingleRecord Completeness: eventdate from yearmonthday")
-	@Specification(value="INTERNAL _PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY or dwc:year is EMPTY or is uninterpretable as a valid year; AMENDED if the value of dwc:eventDate was interpreted from the values in dwc:year, dwc:month and dwc:day; otherwise NOT_CHANGED")
+	@Specification(value="INTERNAL _PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY or dwc:year is EMPTY or is uninterpretable as a valid year; AMENDED if the value of dwc:eventDate was interpreted from the values in dwc:year, dwc:month and dwc:day; otherwise NOT_AMENDED")
 	--
 	@Provides(value="urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812")
 	@Amendment( label = "AMENDMENT_EVENTDATE_FROM_VERBATIM", description="#86 Amendment SingleRecord Completeness: eventdate from verbatim")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY or the value of dwc:verbatimEventDate is EMPTY or not unambiguously interpretable as an ISO 8601-1:2019 date; AMENDED if the value of dwc:eventDate was unambiguously interpreted from dwc:verbatimEventDate; otherwise NOT_CHANGED")
+	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY or the value of dwc:verbatimEventDate is EMPTY or not unambiguously interpretable as an ISO 8601-1:2019 date; AMENDED if the value of dwc:eventDate was unambiguously interpreted from dwc:verbatimEventDate; otherwise NOT_AMENDED")
 	--
 	@Provides(value="urn:uuid:b129fa4d-b25b-43f7-9645-5ed4d44b357b")
 	@Amendment( label = "AMENDMENT_DAY_STANDARDIZED", description="#127 Amendment SingleRecord Conformance: day standardized")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; AMENDED if the value of dwc:day was unambiguously interpreted to be an integer between 1 and 31 inclusive; otherwise NOT_CHANGED")
+	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; AMENDED if the value of dwc:day was unambiguously interpreted to be an integer between 1 and 31 inclusive; otherwise NOT_AMENDED")
 	--
 	@Provides(value="urn:uuid:2e371d57-1eb3-4fe3-8a61-dff43ced50cf")
 	@Amendment( label = "AMENDMENT_MONTH_STANDARDIZED", description="#128 Amendment SingleRecord Conformance: month standardized")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:month is EMPTY; AMENDED if the value of dwc:month was able to be interpreted as a integer between 1 and 12 inclusive; otherwise NOT_CHANGED")
+	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:month is EMPTY; AMENDED if the value of dwc:month was able to be interpreted as a integer between 1 and 12 inclusive; otherwise NOT_AMENDED")
 	--
 	@Provides(value="urn:uuid:eb0a44fa-241c-4d64-98df-ad4aa837307b")
 	@Amendment( label = "AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR", description="#132 Amendment SingleRecord Completeness: eventdate from yearstartdayofyearenddayofyear")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate was not EMPTY or dwc:year was EMPTY or both dwc:startDayOfYear and dwc:endDayOfYear were EMPTY or the values were not interpretable; AMENDED if the value of dwc:eventDate was FILLED_IN from the values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear; otherwise NOT_CHANGED")
+	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate was not EMPTY or dwc:year was EMPTY or both dwc:startDayOfYear and dwc:endDayOfYear were EMPTY or the values were not interpretable; AMENDED if the value of dwc:eventDate was FILLED_IN from the values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear; otherwise NOT_AMENDED")
 	--
 	@Provides(value="urn:uuid:39bb2280-1215-447b-9221-fd13bc990641")
 	@Amendment( label = "AMENDMENT_DATEIDENTIFIED_STANDARDIZED", description="#26 Amendment SingleRecord Conformance: dateidentified standardized")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is EMPTY; AMENDED if the value of dwc:dateIdentified was altered to unambiguously conform with the ISO 8601-1:2019 date format; otherwise NOT_CHANGED")
+	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is EMPTY; AMENDED if the value of dwc:dateIdentified was altered to unambiguously conform with the ISO 8601-1:2019 date format; otherwise NOT_AMENDED")
 	--
 	@Provides(value="urn:uuid:710fe118-17e1-440f-b428-88ba3f547d6d")
 	@Amendment( label = "AMENDMENT_EVENT_FROM_EVENTDATE", description="#52 Amendment SingleRecord Completeness: event from eventdate")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or does not contain a valid ISO 8601-1:2019 date; AMENDED if one or more EMPTY terms of the dwc:Event class (dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear) have been filled in from a valid unambiguously interpretable value in dwc:eventDate and eventDate is wholly within one year; otherwise NOT_CHANGED")
+	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or does not contain a valid ISO 8601-1:2019 date; AMENDED if one or more EMPTY terms of the dwc:Event class (dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear) have been filled in from a valid unambiguously interpretable value in dwc:eventDate and eventDate is wholly within one year; otherwise NOT_AMENDED")
 	--
 	@Provides(value="urn:uuid:718dfc3c-cb52-4fca-b8e2-0e722f375da7")
 	@Amendment( label = "AMENDMENT_EVENTDATE_STANDARDIZED", description="#61 Amendment SingleRecord Conformance: eventdate standardized")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; AMENDED if the value of dwc:eventDate was changed to unambiguously conform with an ISO 8601-1:2019 date; otherwise NOT_CHANGED")
+	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; AMENDED if the value of dwc:eventDate was changed to unambiguously conform with an ISO 8601-1:2019 date; otherwise NOT_AMENDED")
 */
 	
 	private static final Log logger = LogFactory.getLog(DwCEventDQ.class);
@@ -324,7 +324,7 @@ public class DwCEventDQ {
      * @param eventDate to check for emptyness
      * @param verbatimEventDate to try to replace a non-empty event date.
      * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
-     *    resultState is CHANGED if a new value is proposed.
+     *    resultState is AMENDED if a new value is proposed.
      */
 
 	@Provides("urn:uuid:da63f836-1fc6-4e96-a612-fa76678cfd6a")
@@ -394,7 +394,7 @@ public class DwCEventDQ {
      * @param eventDate to check for emptyness
      * @param verbatimEventDate to try to replace a non-empty event date.
      * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
-     *    resultState is CHANGED if a new value is proposed.
+     *    resultState is AMENDED if a new value is proposed.
      *    
      */
     //@Provides(value = "EVENTDATE_FILLED_IN_FROM_VERBATIM")
@@ -430,7 +430,7 @@ public class DwCEventDQ {
 							result.addComment("Interpretation of verbatimEventDate [" + verbatimEventDate + "] is suspect.");
 							result.addComment(extractResponse.getComment());
 						}
-						result.setResultState(ResultState.CHANGED);
+						result.setResultState(ResultState.AMENDED);
 					}
 				} else {
 					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -441,7 +441,7 @@ public class DwCEventDQ {
 				result.addComment("verbatimEventDate does not contains a value.");
 			}
 		} else {
-			result.setResultState(ResultState.NO_CHANGE);
+			result.setResultState(ResultState.NOT_AMENDED);
 			result.addComment("eventDate contains a value, not changing.");
 		}
 
@@ -465,7 +465,7 @@ public class DwCEventDQ {
      * @param month to try to replace a non-empty event date.
      * @param day to try to replace a non-empty event date.
      * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
-     *    resultState is CHANGED if a new value is proposed.
+     *    resultState is AMENDED if a new value is proposed.
      */
     //Provides urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812 and eb0a44fa-241c-4d64-98df-ad4aa837307b and 3892f432-ddd0-4a0a-b713-f2e2ecbd879d
     @Provides(value = "urn:uuid:016c6ee6-c528-4435-87ce-1a9dec9c7ae2")
@@ -507,7 +507,7 @@ public class DwCEventDQ {
 							result.addComment("Interpretation of verbatimEventDate [" + verbatimEventDate + "] is suspect.");
 							result.addComment(extractResponse.getComment());
 						}
-						result.setResultState(ResultState.CHANGED);
+						result.setResultState(ResultState.AMENDED);
 					}
 				} else {
 					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -518,7 +518,7 @@ public class DwCEventDQ {
 				result.addComment("verbatimEventDate does not contains a value.");
 			}
 		} else {
-			result.setResultState(ResultState.NO_CHANGE);
+			result.setResultState(ResultState.NOT_AMENDED);
 			result.addComment("eventDate contains a value, not changing.");
 		}
 		return result;
@@ -542,10 +542,10 @@ public class DwCEventDQ {
 				extractedValues.put("dwc:eventDate", response);
 
 				result.setValue(new AmendmentValue(extractedValues));
-				result.setResultState(ResultState.CHANGED);
+				result.setResultState(ResultState.AMENDED);
 			}
 		} else {
-			result.setResultState(ResultState.NO_CHANGE);
+			result.setResultState(ResultState.NOT_AMENDED);
 			result.addComment("eventDate contains a value, not changing.");
 		}
 		return result;
@@ -607,7 +607,7 @@ public class DwCEventDQ {
      *
      * @param eventDate to check
      * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
-     *    resultState is CHANGED if a new value is proposed.
+     *    resultState is AMENDED if a new value is proposed.
      */
     //@Provides(value = "EVENTDATE_FORMAT_CORRECTION")
 	//@Provides(value = "urn:uuid:134c7b4f-1261-41ec-acb5-69cd4bc8556f")
@@ -620,7 +620,7 @@ public class DwCEventDQ {
 		DQResponse<AmendmentValue> result = new DQResponse<>();
 
 		if (DateUtils.eventDateValid(eventDate)) {
-			result.setResultState(ResultState.NO_CHANGE);
+			result.setResultState(ResultState.NOT_AMENDED);
 			result.addComment("eventDate contains a correctly formatted date, not changing.");
 		} else {
 			if (DateUtils.isEmpty(eventDate)) {
@@ -648,7 +648,7 @@ public class DwCEventDQ {
 							result.addComment("Interpretation of eventDate [" + eventDate + "] is suspect.");
 							result.addComment(extractResponse.getComment());
 						}
-						result.setResultState(ResultState.CHANGED);
+						result.setResultState(ResultState.AMENDED);
 					}
 				} else {
 					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -951,7 +951,7 @@ public class DwCEventDQ {
 					if (dayResult.getResultState().equals(ResultState.RUN_HAS_RESULT) &&
 							dayResult.getValue().equals(ComplianceValue.COMPLIANT)) {
 						// month is in range for months, so don't try to change.
-						result.setResultState(ResultState.NO_CHANGE);
+						result.setResultState(ResultState.NOT_AMENDED);
 					} else {
 						result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
 					}
@@ -1107,7 +1107,7 @@ public class DwCEventDQ {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		result.addComment("Either year or startDayOfYear was not provided.");
     	} else if (!DateUtils.isEmpty(eventDate)) {
-    		result.setResultState(ResultState.NOT_RUN);
+    		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		result.addComment("A value exists in dwc:eventDate, ammendment not attempted.");
     	} else {
     	    try {
@@ -1163,7 +1163,7 @@ public class DwCEventDQ {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		result.addComment("No value for dwc:year was provided.");
     	} else if (!DateUtils.isEmpty(eventDate)) {
-    		result.setResultState(ResultState.NOT_RUN);
+    		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		result.addComment("A value exists in dwc:eventDate, ammendment not attempted.");
     	} else {
     	    try {
@@ -1223,7 +1223,7 @@ public class DwCEventDQ {
 
     		try {
     			Integer monthnumeric = Integer.parseInt(month);
-    			result.setResultState(ResultState.NO_CHANGE);
+    			result.setResultState(ResultState.NOT_AMENDED);
     			result.addComment("A value for dwc:month parsable as an integer was provided.");
     		} catch (NumberFormatException e) {
     			// Convert roman numerals, some problematic forms of abbreviations,
@@ -1244,7 +1244,7 @@ public class DwCEventDQ {
     					String convertedDate = convertedDateResult.getResult();
     					// Date could be parsed, extract the month.
     					Integer monthNumeric = DateUtils.extractDate(convertedDate).getMonthValue();
-    					result.setResultState(ResultState.CHANGED);
+    					result.setResultState(ResultState.AMENDED);
 
 						Map<String, String> values = new HashMap<>();
 						values.put("dwc:month", monthNumeric.toString());
@@ -1286,7 +1286,7 @@ public class DwCEventDQ {
     	} else {
     		try {
     			Integer dayNumeric = Integer.parseInt(day);
-    			result.setResultState(ResultState.NO_CHANGE);
+    			result.setResultState(ResultState.NOT_AMENDED);
     			result.addComment("A value for dwc:day parsable as an integer was provided.");
     		} catch (NumberFormatException e) {
     			// Strip off any trailing non-numeric characters.
@@ -1295,7 +1295,7 @@ public class DwCEventDQ {
     			try {
     				Integer dayNumeric = Integer.parseInt(dayTrimmed);
     				if (dayNumeric>0 && dayNumeric<32) {
-    					result.setResultState(ResultState.CHANGED);
+    					result.setResultState(ResultState.AMENDED);
 
 						Map<String, String> values = new HashMap<>();
 						values.put("dwc:day", dayNumeric.toString());
@@ -1696,7 +1696,7 @@ public class DwCEventDQ {
     				//	}
     				//}
     				if (!result.getResultState().equals(ResultState.FILLED_IN)) {
-    					result.setResultState(ResultState.NO_CHANGE);
+    					result.setResultState(ResultState.NOT_AMENDED);
     					result.addComment("No changes proposed, all candidate fields to fill in contain values.");
     				}
     			} // end interval extraction

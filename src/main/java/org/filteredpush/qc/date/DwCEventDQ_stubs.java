@@ -38,7 +38,7 @@ public class DwCEventDQ_stubs {
         // dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear) 
         // have been filled in from a valid unambiguously interpretable 
         // value in dwc:eventDate and eventDate is wholly within one 
-        //year; otherwise NOT_CHANGED 
+        //year; otherwise NOT_AMENDED 
 
         return result;
     }
@@ -58,7 +58,7 @@ public class DwCEventDQ_stubs {
         //TODO:  Implement specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; 
         // AMENDED if the value of dwc:eventDate was changed to unambiguously 
-        // conform with an ISO 8601-1:2019 date; otherwise NOT_CHANGED 
+        // conform with an ISO 8601-1:2019 date; otherwise NOT_AMENDED 
         //
 
         return result;
@@ -163,7 +163,7 @@ public class DwCEventDQ_stubs {
         // or the value of dwc:verbatimEventDate is EMPTY or not unambiguously 
         // interpretable as an ISO 8601-1:2019 date; AMENDED if the 
         // value of dwc:eventDate was unambiguously interpreted from 
-        //dwc:verbatimEventDate; otherwise NOT_CHANGED 
+        //dwc:verbatimEventDate; otherwise NOT_AMENDED 
 
         return result;
     }
@@ -213,7 +213,7 @@ public class DwCEventDQ_stubs {
         // EMPTY or dwc:year is EMPTY or is uninterpretable as a valid 
         // year; AMENDED if the value of dwc:eventDate was interpreted 
         // from the values in dwc:year, dwc:month and dwc:day; otherwise 
-        //NOT_CHANGED 
+        //NOT_AMENDED 
 
         return result;
     }
@@ -286,7 +286,7 @@ public class DwCEventDQ_stubs {
         //TODO:  Implement specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; AMENDED 
         // if the value of dwc:day was unambiguously interpreted to 
-        // be an integer between 1 and 31 inclusive; otherwise NOT_CHANGED 
+        // be an integer between 1 and 31 inclusive; otherwise NOT_AMENDED 
         //
 
         return result;
@@ -307,7 +307,7 @@ public class DwCEventDQ_stubs {
         //TODO:  Implement specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:month is EMPTY; AMENDED 
         // if the value of dwc:month was able to be interpreted as 
-        // a integer between 1 and 12 inclusive; otherwise NOT_CHANGED 
+        // a integer between 1 and 12 inclusive; otherwise NOT_AMENDED 
         //
 
         return result;
@@ -388,7 +388,7 @@ public class DwCEventDQ_stubs {
         // dwc:endDayOfYear were EMPTY or the values were not interpretable; 
         // AMENDED if the value of dwc:eventDate was FILLED_IN from 
         // the values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear; 
-        //otherwise NOT_CHANGED 
+        //otherwise NOT_AMENDED 
 
         return result;
     }

@@ -382,11 +382,11 @@ public class DateUtilsTest {
     	assertEquals(true, DateUtils.isConsistent(null, "", null, ""));
     	assertEquals(true, DateUtils.isConsistent("1884-03-18", "1884", "03", "18"));
     	assertEquals(false, DateUtils.isConsistent("1884-03-18", "1884", "03", "17"));
-    	// TODO: Check current test definitions, should this pass or fail?  
-    	assertEquals(false, DateUtils.isConsistent("1884-03-18", "1884", "03", ""));
-    	assertEquals(false, DateUtils.isConsistent("1884-03-18", "1884", "03", null));
-    	assertEquals(false, DateUtils.isConsistent("1884-03-18", "1884", null, "18"));
-    	assertEquals(false, DateUtils.isConsistent("1884-03-18", null, "03", "18"));
+    	// Per test definitions as of 2022 Feb 27 these should should this pass, comparison of values present.  
+    	assertEquals(true, DateUtils.isConsistent("1884-03-18", "1884", "03", ""));
+    	assertEquals(true, DateUtils.isConsistent("1884-03-18", "1884", "03", null));
+    	assertEquals(true, DateUtils.isConsistent("1884-03-18", "1884", null, "18"));
+    	assertEquals(true, DateUtils.isConsistent("1884-03-18", null, "03", "18"));
     	assertEquals(false, DateUtils.isConsistent(null, "1884", "03", "18"));
     	assertEquals(false, DateUtils.isConsistent("1884-01-01", "1884", "01", null));
     	assertEquals(false, DateUtils.isConsistent("1884-01-01", "1884", null, null));

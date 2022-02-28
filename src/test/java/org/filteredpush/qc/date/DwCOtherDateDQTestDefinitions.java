@@ -193,17 +193,17 @@ public class DwCOtherDateDQTestDefinitions {
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is 
         // EMPTY; AMENDED if the value of dwc:dateIdentified was altered 
         // to unambiguously conform with the ISO 8601-1:2019 date format; 
-        // otherwise NOT_CHANGED 
+        // otherwise NOT_AMENDED 
 		String dateIdentified = "1950-05-06";  // good value
 		DQResponse<AmendmentValue> result = DwCOtherDateDQ.amendmentDateidentifiedStandardized(dateIdentified);
 		logger.debug(result.getComment());
-		assertEquals(ResultState.NO_CHANGE.getLabel(), result.getResultState().getLabel());
+		assertEquals(ResultState.NOT_AMENDED.getLabel(), result.getResultState().getLabel());
 		assertNull(result.getValue());
 		
 		dateIdentified = "1950-5-6";  // non-conformant
 		result = DwCOtherDateDQ.amendmentDateidentifiedStandardized(dateIdentified);
 		logger.debug(result.getComment());
-		assertEquals(ResultState.CHANGED.getLabel(), result.getResultState().getLabel());
+		assertEquals(ResultState.AMENDED.getLabel(), result.getResultState().getLabel());
 		Set<String> keys = result.getValue().getObject().keySet();
 		Iterator<String> i = keys.iterator();
 		while (i.hasNext()) { 
