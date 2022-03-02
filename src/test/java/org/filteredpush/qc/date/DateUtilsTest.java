@@ -163,55 +163,73 @@ public class DateUtilsTest {
 	public void testExtractDateInterval() {
     	LocalDateInterval test = DateUtils.extractDateInterval("1880-01-01/1880-12-31");
     	assertEquals(1880, test.getStart().getYear());
-    	assertEquals(1, test.getStart().getMonth());
+    	assertEquals(1, test.getStart().getMonthValue());
+    	assertEquals(Month.JANUARY, test.getStart().getMonth());
     	assertEquals(1, test.getStart().getDayOfYear());
     	assertEquals(1880, test.getEnd().getYear());
-    	assertEquals(12, test.getEnd().getMonth());
+    	assertEquals(12, test.getEnd().getMonthValue());
     	assertEquals(31, test.getEnd().getDayOfMonth());
     	
     	test = DateUtils.extractDateInterval("1880");
     	assertEquals(1880, test.getStart().getYear());
-    	assertEquals(1, test.getStart().getMonth());
+    	assertEquals(1, test.getStart().getMonthValue());
     	assertEquals(1, test.getStart().getDayOfYear());
     	assertEquals(1880, test.getEnd().getYear());
-    	assertEquals(12, test.getEnd().getMonth());
+    	assertEquals(12, test.getEnd().getMonthValue());
     	assertEquals(31, test.getEnd().getDayOfMonth());
     	
     	test = DateUtils.extractDateInterval("1880-02");
     	assertEquals(1880, test.getStart().getYear());
-    	assertEquals(2, test.getStart().getMonth());
+    	assertEquals(2, test.getStart().getMonthValue());
     	assertEquals(1, test.getStart().getDayOfMonth());
     	assertEquals(1880, test.getEnd().getYear());
-    	assertEquals(2, test.getEnd().getMonth());
+    	assertEquals(2, test.getEnd().getMonthValue());
     	assertEquals(29, test.getEnd().getDayOfMonth());
     	
     	test = DateUtils.extractDateInterval("1880-234");
     	assertEquals(1880, test.getStart().getYear());
-    	assertEquals(8, test.getStart().getMonth());
+    	assertEquals(8, test.getStart().getMonthValue());
     	assertEquals(234, test.getStart().getDayOfYear());
     	assertEquals(21, test.getStart().getDayOfMonth());
     	assertEquals(1880, test.getEnd().getYear());
-    	assertEquals(8, test.getEnd().getMonth());
+    	assertEquals(8, test.getEnd().getMonthValue());
  
 //TODO: Time    	
     	test = DateUtils.extractDateInterval("1880-01-01T08:30Z/1880-12-31");
     	assertEquals(1880, test.getStart().getYear());
-    	assertEquals(1, test.getStart().getMonth());
+    	assertEquals(1, test.getStart().getMonthValue());
     	assertEquals(1, test.getStart().getDayOfYear());
 //    	assertEquals(0, test.getStart().getHourOfDay());
     	assertEquals(1880, test.getEnd().getYear());
-    	assertEquals(12, test.getEnd().getMonth());
+    	assertEquals(12, test.getEnd().getMonthValue());
     	assertEquals(31, test.getEnd().getDayOfMonth());    	
 //    	assertEquals(0, test.getEnd().getHourOfDay());
     	
        	test = DateUtils.extractDateInterval("1880-02/1880-04");
     	assertEquals(1880, test.getStart().getYear());
-    	assertEquals(2, test.getStart().getMonth());
+    	assertEquals(2, test.getStart().getMonthValue());
     	assertEquals(32, test.getStart().getDayOfYear());
     	assertEquals(1880, test.getEnd().getYear());
-    	assertEquals(4, test.getEnd().getMonth());
+    	assertEquals(4, test.getEnd().getMonthValue());
     	assertEquals(30, test.getEnd().getDayOfMonth());    	
-    }	
+    	
+       	test = DateUtils.extractDateInterval("1880/1881");
+    	assertEquals(1880, test.getStart().getYear());
+    	assertEquals(1, test.getStart().getMonthValue());
+    	assertEquals(1, test.getStart().getDayOfYear());
+    	assertEquals(1881, test.getEnd().getYear());
+    	assertEquals(12, test.getEnd().getMonthValue());
+    	assertEquals(31, test.getEnd().getDayOfMonth()); 
+
+       	test = DateUtils.extractDateInterval("1885/1886");
+    	assertEquals(1885, test.getStart().getYear());
+    	assertEquals(1, test.getStart().getMonthValue());
+    	assertEquals(1, test.getStart().getDayOfYear());
+    	assertEquals(1886, test.getEnd().getYear());
+    	assertEquals(12, test.getEnd().getMonthValue());
+    	assertEquals(31, test.getEnd().getDayOfMonth()); 
+    	
+	}	
 
 	@Test
 	public void testExtractInterval() {
@@ -473,6 +491,11 @@ public class DateUtilsTest {
     	assertEquals(true, DateUtils.specificToMonthScale("1805-11"));
     	assertEquals(true, DateUtils.specificToYearScale("1805-11"));
     	
+    	assertEquals(false, DateUtils.specificToDay("1805-11-01/1805-12-01"));
+    	assertEquals(true, DateUtils.specificToMonthScale("1805-11-01/1805-12-01"));
+    	assertEquals(false, DateUtils.specificToMonthScale("1805-11-01/1805-12-02"));
+    	assertEquals(true, DateUtils.specificToYearScale("1805-11-01/1805-12-01"));
+    	
     	assertEquals(false, DateUtils.specificToDay("1805"));
     	assertEquals(false, DateUtils.specificToMonthScale("1805"));
     	assertEquals(true, DateUtils.specificToYearScale("1805"));   
@@ -491,10 +514,18 @@ public class DateUtilsTest {
     	assertEquals(true, DateUtils.specificToDecadeScale("1805-09"));    	
     	assertEquals(true, DateUtils.specificToDecadeScale("1805"));    	
     	assertEquals(true, DateUtils.specificToDecadeScale("1805/1806"));    	
+    	assertEquals(true, DateUtils.specificToDecadeScale("1980/1989"));    	
+    	assertEquals(true, DateUtils.specificToDecadeScale("1980-01-01/1989-12-31"));    	
+    	assertEquals(true, DateUtils.specificToDecadeScale("1891-01-01/1900-12-31"));    	
     	assertEquals(true, DateUtils.specificToDecadeScale("1805-09-03/1806-01-04")); 
+    	assertEquals(true, DateUtils.specificToDecadeScale("1805-09-03/1814-09-02")); 
     	
     	assertEquals(false, DateUtils.specificToDecadeScale("1805-09-03/1815-10-01"));    	
     	assertEquals(false, DateUtils.specificToDecadeScale("1805/1816"));    	
+    	assertEquals(false, DateUtils.specificToDecadeScale("1891-01-01/1901-01-02"));    	
+    	assertEquals(false, DateUtils.specificToDecadeScale("1980-01-01/1990-01-01"));    	
+    	assertEquals(false, DateUtils.specificToDecadeScale("1980-01-01/1990-01-02"));    	
+    	assertEquals(false, DateUtils.specificToDecadeScale("1980-01-01/1990-02-04"));    	
     }
     
     @Test

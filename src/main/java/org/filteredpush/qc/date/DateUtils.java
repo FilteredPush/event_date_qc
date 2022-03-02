@@ -2052,15 +2052,14 @@ public class DateUtils {
     public static boolean specificToDay(String eventDate) { 
     	boolean result = false;
     	if (!isEmpty(eventDate)) { 
-/*    		
-    	    Duration eventDateInterval = extractInterval(eventDate);
-    	    logger.debug(eventDateInterval);
-    	    if (eventDateInterval.toDays()<1l) { 
+    	    LocalDateInterval eventDateInterval = extractInterval(eventDate);
+    	    Duration eventDateDuration = eventDateInterval.toDuration();
+    	    logger.debug(eventDateDuration.toDays());
+    	    if (eventDateDuration.toDays()<1l) { 
     	    	result = true;
-    	    } else if (eventDateInterval.toDays()==1l && eventDateInterval.getStart().getDayOfYear()==eventDateInterval.getEnd().getDayOfYear()) {
+    	    } else if (eventDateDuration.toDays()==1l && eventDateInterval.getStart().getDayOfYear()==eventDateInterval.getEnd().getDayOfYear()) {
     	    	result = true;
     	    }
-*/    	    
     	}
     	return result;
     }
@@ -2076,12 +2075,11 @@ public class DateUtils {
     public static boolean specificToMonthScale(String eventDate) { 
     	boolean result = false;
     	if (!isEmpty(eventDate)) { 
-/*    		
-    	    Duration eventDateInterval = extractDateInterval(eventDate);
-    	    if (eventDateInterval.toDuration().getStandardDays()<=31l) { 
+    	    LocalDateInterval eventDateInterval = extractDateInterval(eventDate);
+    	    Duration duration = eventDateInterval.toDuration();
+    	    if (duration.toDays() <= 31l) { 
     	    	result = true;
     	    }
-*/    	    
     	}
     	return result;
     }    
@@ -2092,13 +2090,21 @@ public class DateUtils {
      * Provides: EVENTDATE_PRECISON_YEAR_OR_BETTER
      * 
      * @param eventDate to test.
-     * @return true if duration is 365 days or less.
+     * @return true if duration is 365 days or less, 366 if the duration includes
+     *   a leap day.
      */    
     public static boolean specificToYearScale(String eventDate) { 
     	boolean result = false;
     	if (!isEmpty(eventDate)) { 
     	    LocalDateInterval eventDateInterval = extractDateInterval(eventDate);
-    	    if (eventDateInterval.getStartDate().until(eventDateInterval.getEndDate()).getDays()<=365) { 
+    	    Duration duration = eventDateInterval.toDuration();
+    	    int daysInYear = 365;
+    	    if (includesLeapDay(eventDate)) { 
+    	    	daysInYear = 366;
+    	    }
+    	    Duration minusYear = (duration.minus(Duration.ofDays(daysInYear)));
+    	    logger.debug(minusYear.toDays());
+    	    if (minusYear.isNegative() || minusYear.isZero()) { 
     	    	result = true;
     	    }
     	}
@@ -2109,14 +2115,16 @@ public class DateUtils {
      * Test if an event date specifies a duration of 10 years or less.
      * 
      * @param eventDate to test.
-     * @return true if duration is 10 years or or less.
+     * @return true if duration is 3653 days or or less.
      */    
     public static boolean specificToDecadeScale(String eventDate) { 
     	boolean result = false;
     	if (!isEmpty(eventDate)) { 
     	    LocalDateInterval eventDateInterval = extractDateInterval(eventDate);
-    	    Period eventDatePeriod = eventDateInterval.getStartDate().until(eventDateInterval.getEndDate());
-    	    if (eventDatePeriod.toTotalMonths()<=120l) { 
+    	    Duration duration = eventDateInterval.toDuration();
+    	    Duration minusDecade = (duration.minus(Duration.ofDays((365*10)+3)));
+    	    logger.debug(minusDecade.toDays());
+    	    if (minusDecade.isNegative() || minusDecade.isZero()) { 
     	    	result = true;
     	    }
     	}
