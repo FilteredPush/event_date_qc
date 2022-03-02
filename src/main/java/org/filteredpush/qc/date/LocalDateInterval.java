@@ -191,10 +191,12 @@ public class LocalDateInterval {
     				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
     			
     			Iterator<DateTimeFormatter> i = formatters.iterator();
-    			while (i.hasNext()) {
+    			boolean matched = false;
+    			while (i.hasNext() && !matched) {
     				try { 
     					LocalDate startDateBit = LocalDate.parse(dateBit, i.next());
     					result = new DatePair(startDateBit, startDateBit);
+    					matched = true;
     				} catch (Exception e) { 
     					logger.debug(e.getMessage());
     				}
