@@ -857,6 +857,170 @@ public class DateUtilsTest {
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	assertEquals("1950-01-01/1959-12-31", result.getResult());
     	
+    	result = DateUtils.extractDateFromVerbatimER("Jan-1980");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1980-01", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("January 1980");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1980-01", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("04/20/1994");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1994-04-20", result.getResult());
+
+    	result = DateUtils.extractDateFromVerbatimER("20/04/1994");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1994-04-20", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("03/04/1994");
+    	assertEquals(EventResult.EventQCResultState.AMBIGUOUS, result.getResultState());
+    	assertEquals("1994-03-04/1994-04-03", result.getResult());
+
+    	result = DateUtils.extractDateFromVerbatimER("1854");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1854", result.getResult());
+
+    	result = DateUtils.extractDateFromVerbatimER("19950315");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1995-03-15", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("03/Jan/1982");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1982-01-03", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("03/Jan 1982");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1982-01-03", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("03-Jan-1982");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1982-01-03", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("Jan/03/1982");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1982-01-03", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("Jan 3 1982");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1982-01-03", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("January 3 1982");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1982-01-03", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("3 January 1982");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1982-01-03", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("3-January-1982");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1982-01-03", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("Jan 3, 1982");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1982-01-03", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("3 January, 1982");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1982-01-03", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER(" XX-Jan-1995");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1995-01", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER(" XX-JAN-1995");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1995-01", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER(" XX-01-1995");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1995-01", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER(" XX-1-1995");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1995-01", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER(" XX-XXX-1995");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1995", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER(" XX-XX-1995");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1995", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("1880-05");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1880-05", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("1964-11");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1964-11", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("1880-May");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1880-05", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("1880-85");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1880/1885", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("May 9th 1880");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1880-05-09", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("Jul. 9th 1880");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1880-07-09", result.getResult());   
+    	
+    	result = DateUtils.extractDateFromVerbatimER("1880/07/09");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1880-07-09", result.getResult());    
+    	
+    	result = DateUtils.extractDateFromVerbatimER("Sept. 5 1901");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1901-09-05", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("[Sept. 5 1901]");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1901-09-05", result.getResult());   	
+    	
+    	result = DateUtils.extractDateFromVerbatimER("May 13. 1883");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1883-05-13", result.getResult()); 
+    	
+    	result = DateUtils.extractDateFromVerbatimER("May 9th, 1915");
+    	
+    	result = DateUtils.extractDateFromVerbatimER("1880-05");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1880-05", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("May 9th 1880");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1880-05-09", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("Jul. 9th 1880");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1880-07-09", result.getResult());   
+    	
+    	result = DateUtils.extractDateFromVerbatimER("1880/07/09");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1880-07-09", result.getResult());    
+    	
+    	result = DateUtils.extractDateFromVerbatimER("Sept. 5 1901");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1901-09-05", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("[Sept. 5 1901]");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1901-09-05", result.getResult());   	
+    	
+    	result = DateUtils.extractDateFromVerbatimER("May 13. 1883");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1883-05-13", result.getResult()); 
+    	
+    	result = DateUtils.extractDateFromVerbatimER("May 9th, 1915");
+    	
     	result = DateUtils.extractDateFromVerbatimER("1880-05");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	assertEquals("1880-05", result.getResult());
