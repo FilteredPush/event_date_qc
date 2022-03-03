@@ -150,9 +150,9 @@ public class LocalDateIntervalTest {
 			LocalDateInterval instance = new LocalDateInterval("1900-01-01");
 			assertEquals("1900-01-01", instance.toString());
 			instance = new LocalDateInterval("1900-01");
-			assertEquals("1900-01-01/1900-01-31", instance.toString());
+			assertEquals("1900-01", instance.toString());
 			instance = new LocalDateInterval("1900");
-			assertEquals("1900-01-01/1900-12-31", instance.toString());
+			assertEquals("1900", instance.toString());
 			instance = new LocalDateInterval("1900-003");
 			assertEquals("1900-01-03", instance.toString());
 		} catch (DateTimeParseException | EmptyDateException e) {

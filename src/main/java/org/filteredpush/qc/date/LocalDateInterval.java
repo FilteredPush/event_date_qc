@@ -273,7 +273,13 @@ public class LocalDateInterval {
 		if (isSingleDay()) { 
 			result = startDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
 		} else if (startDate!=null && endDate!=null) {
-			result = startDate.format(DateTimeFormatter.ISO_LOCAL_DATE) + "/" + endDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+			if (startDate.getYear()==endDate.getYear() && startDate.getMonthValue()==1 && endDate.getMonthValue()==12 && startDate.getDayOfMonth()==1 && endDate.getDayOfMonth()==31) { 
+				result = startDate.format(DateTimeFormatter.ofPattern("yyyy"));
+			} else if (startDate.getYear()==endDate.getYear() && startDate.getMonthValue()==endDate.getMonthValue() && startDate.getDayOfMonth()==1 && endDate.getDayOfMonth() ==endDate.lengthOfMonth()) { 
+				result = startDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+			} else { 
+				result = startDate.format(DateTimeFormatter.ISO_LOCAL_DATE) + "/" + endDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+			} 
 		} else { 
 			if (startDate==null) { 
 				result = "[null]";

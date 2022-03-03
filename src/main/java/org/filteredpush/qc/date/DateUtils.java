@@ -395,6 +395,34 @@ public class DateUtils {
 			return result;
 		}
 		
+		// Stop before doing more work if provided verbatim string matches a simple ISO date format
+		// and contains at least 4 digits  (nn/nn is recognizable as a y/y format, but shouldn't match here)
+		if (verbatimEventDate.matches(".*[0-9]{4}.*")) {
+			logger.debug(verbatimEventDate);
+			try { 
+				// try parsing as a straight ISO date
+				LocalDateInterval testInterval = new LocalDateInterval(verbatimEventDate);
+				if (testInterval!=null) { 
+					logger.debug(testInterval.toString());
+					if (testInterval.isSingleDay()) { 
+						resultDate = testInterval.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
+						result.setResultState(EventResult.EventQCResultState.DATE);
+						result.setResult(resultDate);
+					} else if (testInterval.getStart()!=null && testInterval.getEnd()!=null) { 
+						resultDate = testInterval.toString();
+						result.setResultState(EventResult.EventQCResultState.RANGE);
+						result.setResult(resultDate);
+					}
+					if (testInterval.getStart().getYear()< yearsBeforeSuspect) { 
+						result.setResultState(EventResult.EventQCResultState.SUSPECT);
+					}
+					return result;
+				}
+			} catch (EmptyDateException|DateTimeParseException e) { 
+				logger.debug(e.getMessage());
+			}
+		}
+		
 		if (verbatimEventDate.matches("^[0-9]{4}[-][0-9]{2}[-][0-9]{2}/[0-9]{4}[-][0-9]{2}[-][0-9]{2}$")) {
 			// if verbatim date is a ISO formatted range with identical first and last dates (/), use just one.
 			// Example: 1982-12-11/1982-12-11  changed to 1982-12-11
@@ -789,17 +817,21 @@ public class DateUtils {
 						.append(DateTimeFormatter.ofPattern("MM'-'dd','uuuu"))
 						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
 				formatters.add(new DateTimeFormatterBuilder()
-						.append(DateTimeFormatter.ofPattern("MM'.'dd'.'uuuu"))
+						.append(DateTimeFormatter.ofPattern("M'-'d'-'uuuu"))
 						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
 				formatters.add(new DateTimeFormatterBuilder()
-						.append(DateTimeFormatter.ofPattern("MM'.-'dd'.-'uuuu"))
+						.append(DateTimeFormatter.ofPattern("M'-'d',-'uuuu"))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("M'-'d','uuuu"))
 						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
 
 				Iterator<DateTimeFormatter> i = formatters.iterator();
 				boolean matched = false;
 				while (i.hasNext() && !matched) {
 					try { 
-						String verbatimEventDateCleaned = verbatimEventDate.replace("/", "-").replace(" ", "-");
+						String verbatimEventDateCleaned = verbatimEventDate.replace("/", "-").replace(" ", "-").replace(".","-");;
+						verbatimEventDateCleaned = verbatimEventDateCleaned.replace("--", "-");
 						parseDate1 = LocalDate.parse(verbatimEventDateCleaned, i.next());
 						resultDateMD = parseDate1.format(DateTimeFormatter.ISO_LOCAL_DATE);
 						logger.debug(resultDateMD);
@@ -821,17 +853,21 @@ public class DateUtils {
 						.append(DateTimeFormatter.ofPattern("dd'-'MM','uuuu"))
 						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
 				formatters.add(new DateTimeFormatterBuilder()
-						.append(DateTimeFormatter.ofPattern("dd'.'MM'.'uuuu"))
+						.append(DateTimeFormatter.ofPattern("d'-'M'-'uuuu"))
 						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
 				formatters.add(new DateTimeFormatterBuilder()
-						.append(DateTimeFormatter.ofPattern("dd'.-'MM'.-'uuuu"))
+						.append(DateTimeFormatter.ofPattern("d'-'M',-'uuuu"))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("d'-'M','uuuu"))
 						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
 
 				Iterator<DateTimeFormatter> i = formatters.iterator();
 				boolean matched = false;
 				while (i.hasNext() && !matched) {
 					try { 
-						String verbatimEventDateCleaned = verbatimEventDate.replace("/", "-").replace(" ", "-");
+						String verbatimEventDateCleaned = verbatimEventDate.replace("/", "-").replace(" ", "-").replace(".","-");;
+						verbatimEventDateCleaned = verbatimEventDateCleaned.replace("--", "-");
 						parseDate2 = LocalDate.parse(verbatimEventDateCleaned, i.next());
 						resultDateDM = parseDate2.format(DateTimeFormatter.ISO_LOCAL_DATE);
 						logger.debug(resultDateDM);
@@ -909,6 +945,55 @@ public class DateUtils {
 			}
 		}	
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
+				verbatimEventDate.matches("^([0-9]{1,2}|[A-Za-z]+)[-/. ]{1,2}([0-9]{1,2}|[A-Za-z]+),{0,1}[-/., ]{1,2}[0-9]{4}$")) { 
+			// Example: Jan 03, 1982
+			// Example: 3 Jan, 1982
+			
+			List<DateTimeFormatter> formatters = new ArrayList<DateTimeFormatter>();
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("dd'-'LLLL'-'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("LLLL'-'dd'-'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("dd'-'LLL'-'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("LLL'-'dd'-'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("d'-'LLLL'-'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("LLLL'-'d'-'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("d'-'LLL'-'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("LLL'-'d'-'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+
+			Iterator<DateTimeFormatter> i = formatters.iterator();
+			boolean matched = false;
+			while (i.hasNext() && !matched) {
+				try { 
+					String cleaned = cleanMonth(verbatimEventDate);
+					cleaned = cleaned.replace("/","-").replace(".", "-").replace(" ", "-").replace("--", "-").replace(",","-");
+					cleaned = cleaned.replace("--", "-").replace("--", "-");
+					LocalDate parseDate = LocalDate.parse(cleaned, i.next());
+					resultDate = parseDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+					logger.debug(resultDate);
+					result.setResultState(EventResult.EventQCResultState.DATE);
+					result.setResult(resultDate);
+					matched = true;
+				} catch (Exception e) { 
+					logger.debug(e.getMessage());
+				}
+			}
+		}			
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
 				verbatimEventDate.matches("^[X*]{2}[-/. ]([0-9]{1,2}|[A-Za-z]+)[-/. ][0-9]{4}$")) { 
 			// Example: XX-04-1982   (XX for day) (which can't be a roman numeral month)
 			// Example: XX-Jan-1995
@@ -930,9 +1015,15 @@ public class DateUtils {
 			boolean matched = false;
 			while (i.hasNext() && !matched) {
 				try { 
-					String cleaned = verbatimEventDate.replace("/","-").replace(".", "-").replace(" ", "-").replace("--", "-").replace(",","");
+					logger.debug(verbatimEventDate);
+					String cleaned = cleanMonth(verbatimEventDate.substring(3));  // prevent XX from being turned into OctoberOctober.
+					logger.debug(cleaned);
+					cleaned = verbatimEventDate.substring(0, 3) + cleaned;
+					logger.debug(cleaned);
+					cleaned = cleaned.replace("/","-").replace(".", "-").replace(" ", "-").replace("--", "-").replace(",","");
 					cleaned = cleaned.replaceFirst("XX-", "01-");
-					cleaned = cleanMonth(cleaned);
+					cleaned = cleaned.replace("**-", "01-");
+					logger.debug(cleaned);
 					LocalDate parseDate = LocalDate.parse(cleaned, i.next());
 					resultDate = parseDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 					logger.debug(resultDate);
@@ -946,7 +1037,7 @@ public class DateUtils {
 		}		
 
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
-				verbatimEventDate.matches("^[X*]{2}[-/. ][X*]{2,3}[-/. ][0-9]{4}$")) { 
+				verbatimEventDate.matches("^[X*]{2,3}[-/. ][X*]{2,3}[-/. ][0-9]{4}$")) { 
 			// Example: XX-XXX-1995
 			// Example: **-**-1995
 			List<DateTimeFormatter> formatters = new ArrayList<DateTimeFormatter>();
@@ -961,6 +1052,10 @@ public class DateUtils {
 					String cleaned = verbatimEventDate.replace("/","-").replace(".", "-").replace(" ", "-").replace("--", "-").replace(",","");
 					cleaned = cleaned.replace("XX-XX-", "01-01-");
 					cleaned = cleaned.replace("XX-XXX-", "01-01-");
+					cleaned = cleaned.replace("XXX-XX-", "01-01-");
+					cleaned = cleaned.replace("**-**-", "01-01-");
+					cleaned = cleaned.replace("**-***-", "01-01-");
+					cleaned = cleaned.replace("***-**-", "01-01-");
 					LocalDate parseDate = LocalDate.parse(cleaned, i.next());
 					resultDate = parseDate.format(DateTimeFormatter.ofPattern("yyyy"));
 					logger.debug(resultDate);
@@ -1005,10 +1100,10 @@ public class DateUtils {
 						.append(DateTimeFormatter.ofPattern("uuuu'-'M'-'dd"))
 						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
 				formatters.add(new DateTimeFormatterBuilder()
-						.append(DateTimeFormatter.ofPattern("uuuu'-'MMM'-'dd").withLocale(Locale.ENGLISH))
+						.append(DateTimeFormatter.ofPattern("uuuu'-'LLL'-'dd").withLocale(Locale.ENGLISH))
 						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
 				formatters.add(new DateTimeFormatterBuilder()
-						.append(DateTimeFormatter.ofPattern("uuuu'-'MMMM'-'dd").withLocale(Locale.ENGLISH))
+						.append(DateTimeFormatter.ofPattern("uuuu'-'LLLL'-'dd").withLocale(Locale.ENGLISH))
 						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
 
 				Iterator<DateTimeFormatter> i = formatters.iterator();
@@ -1049,6 +1144,7 @@ public class DateUtils {
 				logger.debug(e.getMessage());
 			}			
 		}
+		
 		if ( result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
 				verbatimEventDate.matches("^[0-9]{4}[-][0-9]{2}$")) 
 		{
@@ -1068,6 +1164,7 @@ public class DateUtils {
 				logger.debug(e.getMessage());
 			}					
 		}
+		
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
 				verbatimEventDate.matches("^[0-9]{4}[0-9]{2}[0-9]{2}$") && 
 				!verbatimEventDate.endsWith("0000")) {
@@ -1085,255 +1182,240 @@ public class DateUtils {
 				logger.debug(e.getMessage());
 			}			
 		}			
-/*
+		
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
 			// Multiple yyyy-mmm-ddd, mmm-dd-yyyy, dd-mmm-yyyy patterns.
-			try { 
-				DateTimeParser[] parsers = { 
-					DateTimeFormat.forPattern("yyyy MMM dd").getParser(),
-					DateTimeFormat.forPattern("yyyy MMM. dd").getParser(),
-					DateTimeFormat.forPattern("yyyy, MMM dd").getParser(),
-					DateTimeFormat.forPattern("yyyy, MMM. dd").getParser(),
-					DateTimeFormat.forPattern("yyyy.MMM.dd").getParser(),
-					DateTimeFormat.forPattern("yyyy.MMM.dd.").getParser(),
-					DateTimeFormat.forPattern("yyyy. MMM. dd").getParser(),
-					DateTimeFormat.forPattern("yyyy. MMM. dd.").getParser(),
-					DateTimeFormat.forPattern("yyyy. MMM dd.").getParser(),
-					DateTimeFormat.forPattern("yyyy. MMM dd").getParser(),
-					DateTimeFormat.forPattern("yyyy MMM. dd.").getParser(),
-					DateTimeFormat.forPattern("yyyy: MMM. dd.").getParser(),
-					DateTimeFormat.forPattern("yyyy: MMM. dd").getParser(),
-					DateTimeFormat.forPattern("yyyy: MMM dd").getParser(),
-					DateTimeFormat.forPattern("yyyy:MMM dd").getParser(),
-					DateTimeFormat.forPattern("yyyy:MMM. dd").getParser(),
-					DateTimeFormat.forPattern("yyyy:MMM.dd").getParser(),
-					
-					DateTimeFormat.forPattern("yyyy MMM dd'st'").getParser(),
-					DateTimeFormat.forPattern("yyyy MMM. dd'st'").getParser(),
-					DateTimeFormat.forPattern("yyyy MMM dd'nd'").getParser(),
-					DateTimeFormat.forPattern("yyyy MMM. dd'nd'").getParser(),	
-					DateTimeFormat.forPattern("yyyy MMM dd'rd'").getParser(),
-					DateTimeFormat.forPattern("yyyy MMM. dd'rd'").getParser(),
-					DateTimeFormat.forPattern("yyyy MMM dd'th'").getParser(),
-					DateTimeFormat.forPattern("yyyy MMM. dd'th'").getParser(),
-					
-					DateTimeFormat.forPattern("MMM dd, yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd., yyyy").getParser(),
-					DateTimeFormat.forPattern("MMMdd, yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'st', yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'nd', yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'rd', yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'd', yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'th', yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd, yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM.dd, yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'st', yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'nd', yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'rd', yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'th', yyyy").getParser(),
-					
-					DateTimeFormat.forPattern("MMM.dd,yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM.dd'st',yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM.dd'nd',yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM.dd'rd',yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM.dd'd',yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM.dd'th',yyyy").getParser(),	
-					
-					DateTimeFormat.forPattern("MMM.dd.yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM.dd'st'.yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM.dd'nd'.yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM.dd'rd'.yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM.dd'd'.yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM.dd'th'.yyyy").getParser(),					
-					DateTimeFormat.forPattern("MMM. dd'st'. yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'nd'. yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'rd'. yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'd'. yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'th'. yyyy").getParser(),					
-					DateTimeFormat.forPattern("MMM dd'st'. yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'nd'. yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'rd'. yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'd'. yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'th'. yyyy").getParser(),					
-					DateTimeFormat.forPattern("MMM dd'st'.yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'nd'.yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'rd'.yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'd'.yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'th'.yyyy").getParser(),					
-					
-					DateTimeFormat.forPattern("MMM-dd-yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM-dd yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM-dd, yyyy").getParser(),
-					DateTimeFormat.forPattern("dd-MMM-yyyy").getParser(),
-					DateTimeFormat.forPattern("dd.MMM.yyyy").getParser(),
-					DateTimeFormat.forPattern("dd,MMM,yyyy").getParser(),
-					DateTimeFormat.forPattern("dd.MMM.,yyyy").getParser(),
-					DateTimeFormat.forPattern("dd. MMM.,yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd. yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM, dd yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM, dd. yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM, dd, yyyy").getParser(),					
-					DateTimeFormat.forPattern("MMM, dd., yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd, yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd/yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd,yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd, yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd,yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd-yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM.dd-yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd, yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd., yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM., dd, yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM.,dd, yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'' yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'' yyyy").getParser(),
-					DateTimeFormat.forPattern("dd. MMM. yyyy").getParser(),
-					DateTimeFormat.forPattern("dd. MMM.yyyy").getParser(),
-					DateTimeFormat.forPattern("dd MMM., yyyy").getParser(),
-					DateTimeFormat.forPattern("dd MMM.,yyyy").getParser(),
-					DateTimeFormat.forPattern("dd MMM,.yyyy").getParser(),
-					DateTimeFormat.forPattern("dd MMM,. yyyy").getParser(),
-					DateTimeFormat.forPattern("dd MMM..yyyy").getParser(),
-					
-					DateTimeFormat.forPattern("dd MMM, yyyy").getParser(),
-					DateTimeFormat.forPattern("dd MMM yyyy").getParser(),
-					DateTimeFormat.forPattern("dd MMM,yyyy").getParser(),
-					DateTimeFormat.forPattern("dd MMM.yyyy").getParser(),
-					DateTimeFormat.forPattern("ddMMM.yyyy").getParser(),
-					DateTimeFormat.forPattern("ddMMM. yyyy").getParser(),
-					DateTimeFormat.forPattern("dd.MMM-yyyy").getParser(),
-					DateTimeFormat.forPattern("dd-MMM-yyyy").getParser(),
-					DateTimeFormat.forPattern("dd.MMM yyyy").getParser(),
-					DateTimeFormat.forPattern("dd. MMM yyyy").getParser(),
-					DateTimeFormat.forPattern("dd, MMM, yyyy").getParser(),
-					DateTimeFormat.forPattern("dd, MMM; yyyy").getParser(),
-					DateTimeFormat.forPattern("dd. MMM; yyyy").getParser(),
-					DateTimeFormat.forPattern("dd MMM-yyyy").getParser(),
-					DateTimeFormat.forPattern("dd-MMM yyyy").getParser(),
-					DateTimeFormat.forPattern("ddMMMyyyy").getParser(),
-					
-					DateTimeFormat.forPattern("MMM dd yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd/yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'st' yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'nd' yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'rd' yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'd' yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'th' yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'st' yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'nd' yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'rd' yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'd' yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'th' yyyy").getParser(),	
-					DateTimeFormat.forPattern("MMMdd yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM.dd yyyy").getParser(),
-					
-					DateTimeFormat.forPattern("dd MMM, yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'st' MMM, yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'nd' MMM, yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'rd' MMM, yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'd' MMM, yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'th MMM', yyyy").getParser(),
-					DateTimeFormat.forPattern("dd MMM., yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'st' MMM., yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'nd' MMM., yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'rd' MMM., yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'th' MMM., yyyy").getParser(),
-					
-					DateTimeFormat.forPattern("dd MMM yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'st' MMM yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'nd' MMM yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'rd' MMM yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'd' MMM yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'th' MMM yyyy").getParser(),
-					DateTimeFormat.forPattern("dd MMM. yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'st' MMM. yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'nd' MMM. yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'rd' MMM. yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'd' MMM. yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'th' MMM. yyyy").getParser(),			
-					DateTimeFormat.forPattern("dd'st' MMM, yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'nd' MMM, yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'rd' MMM, yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'd' MMM, yyyy").getParser(),
-					DateTimeFormat.forPattern("dd'th' MMM, yyyy").getParser(),	
-					
-					DateTimeFormat.forPattern("dd/MMM/yyyy").getParser(),
-					DateTimeFormat.forPattern("dd/MMM yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM/dd yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM/dd/yyyy").getParser(),
-					
-					DateTimeFormat.forPattern("MMM dd. yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'st'. yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'nd'. yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'rd'. yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'th'. yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd. yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'st'. yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'nd'. yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'rd'. yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'th'. yyyy").getParser(),					
-					DateTimeFormat.forPattern("MMM dd.yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd.yyyy").getParser(),
 
-					DateTimeFormat.forPattern("MMM. dd-yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'st'-yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'nd'-yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'rd'-yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM. dd'th'-yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd-yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'st'-yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'nd'-yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'rd'-yyyy").getParser(),
-					DateTimeFormat.forPattern("MMM dd'th'-yyyy").getParser(),
-					
-					DateTimeFormat.forPattern("yyyy-MMM-dd").getParser()
-				};
-				DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
-				String cleaned = cleanMonth(verbatimEventDate);
-				cleaned = cleaned.replace("''", "'");
-				try {
-					// Specify English locale, or local default will be used
-				    LocalDate parseDate = LocalDate.parse(cleaned,formatter.withLocale(Locale.ENGLISH));
-				    resultDate =  parseDate.toString("yyyy-MM-dd");
-				} catch (Exception e) {
-					try {
-						logger.debug(e.getMessage());
-						LocalDate parseDate = LocalDate.parse(cleaned,formatter.withLocale(Locale.FRENCH));
-						resultDate =  parseDate.toString("yyyy-MM-dd");
-					} catch (Exception e1) { 
-						try { 
-							logger.debug(e1.getMessage());
-							LocalDate parseDate = LocalDate.parse(cleaned,formatter.withLocale(Locale.ITALIAN));
-							resultDate =  parseDate.toString("yyyy-MM-dd");
-						} catch (Exception e2) {
-							try { 
-							logger.debug(e2.getMessage());
-							LocalDate parseDate = LocalDate.parse(cleaned,formatter.withLocale(Locale.GERMAN));
-							resultDate =  parseDate.toString("yyyy-MM-dd");
-							} catch (Exception e3) { 
-								try { 
-								    logger.debug(e2.getMessage());
-								    LocalDate parseDate = LocalDate.parse(cleaned,formatter.withLocale(Locale.forLanguageTag("es")));
-								    resultDate =  parseDate.toString("yyyy-MM-dd");
-								} catch (Exception e4) { 
-									logger.debug(e2.getMessage());
-									LocalDate parseDate = LocalDate.parse(cleaned,formatter.withLocale(Locale.forLanguageTag("pt")));
-									resultDate =  parseDate.toString("yyyy-MM-dd");
-								}
-							}
-						}
-					}
-				}	
-				logger.debug(resultDate);
-				result.setResultState(EventResult.EventQCResultState.DATE);
-				result.setResult(resultDate);
-			} catch (Exception e) { 
+			List<DateTimeFormatter> formatters = new ArrayList<DateTimeFormatter>();
+
+			List <Locale> locales = new ArrayList<Locale>();
+			locales.add(Locale.ENGLISH);
+			locales.add(Locale.FRENCH);
+			locales.add(Locale.GERMAN);
+			locales.add(Locale.ITALIAN);
+			locales.add(Locale.KOREAN);
+			try { 
+				locales.add(Locale.forLanguageTag("es"));
+			} catch (NullPointerException e) { 
 				logger.debug(e.getMessage());
-			}			
+			}
+			try { 
+				locales.add(Locale.forLanguageTag("pt"));
+			} catch (NullPointerException e) { 
+				logger.debug(e.getMessage());
+			}
+			try { 
+				locales.add(Locale.forLanguageTag("cs"));
+			} catch (NullPointerException e) { 
+				logger.debug(e.getMessage());
+			}
+			try { 
+				locales.add(Locale.forLanguageTag("da"));
+			} catch (NullPointerException e) { 
+				logger.debug(e.getMessage());
+			}
+			try { 
+				locales.add(Locale.forLanguageTag("cy"));
+			} catch (NullPointerException e) { 
+				logger.debug(e.getMessage());
+			}
+			try { 
+				locales.add(Locale.forLanguageTag("lt"));
+			} catch (NullPointerException e) { 
+				logger.debug(e.getMessage());
+			}
+			try { 
+				locales.add(Locale.forLanguageTag("ru"));
+			} catch (NullPointerException e) { 
+				logger.debug(e.getMessage());
+			}	
+			try { 
+				locales.add(Locale.forLanguageTag("nl"));
+			} catch (NullPointerException e) { 
+				logger.debug(e.getMessage());
+			}
+			try { 
+				locales.add(Locale.forLanguageTag("no"));
+			} catch (NullPointerException e) { 
+				logger.debug(e.getMessage());
+			}
+			try { 
+				locales.add(Locale.forLanguageTag("sv"));
+			} catch (NullPointerException e) { 
+				logger.debug(e.getMessage());
+			}
+			try { 
+				locales.add(Locale.forLanguageTag("sw"));
+			} catch (NullPointerException e) { 
+				logger.debug(e.getMessage());
+			}
+			try { 
+				locales.add(Locale.forLanguageTag("yo"));
+			} catch (NullPointerException e) { 
+				logger.debug(e.getMessage());
+			}
+
+			Iterator<Locale> iloc = locales.iterator();
+			while (iloc.hasNext()) { 
+				Locale loc = iloc.next();
+
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("uuuu'-'LLL'-'d").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("uuuu'-'LLLL'-'d").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("uuuu'-'LLL'-'d'st'").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("uuuu'-'LLLL'-'d'st'").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("uuuu'-'LLL'-'d'nd'").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("uuuu'-'LLLL'-'d'nd'").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("uuuu'-'LLL'-'d'rd'").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("uuuu'-'LLLL'-'d'rd'").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("uuuu'-'LLL'-'d'th'").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("uuuu'-'LLLL'-'d'th'").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("LLL'-'d'-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("LLLL'-'d'-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("LLL'-'d'st-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("LLLL'-'d'st-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("LLL'-'d'nd-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("LLLL'-'d'nd-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("LLL'-'d'rd-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("LLLL'-'d'rd-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("LLL'-'d'd-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("LLLL'-'d'd-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("LLL'-'d'th-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("LLLL'-'d'th-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("d'-'LLL'-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("d'-'LLLL'-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("d'st-'LLL'-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("d'st-'LLLL'-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("d'nd-'LLL'-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("d'nd-'LLLL'-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("d'rd-'LLL'-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("d'rd-'LLLL'-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("d'th-'LLL'-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("d'th-'LLLL'-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("uuuu'-'LLLd").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("LLLd'-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("dLLL'-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("uuuuLLLd").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("LLLduuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("dLLLuuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("uuuu'-'LLLLd").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("LLLLd'-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("dLLLL'-'uuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("uuuuLLLLd").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				formatters.add(new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("dLLLLuuuu").withLocale(loc))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+
+			}
+
+			Iterator<DateTimeFormatter> i = formatters.iterator();
+			boolean matched = false;
+			String cleaned = cleanMonth(verbatimEventDate);
+			cleaned = cleaned.replace("/","-").replace(".", "-").replace(" ", "-").replace(":", "-");
+			cleaned = cleaned.replaceAll("-+", "-").replace(",","").replaceFirst("-$","");
+			logger.debug(cleaned);
+			while (i.hasNext() && !matched) {
+				try { 
+					DateTimeFormatter formatter = i.next();
+					LocalDate parseDate = LocalDate.parse(cleaned,formatter);
+					resultDate =  parseDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+					logger.debug(resultDate);
+					result.setResultState(EventResult.EventQCResultState.DATE);
+					result.setResult(resultDate);
+					matched = true;
+				} catch (Exception e) { 
+					// logger.debug(e.getMessage());
+				}
+			}
 		}		
+		
+/*		
 		logger.debug(result.getResultState());
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
 			// Example: jan.-1992
@@ -1697,7 +1779,7 @@ public class DateUtils {
     	} else if (test==null) { 
     		// wasn't a simple ISO date, try the verbatim date parser and see if it returns a range.
     		EventResult lookupResult = DateUtils.extractDateFromVerbatimER(eventDate);
-    		if (lookupResult.getResult().equals(EventResult.EventQCResultState.RANGE)) { 
+    		if (lookupResult!=null && lookupResult.getResult()!=null && lookupResult.getResult().equals(EventResult.EventQCResultState.RANGE)) { 
     			isRange = true;
     		}
     	}
@@ -2351,9 +2433,9 @@ public class DateUtils {
     		cleaned = cleaned.replace("Febuary", "February");
     		cleaned = cleaned.replace("Janauary", "January");
 
-    		// Joda date time parsing as used here, is case sensitive for months.
+    		// Java date time parsing as used here, is case sensitive for months.
     		// Put cases of alternative spellings, missing accents, and capitalization into
-    		// a form that Joda will parse.
+    		// a form that tava.time will parse.
 
     		cleaned = cleaned.replace("DECEMBER", "December");
     		cleaned = cleaned.replace("NOVEMBER", "November");
@@ -2425,14 +2507,19 @@ public class DateUtils {
     		cleaned = cleaned.replace("Gennaio", "January");			
     		// likewise french, also handle omitted accents
     		cleaned = cleaned.replace("Janvier", "January");
+    		cleaned = cleaned.replace("janvier", "January");
+    		cleaned = cleaned.replace("janv", "January");
     		cleaned = cleaned.replace("Février", "February");
     		cleaned = cleaned.replace("Fevrier", "February");
     		cleaned = cleaned.replace("fevrier", "February");
     		cleaned = cleaned.replace("Mars", "March");
+    		cleaned = cleaned.replace("mars", "March");
     		cleaned = cleaned.replace("Avril", "April");
+    		cleaned = cleaned.replace("avril", "April");
     		cleaned = cleaned.replace("Mai", "May");
     		cleaned = cleaned.replace("Juin", "June");
     		cleaned = cleaned.replace("Juillet", "July");
+    		cleaned = cleaned.replace("juillet", "July");
     		cleaned = cleaned.replace("Août", "August");
     		cleaned = cleaned.replace("Aout", "August");
     		cleaned = cleaned.replace("aout", "August");
@@ -2508,7 +2595,10 @@ public class DateUtils {
     		cleaned = cleaned.replace("XI", "November");
     		cleaned = cleaned.replace("xi", "November");
     		cleaned = cleaned.replace("IX", "September");
-    		cleaned = cleaned.replace("X", "October");
+    		if (!cleaned.matches(".*XX.*")) {
+    			// avoid translating XX or XXX to October.
+    			cleaned = cleaned.replace("X", "October");
+    		}
     		cleaned = cleaned.replace("VIII", "August");
     		cleaned = cleaned.replace("viii", "August");
     		cleaned = cleaned.replace("VII", "July");
@@ -2529,7 +2619,10 @@ public class DateUtils {
     		cleaned = cleaned.replace(".ix", ".September");
     		cleaned = cleaned.replace(".i", ".January");
     		cleaned = cleaned.replace(".v", ".May");
-    		cleaned = cleaned.replace(".x", ".October");
+    		if (!cleaned.matches(".*\\.xx.*")) {
+    			// avoid translating xx or xxx to October.
+    			cleaned = cleaned.replace(".x", ".October");
+    		}
     		cleaned = cleaned.replace(" vi", " June");
     		cleaned = cleaned.replace(" ix", " September");
     		cleaned = cleaned.replace(" i", " January");
