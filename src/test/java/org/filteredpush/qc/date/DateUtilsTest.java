@@ -1197,7 +1197,7 @@ public class DateUtilsTest {
     	
     	result = DateUtils.extractDateFromVerbatimER("1910-01-01/1911-12-31");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	assertEquals("1910-01-01/1911-12-31", result.getResult());      	
+    	assertEquals("1910/1911", result.getResult());      	
 
     	result = DateUtils.extractDateFromVerbatimER("**-Nov-1910");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
@@ -1231,25 +1231,25 @@ public class DateUtilsTest {
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	assertEquals("1871-06", result.getResult());  
     	
-    	result = DateUtils.extractDateFromVerbatimER("July 16-26, 1945");
+    	result = DateUtils.extractDateFromVerbatimER("1882-1995");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	assertEquals("1945-07-16/1945-07-26", result.getResult()); 
+    	assertEquals("1882/1995", result.getResult()); 
     	
-    	result = DateUtils.extractDateFromVerbatimER("July 16 to 26, 1945");
+    	result = DateUtils.extractDateFromVerbatimER("1882 to 1885");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	assertEquals("1945-07-16/1945-07-26", result.getResult());     	
+    	assertEquals("1882/1885", result.getResult()); 
     	
-    	result = DateUtils.extractDateFromVerbatimER("July 16-26 1945");
+    	result = DateUtils.extractDateFromVerbatimER("1882/1885");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	assertEquals("1945-07-16/1945-07-26", result.getResult()); 
+    	assertEquals("1882/1885", result.getResult()); 
     	
-    	result = DateUtils.extractDateFromVerbatimER("August 1-10, 2006");
+    	result = DateUtils.extractDateFromVerbatimER("Jan to Feb 1882");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	assertEquals("2006-08-01/2006-08-10", result.getResult());
+    	assertEquals("1882-01/1882-02", result.getResult()); 
     	
-    	result = DateUtils.extractDateFromVerbatimER("giugno 1-10, 2006");
+    	result = DateUtils.extractDateFromVerbatimER("Jan-Feb 1882");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	assertEquals("2006-06-01/2006-06-10", result.getResult());
+    	assertEquals("1882-01/1882-02", result.getResult()); 
     	
     	result = DateUtils.extractDateFromVerbatimER("[Nov. 8]");
     	assertEquals(EventResult.EventQCResultState.NOT_RUN, result.getResultState());
@@ -1451,8 +1451,41 @@ public class DateUtilsTest {
     	result = DateUtils.extractDateFromVerbatimER("1934 - 1936");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	assertEquals("1934/1936", result.getResult());
+ 
+    	result = DateUtils.extractDateFromVerbatimER("July 16-26, 1945");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1945-07-16/1945-07-26", result.getResult()); 
+    	
+    	result = DateUtils.extractDateFromVerbatimER("July 16 to 26, 1945");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1945-07-16/1945-07-26", result.getResult());     	
+    	
+    	result = DateUtils.extractDateFromVerbatimER("July 16-26 1945");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1945-07-16/1945-07-26", result.getResult()); 
+    	
+    	result = DateUtils.extractDateFromVerbatimER("August 1-10, 2006");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("2006-08-01/2006-08-10", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("giugno 1-10, 2006");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("2006-06-01/2006-06-10", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("Jan,15-18 1882");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1882-01-15/1882-01-18", result.getResult());
     	
     	// Checking translation of all roman numberal months
+        result = DateUtils.extractDateFromVerbatimER("9.XII.2000");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("2000-12-09", result.getResult());    	
+        result = DateUtils.extractDateFromVerbatimER("9.xii.2000");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("2000-12-09", result.getResult());    	
+        result = DateUtils.extractDateFromVerbatimER("9.I-10.XII.2000");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("2000-01-09/2000-12-10", result.getResult());    	
         result = DateUtils.extractDateFromVerbatimER("9.i-10.xii.2000");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	assertEquals("2000-01-09/2000-12-10", result.getResult());    	
