@@ -1638,10 +1638,6 @@ public class DateUtilsTest {
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	assertEquals("1943-09/1943-10", result.getResult());  
    			
-    	result = DateUtils.extractDateFromVerbatimER("4-11.viii.1934");
-    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	assertEquals("1934-08-04/1934-08-11", result.getResult());  
-    	
     	result = DateUtils.extractDateFromVerbatimER("4-12 Mar 2006");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	assertEquals("2006-03-04/2006-03-12", result.getResult());
@@ -1653,14 +1649,6 @@ public class DateUtilsTest {
     	result = DateUtils.extractDateFromVerbatimER("Jan- Feb/1963");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
     	assertEquals("1963-01/1963-02", result.getResult());     	
-    	
-    	result = DateUtils.extractDateFromVerbatimER("July 17 and 18, 1914");
-    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	assertEquals("1914-07-17/1914-07-18", result.getResult());
-    	
-    	result = DateUtils.extractDateFromVerbatimER("8-15 to 20, 1884");
-    	//assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
-    	//assertEquals("1884-08-15/1884-08-20", result.getResult());
     	
     	result = DateUtils.extractDateFromVerbatimER("August 29 - September 2, 2006");
     	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
@@ -1885,16 +1873,37 @@ public class DateUtilsTest {
     	assertEquals("1879-07-14", result.getResult());
     	
     	result = DateUtils.extractDateFromVerbatimER("11 et 14 VII 1910");
-    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals(EventResult.EventQCResultState.DISJUNCT_RANGE, result.getResultState());
     	assertEquals("1910-07-11/1910-07-14", result.getResult());
     	
     	result = DateUtils.extractDateFromVerbatimER("May 16 and June 13, 1878");
-    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals(EventResult.EventQCResultState.DISJUNCT_RANGE, result.getResultState());
     	assertEquals("1878-05-16/1878-06-13", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("July 17 and 18, 1914");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1914-07-17/1914-07-18", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("4-11.viii.1934");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1934-08-04/1934-08-11", result.getResult()); 
+    	
+    	result = DateUtils.extractDateFromVerbatimER("1939-05-15/1939-05-15");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1939-05-15", result.getResult());
+    	
+    	result = DateUtils.extractDateFromVerbatimER("1939/05/15-1939/05/15");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1939-05-15", result.getResult());    	
+    	
     	
     	/*
     	 Not yet supported cases: 
     	 
+    	result = DateUtils.extractDateFromVerbatimER("8-15 to 20, 1884");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1884-08-15/1884-08-20", result.getResult());
+    	
     	 Day/month between century and year, from "Date Format" thread
     	 on NHCOLL started by Paul Callomon
     	 19 3/viii 25
@@ -1903,6 +1912,9 @@ public class DateUtilsTest {
     	 
     	 8-15 to 20, 1884
     	 II-VIII-1913
+    	result = DateUtils.extractDateFromVerbatimER("II-VIII-1913");
+    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+    	assertEquals("1913-02/1913-08", result.getResult());    	
     	 
     	 Some cases where interpretation is problematic:
     	 6-11, 1902  -> (1902-06-11/1902-11-06 or 1902-06/1902-11)
@@ -1910,6 +1922,10 @@ public class DateUtilsTest {
     	 Discontinuous range: 
     	 Sept. & Oct. 1892 & Oct. 1893
     	 September 14th and 19th, 1916
+    	result = DateUtils.extractDateFromVerbatimER("September 14th and 19th, 1916");
+    	assertEquals(EventResult.EventQCResultState.DISJUNCT_RANGE, result.getResultState());
+    	assertEquals("1916-09-14/1916-09-19", result.getResult()); 
+    	   	
     	 Sept. 27, 1896&Oct. 27, 1895
     	 May 18, May 25, June 7, 1895
     	 
@@ -1919,14 +1935,6 @@ public class DateUtilsTest {
 //    	for (int i = 0; i<locs.length; i++) {
 //    		System.out.println(locs[i].getLanguage());
 //    	}
-    	
-    	result = DateUtils.extractDateFromVerbatimER("1939-05-15/1939-05-15");
-    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
-    	assertEquals("1939-05-15", result.getResult());
-    	
-    	result = DateUtils.extractDateFromVerbatimER("1939/05/15-1939/05/15");
-    	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
-    	assertEquals("1939-05-15", result.getResult());    	
     	
     }    
     

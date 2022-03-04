@@ -30,6 +30,7 @@ public class EventResult {
 	    SUSPECT,
 	    DATE, 
 	    RANGE,
+	    DISJUNCT_RANGE,
 	    INTERNAL_PREREQISITES_NOT_MET;
 	}
 	
