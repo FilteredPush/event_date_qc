@@ -109,17 +109,31 @@ public class LocalDateInterval {
     		if (bits.length!=2) {
     			throw new DateTimeParseException("provided dateString contains a / but isn't parsable into exactly two parts", dateString, dateString.indexOf("/"));
     		}
-    		DatePair startResult = parseDateBit(bits[0]);
+    		String startBit = bits[0];
+    		if (startBit.matches("^-[0-9]{3,4}")) {
+    			startBit = startBit.replace("-", "").concat(" BCE");
+    		}
+    		String endBit = bits[1];
+    		if (endBit.matches("^-[0-9]{3,4}")) {
+    			endBit = endBit.replace("-", "").concat(" BCE");
+    		}
+    		DatePair startResult = parseDateBit(startBit);
     		this.startDate = startResult.startOfPair;
-    		DatePair endResult = parseDateBit(bits[1]);
+    		DatePair endResult = parseDateBit(endBit);
     		this.endDate = endResult.endOfPair;
     		if (endDate.isBefore(startDate)) { 
     			throw new DateTimeParseException("provided dateString has a start date later than the end date.", dateString, dateString.indexOf("/"));
     		}
     	} else { 
-    		DatePair result = parseDateBit(dateString);
-    		this.startDate = result.getStartOfPair();
-    		this.endDate = result.getEndOfPair();
+    		if (dateString.matches("^-[0-9]{3,4}")) { 
+    			DatePair result = parseDateBit(dateString.replace("-", "").concat(" BCE"));
+    			this.startDate = result.getStartOfPair();
+    			this.endDate = result.getEndOfPair();
+    		} else { 
+    			DatePair result = parseDateBit(dateString);
+    			this.startDate = result.getStartOfPair();
+    			this.endDate = result.getEndOfPair();
+    		}
     	}
 	}
 
@@ -168,6 +182,14 @@ public class LocalDateInterval {
     			}
     			LocalDate startDateBit = LocalDate.parse(dateBit+"-01-01", formatter);
     			result = new DatePair(startDateBit,startDateBit.with(TemporalAdjusters.lastDayOfYear()));
+    		} else if (dateBit.matches("^[0-9]{1,4} BCE$")) {
+    			logger.debug(dateBit);
+    			DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+    				.append(DateTimeFormatter.ofPattern("yyyy-MM-ddGGGGG"))
+    				.toFormatter().withResolverStyle(ResolverStyle.STRICT);
+    			dateBit = String.format("%04d", Integer.parseInt(dateBit.substring(0,4)));
+    			LocalDate startDateBit = LocalDate.parse(dateBit+"-01-01B", formatter);
+    			result = new DatePair(startDateBit.minusYears(1),startDateBit.minusYears(1).with(TemporalAdjusters.lastDayOfYear()));
     		} else { 
     			List<DateTimeFormatter> formatters = new ArrayList<DateTimeFormatter>();
     			

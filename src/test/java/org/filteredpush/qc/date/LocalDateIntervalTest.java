@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.chrono.IsoEra;
 import java.time.format.DateTimeParseException;
 
 import org.apache.commons.logging.Log;
@@ -132,13 +133,46 @@ public class LocalDateIntervalTest {
 			assertEquals(6, instance.getEndDate().getDayOfMonth());
 		} catch (EmptyDateException e) {
 			fail(e.getMessage());
-		}		
+		}	
+		date = "1880";
+		try {
+			instance = new LocalDateInterval(date);
+			assertEquals(1880, instance.getStartDate().getYear());
+			assertEquals(1, instance.getStartDate().getMonthValue());
+			assertEquals(1, instance.getStartDate().getDayOfMonth());
+			assertEquals(1880, instance.getEndDate().getYear());
+			assertEquals(12, instance.getEndDate().getMonthValue());
+			assertEquals(31, instance.getEndDate().getDayOfMonth());
+		} catch (EmptyDateException e) {
+			fail(e.getMessage());
+		}	
 		try {
 			instance = new LocalDateInterval(((String)null));
 			fail("EmptyDateException should have been thrown");
 		} catch (EmptyDateException e) {
 			assertEquals(e.getClass(), EmptyDateException.class);
 		}	
+		date = "2000 BCE";
+		try {
+			instance = new LocalDateInterval(date);
+			assertEquals(-2000, instance.getStartDate().getYear());
+			assertEquals(1, instance.getStartDate().getMonthValue());
+			assertEquals(1, instance.getStartDate().getDayOfMonth());
+			assertEquals(IsoEra.BCE, instance.getStart().getEra());
+			assertEquals(-2000, instance.getEndDate().getYear());
+			assertEquals(12, instance.getEndDate().getMonthValue());
+			assertEquals(31, instance.getEndDate().getDayOfMonth());
+			assertEquals(IsoEra.BCE, instance.getEnd().getEra());
+		} catch (EmptyDateException e) {
+			fail(e.getMessage());
+		}	
+		try {
+			instance = new LocalDateInterval(((String)null));
+			fail("EmptyDateException should have been thrown");
+		} catch (EmptyDateException e) {
+			assertEquals(e.getClass(), EmptyDateException.class);
+		}
+		
 	}
 
 	/**

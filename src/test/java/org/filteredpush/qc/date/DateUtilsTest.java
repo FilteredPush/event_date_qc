@@ -400,16 +400,18 @@ public class DateUtilsTest {
     	assertEquals(true, DateUtils.isConsistent(null, "", null, ""));
     	assertEquals(true, DateUtils.isConsistent("1884-03-18", "1884", "03", "18"));
     	assertEquals(false, DateUtils.isConsistent("1884-03-18", "1884", "03", "17"));
-    	// Per test definitions as of 2022 Feb 27 these should should this pass, comparison of values present.  
+    	// Per test definitions as of 2022 Feb 27 these should should this pass
+    	// where a value is compared with a null, comparison is of values present, 
+    	// not values against empty.  
     	assertEquals(true, DateUtils.isConsistent("1884-03-18", "1884", "03", ""));
     	assertEquals(true, DateUtils.isConsistent("1884-03-18", "1884", "03", null));
     	assertEquals(true, DateUtils.isConsistent("1884-03-18", "1884", null, "18"));
     	assertEquals(true, DateUtils.isConsistent("1884-03-18", null, "03", "18"));
-    	assertEquals(false, DateUtils.isConsistent(null, "1884", "03", "18"));
-    	assertEquals(false, DateUtils.isConsistent("1884-01-01", "1884", "01", null));
-    	assertEquals(false, DateUtils.isConsistent("1884-01-01", "1884", null, null));
-    	assertEquals(false, DateUtils.isConsistent("1884-01-01", null, null, null));
-    	assertEquals(false, DateUtils.isConsistent(null, "1884", "1", "1"));
+    	assertEquals(true, DateUtils.isConsistent(null, "1884", "03", "18"));
+    	assertEquals(true, DateUtils.isConsistent("1884-01-01", "1884", "01", null));
+    	assertEquals(true, DateUtils.isConsistent("1884-01-01", "1884", null, null));
+    	assertEquals(true, DateUtils.isConsistent("1884-01-01", null, null, null));
+    	assertEquals(true, DateUtils.isConsistent(null, "1884", "1", "1"));
     	assertEquals(true, DateUtils.isConsistent("1884-03-01", "1884", "03", "1"));
     	assertEquals(true, DateUtils.isConsistent("1884-03-01", "1884", "03", "01"));
     	assertEquals(true, DateUtils.isConsistent("1884-03", "1884", "03", "01"));
@@ -417,12 +419,12 @@ public class DateUtilsTest {
     	assertEquals(true, DateUtils.isConsistent("1884-03", "1884", "03", ""));
     	assertEquals(true, DateUtils.isConsistent("1884-03", "1884", "03", null));
     	assertEquals(true, DateUtils.isConsistent("1884-01-01/1884-01-31", "1884", "01", null));
-    	assertEquals(false, DateUtils.isConsistent("1884-01-01/1884-01-05", "1884", "01", null));    	
+    	assertEquals(true, DateUtils.isConsistent("1884-01-01/1884-01-05", "1884", "01", null));    	
     	assertEquals(true, DateUtils.isConsistent("1884-01-01/1884-01-31", "1884", "01", ""));
-    	assertEquals(false, DateUtils.isConsistent("1884-01-01/1884-01-05", "1884", "01", ""));    	
+    	assertEquals(true, DateUtils.isConsistent("1884-01-01/1884-01-05", "1884", "01", ""));    	
     	assertEquals(true, DateUtils.isConsistent("1884-01-01/1884-12-31", "1884", null, null));
-    	assertEquals(false, DateUtils.isConsistent("1884-01-01/1884-12-05", "1884", null, null));    	
-    	assertEquals(false, DateUtils.isConsistent("1884-01-01T05:05Z/1884-12-05", "1884", null, null));
+    	assertEquals(true, DateUtils.isConsistent("1884-01-01/1884-12-05", "1884", null, null));    	
+    	assertEquals(true, DateUtils.isConsistent("1884-01-01T05:05Z/1884-12-05", "1884", null, null));
     	
     	assertEquals(true, DateUtils.isConsistent("1884-03-18/1884-03-19", "1884", "03", "18"));
     }
@@ -465,6 +467,9 @@ public class DateUtilsTest {
     	assertEquals(null, DateUtils.extractZuluTime(null));
     	assertEquals(null, DateUtils.extractZuluTime("1905-04-08"));
     	assertEquals("08:00:00.000Z", DateUtils.extractZuluTime("1905-04-08T08Z"));
+    	assertEquals("13:00:00.000Z", DateUtils.extractZuluTime("1968-04-08T08-05:00"));
+    	assertEquals("08:15:20.000Z", DateUtils.extractZuluTime("1905-04-08T08:15:20Z"));
+    	assertEquals("08:15:20.004Z", DateUtils.extractZuluTime("1905-04-08T08:15:20.004Z"));
     	assertEquals("08:32:16.000Z", DateUtils.extractZuluTime("1905-04-08T08:32:16Z"));
     	assertEquals("13:32:16.000Z", DateUtils.extractZuluTime("1905-04-08T08:32:16-05:00"));
     	assertEquals(null, DateUtils.extractZuluTime("1251e3254w2v"));
@@ -1896,6 +1901,13 @@ public class DateUtilsTest {
     	assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
     	assertEquals("1939-05-15", result.getResult());    	
     	
+    	result = DateUtils.extractDateFromVerbatimER("June and Sept. 1876");
+    	assertEquals(EventResult.EventQCResultState.DISJUNCT_RANGE, result.getResultState());
+    	assertEquals("1876-06/1876-09", result.getResult());    	
+    	
+    	result = DateUtils.extractDateFromVerbatimER("June and July 1876");
+    	assertEquals(EventResult.EventQCResultState.RANGE, result.getResultState());
+    	assertEquals("1876-06/1876-07", result.getResult());    	
     	
     	/*
     	 Not yet supported cases: 

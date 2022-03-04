@@ -40,44 +40,49 @@ public class DwcEventDQTest {
 	@Test
 	public void testMeasureDuration() { 
 		DQResponse<NumericalValue> measure = DwCEventDQ.measureEventdatePrecisioninseconds("1880-05-08");
-		Long seconds = (60l*60l*24l)-1l; 
+		Long seconds = (60l*60l*24l); 
 		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
 		
 		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1880-05");
-		seconds = (60l*60l*24l*31)-1l; 
+		seconds = (60l*60l*24l*31); 
 		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
 		
 		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1881");
-		seconds = (60l*60l*24l*365)-1l; 
+		seconds = (60l*60l*24l*365); 
 		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
 		
 		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1880"); // leap year
-		seconds = (60l*60l*24l*366)-1l; 
+		seconds = (60l*60l*24l*366); 
 		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
 		
 		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1880-02");  // Feb in leap year
-		seconds = (60l*60l*24l*29)-1l; 
+		seconds = (60l*60l*24l*29); 
 		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());		
 		
 		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1881-02");
-		seconds = (60l*60l*24l*28)-1l; 
+		seconds = (60l*60l*24l*28); 
 		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());			
 		
 		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1969");  
-		seconds = (60l*60l*24l*366l)-1l; 
+		seconds = (60l*60l*24l*365l); 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
+		
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1980");  
+		seconds = (60l*60l*24l*366l); 
 		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
 		
 		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1972");  // leap year with two leap seconds
 		// if leap seconds were included would be 31622401, but guidance is to exclude leap seconds from this measure
 		// seconds = (60l*60l*24l*366l)+1l; 
-		seconds = (60l*60l*24l*366l)-1l; 
+		seconds = (60l*60l*24l*366l); 
 		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
 		
@@ -88,7 +93,7 @@ public class DwcEventDQTest {
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());		
 		
 		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1881-02");
-		seconds = (60l*60l*24l*28)-1l; 
+		seconds = (60l*60l*24l*28); 
 		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
 		
@@ -1995,8 +2000,13 @@ public class DwcEventDQTest {
 		
 		eventDate = "-2000";
 		result = DwCEventDQ.validationEventdateOutofrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());			
+		
+		eventDate = "-2000";
+		result = DwCEventDQ.validationEventdateOutofrange(eventDate, "-4000", null);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
 	
 		eventDate = "1599-12";
 		result = DwCEventDQ.validationEventdateOutofrange(eventDate, null, null);

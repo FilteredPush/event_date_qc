@@ -1818,12 +1818,18 @@ public class DwCEventDQ {
     		result.addComment("No value provided for dwc:eventDate.");
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     	} else { 
+    		logger.debug(earlyestValidDate);
+    		logger.debug(latestValidDate);
+    		logger.debug(eventDate);
     		if (! DateUtils.eventDateValid(eventDate)) { 
     			result.addComment("Value provided for dwc:eventDate ["+eventDate+"] not recognized as a valid date.");
     			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    			logger.debug(result.getComment());
     		} else { 
     			LocalDateInterval interval = DateUtils.extractInterval(eventDate);
     			LocalDateInterval bounds = DateUtils.extractInterval(earlyestValidDate + "/" + latestValidDate );
+    			logger.debug(bounds);
+    			logger.debug(interval);
     			if (bounds.contains(interval)) { 
     				result.setValue(ComplianceValue.COMPLIANT);
     				result.addComment("Provided value for dwc:eventDate '" + eventDate + "' falls entirely within the range " + earlyestValidDate + " to " + latestValidDate + ".");

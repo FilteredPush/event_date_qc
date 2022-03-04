@@ -26,6 +26,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.Period;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -45,6 +46,7 @@ import java.time.LocalTime;
 import java.time.Instant;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
@@ -691,6 +693,22 @@ public class DateUtils {
 				logger.debug(e.getMessage());
 			}
 		}
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
+				yearsBeforeSuspect < 0 &&
+				verbatimEventDate.matches("^-[0-9]{4}$")) { 
+			// Example: -2000 
+			try { 
+				DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("Guuuu"))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT);
+				LocalDate parseDate = LocalDate.parse(verbatimEventDate.replace("-", "BC") + "-01-01" ,formatter);
+				resultDate = parseDate.format(DateTimeFormatter.ofPattern("yyyy G"));
+				result.setResultState(EventResult.EventQCResultState.RANGE);
+				result.setResult(resultDate);
+			} catch (Exception e) { 
+				logger.debug(e.getMessage());
+			}
+		}
 						
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
 				verbatimEventDate.matches("^[12][0-9]{1}00[']{0,1}s$")) {
@@ -1311,6 +1329,18 @@ public class DateUtils {
 						.append(DateTimeFormatter.ofPattern("uuuu'-'LLLL'-'d'th'").withLocale(loc))
 						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
 
+				if (yearsBeforeSuspect < 1000) { 
+					formatters.add(new DateTimeFormatterBuilder()
+							.append(DateTimeFormatter.ofPattern("LLLL'-'d'-'uuu").withLocale(loc))
+							.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+					formatters.add(new DateTimeFormatterBuilder()
+							.append(DateTimeFormatter.ofPattern("LLL'-'d'-'uuu").withLocale(loc))
+							.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+					formatters.add(new DateTimeFormatterBuilder()
+							.append(DateTimeFormatter.ofPattern("LLL'.-'d'-'uuu").withLocale(loc))
+							.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+				}
+
 				formatters.add(new DateTimeFormatterBuilder()
 						.append(DateTimeFormatter.ofPattern("LLL'-'d'-'uuuu").withLocale(loc))
 						.toFormatter().withResolverStyle(ResolverStyle.STRICT));
@@ -1436,6 +1466,15 @@ public class DateUtils {
 			String cleaned = cleanMonth(verbatimEventDate);
 			cleaned = cleaned.replace("/","-").replace(".", "-").replace(" ", "-").replace(":", "-").replace(";", "-").replace(",", "-");
 			cleaned = cleaned.replaceAll("-+", "-").replace(",","").replaceFirst("-$","");
+			if (yearsBeforeSuspect < 100) {
+				// only interpret two digit years if yearsBeforeSuspect < 100, meaning some two digit years may
+				// be valid years in the range 0001-0099
+				if (cleaned.matches("^[A-Za-z]+-[0-9]{1,2}-[0-9]{1,2}$")) { 
+					// could be MMM-dd-yy two digit year, insert 0 for parser
+					cleaned = cleaned.substring(0, cleaned.length()-2) + "0" + cleaned.substring(cleaned.length()-2);
+					logger.debug(cleaned);
+				}
+			}
 			logger.debug(cleaned);
 			while (i.hasNext() && !matched) {
 				try { 
@@ -1510,7 +1549,7 @@ public class DateUtils {
 		}
 
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
-				verbatimEventDate.matches("^[A-Za-z]+[.]{0,1}( and | to |[-][ ]{0,1}| [-] )[A-Za-z]+[.]{0,1}(, |[/ .])[0-9]{4}$")) { 
+				verbatimEventDate.matches("^[A-Za-z]+[.]{0,1}( et | & | and | to |[-][ ]{0,1}| [-] )[A-Za-z]+[.]{0,1}(, |[/ .])[0-9]{4}$")) { 
 			logger.debug(verbatimEventDate);
 			// Example: Jan to Feb 1882
 			// Example: Jan-Feb/1882
@@ -1533,11 +1572,15 @@ public class DateUtils {
 			    verbatimEventDate = verbatimEventDate.replace("- ", "-");
 			   logger.debug(verbatimEventDate);
 		    }
-		    if ( verbatimEventDate.matches("^[A-Za-z]+[.]{0,1} and {1}[A-Za-z]+[.]{0,1}[/ .][0-9]{4}$"))
+		    boolean isDisjunctFlag = false;
+		    if ( verbatimEventDate.matches("^[A-Za-z]+[.]{0,1}( and | et | & ){1}[A-Za-z]+[.]{0,1}[/ .][0-9]{4}$"))
 		    { 
 		    	// replace and with dash
 			    verbatimEventDate = verbatimEventDate.replace(" and ", "-");
+			    verbatimEventDate = verbatimEventDate.replace(" et ", "-");
+			    verbatimEventDate = verbatimEventDate.replace(" & ", "-");
 			   logger.debug(verbatimEventDate);
+			   isDisjunctFlag = true;
 		    }		
 		    if ( verbatimEventDate.matches("^[A-Za-z]+[.]{0,1} to {1}[A-Za-z]+[.]{0,1}[/ .][0-9]{4}$"))
 		    { 
@@ -1566,18 +1609,42 @@ public class DateUtils {
 					String endBit = "01-" + cleanMonth(bits[1]).replace("./", "/");              // e.g.  Feb/1882 ->  01-Feb/1882
 					logger.debug(startBit);
 					logger.debug(endBit);
-					
+
 					Iterator<DateTimeFormatter> i = formatters.iterator();
 					boolean matched = false;
 					while (i.hasNext() && !matched) {
 						try { 
 							DateTimeFormatter formatter = i.next();
 							LocalDate parseStartDate = LocalDate.parse(startBit,formatter);
-							LocalDate parseEndDate = LocalDate.parse(endBit,formatter);
-							resultDate =  parseStartDate.format(DateTimeFormatter.ofPattern("yyyy-MM")) + "/" + parseEndDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
-							logger.debug(resultDate);
-							result.setResultState(EventResult.EventQCResultState.RANGE);
-							result.setResult(resultDate);
+							Iterator<DateTimeFormatter> iend = formatters.iterator();
+							boolean matchedend = false;
+							while (iend.hasNext() && !matchedend) {
+								try { 
+									formatter = iend.next();
+									LocalDate parseEndDate = LocalDate.parse(endBit,formatter);
+									resultDate =  parseStartDate.format(DateTimeFormatter.ofPattern("yyyy-MM")) + "/" + parseEndDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+									logger.debug(resultDate);
+									result.setResultState(EventResult.EventQCResultState.RANGE);
+									result.setResult(resultDate);
+									if (isDisjunctFlag) {
+										try {
+											// check to see if the date represents two adjacent months, if so, range
+											LocalDateInterval range = new LocalDateInterval(result.getResult());
+											if (range.getStart().getMonthValue()+1==range.getEnd().getMonthValue() 
+													&& range.getStart().getYear()==range.getEnd().getYear()) 
+											{ 
+												result.setResultState(EventResult.EventQCResultState.RANGE);
+											}  else { 
+												result.setResultState(EventResult.EventQCResultState.DISJUNCT_RANGE);
+											}
+										} catch (DateTimeParseException | EmptyDateException e) {
+											logger.error(e.getMessage());
+										}
+									}
+								} catch (Exception e) { 
+									logger.debug(e.getMessage());
+								}
+							}
 							matched = true;
 						} catch (Exception e) { 
 							logger.debug(e.getMessage());
@@ -1635,12 +1702,23 @@ public class DateUtils {
 						try { 
 							DateTimeFormatter formatter = i.next();
 							LocalDate parseStartDate = LocalDate.parse(startBit,formatter);
-							LocalDate parseEndDate = LocalDate.parse(endBit,formatter);
-							resultDate =  parseStartDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + 
-									"/" + parseEndDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-							logger.debug(resultDate);
-							result.setResultState(EventResult.EventQCResultState.RANGE);
-							result.setResult(resultDate);
+							Iterator<DateTimeFormatter> iend = formatters.iterator();
+							boolean matchedend = false;
+							while (iend.hasNext() && !matchedend) {
+								formatter = iend.next();
+								try { 
+									LocalDate parseEndDate = LocalDate.parse(endBit,formatter);
+									resultDate =  parseStartDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + 
+											"/" + parseEndDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+									logger.debug(resultDate);
+									result.setResultState(EventResult.EventQCResultState.RANGE);
+									result.setResult(resultDate);
+									matchedend = true;
+								} catch (Exception e) { 	
+									logger.debug(e.getMessage());
+								}
+							}
+							matched = true;
 						} catch (Exception e) { 	
 							logger.debug(e.getMessage());
 						}
@@ -2303,90 +2381,66 @@ public class DateUtils {
      */
     public static boolean isConsistent(String eventDate, String year, String month, String day) {
     	boolean result = false;
-    	
+
     	if (DateUtils.isEmpty(eventDate) && DateUtils.isEmpty(year) && DateUtils.isEmpty(month) && DateUtils.isEmpty(day)) {
+    		// no values to compare
+    		result = true;
+    	} else if (isEmpty(eventDate)) {
+    		// no event date to make comarison with
     		result = true;
     	} else { 
     		LocalDateInterval test = extractInterval(eventDate);
     		logger.debug(test.toString());
     		if (test!=null) {
     			LocalDate start = test.getStartDate();
-    			try { 
-    				if (!DateUtils.isEmpty(year)) {
-    					if (start.getYear()==Integer.parseInt(year)) { 
-    						if (DateUtils.isEmpty(month)) { 
-    							if (DateUtils.isEmpty(day)) { 
-    								result = true;
-    							}
-    						} else { 
-    							if (start.getMonthValue()==Integer.parseInt(month)) { 
-    								if (DateUtils.isEmpty(day)) {
-    									result = true;
-    								} else {
-    									if (start.getDayOfMonth()==Integer.parseInt(day)) {
-    										result = true;
-    									}
-    								}
-    							}
-    						}
-    					}
+    			boolean anyFails = false;
+    			Integer dayBit = null;
+    			if (!isEmpty(day)) { 
+    				try { 
+    					dayBit = Integer.parseInt(day);
+    				} catch (NumberFormatException e) { 
+    					anyFails = true;
     				}
-    			} catch (NumberFormatException e) { 
+    			}
+    			Integer monthBit = null;
+    			if (!isEmpty(month)) { 
+    				try { 
+    					monthBit = Integer.parseInt(month);
+    				} catch (NumberFormatException e) { 
+    					anyFails = true;
+    				}
+    			}
+    			Integer yearBit = null;
+    			if (!isEmpty(year)) { 
+    				try { 
+    					yearBit = Integer.parseInt(year);
+    				} catch (NumberFormatException e) { 
+    					anyFails = true;
+    				}
+    			}
+    			if (!DateUtils.isEmpty(year) && yearBit!=null) {
+    				if (start.getYear()!=yearBit) { 
+    					anyFails = true;
+    				}
+    			}
+    			if (!DateUtils.isEmpty(month) && monthBit!=null) { 
+    				if (start.getMonthValue()!=monthBit) { 
+    					anyFails = true;
+    				}
+    			}
+    			if (!DateUtils.isEmpty(day) && dayBit!=null) {
+    				if (start.getDayOfMonth()!=dayBit) { 
+    					anyFails = true;
+    				}
+    			}
+    			if (anyFails) { 
     				result = false;
+    			} else { 
+    				result = true;
     			}
     		}
     	}
     	
-/*    	
-    	StringBuffer date = new StringBuffer();
-    	if (!isEmpty(year)) { year = StringUtils.leftPad(year,4,"0"); } 
-    	if (!isEmpty(month)) { month = StringUtils.leftPad(month,2,"0"); } 
-    	if (!isEmpty(day)) { day = StringUtils.leftPad(day,2,"0"); } 
-    	if (!isEmpty(eventDate)) {
-    		if (!isEmpty(year) && !isEmpty(month) && !isEmpty(day)) { 
-    			date.append(year).append("-").append(month).append("-").append(day);
-    			if (!isRange(eventDate)) { 
-    				LocalDate eventDateDate = extractDate(eventDate);
-    				LocalDate bitsDate = extractDate(date.toString());
-    				if (eventDateDate!=null && bitsDate !=null) { 
-    					if (eventDateDate.getYear().compareTo(bitsDate)==0 && eventDateDate.monthOfYear().compareTo(bitsDate)==0 && eventDateDate.dayOfMonth().compareTo(bitsDate)==0) {
-    						result = true;   
-    					}	   
-    				}
-    			} else {
-    				Interval eventDateDate = extractDateInterval(eventDate);
-    				DateMidnight bitsDate = extractDate(date.toString());
-    				if (eventDateDate!=null && bitsDate !=null) { 
-    					if (eventDateDate.getStart().year().compareTo(bitsDate)==0 && eventDateDate.getStart().monthOfYear().compareTo(bitsDate)==0 && eventDateDate.getStart().dayOfMonth().compareTo(bitsDate)==0) {
-    						result = true;   
-    					}	   
-    				}    				
-    				
-    			}
-    		}
-    		if (!isEmpty(year) && !isEmpty(month) && isEmpty(day)) { 
-    			date.append(year).append("-").append(month);
-    			Interval eventDateInterval = extractDateInterval(eventDate);
-    			Interval bitsInterval = extractDateInterval(date.toString());
-    			if (eventDateInterval.equals(bitsInterval)) {
-    				result = true;
-    			}
-    		}    	
-    		if (!isEmpty(year) && isEmpty(month) && isEmpty(day)) { 
-    			date.append(year);
-    			Interval eventDateInterval = extractDateInterval(eventDate);
-    			Interval bitsInterval = extractDateInterval(date.toString());
-    			if (eventDateInterval.equals(bitsInterval)) {
-    				result = true;
-    			}
-    		}    		
-    	} else { 
-    		if (isEmpty(year) && isEmpty(month) && isEmpty(day)) {
-    			// eventDate, year, month, and day are all empty, treat as consistent.
-    			result = true;
-    		}
-    	}
-*/    	
         return result;
     }
     
@@ -2418,55 +2472,81 @@ public class DateUtils {
      */
     public static boolean containsTime(String eventDate) {
     	boolean result = false;
-/*    	
+    	
     	if (!isEmpty(eventDate)) { 
     		if (eventDate.endsWith("UTC")) { eventDate = eventDate.replace("UTC", "Z"); } 
-    		DateTimeParser[] parsers = { 
-    				ISODateTimeFormat.dateHour().getParser(),
-    				ISODateTimeFormat.dateTimeParser().getParser(),
-    				ISODateTimeFormat.dateHourMinute().getParser(),
-    				ISODateTimeFormat.dateHourMinuteSecond().getParser(),
-    				ISODateTimeFormat.dateTime().getParser() 
-    		};
-    		DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
-    		if (eventDate.matches("^[0-9]{4}[-][0-9]{2}[-][0-9]{2}[Tt].+")) { 
-    			try { 
-    				LocalDate match = LocalDate.parse(eventDate, formatter);
-    				result = true;
-    				logger.debug(match);
-    			} catch (Exception e) { 
-    				// not a date with a time
-    				logger.error(e.getMessage());
-    			}    		
-    		}
-    		if (isRange(eventDate) && eventDate.contains("/") && !result) { 
-    			String[] bits = eventDate.split("/");
-    			if (bits!=null && bits.length>1) { 
-    				// does either start or end date contain a time?
-    				if (bits[0].matches("^[0-9]{4}[-][0-9]{2}[-][0-9]{2}[Tt].+")) { 
-    					try { 
-    						LocalDate match = LocalDate.parse(bits[0], formatter);
-    						result = true;
-    						logger.debug(match);
-    					} catch (Exception e) { 
-    						// not a date with a time
-    						logger.error(e.getMessage());
-    					}     
-    				}
-    				if (bits[1].matches("^[0-9]{4}[-][0-9]{2}[-][0-9]{2}[Tt].+")) { 
-    					try { 
-    						LocalDate match = LocalDate.parse(bits[1], formatter);
-    						result = true;
-    						logger.debug(match);
-    					} catch (Exception e) { 
-    						// not a date with a time
-    						logger.error(e.getMessage());
-    					}     	  
-    				}
-    			}
-    		}
+			logger.debug(eventDate);
+    		
+			List<DateTimeFormatter> formatters = new ArrayList<DateTimeFormatter>();
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'-'MM'-'dd'T'H").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'-'MM'-'dd'T'H[VV][x]").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'-'MM'-'dd'T'H':'m[VV][x]").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'-'MM'-'dd'T'H':'m':'s['.'S][VV][x]").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'-'MM'-'dd'T'H':'m':'s['.'S][VV][x]").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			//1905-04-08T01:02:03.004Z
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'-'MM'-'dd'T'H':'m':'s'.'SSS[VV][x]").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+
+			Iterator<DateTimeFormatter> i = formatters.iterator();
+			boolean matched = false;
+			while (i.hasNext() && !matched) {
+				DateTimeFormatter formatter = i.next();
+				//logger.debug(formatter.toString());
+				try { 
+		    		if (eventDate.matches("^[0-9]{4}[-][0-9]{2}[-][0-9]{2}[Tt].+")) { 
+		    			try { 
+		    				LocalDate match = LocalDate.parse(eventDate, formatter);
+		    				result = true;
+		    				logger.debug(match);
+		    			} catch (Exception e) { 
+		    				// not a date with a time
+		    				logger.error(e.getMessage());
+		    			}    		
+		    		}
+		    		if (isRange(eventDate) && eventDate.contains("/") && !result) { 
+		    			String[] bits = eventDate.split("/");
+		    			if (bits!=null && bits.length>1) { 
+		    				// does either start or end date contain a time?
+		    				if (bits[0].matches("^[0-9]{4}[-][0-9]{2}[-][0-9]{2}[Tt].+")) { 
+		    					try { 
+		    						LocalDate match = LocalDate.parse(bits[0], formatter);
+		    						result = true;
+		    						logger.debug(match);
+		    					} catch (Exception e) { 
+		    						// not a date with a time
+		    						logger.error(e.getMessage());
+		    					}     
+		    				}
+		    				if (bits[1].matches("^[0-9]{4}[-][0-9]{2}[-][0-9]{2}[Tt].+")) { 
+		    					try { 
+		    						LocalDate match = LocalDate.parse(bits[1], formatter);
+		    						result = true;
+		    						logger.debug(match);
+		    					} catch (Exception e) { 
+		    						// not a date with a time
+		    						logger.error(e.getMessage());
+		    					}     	  
+		    				}
+		    			}
+		    		}
+				} catch (Exception e) { 
+					logger.debug(e.getMessage());
+				}
+			}
+    		
+
     	}
-*/
     	return result;
     }
     
@@ -2478,52 +2558,122 @@ public class DateUtils {
      */
     public static String extractZuluTime(String eventDate) {
     	String result = null;
-/*    	
+    	boolean hasResult = false;
+    	
     	if (!isEmpty(eventDate)) { 
     		if (eventDate.endsWith("UTC")) { eventDate = eventDate.replace("UTC", "Z"); } 
-    		DateTimeParser[] parsers = { 
-    				ISODateTimeFormat.dateHour().getParser(),
-    				ISODateTimeFormat.dateTimeParser().getParser(),
-    				ISODateTimeFormat.dateHourMinute().getParser(),
-    				ISODateTimeFormat.dateHourMinuteSecond().getParser(),
-    				ISODateTimeFormat.dateTime().getParser() 
-    		};
-    		DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
-    		if (eventDate.matches("^[0-9]{4}[-][0-9]{2}[-][0-9]{2}[Tt].+")) { 
-    			try { 
-    	    		result = instantToStringTime(Instant.parse(eventDate, formatter));
-    				logger.debug(result);
-    			} catch (Exception e) { 
-    				// not a date with a time
-    				logger.debug(e.getMessage());
-    			}    		
-    		}
-    		if (isRange(eventDate) && eventDate.contains("/") && result!=null) { 
-    			String[] bits = eventDate.split("/");
-    			if (bits!=null && bits.length>1) { 
-    				// does either start or end date contain a time?
-    				if (bits[0].matches("^[0-9]{4}[-][0-9]{2}[-][0-9]{2}[Tt].+")) { 
-    					try { 
-    	    				result = instantToStringTime(Instant.parse(bits[0], formatter));
-    						logger.debug(result);
-    					} catch (Exception e) { 
-    						// not a date with a time
-    						logger.error(e.getMessage());
-    					}     
-    				}
-    				if (bits[1].matches("^[0-9]{4}[-][0-9]{2}[-][0-9]{2}[Tt].+") && result!=null) { 
-    					try { 
-    	    				result = instantToStringTime(Instant.parse(bits[1], formatter));
-    	    				logger.debug(result);
-    					} catch (Exception e) { 
-    						// not a date with a time
-    						logger.error(e.getMessage());
-    					}     	  
-    				}
-    			}
-    		}
-    	}
-*/    	
+			logger.debug(eventDate);
+    		
+			List<DateTimeFormatter> formatters = new ArrayList<DateTimeFormatter>();
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ISO_OFFSET_DATE_TIME.withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ISO_ZONED_DATE_TIME.withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'-'MM'-'dd'T'H").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'-'MM'-'dd'T'Hx").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'-'MM'-'dd'T'Hxx").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'-'MM'-'dd'T'Hxxx").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'-'MM'-'dd'T'HX").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'-'MM'-'dd'T'HXX").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'-'MM'-'dd'T'HXXX").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));			
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'-'MM'-'dd'T'H[VV][xx]").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'-'MM'-'dd'T'H':'m[VV][xx]").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'-'MM'-'dd'T'H':'m':'s['.'S][VV][xx]").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'-'MM'-'dd'T'H':'m':'s['.'S][VV][xx]").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			//1905-04-08T01:02:03.004Z
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'-'MM'-'dd'T'H':'m':'s'.'SSSSSSSS[VV][xx]").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			//1905-04-08T08:32:16-05:00
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'-'MM'-'dd'T'H':'m':'sx").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'-'MM'-'dd'T'H':'m':'sxx").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'-'MM'-'dd'T'H':'m':'sxxx").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+
+			Iterator<DateTimeFormatter> i = formatters.iterator();
+			boolean matched = false;
+			while (i.hasNext() && !matched && !hasResult) {
+				DateTimeFormatter formatter = i.next();
+				logger.debug(formatter.toString());
+				try { 
+		    		if (eventDate.matches("^[0-9]{4}[-][0-9]{2}[-][0-9]{2}[Tt].+")) { 
+		    			try { 
+		    				ZonedDateTime match = ZonedDateTime.parse(eventDate, formatter);
+		    				logger.debug(match);
+		    				try { 
+		    					result = match.withZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("HH':'mm':'ss'.'SSSVV"));
+		    				} catch (Exception e) { 
+		    					result = match.withZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_OFFSET_TIME);
+		    					logger.debug(result);
+		    				}
+		    				hasResult = true;
+		    			} catch (Exception e) { 
+		    				// not parsed as date with a time
+		    				logger.error(e.getMessage());
+		    			}    		
+		    		}
+		    		if (isRange(eventDate) && eventDate.contains("/") && !hasResult) { 
+		    			String[] bits = eventDate.split("/");
+		    			if (bits!=null && bits.length>1) { 
+		    				// does either start or end date contain a time?
+		    				if (bits[0].matches("^[0-9]{4}[-][0-9]{2}[-][0-9]{2}[Tt].+")) { 
+		    					try { 
+		    						LocalDateTime match = LocalDateTime.parse(bits[0], formatter);
+		    						result = match.format(DateTimeFormatter.ISO_TIME);
+		    						hasResult = true;
+		    						logger.debug(match);
+		    					} catch (Exception e) { 
+		    						// not a date with a time
+		    						logger.error(e.getMessage());
+		    					}     
+		    				}
+		    				if (bits[1].matches("^[0-9]{4}[-][0-9]{2}[-][0-9]{2}[Tt].+")) { 
+		    					try { 
+		    						LocalDateTime match = LocalDateTime.parse(bits[1], formatter);
+		    						result = match.format(DateTimeFormatter.ISO_TIME);
+		    						hasResult = true;
+		    						logger.debug(match);
+		    					} catch (Exception e) { 
+		    						// not a date with a time
+		    						logger.error(e.getMessage());
+		    					}     	  
+		    				}
+		    			}
+		    		}
+				} catch (Exception e) { 
+					logger.debug(e.getMessage());
+				}
+			}
+    	}   	
     	return result;
     }    
     
@@ -2775,6 +2925,18 @@ public class DateUtils {
     		cleaned = cleaned.replace("FEB", "Feb");
     		cleaned = cleaned.replace("JAN", "Jan");	 
     		
+    		cleaned = cleaned.replace("dec ", "Dec ");
+    		cleaned = cleaned.replace("nov ", "Nov ");
+    		cleaned = cleaned.replace("oct ", "Oct ");
+    		cleaned = cleaned.replace("sep ", "Sep ");
+    		cleaned = cleaned.replace("aug ", "Aug ");
+    		cleaned = cleaned.replace("jul ", "Jul ");
+    		cleaned = cleaned.replace("jun ", "Jun ");
+    		cleaned = cleaned.replace("apr ", "Apr ");
+    		cleaned = cleaned.replace("mar ", "Mar ");
+    		cleaned = cleaned.replace("feb ", "Feb ");
+    		cleaned = cleaned.replace("jan ", "Jan ");
+    		
     		cleaned = cleaned.replace("dECEMBER", "December");
     		cleaned = cleaned.replace("nOVEMBER", "November");
     		cleaned = cleaned.replace("oCTOBER", "October");
@@ -2790,6 +2952,7 @@ public class DateUtils {
             // uncommon abbreviations
     		cleaned = cleaned.replace("Mrch", "March");
     		cleaned = cleaned.replace("Jnry", "January");
+    		cleaned = cleaned.replace("Februar", "February");
     		
     		// Italian months are lower case, if capitalized, skip a step and go right to english.
     		cleaned = cleaned.replace("Dicembre", "December");
