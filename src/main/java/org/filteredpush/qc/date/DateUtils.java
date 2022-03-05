@@ -1081,18 +1081,18 @@ public class DateUtils {
 			formatters.add(new DateTimeFormatterBuilder()
 					.append(DateTimeFormatter.ofPattern("dd'-'MM'-'uuuu").withLocale(Locale.ENGLISH))
 					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			String cleaned = verbatimEventDate.replace("/","-").replace(".", "-").replace(" ", "-").replace("--", "-").replace(",","");
+			cleaned = cleaned.replace("XX-XX-", "01-01-");
+			cleaned = cleaned.replace("XX-XXX-", "01-01-");
+			cleaned = cleaned.replace("XXX-XX-", "01-01-");
+			cleaned = cleaned.replace("**-**-", "01-01-");
+			cleaned = cleaned.replace("**-***-", "01-01-");
+			cleaned = cleaned.replace("***-**-", "01-01-");
 
 			Iterator<DateTimeFormatter> i = formatters.iterator();
 			boolean matched = false;
 			while (i.hasNext() && !matched) {
 				try { 
-					String cleaned = verbatimEventDate.replace("/","-").replace(".", "-").replace(" ", "-").replace("--", "-").replace(",","");
-					cleaned = cleaned.replace("XX-XX-", "01-01-");
-					cleaned = cleaned.replace("XX-XXX-", "01-01-");
-					cleaned = cleaned.replace("XXX-XX-", "01-01-");
-					cleaned = cleaned.replace("**-**-", "01-01-");
-					cleaned = cleaned.replace("**-***-", "01-01-");
-					cleaned = cleaned.replace("***-**-", "01-01-");
 					LocalDate parseDate = LocalDate.parse(cleaned, i.next());
 					resultDate = parseDate.format(DateTimeFormatter.ofPattern("yyyy"));
 					logger.debug(resultDate);
@@ -2005,8 +2005,43 @@ public class DateUtils {
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
 			}			
-		}		
+		}	
 		
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
+				verbatimEventDate.matches("^[1-2][07-9] [0-9]{1,2}/([0-9]{1,2}|[IVXivx]{1,4}) [0-9]{2}$")) 
+		{ 
+			// See: Day/month between century and year, from "Date Format" thread
+	    	//  on NHCOLL started by Paul Callomon
+			// Example: 19 3/viii 25
+			// 18 25/7 73
+			// 18 12/7 96
+			String cleaned = verbatimEventDate;
+			cleaned = cleaned.substring(3,cleaned.length()-3) + "/" + cleaned.substring(0,2) + cleaned.substring(cleaned.length()-2);
+			cleaned = cleanMonth(cleaned);
+			logger.debug(cleaned);
+			List<DateTimeFormatter> formatters = new ArrayList<DateTimeFormatter>();
+			formatters.add(new DateTimeFormatterBuilder()
+				.append(DateTimeFormatter.ofPattern("d'/'M'/'uuuu").withLocale(Locale.ENGLISH))
+				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+				.append(DateTimeFormatter.ofPattern("d'/'LLLL'/'uuuu").withLocale(Locale.ENGLISH))
+				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			Iterator<DateTimeFormatter> i = formatters.iterator();
+			boolean matched = false;
+			while (i.hasNext() && !matched) {
+				try { 
+					LocalDate parseDate = LocalDate.parse(cleaned, i.next());
+					resultDate = parseDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+					logger.debug(resultDate);
+					result.setResultState(EventResult.EventQCResultState.DATE);
+					result.setResult(resultDate);
+					matched = true;
+				} catch (Exception e) { 
+					logger.debug(e.getMessage());
+				}
+			}	
+			
+		}
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) && 
 				verbatimEventDate.matches("^[0-9]{4}-[0-9]{2}/[0-9]{4}-[0-9]{2}$")
 			) {
@@ -2125,14 +2160,23 @@ public class DateUtils {
 		// Now test to see if result is sane.
 		if (result!=null && !result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) {
 			LocalDateInterval testExtract = DateUtils.extractDateInterval(result.getResult());
-			if(testExtract==null || testExtract.getStart().getYear()< yearsBeforeSuspect) { 
+			if(testExtract==null || testExtract.getStart().getYear()< yearsBeforeSuspect) {
+				// parsed start year was before the yearsBeforeSuspect value. 
 				result.setResultState(EventResult.EventQCResultState.SUSPECT);
 				logger.debug(result.getResult());
 				logger.debug(testExtract);
 			} else { 
+				// parsed start year was equal to or after the yearsBeforeSuspect value. 
 				logger.debug(result.getResult());
 			}
-			if (!verbatimEventDate.matches(".*[0-9]{4}.*") && yearsBeforeSuspect>999) { 
+			// check that a 4 digit year is present, if years before suspect is > 999,
+			// excepting the one yy dd/mm yy case where yyyy is split.
+			if (!verbatimEventDate.matches(".*[0-9]{4}.*")
+					&& !verbatimEventDate.matches("^[1-2][07-9] [0-9]{1,2}/([0-9]{1,2}|[IVXivx]{1,4}) [0-9]{2}$")
+					&& yearsBeforeSuspect>999) 
+			{ 
+				// there should be a 4 digit year present, but none is, yet a result was found,
+				// assume this is in error and return a NOT_RUN result.
 				result = new EventResult();
 				logger.debug(result.getResult());
 			}
