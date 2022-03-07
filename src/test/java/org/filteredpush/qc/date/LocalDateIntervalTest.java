@@ -166,6 +166,37 @@ public class LocalDateIntervalTest {
 		} catch (EmptyDateException e) {
 			fail(e.getMessage());
 		}	
+		date = "1963-03-08T4";  // invalid time part, hours must have two digits.
+		try {
+			instance = new LocalDateInterval(date);
+			fail("Should have failed with parse exception, invalidly formatted time part of date.");
+		} catch (DateTimeParseException e) {
+			logger.debug(e.getMessage());
+		} catch (EmptyDateException e) {
+			fail(e.getMessage());
+		}
+		try {
+			instance = new LocalDateInterval(((String)null));
+			fail("EmptyDateException should have been thrown");
+		} catch (EmptyDateException e) {
+			assertEquals(e.getClass(), EmptyDateException.class);
+		}
+		date = "1963-03-08T04";  // valid time part, hours must have two digits.
+		try {
+			instance = new LocalDateInterval(date);
+			assertEquals(1963, instance.getStartDate().getYear());
+			assertEquals(3, instance.getStartDate().getMonthValue());
+			assertEquals(8, instance.getStartDate().getDayOfMonth());
+			assertEquals(IsoEra.CE, instance.getStart().getEra());
+			assertEquals(1963, instance.getEndDate().getYear());
+			assertEquals(3, instance.getEndDate().getMonthValue());
+			assertEquals(8, instance.getEndDate().getDayOfMonth());
+			assertEquals(IsoEra.CE, instance.getEnd().getEra());
+		} catch (DateTimeParseException e) {
+			fail(e.getMessage());
+		} catch (EmptyDateException e) {
+			fail(e.getMessage());
+		}
 		try {
 			instance = new LocalDateInterval(((String)null));
 			fail("EmptyDateException should have been thrown");

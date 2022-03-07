@@ -139,7 +139,7 @@ public class LocalDateInterval {
 
 	/**
 	 * Extract a pair of days, representing the start and end of the specified dateBit
-	 * ignoring time.
+	 * ignoring time, so long as it is correctly formatted.
 	 * 
 	 * @param dateBit a string representing a date or range of dates, without a / to parse
 	 * @return a date pair containing the start and end days of the range in dateBit, values are the
@@ -151,6 +151,45 @@ public class LocalDateInterval {
 			throw new EmptyDateException("Provided dateString value is empty");
 		} 
 		if (dateBit.contains("T")) { 
+			logger.debug(dateBit);
+			// but check first that the time is correctly formatted
+			List<DateTimeFormatter> formatters = new ArrayList<DateTimeFormatter>();
+			formatters.add(new DateTimeFormatterBuilder()
+				.append(DateTimeFormatter.ISO_DATE_TIME)
+				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+				.append(DateTimeFormatter.ISO_ZONED_DATE_TIME)
+				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+    			.append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+    			.append(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+    			.append(DateTimeFormatter.ofPattern("uuuu-MM-dd'T'kk"))
+				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+    			.append(DateTimeFormatter.ofPattern("uuuu-MM-dd'T'kk[VV][zz][X][xx][OOOO]"))
+				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+    			.append(DateTimeFormatter.ofPattern("uuuu-MM-dd'T'kk':'mm[VV][zz][X][xx][OOOO"))
+				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			Iterator<DateTimeFormatter> i = formatters.iterator();
+			boolean matched = false;
+			while (i.hasNext() && !matched) {
+				try { 
+					LocalDate startDateBit = LocalDate.parse(dateBit, i.next());
+					result = new DatePair(startDateBit, startDateBit);
+					matched = true;
+				} catch (Exception e) { 
+					logger.debug(e.getMessage());
+				}
+			}
+			if (!matched) { 
+				throw new DateTimeParseException("unable to parse provided dateString, error parsing time part", dateBit, 0);
+			} 
+			// extract just the date part to pass on for testing
 			dateBit = dateBit.substring(0,dateBit.indexOf("T"));
 		}
 		logger.debug(dateBit);
@@ -195,15 +234,6 @@ public class LocalDateInterval {
     			
     			formatters.add(new DateTimeFormatterBuilder()
     				.append(DateTimeFormatter.ISO_DATE)
-    				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
-    			formatters.add(new DateTimeFormatterBuilder()
-    				.append(DateTimeFormatter.ISO_DATE_TIME)
-    				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
-    			formatters.add(new DateTimeFormatterBuilder()
-        			.append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-    				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
-    			formatters.add(new DateTimeFormatterBuilder()
-        			.append(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
     				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
     			formatters.add(new DateTimeFormatterBuilder()
         			.append(DateTimeFormatter.BASIC_ISO_DATE)
