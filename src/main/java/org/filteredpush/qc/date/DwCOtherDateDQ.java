@@ -50,17 +50,15 @@ public class DwCOtherDateDQ {
      * @param dateIdentified the provided dwc:dateIdentified to evaluate
      * @return DQResponse the response of type ComplianceValue  to return
      */
-    @Provides("urn:uuid:66269bdd-9271-4e76-b25c-7ab81eebe1d8")
-    @Validation(label="VALIDATION_DATEIDENTIFIED_NOTSTANDARD",description="dateIdentified is in standard form")
-    @Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is EMPTY; COMPLIANT if the value of dwc:dateIdentified is a valid ISO 8601-1:2019 date; otherwise NOT_COMPLIANT")
+    @Provides("66269bdd-9271-4e76-b25c-7ab81eebe1d8")
     public static DQResponse<ComplianceValue> validationDateidentifiedNotstandard(@ActedUpon("dwc:dateIdentified") String dateIdentified) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
         // Specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is 
         // EMPTY; COMPLIANT if the value of dwc:dateIdentified is a 
-        // valid ISO 8601-1:2019 date; otherwise NOT_COMPLIANT 
-
+        // valid ISO 8601-1:2019 date; otherwise NOT_COMPLIANT
+        
     	if (DateUtils.isEmpty(dateIdentified)) {
     		result.addComment("No value provided for dwc:dateIdentified.");
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -91,7 +89,7 @@ public class DwCOtherDateDQ {
      * Provides: VALIDATION_DATEIDENTIFIED_OUTOFRANGE
      *
      * @param dateIdentified the provided dwc:dateIdentified to evaluate
-     * @param eventDate the provided dwc:eventDate to evaluate as containing dateIdentified
+     * @param eventDate the provided dwc:eventDate to evaluate as preceding dateIdentified
      * @return DQResponse the response of type ComplianceValue  to return
      */
     @Provides("dc8aae4b-134f-4d75-8a71-c4186239178e")
@@ -111,12 +109,12 @@ public class DwCOtherDateDQ {
      * Provides: VALIDATION_DATEIDENTIFIED_OUTOFRANGE
      *
      * @param dateIdentified the provided dwc:dateIdentified to evaluate
-     * @param eventDate the provided dwc:eventDate to evaluate as containing dateIdentified
+     * @param eventDate the provided dwc:eventDate to evaluate as preceding dateIdentified
      * @param earliestValidDate the earliest dateIdentified considered to be within range
 	 * @param latestValidDate the most recent dateIdentified considered to be within range
      * @return DQResponse the response of type ComplianceValue  to return
      */
-    @Provides("urn:uuid:dc8aae4b-134f-4d75-8a71-c4186239178e")
+    @Provides("dc8aae4b-134f-4d75-8a71-c4186239178e")
     public static DQResponse<ComplianceValue> validationDateidentifiedOutofrange(
 		@ActedUpon("dwc:dateIdentified") String dateIdentified,
 		@Consulted("dwc:eventDate") String eventDate, 
@@ -124,14 +122,15 @@ public class DwCOtherDateDQ {
 		@Parameter(name="bdq:latestValidDate") String latestValidDate
 	) {
 
-        // Specification (updated as of 2022 Feb 21)
-        // INTERNAL_PREREQUISITES_NOT_MET if any of these three conditions are met 
-        // (1) dwc:dateIdentified is EMPTY, (2) dwc:dateIdentified is not a valid 
-        // ISO 8601-1:2019 date, (3) dwc:eventDate is not EMPTY and is not a valid
-        // ISO 8601-1:2019 date; COMPLIANT if the value of dwc:dateIdentified is 
-        // within the parameter ranges and either (1) dwcEventDate is EMPTY or 
-        // (2) if dwc:eventDate is a valid ISO 8601-1:2019 date and dwc:dateIdentified 
-        // overlaps or follows the dwc:eventDate; otherwise NOT_COMPLIANT
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if any of these three conditions 
+        // are met (1) dwc:dateIdentified is EMPTY, (2) dwc:dateIdentified 
+        // is not a valid ISO 8601-1:2019 date, (3) dwc:eventDate is 
+        // not EMPTY and is not a valid ISO 8601-1:2019 date; COMPLIANT 
+        // if the value of dwc:dateIdentified is within the parameter 
+        // ranges and either (1) dwc:eventDate is EMPTY or (2) if dwc:eventDate 
+        // is a valid ISO 8601-1:2019 date and dwc:dateIdentified overlaps 
+        // or follows the dwc:eventDate; otherwise NOT_COMPLIANT 
 
         // Parameters. This test is defined as parameterized.
         // Default values: bdq:earliestVaidDate="1753-01-01"; bdq:latestValidDate=current day
@@ -234,9 +233,7 @@ public class DwCOtherDateDQ {
      * @param dateIdentified the provided dwc:dateIdentified to evaluate
      * @return DQResponse the response of type AmendmentValue to return
      */
-    @Provides("urn:uuid:39bb2280-1215-447b-9221-fd13bc990641")
-    @Amendment(label="AMENDMENT_DATEIDENTIFIED_STANDARDIZED",description="dateIdentified conformed to expected format")
-    @Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is EMPTY; AMENDED if the value of dwc:dateIdentified was altered to unambiguously conform with the ISO 8601-1:2019 date format; otherwise NOT_CHANGED") 
+    @Provides("39bb2280-1215-447b-9221-fd13bc990641")
     public static DQResponse<AmendmentValue> amendmentDateidentifiedStandardized(@ActedUpon("dwc:dateIdentified") String dateIdentified) {
         DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
 
@@ -245,7 +242,6 @@ public class DwCOtherDateDQ {
         // EMPTY; AMENDED if the value of dwc:dateIdentified was altered 
         // to unambiguously conform with the ISO 8601-1:2019 date format; 
         // otherwise NOT_AMENDED 
-        
 
 		if (DateUtils.eventDateValid(dateIdentified)) {
 			result.setResultState(ResultState.NOT_AMENDED);

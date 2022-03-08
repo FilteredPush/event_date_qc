@@ -47,7 +47,7 @@ public class DwCOtherDateDQTestDefinitions {
         // Specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is 
         // EMPTY; COMPLIANT if the value of dwc:dateIdentified is a 
-        // valid ISO 8601-1:2019 date; otherwise NOT_COMPLIANT 
+        // valid ISO 8601-1:2019 date; otherwise NOT_COMPLIANT
 		
 		String dateIdentified = "";
 		DQResponse<ComplianceValue> result = DwCOtherDateDQ.validationDateidentifiedNotstandard(dateIdentified);
@@ -70,13 +70,15 @@ public class DwCOtherDateDQTestDefinitions {
 
 	@Test
 	public void testValidationDateidentifiedOutofrangeStringString() {        
-		// Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is 
-        // EMPTY or is not a valid ISO 8601-1:2019 date, or if dwc:eventDate 
-        // is not EMPTY and is not a valid ISO 8601-1:2019 date; COMPLIANT 
-        // if the value of dwc:dateIdentified overlaps or follows the 
-        // dwc:eventDate, and is within the Parameter range; otherwise 
-        // NOT_COMPLIANT 
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if any of these three conditions 
+        // are met (1) dwc:dateIdentified is EMPTY, (2) dwc:dateIdentified 
+        // is not a valid ISO 8601-1:2019 date, (3) dwc:eventDate is 
+        // not EMPTY and is not a valid ISO 8601-1:2019 date; COMPLIANT 
+        // if the value of dwc:dateIdentified is within the parameter 
+        // ranges and either (1) dwc:eventDate is EMPTY or (2) if dwc:eventDate 
+        // is a valid ISO 8601-1:2019 date and dwc:dateIdentified overlaps 
+        // or follows the dwc:eventDate; otherwise NOT_COMPLIANT
 
         // Parameters. This test is defined as parameterized.
         // Default values: bdq:earliestVaidDate="1753-01-01"; bdq:latestValidDate=current day
@@ -152,13 +154,14 @@ public class DwCOtherDateDQTestDefinitions {
 	 */
 	public void testValidationDateidentifiedOutofrangeStringStringStringString() {
         // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if any of these three conditions are met 
-        // (1) dwc:dateIdentified is EMPTY, (2) dwc:dateIdentified is not a valid 
-        // ISO 8601-1:2019 date, (3) dwc:eventDate is not EMPTY and is not a valid
-        // ISO 8601-1:2019 date; COMPLIANT if the value of dwc:dateIdentified is 
-        // within the parameter ranges and either (1) dwcEventDate is EMPTY or 
-        // (2) if dwc:eventDate is a valid ISO 8601-1:2019 date and dwc:dateIdentified 
-        // overlaps or follows the dwc:eventDate; otherwise NOT_COMPLIANT
+        // INTERNAL_PREREQUISITES_NOT_MET if any of these three conditions 
+        // are met (1) dwc:dateIdentified is EMPTY, (2) dwc:dateIdentified 
+        // is not a valid ISO 8601-1:2019 date, (3) dwc:eventDate is 
+        // not EMPTY and is not a valid ISO 8601-1:2019 date; COMPLIANT 
+        // if the value of dwc:dateIdentified is within the parameter 
+        // ranges and either (1) dwc:eventDate is EMPTY or (2) if dwc:eventDate 
+        // is a valid ISO 8601-1:2019 date and dwc:dateIdentified overlaps 
+        // or follows the dwc:eventDate; otherwise NOT_COMPLIANT
 		
         // Parameters. This test is defined as parameterized.
         // Default values: bdq:earliestVaidDate="1753-01-01"; bdq:latestValidDate=current day
