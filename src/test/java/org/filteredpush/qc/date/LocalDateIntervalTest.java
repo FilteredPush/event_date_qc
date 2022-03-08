@@ -134,6 +134,30 @@ public class LocalDateIntervalTest {
 		} catch (EmptyDateException e) {
 			fail(e.getMessage());
 		}	
+		date = "1949-12-31T02/1951-05-06";  // time is checked for valid format, but ignored
+		try {
+			instance = new LocalDateInterval(date);
+			assertEquals(1949, instance.getStartDate().getYear());
+			assertEquals(12, instance.getStartDate().getMonthValue());
+			assertEquals(31, instance.getStartDate().getDayOfMonth());
+			assertEquals(1951, instance.getEndDate().getYear());
+			assertEquals(5, instance.getEndDate().getMonthValue());
+			assertEquals(6, instance.getEndDate().getDayOfMonth());
+		} catch (EmptyDateException e) {
+			fail(e.getMessage());
+		}			
+		date = "1949-12-31T02:02/1951-05-06T03:03"; // time is checked for valid format, but ingnored
+		try {
+			instance = new LocalDateInterval(date);
+			assertEquals(1949, instance.getStartDate().getYear());
+			assertEquals(12, instance.getStartDate().getMonthValue());
+			assertEquals(31, instance.getStartDate().getDayOfMonth());
+			assertEquals(1951, instance.getEndDate().getYear());
+			assertEquals(5, instance.getEndDate().getMonthValue());
+			assertEquals(6, instance.getEndDate().getDayOfMonth());
+		} catch (EmptyDateException e) {
+			fail(e.getMessage());
+		}	
 		date = "1880";
 		try {
 			instance = new LocalDateInterval(date);
@@ -146,6 +170,30 @@ public class LocalDateIntervalTest {
 		} catch (EmptyDateException e) {
 			fail(e.getMessage());
 		}	
+		date = "1880-02";   // Feb in leap year
+		try {
+			instance = new LocalDateInterval(date);
+			assertEquals(1880, instance.getStartDate().getYear());
+			assertEquals(2, instance.getStartDate().getMonthValue());
+			assertEquals(1, instance.getStartDate().getDayOfMonth());
+			assertEquals(1880, instance.getEndDate().getYear());
+			assertEquals(2, instance.getEndDate().getMonthValue());
+			assertEquals(29, instance.getEndDate().getDayOfMonth());
+		} catch (EmptyDateException e) {
+			fail(e.getMessage());
+		}	
+		date = "1881-02"; // Feb not in leap year
+		try {
+			instance = new LocalDateInterval(date);
+			assertEquals(1881, instance.getStartDate().getYear());
+			assertEquals(2, instance.getStartDate().getMonthValue());
+			assertEquals(1, instance.getStartDate().getDayOfMonth());
+			assertEquals(1881, instance.getEndDate().getYear());
+			assertEquals(2, instance.getEndDate().getMonthValue());
+			assertEquals(28, instance.getEndDate().getDayOfMonth());
+		} catch (EmptyDateException e) {
+			fail(e.getMessage());
+		}		
 		try {
 			instance = new LocalDateInterval(((String)null));
 			fail("EmptyDateException should have been thrown");
@@ -175,6 +223,15 @@ public class LocalDateIntervalTest {
 		} catch (EmptyDateException e) {
 			fail(e.getMessage());
 		}
+		date = "1963-03-08T04:2";  // invalid time part, minutes must have two digits.
+		try {
+			instance = new LocalDateInterval(date);
+			fail("Should have failed with parse exception, invalidly formatted time part of date.");
+		} catch (DateTimeParseException e) {
+			logger.debug(e.getMessage());
+		} catch (EmptyDateException e) {
+			fail(e.getMessage());
+		}		
 		try {
 			instance = new LocalDateInterval(((String)null));
 			fail("EmptyDateException should have been thrown");
@@ -197,6 +254,79 @@ public class LocalDateIntervalTest {
 		} catch (EmptyDateException e) {
 			fail(e.getMessage());
 		}
+		date = "1963-03-08T00:05";  // valid time part, starting at 00 hours
+		try {
+			instance = new LocalDateInterval(date);
+			assertEquals(1963, instance.getStartDate().getYear());
+			assertEquals(3, instance.getStartDate().getMonthValue());
+			assertEquals(8, instance.getStartDate().getDayOfMonth());
+			assertEquals(IsoEra.CE, instance.getStart().getEra());
+			assertEquals(1963, instance.getEndDate().getYear());
+			assertEquals(3, instance.getEndDate().getMonthValue());
+			assertEquals(8, instance.getEndDate().getDayOfMonth());
+			assertEquals(IsoEra.CE, instance.getEnd().getEra());
+		} catch (DateTimeParseException e) {
+			fail(e.getMessage());
+		} catch (EmptyDateException e) {
+			fail(e.getMessage());
+		}		
+		date = "1963-03-08T12.5";  // valid time part, ISO standard allows lowest part present to be fractional
+		try {
+			instance = new LocalDateInterval(date);
+			assertEquals(1963, instance.getStartDate().getYear());
+			assertEquals(3, instance.getStartDate().getMonthValue());
+			assertEquals(8, instance.getStartDate().getDayOfMonth());
+			assertEquals(IsoEra.CE, instance.getStart().getEra());
+			assertEquals(1963, instance.getEndDate().getYear());
+			assertEquals(3, instance.getEndDate().getMonthValue());
+			assertEquals(8, instance.getEndDate().getDayOfMonth());
+			assertEquals(IsoEra.CE, instance.getEnd().getEra());
+		} catch (DateTimeParseException e) {
+			fail(e.getMessage());
+		} catch (EmptyDateException e) {
+			fail(e.getMessage());
+		}	
+		date = "1963-03-08T12:10.5";  // valid time part, ISO standard allows lowest part present to be fractional
+		try {
+			instance = new LocalDateInterval(date);
+			assertEquals(1963, instance.getStartDate().getYear());
+			assertEquals(3, instance.getStartDate().getMonthValue());
+			assertEquals(8, instance.getStartDate().getDayOfMonth());
+			assertEquals(IsoEra.CE, instance.getStart().getEra());
+			assertEquals(1963, instance.getEndDate().getYear());
+			assertEquals(3, instance.getEndDate().getMonthValue());
+			assertEquals(8, instance.getEndDate().getDayOfMonth());
+			assertEquals(IsoEra.CE, instance.getEnd().getEra());
+		} catch (DateTimeParseException e) {
+			fail(e.getMessage());
+		} catch (EmptyDateException e) {
+			fail(e.getMessage());
+		}		
+		date = "63";  // invalid year, ISO standard requires years to be 4 digits with zero padding.
+		try {
+			instance = new LocalDateInterval(date);
+			fail("Should have failed with parse exception, invalidly formatted year.");
+		} catch (DateTimeParseException e) {
+			logger.debug(e.getMessage());
+		} catch (EmptyDateException e) {
+			fail(e.getMessage());
+		}
+		date = "0063";  // valid year
+		try {
+			instance = new LocalDateInterval(date);
+			assertEquals(63, instance.getStartDate().getYear());
+			assertEquals(1, instance.getStartDate().getMonthValue());
+			assertEquals(1, instance.getStartDate().getDayOfMonth());
+			assertEquals(IsoEra.CE, instance.getStart().getEra());
+			assertEquals(63, instance.getEndDate().getYear());
+			assertEquals(12, instance.getEndDate().getMonthValue());
+			assertEquals(31, instance.getEndDate().getDayOfMonth());
+			assertEquals(IsoEra.CE, instance.getEnd().getEra());
+		} catch (DateTimeParseException e) {
+			fail(e.getMessage());
+		} catch (EmptyDateException e) {
+			fail(e.getMessage());
+		}		
 		try {
 			instance = new LocalDateInterval(((String)null));
 			fail("EmptyDateException should have been thrown");

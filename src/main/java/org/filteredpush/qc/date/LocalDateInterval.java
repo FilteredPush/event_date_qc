@@ -139,7 +139,7 @@ public class LocalDateInterval {
 
 	/**
 	 * Extract a pair of days, representing the start and end of the specified dateBit
-	 * ignoring time, so long as it is correctly formatted.
+	 * ignoring time, so long the time part it is correctly formatted.
 	 * 
 	 * @param dateBit a string representing a date or range of dates, without a / to parse
 	 * @return a date pair containing the start and end days of the range in dateBit, values are the
@@ -149,7 +149,12 @@ public class LocalDateInterval {
 		DatePair result = null;
 		if (DateUtils.isEmpty(dateBit)) { 
 			throw new EmptyDateException("Provided dateString value is empty");
-		} 
+		}
+		if (dateBit.matches("^[0-9]{1,3}$")) { 
+			// Java.time ISO date parsers, even in strict mode, will parse 1, 2, and 3 digit years, but these are 
+			// invalid ISO dates, as the ISO standard requires the year to consist of at least 4 digits.
+			throw new DateTimeParseException("unable to parse provided dateString, year does not consist of 4 digits", dateBit, 0);
+		}
 		if (dateBit.contains("T")) { 
 			logger.debug(dateBit);
 			// but check first that the time is correctly formatted
@@ -166,6 +171,7 @@ public class LocalDateInterval {
 			formatters.add(new DateTimeFormatterBuilder()
     			.append(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
 				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			// The java.time parsers don't treat minutes and seconds as optional, add more parsers
 			formatters.add(new DateTimeFormatterBuilder()
     			.append(DateTimeFormatter.ofPattern("uuuu-MM-dd'T'kk"))
 				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
@@ -175,11 +181,37 @@ public class LocalDateInterval {
 			formatters.add(new DateTimeFormatterBuilder()
     			.append(DateTimeFormatter.ofPattern("uuuu-MM-dd'T'kk':'mm[VV][zz][X][xx][OOOO"))
 				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			// Because we will be ignoring the time part, other than checking for valid format
+			// try both kk (two digit clock hour of day 1-24 and HH hour of day 0-23
+			// to interpret time, we'd need to know which of these to use.
+			formatters.add(new DateTimeFormatterBuilder()
+    			.append(DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH"))
+				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+    			.append(DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH[VV][zz][X][xx][OOOO]"))
+				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+    			.append(DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH':'mm[VV][zz][X][xx][OOOO"))
+				.toFormatter().withResolverStyle(ResolverStyle.STRICT));
 			Iterator<DateTimeFormatter> i = formatters.iterator();
 			boolean matched = false;
+			String testMe = "";
+			// Handle valid cases of fractional lowest element present that java.time can't parse
+			if (dateBit.matches("^.*T[0-9]{2}[.,][0-9]+$")) { 
+				// Time represented a fractional hours will fail to parse, Java.time 
+				//  doesn't have a formatter for this valid ISO date/time form.
+				testMe = dateBit.replaceFirst("[.,][0-9]+$","");
+			} else if (dateBit.matches("^.*T[0-9]{2}:[0-9]{2}[.,][0-9]+$")) { 
+				// Time represented a fractional minutes will fail to parse, Java.time 
+				//  doesn't have a formatter for this valid ISO date/time form.
+				testMe = dateBit.replaceFirst("[.,][0-9]+$","");
+			} else { 
+				testMe = dateBit;
+			}
+			logger.debug(testMe);
 			while (i.hasNext() && !matched) {
 				try { 
-					LocalDate startDateBit = LocalDate.parse(dateBit, i.next());
+					LocalDate startDateBit = LocalDate.parse(testMe, i.next());
 					result = new DatePair(startDateBit, startDateBit);
 					matched = true;
 				} catch (Exception e) { 
