@@ -14,6 +14,90 @@ import org.datakurator.ffdq.api.result.*;
 public class DwCEventDQ_stubs {
 
 
+    
+    /**
+     * #26 Amendment SingleRecord Conformance: dateidentified standardized
+     *
+     * Provides: AMENDMENT_DATEIDENTIFIED_STANDARDIZED
+     *
+     * @param dateIdentified the provided dwc:dateIdentified to evaluate
+     * @return DQResponse the response of type AmendmentValue to return
+     */
+    @Provides("39bb2280-1215-447b-9221-fd13bc990641")
+    public DQResponse<AmendmentValue> amendmentDateidentifiedStandardized(@ActedUpon("dwc:dateIdentified") String dateIdentified) {
+        DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
+
+        //TODO:  Implement specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is 
+        // EMPTY; AMENDED if the value of dwc:dateIdentified was altered 
+        // to unambiguously conform with the ISO 8601-1:2019 date format; 
+        //otherwise NOT_AMENDED 
+
+        return result;
+    }
+
+    /**
+     * #33 Validation SingleRecord Completeness: eventdate empty
+     *
+     * Provides: VALIDATION_EVENTDATE_EMPTY
+     *
+     * @param eventDate the provided dwc:eventDate to evaluate
+     * @return DQResponse the response of type ComplianceValue  to return
+     */
+    @Provides("f51e15a6-a67d-4729-9c28-3766299d2985")
+    public DQResponse<ComplianceValue> validationEventdateEmpty(@ActedUpon("dwc:eventDate") String eventDate) {
+        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+
+        //TODO:  Implement specification
+        // COMPLIANT if dwc:eventDate is not EMPTY; otherwise NOT_COMPLIANT 
+        //
+
+        return result;
+    }
+
+    /**
+     * #36 Validation SingleRecord Conformance: eventdate outofrange
+     *
+     * Provides: VALIDATION_EVENTDATE_OUTOFRANGE
+     *
+     * @param eventDate the provided dwc:eventDate to evaluate
+     * @return DQResponse the response of type ComplianceValue  to return
+     */
+    @Provides("3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
+    public DQResponse<ComplianceValue> validationEventdateOutofrange(@ActedUpon("dwc:eventDate") String eventDate) {
+        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+
+        //TODO:  Implement specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
+        // or if the value of dwc:eventDate is not a valid ISO 8601-1:2019 
+        // date; COMPLIANT if the range of dwc:eventDate is entirely 
+        //within the parameter range, otherwise NOT_COMPLIANT 
+
+        //TODO: Parameters. This test is defined as parameterized.
+        // Default values: bdq:earliestValidDate="1600"; bdq:latestValidDate=current year
+
+        return result;
+    }
+
+    /**
+     * #49 Validation SingleRecord Completeness: year empty
+     *
+     * Provides: VALIDATION_YEAR_EMPTY
+     *
+     * @param year the provided dwc:year to evaluate
+     * @return DQResponse the response of type ComplianceValue  to return
+     */
+    @Provides("c09ecbf9-34e3-4f3e-b74a-8796af15e59f")
+    public DQResponse<ComplianceValue> validationYearEmpty(@ActedUpon("dwc:year") String year) {
+        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+
+        //TODO:  Implement specification
+        // COMPLIANT if dwc:year is not EMPTY; otherwise NOT_COMPLIANT 
+        //
+
+        return result;
+    }
+
     /**
      * #52 Amendment SingleRecord Completeness: event from eventdate
      *
@@ -122,6 +206,55 @@ public class DwCEventDQ_stubs {
     }
 
     /**
+     * #69 Validation SingleRecord Conformance: dateidentified notstandard
+     *
+     * Provides: VALIDATION_DATEIDENTIFIED_NOTSTANDARD
+     *
+     * @param dateIdentified the provided dwc:dateIdentified to evaluate
+     * @return DQResponse the response of type ComplianceValue  to return
+     */
+    @Provides("66269bdd-9271-4e76-b25c-7ab81eebe1d8")
+    public DQResponse<ComplianceValue> validationDateidentifiedNotstandard(@ActedUpon("dwc:dateIdentified") String dateIdentified) {
+        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+
+        //TODO:  Implement specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is 
+        // EMPTY; COMPLIANT if the value of dwc:dateIdentified is a 
+        //valid ISO 8601-1:2019 date; otherwise NOT_COMPLIANT 
+
+        return result;
+    }
+
+    /**
+     * #76 Validation SingleRecord Likelihood: dateidentified outofrange
+     *
+     * Provides: VALIDATION_DATEIDENTIFIED_OUTOFRANGE
+     *
+     * @param eventDate the provided dwc:eventDate to evaluate
+     * @param dateIdentified the provided dwc:dateIdentified to evaluate
+     * @return DQResponse the response of type ComplianceValue  to return
+     */
+    @Provides("dc8aae4b-134f-4d75-8a71-c4186239178e")
+    public DQResponse<ComplianceValue> validationDateidentifiedOutofrange(@ActedUpon("dwc:eventDate") String eventDate, @ActedUpon("dwc:dateIdentified") String dateIdentified) {
+        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+
+        //TODO:  Implement specification
+        // INTERNAL_PREREQUISITES_NOT_MET if any of these three conditions 
+        // are met (1) dwc:dateIdentified is EMPTY, (2) dwc:dateIdentified 
+        // is not a valid ISO 8601-1:2019 date, (3) dwc:eventDate is 
+        // not EMPTY and is not a valid ISO 8601-1:2019 date; COMPLIANT 
+        // if the value of dwc:dateIdentified is within the parameter 
+        // ranges and either (1) dwc:eventDate is EMPTY or (2) if dwc:eventDate 
+        // is a valid ISO 8601-1:2019 date and dwc:dateIdentified overlaps 
+        //or follows the dwc:eventDate; otherwise NOT_COMPLIANT 
+
+        //TODO: Parameters. This test is defined as parameterized.
+        // Default values: bdq:earliestVaidDate="1753-01-01"; bdq:latestValidDate=current day
+
+        return result;
+    }
+
+    /**
      * #84 Validation SingleRecord Conformance: year outofrange
      *
      * Provides: VALIDATION_YEAR_OUTOFRANGE
@@ -187,8 +320,9 @@ public class DwCEventDQ_stubs {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
         //TODO:  Implement specification
-        // COMPLIANT if at least one term needed to determine the event 
-        //date exists and is not EMPTY; otherwise NOT_COMPLIANT 
+        // COMPLIANT if any of dwc:eventDate, dwc:year, dwc:month, 
+        // dwc:day, dwc:startDayOfYear, dwc:endDayOfYear, dwc:verbatimEventDate 
+        //are NOT EMPTY; otherwise NOT_COMPLIANT. 
 
         return result;
     }
@@ -211,9 +345,9 @@ public class DwCEventDQ_stubs {
         //TODO:  Implement specification
         // INTERNAL _PREREQUISITES_NOT_MET if dwc:eventDate is not 
         // EMPTY or dwc:year is EMPTY or is uninterpretable as a valid 
-        // year; AMENDED if the value of dwc:eventDate was interpreted 
-        // from the values in dwc:year, dwc:month and dwc:day; otherwise 
-        //NOT_AMENDED 
+        // year; AMENDED if the value of dwc:eventDate was unambiguously 
+        // interpreted from the values in dwc:year, dwc:month and dwc:day; 
+        //otherwise NOT_AMENDED 
 
         return result;
     }
@@ -233,20 +367,24 @@ public class DwCEventDQ_stubs {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
         //TODO:  Implement specification
-        // INTERNAL_PREREQUISITES_NOT_MET if (a) dwc:day is EMPTY (b) 
-        // is not an integer, or (c) dwc:day is an integer between 
-        // 29 and 31 inclusive and dwc:month is not an integer between 
-        // 1 and 12, or (d) dwc:month is the integer 2 and dwc:day 
-        // is the integer 29 and dwc:year is not a valid ISO 8601 year; 
-        // COMPLIANT (a) if the value of the field dwc:day is an integer 
-        // between 1 and 28 inclusive, or (b) dwc:day is an integer 
-        // between 29 and 30 and dwc:month is an integer in the set 
-        // (4,6,9,11), or (c) dwc:day is an integer between 29 and 
-        // 31 and dwc:month is an integer in the set (1,3,5,7,8,10,12), 
-        // or (d) dwc:day is the integer 29 and dwc:month is the integer 
-        // 2 and dwc:year is a valid leap year (evenly divisible by 
-        // 400 or (evenly divisible by 4 but not evenly divisible by 
-        //100)); otherwise NOT_COMPLIANT. 
+        // INTERNAL_PREREQUISITES_NOT_MET if (a) dwc:day is EMPTY, 
+        // or (b) dwc:day is not interpretable as an integer, or (c) 
+        // dwc:day is interpretable as an integer between 29 and 31 
+        // inclusive and dwc:month is not interpretable as an integer 
+        // between 1 and 12, or (d) dwc:month is interpretable as the 
+        // integer 2 and dwc:day is interpretable as the integer 29 
+        // and dwc:year is not interpretable as a valid ISO 8601 year; 
+        // COMPLIANT if (a) the value of dwc:day is interpretable as 
+        // an integer between 1 and 28 inclusive, or (b) dwc:day is 
+        // interpretable as an integer between 29 and 30 and dwc:month 
+        // is interpretable as an integer in the set (4,6,9,11), or 
+        // (c) dwc:day is interpretable as an integer between 29 and 
+        // 31 and dwc:month is interpretable as an integer in the set 
+        // (1,3,5,7,8,10,12), or (d) dwc:day is interpretable as the 
+        // integer 29 and dwc:month is interpretable as the integer 
+        // 2 and dwc:year is interpretable as is a valid leap year 
+        // (evenly divisible by 400 or (evenly divisible by 4 but not 
+        //evenly divisible by 100)); otherwise NOT_COMPLIANT." 
 
         return result;
     }
@@ -265,8 +403,8 @@ public class DwCEventDQ_stubs {
 
         //TODO:  Implement specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:month is EMPTY; COMPLIANT 
-        // if the value of dwc:month is an integer between 1 and 12 
-        //inclusive; otherwise NOT_COMPLIANT 
+        // if the value of dwc:month is interpretable as an integer 
+        //between 1 and 12 inclusive; otherwise NOT_COMPLIANT 
 
         return result;
     }
@@ -285,8 +423,8 @@ public class DwCEventDQ_stubs {
 
         //TODO:  Implement specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; AMENDED 
-        // if the value of dwc:day was unambiguously interpreted to 
-        // be an integer between 1 and 31 inclusive; otherwise NOT_AMENDED 
+        // if the value of dwc:day was unambiguously interpreted as 
+        // an integer between 1 and 31 inclusive; otherwise NOT_AMENDED 
         //
 
         return result;
@@ -356,13 +494,12 @@ public class DwCEventDQ_stubs {
         //TODO:  Implement specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:endDayOfYear is EMPTY 
         // or if the value of dwc:endDayOfYear is equal to 366 and 
-        // (dwc:eventDate is EMPTY or the value of dwc:eventDate can 
-        // not be interpreted to find single year or an end year in 
-        // a range); COMPLIANT if the value of dwc:endDayOfYear is 
-        // an integer between 1 and 365 inclusive, or if the value 
-        // of dwc:endDayOfYear is 366 and the end year interpreted 
-        // from dwc:eventDate is a leap year; otherwise NOT_COMPLIANT 
-        //
+        // (dwc:eventDate is EMPTY or the value of dwc:eventDate cannot 
+        // be interpreted to find a single year or an end year in a 
+        // range); COMPLIANT if the value of dwc:endDayOfYear is an 
+        // integer between 1 and 365 inclusive, or if the value of 
+        // dwc:endDayOfYear is 366 and the end year interpreted from 
+        //dwc:eventDate is a leap year; otherwise NOT_COMPLIANT 
 
         return result;
     }
@@ -386,11 +523,52 @@ public class DwCEventDQ_stubs {
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate was not 
         // EMPTY or dwc:year was EMPTY or both dwc:startDayOfYear and 
         // dwc:endDayOfYear were EMPTY or the values were not interpretable; 
-        // AMENDED if the value of dwc:eventDate was FILLED_IN from 
-        // the values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear; 
-        //otherwise NOT_AMENDED 
+        // AMENDED if dwc:eventDate was FILLED_IN from the values in 
+        // dwc:year, dwc:startDayOfYear and dwc:endDayOfYear; otherwise 
+        //NOT_AMENDED 
 
         return result;
     }
-    
+
+    /**
+     * #140 Measure SingleRecord Resolution: eventdate precisioninseconds
+     *
+     * Provides: MEASURE_EVENTDATE_PRECISIONINSECONDS
+     *
+     * @param eventDate the provided dwc:eventDate to evaluate
+     * @return DQResponse the response of type NumericalValue  to return
+     */
+    @Provides("56b6c695-adf1-418e-95d2-da04cad7be53")
+    public DQResponse<NumericalValue> measureEventdatePrecisioninseconds(@ActedUpon("dwc:eventDate") String eventDate) {
+        DQResponse<NumericalValue> result = new DQResponse<NumericalValue>();
+
+        //TODO:  Implement specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
+        // or does not contain a valid ISO 8601-1:2019 date; otherwise 
+        // RUN_HAS_RESULT with the result value being the length of 
+        //the period expressed in the dwc:eventDate in seconds 
+
+        return result;
+    }
+
+    /**
+     * #147 Validation SingleRecord Conformance: day notstandard
+     *
+     * Provides: VALIDATION_DAY_NOTSTANDARD
+     *
+     * @param day the provided dwc:day to evaluate
+     * @return DQResponse the response of type ComplianceValue  to return
+     */
+    @Provides("47ff73ba-0028-4f79-9ce1-ee7008d66498")
+    public DQResponse<ComplianceValue> validationDayNotstandard(@ActedUpon("dwc:day") String day) {
+        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+
+        //TODO:  Implement specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; COMPLIANT 
+        // if the value of the field dwc:day is an integer between 
+        //1 and 31 inclusive; otherwise NOT_COMPLIANT. 
+
+        return result;
+    }
+
 }
