@@ -37,14 +37,18 @@ import java.util.Map;
 /**
  * Darwin Core Event eventDate related Data Quality Measures, Validations, and Enhancements. 
  *
- * Provides support for the following TDWG DQIG TG2 validations and amendments: 
+ * Provides support for the following TDWG DQIG TG2 measures: 
  *
- * MEASURE_EVENTDATE_PRECISIONINSECONDS urn:uuid:56b6c695-adf1-418e-95d2-da04cad7be53
+ * MEASURE_EVENTDATE_PRECISIONINSECONDS 56b6c695-adf1-418e-95d2-da04cad7be53
  * 
  * Provides support for the following TDWG DQIG TG2 validations and amendments 
- * TODO: Update: 
  * 
- * VALIDATION_DAY_NOTSTANDARD  47ff73ba-0028-4f79-9ce1-ee7008d66498
+ * VALIDATION_EVENTDATE_EMPTY f51e15a6-a67d-4729-9c28-3766299d2985
+ * VALIDATION_YEAR_EMPTY c09ecbf9-34e3-4f3e-b74a-8796af15e59f
+ * VALIDATION_DAY_NOTSTANDARD 47ff73ba-0028-4f79-9ce1-ee7008d66498
+ * VALIDATION_EVENTDATE_OUTOFRANGE 3cff4dc4-72e9-4abe-9bf3-8a30f1618432
+ * 
+ * TODO: Update: 
  * VALIDATION_DAY_OUTOFRANGE   5618f083-d55a-4ac2-92b5-b9fb227b832f   ** Differs
  * 
  * 
@@ -198,15 +202,15 @@ public class DwCEventDQ {
      * @return DQResponse the response of type NumericalValue  to return
 	 *   which if state is RUN_HAS_RESULT has a value of type Long.
      */
-    @Provides("urn:uuid:56b6c695-adf1-418e-95d2-da04cad7be53")
+    @Provides("56b6c695-adf1-418e-95d2-da04cad7be53")
     public static DQResponse<NumericalValue> measureEventdatePrecisioninseconds(@ActedUpon("dwc:eventDate") String eventDate) {
         DQResponse<NumericalValue> result = new DQResponse<NumericalValue>();
 
-        // Specification (updated as of 2022 Feb 21)
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or does not 
-        // contain a valid ISO 8601-1:2019 date; otherwise RUN_HAS_RESULT with the 
-        // result value being the length of the period expressed in the dwc:eventDate 
-        // in seconds
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or does not
+        // contain a valid ISO 8601-1:2019 date; otherwise RUN_HAS_RESULT with the
+        // result value being the length of the period expressed in the dwc:eventDate
+        // in seconds 
         
         // In notes, exclude leap seconds.  
         // The joda and java Time libraries exclude leap seconds.
@@ -229,14 +233,13 @@ public class DwCEventDQ {
 	}
 
 	/**
-	 * Measure the completeness of an event date.
+	 * Measure the completeness of an event date.   Non-Core.
 	 *
 	 * Provides: EVENT_DATE_COMPLETENESS
 	 *
 	 * @param eventDate to check if empty
 	 * @return EventDQMeasurement object, which if state is COMPLETE has a value of type Long.
 	 */
-
 	@Provides(value = "urn:uuid:0a59e03f-ebb5-4df3-a802-2e444de525b5")
 	@Measure(dimension = Dimension.COMPLETENESS, label = "EVENT_DATE_COMPLETENESS", description = "Measure the completeness of an event date.")
 	@Specification(value = "For values of dwc:eventDate, check is not empty.")
@@ -266,9 +269,7 @@ public class DwCEventDQ {
 	 * @param eventDate the provided dwc:eventDate to evaluate for emptyness
 	 * @return DQResponse the response of type ComplianceValue  to return
 	 */
-	@Provides("urn:uuid:f51e15a6-a67d-4729-9c28-3766299d2985")
-	@Validation( label = "VALIDATION_EVENTDATE_EMPTY", description="The field dwc:eventDate is not EMPTY")
-	@Specification(value="COMPLIANT if dwc:eventDate is not EMPTY; otherwise NOT_COMPLIANT")
+	@Provides("f51e15a6-a67d-4729-9c28-3766299d2985")
 	public static DQResponse<ComplianceValue> validationEventdateEmpty(@ActedUpon("dwc:eventDate") String eventDate) {
 		DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
@@ -295,9 +296,7 @@ public class DwCEventDQ {
      * @param year the provided dwc:year to evaluate for the presence of some value
      * @return DQVResponse of type ComplianceValue describing whether any value is present dwc:year.
 	 */
-	@Provides(value="urn:uuid:c09ecbf9-34e3-4f3e-b74a-8796af15e59f")
-    @Validation( label = "VALIDATION_YEAR_EMPTY", description="The field dwc:year is not EMPTY")
-    @Specification(value="The field dwc:year is not EMPTY The field dwc:year exists in the record.")
+	@Provides(value="c09ecbf9-34e3-4f3e-b74a-8796af15e59f")
 	public static DQResponse<ComplianceValue> validationYearEmpty(@ActedUpon(value = "dwc:year") String year) {
 		DQResponse<ComplianceValue> result = new DQResponse<>();
 
@@ -673,7 +672,7 @@ public class DwCEventDQ {
      * see DwCEventDQ.validationDayOutofrange(String year, String month, String day) 
 	 *  providing VALIDATION_DAY_OUTOFRANGE
      */
-    @Provides("urn:uuid:47ff73ba-0028-4f79-9ce1-ee7008d66498")
+    @Provides("47ff73ba-0028-4f79-9ce1-ee7008d66498")
     public static DQResponse<ComplianceValue> validationDayNotstandard(@ActedUpon("dwc:day") String day) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
@@ -1764,7 +1763,7 @@ public class DwCEventDQ {
      * @param eventDate the provided dwc:eventDate to evaluate
      * @return DQResponse the response of type ComplianceValue  to return
      */
-    @Provides("urn:uuid:3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
+    @Provides("3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
     public static DQResponse<ComplianceValue> validationEventdateOutofrange(@ActedUpon("dwc:eventDate") String eventDate) {
         // Specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
@@ -1794,7 +1793,7 @@ public class DwCEventDQ {
      * @param latestValidDate the  latest date for which eventDate can be valid
      * @return DQResponse the response of type ComplianceValue  to return
      */
-    @Provides("urn:uuid:3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
+    @Provides("3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
     public static DQResponse<ComplianceValue> validationEventdateOutofrange(@ActedUpon("dwc:eventDate") String eventDate, @Parameter(name="bdq:earliestValidDate") String earlyestValidDate, @Parameter(name="bdq:latestValidDate") String latestValidDate ) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
  
