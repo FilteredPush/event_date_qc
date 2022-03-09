@@ -1135,10 +1135,11 @@ public class DwCEventDQ {
      	    	   result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
      		       result.addComment("Unable to construct a valid ISO date from startDayOfYear [" + startDay + "], year ["+year+"], and endDayOfYear ["+ endDay +"].");
      	       } else {
-     	    	   result.setResultState(ResultState.FILLED_IN);
+     	    	   result.setResultState(ResultState.AMENDED);
      	    	   Map<String, String> values = new HashMap<>();
      	    	   values.put("dwc:eventDate", resultDateString);
      	    	   result.setValue(new AmendmentValue(values));
+     		       result.addComment("FILLED IN EMPTY dwc:eventDate from startDayOfYear [" + startDay + "], year ["+year+"], and endDayOfYear ["+ endDay +"].");
      	       }
 
      	    } catch (NumberFormatException e) {

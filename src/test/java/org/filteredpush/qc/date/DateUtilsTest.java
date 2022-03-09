@@ -62,7 +62,8 @@ public class DateUtilsTest {
 		assertEquals(false,DateUtils.stringIsISOFormattedDate("a"));
 		assertEquals(false,DateUtils.stringIsISOFormattedDate(" 1700"));
 		
-		assertEquals(true,DateUtils.stringIsISOFormattedDate("900"));
+		assertEquals(false,DateUtils.stringIsISOFormattedDate("900"));
+		assertEquals(true,DateUtils.stringIsISOFormattedDate("0900"));
 		assertEquals(true,DateUtils.stringIsISOFormattedDate("1800"));
 		assertEquals(true,DateUtils.stringIsISOFormattedDate("1800-01"));
 		assertEquals(true,DateUtils.stringIsISOFormattedDate("1800-01-01"));
@@ -1998,7 +1999,8 @@ public class DateUtilsTest {
 		assertEquals(true,DateUtils.eventDateValid("1884-01-01T05:05Z/1884-12-05"));
 		assertEquals(true,DateUtils.eventDateValid("1805-09-03/1805-11-04"));
 		
-		assertEquals(true,DateUtils.eventDateValid("5"));  // valid ISO year, not zero padded.
+		assertEquals(false,DateUtils.eventDateValid("5"));  // invalid ISO year, not zero padded.
+		assertEquals(true,DateUtils.eventDateValid("0005"));  // valid ISO year, zero padded.
 		
     	assertEquals(true, DateUtils.eventDateValid("1955-06-08T04:06Z"));
     	assertEquals(true, DateUtils.eventDateValid("1905-04-08T04"));

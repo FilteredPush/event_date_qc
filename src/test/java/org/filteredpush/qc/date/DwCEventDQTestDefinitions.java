@@ -386,7 +386,7 @@ public class DwCEventDQTestDefinitions {
         // in seconds
 		
 		DQResponse<NumericalValue> measure = DwCEventDQ.measureEventdatePrecisioninseconds("1880-05-08");
-		Long seconds = (60l*60l*24l)-1l; 
+		Long seconds = (60l*60l*24l); 
 		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
 		
