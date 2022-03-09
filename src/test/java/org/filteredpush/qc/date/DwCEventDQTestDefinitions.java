@@ -5,6 +5,8 @@ package org.filteredpush.qc.date;
 
 import static org.junit.Assert.*;
 
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.datakurator.ffdq.api.DQResponse;
@@ -209,7 +211,30 @@ public class DwCEventDQTestDefinitions {
 	 */
 	@Test
 	public void testValidationEventTemporalEmpty() {
-		fail("Not yet implemented");
+		
+        // Specification
+        // COMPLIANT if any of dwc:eventDate, dwc:year, dwc:month, 
+        // dwc:day, dwc:startDayOfYear, dwc:endDayOfYear, dwc:verbatimEventDate 
+        // are NOT EMPTY; otherwise NOT_COMPLIANT. 
+		
+		DQResponse<ComplianceValue> result = null;
+		String eventDate = null;
+		String verbatimEventDate = null;
+		String year = null;
+		String month = null;
+		String day = null;
+		String startDayOfYear = null;
+		String endDayOfYear = null;
+		String eventTime = null;
+		
+		result = DwCEventDQ.validationEventTemporalEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+	
+		year = "1852";
+		result = DwCEventDQ.validationEventTemporalEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
 	}
 
 	/**
@@ -217,7 +242,79 @@ public class DwCEventDQTestDefinitions {
 	 */
 	@Test
 	public void testAmendmentEventdateFromYearmonthday() {
-		fail("Not yet implemented");
+		
+        // Specification
+        // INTERNAL _PREREQUISITES_NOT_MET if dwc:eventDate is not 
+        // EMPTY or dwc:year is EMPTY or is uninterpretable as a valid 
+        // year; AMENDED if the value of dwc:eventDate was unambiguously 
+        // interpreted from the values in dwc:year, dwc:month and dwc:day; 
+        // otherwise NOT_AMENDED 
+		
+		DQResponse<AmendmentValue> result = null;
+		String eventDate = null;
+		String year = null;
+		String month = null;
+		String day = null;
+		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		
+		eventDate="1880";
+		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		
+		eventDate="Foo";
+		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		
+		eventDate="";
+		year="Foo";
+		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		
+		eventDate="";
+		year="1880";
+		month="12";
+		day="15";
+		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(ResultState.AMENDED.getLabel(), result.getResultState().getLabel());
+		assertNotNull(result.getValue().getObject());
+		Map<String,String> resultValues = result.getValue().getObject();
+		assertTrue(resultValues.containsKey("dwc:eventDate"));
+		assertEquals("1880-12-15",resultValues.get("dwc:eventDate"));
+		assertEquals(1,resultValues.size());
+		
+		eventDate="";
+		year="1880";
+		month="XII";
+		day="15";
+		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(ResultState.AMENDED.getLabel(), result.getResultState().getLabel());
+		assertNotNull(result.getValue().getObject());
+		resultValues = result.getValue().getObject();
+		assertTrue(resultValues.containsKey("dwc:eventDate"));
+		assertEquals("1880-12-15",resultValues.get("dwc:eventDate"));
+		assertEquals(1,resultValues.size());
+		
+		eventDate="";
+		year="1880";
+		month="32";
+		day="15";
+		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(ResultState.NOT_AMENDED.getLabel(), result.getResultState().getLabel());
+		
+		eventDate="";
+		year="1880";
+		month="Feb";
+		day="15";
+		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(ResultState.NOT_AMENDED.getLabel(), result.getResultState().getLabel());
+		
+		eventDate="";
+		year="1880";
+		month="";
+		day="150";
+		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(ResultState.NOT_AMENDED.getLabel(), result.getResultState().getLabel());
 	}
 
 	/**

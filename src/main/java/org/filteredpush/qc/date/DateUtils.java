@@ -3589,5 +3589,35 @@ public class DateUtils {
 			System.out.println(e.getMessage());
 		}
 	}
+	
+	/**
+	 * Return the Integer month number for a month represented as a Roman numeral, 
+	 * if given a string that matches a Roman numeral in the range I to XII (case
+	 * insensitive), return the corresponding Integer value for month of year.
+	 * 
+	 * @param month a string representing a month
+	 * @return an integer in the range 1-12 if month is a roman numeral in the
+	 *   range I-XII, otherwise null
+	 */
+	public static Integer romanMonthToInteger(String month) { 
+		Integer result = null;
+		if (month!=null && month.matches("^[XIVxiv]+$")) { 
+			switch (month.toUpperCase()) { 
+				case "I": result = Integer.valueOf(1); break;
+				case "II": result = Integer.valueOf(2); break;
+				case "III": result = Integer.valueOf(3); break;
+				case "IV": result = Integer.valueOf(4); break;
+				case "V": result = Integer.valueOf(5); break;
+				case "VI": result = Integer.valueOf(6); break;
+				case "VII": result = Integer.valueOf(7); break;
+				case "VIII": result = Integer.valueOf(8); break;
+				case "IX": result = Integer.valueOf(9); break;
+				case "X": result = Integer.valueOf(10); break;
+				case "XI": result = Integer.valueOf(11); break;
+				case "XII": result = Integer.valueOf(12); break;
+			}
+		} 
+		return result;
+	}
     
 }

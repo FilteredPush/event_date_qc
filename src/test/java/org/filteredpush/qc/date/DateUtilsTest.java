@@ -2170,5 +2170,46 @@ public class DateUtilsTest {
     	assertEquals(false,DateUtils.eventsAreSameInterval("1880", "Z"));
     	assertEquals(false,DateUtils.eventsAreSameInterval("1880", null));
     }
+ 
+    @Test
+    public void testromanMonthToInteger() { 
+    	assertNull(DateUtils.romanMonthToInteger(null));
+    	assertNull(DateUtils.romanMonthToInteger(""));
+    	assertNull(DateUtils.romanMonthToInteger(" "));
+    	assertNull(DateUtils.romanMonthToInteger("Feb"));
+    	assertNull(DateUtils.romanMonthToInteger("February"));
+    	assertNull(DateUtils.romanMonthToInteger("XIII"));
+    	assertNull(DateUtils.romanMonthToInteger("L"));
+    	
+    	assertEquals(Integer.valueOf(1),DateUtils.romanMonthToInteger("I"));
+    	assertEquals(Integer.valueOf(2),DateUtils.romanMonthToInteger("II"));
+    	assertEquals(Integer.valueOf(3),DateUtils.romanMonthToInteger("III"));
+    	assertEquals(Integer.valueOf(4),DateUtils.romanMonthToInteger("IV"));
+    	assertEquals(Integer.valueOf(5),DateUtils.romanMonthToInteger("V"));
+    	assertEquals(Integer.valueOf(6),DateUtils.romanMonthToInteger("VI"));
+    	assertEquals(Integer.valueOf(7),DateUtils.romanMonthToInteger("VII"));
+    	assertEquals(Integer.valueOf(8),DateUtils.romanMonthToInteger("VIII"));
+    	assertEquals(Integer.valueOf(9),DateUtils.romanMonthToInteger("IX"));
+    	assertEquals(Integer.valueOf(10),DateUtils.romanMonthToInteger("X"));
+    	assertEquals(Integer.valueOf(11),DateUtils.romanMonthToInteger("XI"));
+    	assertEquals(Integer.valueOf(12),DateUtils.romanMonthToInteger("XII"));
+    	
+    	assertEquals(Integer.valueOf(1),DateUtils.romanMonthToInteger("i"));
+    	assertEquals(Integer.valueOf(2),DateUtils.romanMonthToInteger("ii"));
+    	assertEquals(Integer.valueOf(3),DateUtils.romanMonthToInteger("iii"));
+    	assertEquals(Integer.valueOf(4),DateUtils.romanMonthToInteger("iv"));
+    	assertEquals(Integer.valueOf(5),DateUtils.romanMonthToInteger("v"));
+    	assertEquals(Integer.valueOf(6),DateUtils.romanMonthToInteger("vi"));
+    	assertEquals(Integer.valueOf(7),DateUtils.romanMonthToInteger("vii"));
+    	assertEquals(Integer.valueOf(8),DateUtils.romanMonthToInteger("viii"));
+    	assertEquals(Integer.valueOf(9),DateUtils.romanMonthToInteger("ix"));
+    	assertEquals(Integer.valueOf(10),DateUtils.romanMonthToInteger("x"));
+    	assertEquals(Integer.valueOf(11),DateUtils.romanMonthToInteger("xi"));
+    	assertEquals(Integer.valueOf(12),DateUtils.romanMonthToInteger("xii"));
+    	
+    	assertEquals(Integer.valueOf(2),DateUtils.romanMonthToInteger("Ii"));
+    	assertEquals(Integer.valueOf(11),DateUtils.romanMonthToInteger("Xi"));
+    	assertEquals(Integer.valueOf(11),DateUtils.romanMonthToInteger("xI"));
+    }
     
 }

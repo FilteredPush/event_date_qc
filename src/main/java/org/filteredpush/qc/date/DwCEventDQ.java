@@ -1149,11 +1149,21 @@ public class DwCEventDQ {
     	return result;
     }
 
-
+    @Deprecated
+    public static final DQResponse<AmendmentValue> eventDateFromYearMonthDay(
+    		@ActedUpon(value="dwc:eventDate") String eventDate, 
+    		@Consulted(value="dwc:year") String year, 
+    		@Consulted(value="dwc:month") String month, 
+    		@Consulted(value="dwc:day") String day ) 
+    {
+    	return amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
+    }
     /**
      * Given values for year, month, and day propose a value to fill in an empty eventDate.
      *
-     * TG2-AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY
+     * #93 Amendment SingleRecord Completeness: eventdate from yearmonthday
+     *
+     * Provides: AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY
      *
      * Run in order: extractDateFromVerbatim, then eventDateFromYearStartEndDay, then eventDateFromYearMonthDay
      *
@@ -1164,12 +1174,22 @@ public class DwCEventDQ {
      * @param year from which to construct the event date
      * @param month from which to construct the event date
      * @param day from which to construct the event date
-     * @return an EventDQAmmendment which may contain a proposed ammendment.
+     * @return DQResponse the response of type AmendmentValue to return
      */
-    @Provides(value="urn:uuid:3892f432-ddd0-4a0a-b713-f2e2ecbd879d")
-    @Amendment( label = "AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY", description="The value of dwc:eventDate was interpreted from the values in dwc:year, dwc:month and dwc:day")
-    @Specification(value="The value of dwc:eventDate was interpreted from the values in dwc:year, dwc:month and dwc:day The field dwc:eventDate is EMPTY and at least dwc:year (from among dwc:year, dwc:month, and dwc:day) must not be EMPTY and must be interpretable as a year.")
-    public static final DQResponse<AmendmentValue> eventDateFromYearMonthDay(@ActedUpon(value="dwc:eventDate") String eventDate, @Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @Consulted(value="dwc:day") String day ) {
+    @Provides("3892f432-ddd0-4a0a-b713-f2e2ecbd879d")
+    public static final DQResponse<AmendmentValue> amendmentEventDateFromYearMonthDay(
+    		@ActedUpon(value="dwc:eventDate") String eventDate, 
+    		@Consulted(value="dwc:year") String year, 
+    		@Consulted(value="dwc:month") String month, 
+    		@Consulted(value="dwc:day") String day ) 
+    {
+        // Specification
+        // INTERNAL _PREREQUISITES_NOT_MET if dwc:eventDate is not 
+        // EMPTY or dwc:year is EMPTY or is uninterpretable as a valid 
+        // year; AMENDED if the value of dwc:eventDate was unambiguously 
+        // interpreted from the values in dwc:year, dwc:month and dwc:day; 
+        // otherwise NOT_AMENDED 
+    	
     	DQResponse<AmendmentValue> result = new DQResponse<>();
     	if (DateUtils.isEmpty(year)) {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -1179,35 +1199,48 @@ public class DwCEventDQ {
     		result.addComment("A value exists in dwc:eventDate, ammendment not attempted.");
     	} else {
     	    try {
-     	       Integer numericYear = Integer.parseInt(year);
-    	       if (!DateUtils.isEmpty(month)) {
-     	           Integer numericmonth = Integer.parseInt(month);
-    	       }
-     	       if (!DateUtils.isEmpty(day)) {
-     	           Integer numericDay = Integer.parseInt(day);
-     	       }
-
-     	       String resultDateString = DateUtils.createEventDateFromParts("", "", "", year, month, day);
-
-
-     	       if (DateUtils.isEmpty(resultDateString)) {
-     	    	   result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-     		       result.addComment("Unable to construct a valid ISO date from year ["+year+"], month ["+ month +"] and day ["+ day +"].");
-     	       } else if (!DateUtils.eventDateValid(resultDateString)) {
-     	    	   result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-     		       result.addComment("Failed to construct a valid ISO date from year ["+year+"], month ["+ month +"] and day ["+ day +"].");
-     	       } else {
-     	    	   result.setResultState(ResultState.FILLED_IN);
-
-     	    	   Map<String, String> values = new HashMap<>();
-     	    	   values.put("dwc:eventDate", resultDateString);
-
-     	    	   result.setValue(new AmendmentValue(values));
+     	       Integer.parseInt(year);
+     	       try {
+     	    	   if (!DateUtils.isEmpty(month)) {
+     	    		   if (month.matches("^[XIVxiv]+$")) { 
+     	    			   // Roman numeral month values are interpretable as numbers.
+     	    			   logger.debug(month);
+     	    			   if (DateUtils.romanMonthToInteger(month)==null) { 
+     	    				   Integer.parseInt(month);
+     	    			   } else { 
+     	    				   String numericmonth = DateUtils.romanMonthToInteger(month).toString();
+     	    				   result.addComment("Converting month ["+month+"] to ["+ numericmonth +"] .");
+     	    				   month = DateUtils.romanMonthToInteger(month).toString();
+     	    			   }
+     	    			   logger.debug(month);
+     	    		   } else { 
+     	    			   Integer.parseInt(month);
+     	    		   }
+     	    	   }
+     	    	   if (!DateUtils.isEmpty(day)) {
+     	    		   Integer.parseInt(day);
+     	    	   }
+     	    	   String resultDateString = DateUtils.createEventDateFromParts("", "", "", year, month, day);
+     	    	   if (DateUtils.isEmpty(resultDateString)) {
+     	    		   result.setResultState(ResultState.NOT_AMENDED);
+     	    		   result.addComment("Unable to construct an unabmiguous ISO date from year ["+year+"], month ["+ month +"] and day ["+ day +"].");
+     	    	   } else if (!DateUtils.eventDateValid(resultDateString)) {
+     	    		   result.setResultState(ResultState.NOT_AMENDED);
+     	    		   result.addComment("Failed to construct an unambiguous ISO date from year ["+year+"], month ["+ month +"] and day ["+ day +"].");
+     	    	   } else {
+     	    		   result.setResultState(ResultState.AMENDED);
+     	    		   Map<String, String> values = new HashMap<>();
+     	    		   values.put("dwc:eventDate", resultDateString);
+     	    		   result.setValue(new AmendmentValue(values));
+     	    	   }
+     	       } catch (NumberFormatException e) {
+     	    	   result.setResultState(ResultState.NOT_AMENDED);
+     	    	   result.addComment("One of month ["+month+"], or day ["+ day +"] is not interpretable as a number.");
      	       }
 
      	    } catch (NumberFormatException e) {
      		   result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-     		   result.addComment("One of year [" + year + "], month ["+month+"], or day ["+ day +"] is not a number.");
+     		   result.addComment("Value provided for year [" + year + "] is not a number.");
      	    }
     	}
     	return result;
@@ -1488,12 +1521,26 @@ public class DwCEventDQ {
 		return result;
 	}
 
+    @Deprecated
+    public static DQResponse<ComplianceValue> isEventEmpty(
+    		@ActedUpon(value = "dwc:eventDate") String eventDate,
+			@ActedUpon(value = "dwc:verbatimEventDate") String verbatimEventDate,
+			@ActedUpon(value = "dwc:year") String year,
+			@ActedUpon(value = "dwc:month") String month,
+			@ActedUpon(value = "dwc:day") String day,
+			@ActedUpon(value = "dwc:startDayOfYear") String startDayOfYear,
+			@ActedUpon(value = "dwc:endDayOfYear") String endDayOfYear )
+    {
+        return validationEventTemporalEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);   
+    }
     /**
      * Examine each of the date/time related terms in the Event class, and test to see if at least
      * one of them contains some value.  This may or may not be a meaningful value, and this may or
      * may not be interpretable to a date or date range.
      *
-     * TG2-VALIDATION_EVENT_EMPTY
+     * #88 Validation SingleRecord Completeness: event temporal empty
+     *
+     * Provides: VALIDATION_EVENT_TEMPORAL_EMPTY
      *
      * Does not include eventTime (not considered core) in the evaluation of emptyness.
      *
@@ -1506,10 +1553,8 @@ public class DwCEventDQ {
      * @param endDayOfYear to examine
      * @return an DQValidationResponse object describing whether any value is present in any of the temporal terms of the event.
      */
-    @Provides(value="urn:uuid:41267642-60ff-4116-90eb-499fee2cd83f")
-    @Validation( label = "VALIDATION_EVENT_EMPTY", description="At least one field needed to determine the event date exists and is not EMPTY.")
-    @Specification(value="At least one field needed to determine the event date exists and is not EMPTY. None. It is not necessary for the record to have any fields in the Event class to run this test.")
-    public static DQResponse<ComplianceValue> isEventEmpty(
+    @Provides(value="41267642-60ff-4116-90eb-499fee2cd83f")
+    public static DQResponse<ComplianceValue> validationEventTemporalEmpty(
     		@ActedUpon(value = "dwc:eventDate") String eventDate,
 			@ActedUpon(value = "dwc:verbatimEventDate") String verbatimEventDate,
 			@ActedUpon(value = "dwc:year") String year,
@@ -1520,6 +1565,11 @@ public class DwCEventDQ {
 			// @ActedUpon(value = "dwc:eventTime") String eventTime )   // Removed per discussion in tdwg/bdq issue 88
     {
 
+        // Specification
+        // COMPLIANT if any of dwc:eventDate, dwc:year, dwc:month, 
+        // dwc:day, dwc:startDayOfYear, dwc:endDayOfYear, dwc:verbatimEventDate 
+        // are NOT EMPTY; otherwise NOT_COMPLIANT. 
+    	
 		DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
 		if (DateUtils.isEmpty(eventDate) &&
@@ -1570,7 +1620,7 @@ public class DwCEventDQ {
 			@ActedUpon(value = "dwc:endDayOfYear") String endDayOfYear )
 		{
 		DQResponse<CompletenessValue> result = new DQResponse<>();
-		DQResponse<ComplianceValue> validation = DwCEventDQ.isEventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
+		DQResponse<ComplianceValue> validation = DwCEventDQ.validationEventTemporalEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
 		if (validation.getResultState().equals(ResultState.RUN_HAS_RESULT)) {
 			if (validation.getValue().equals(ComplianceValue.COMPLIANT)) {
 				result.setValue(CompletenessValue.COMPLETE);
