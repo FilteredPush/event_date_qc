@@ -41,7 +41,7 @@ import java.util.Map;
  *
  * MEASURE_EVENTDATE_PRECISIONINSECONDS 56b6c695-adf1-418e-95d2-da04cad7be53
  * 
- * Provides support for the following TDWG DQIG TG2 validations and amendments 
+ * Provides support for the following TDWG DQIG TG2 validations
  * 
  * VALIDATION_EVENTDATE_EMPTY f51e15a6-a67d-4729-9c28-3766299d2985
  * VALIDATION_YEAR_EMPTY c09ecbf9-34e3-4f3e-b74a-8796af15e59f
@@ -51,12 +51,12 @@ import java.util.Map;
  * TODO: Update: 
  * VALIDATION_DAY_OUTOFRANGE   5618f083-d55a-4ac2-92b5-b9fb227b832f   ** Differs
  * 
+ * Provides support for the following TDWG DQIG TG2 amendments 
+ * 
+ * AMENDMENT_EVENTDATE_FROM_VERBATIM 6d0a0c10-5e4a-4759-b448-88932f399812
  * 
  * Provides support for the following draft TDWG DQIG TG2 validations and amendments.  
- *  
- * TG2-VALIDATION_EVENTDATE_EMPTY  f51e15a6-a67d-4729-9c28-3766299d2985
- * TG2-VALIDATION_YEAR_EMPTY  c09ecbf9-34e3-4f3e-b74a-8796af15e59f
- * TG2-AMENDMENT_EVENTDATE_FROM_VERBATIM  
+ * (Old list, to update)   
  * ?? TG2-VALIDATION_EVENTDATE_NOTSTANDARD 4f2bf8fd-fc5c-493f-a44c-e7b16153c803
  * TG2-AMENDMENT_EVENTDATE_STANDARDIZED  	718dfc3c-cb52-4fca-b8e2-0e722f375da7
  * TG2-VALIDATION_MONTH_OUTOFRANGE isMonthInRange(@ActedUpon(value = "dwc:month") String month) 
@@ -380,56 +380,69 @@ public class DwCEventDQ {
 	}
 
     /**
+     * Deprecated, use: amendmentEventdateFromVerbatim
+     */
+	@Deprecated 
+    public static DQResponse<AmendmentValue>  extractDateFromVerbatim(
+    		@ActedUpon(value = "dwc:eventDate") String eventDate, 
+    		@Consulted(value = "dwc:verbatimEventDate") String verbatimEventDate) {
+		return amendmentEventdateFromVerbatim(eventDate, verbatimEventDate);
+    }
+    /**
+     * #86 Amendment SingleRecord Completeness: eventdate from verbatim
+     *
+     * Provides: AMENDMENT_EVENTDATE_FROM_VERBATIM
+     * 
      * If a dwc:eventDate is empty and the verbatimEventDate is not empty, try to populate the 
      * eventDate from the verbatim value.
-     * 
-     * TG2-AMENDMENT_EVENTDATE_FROM_VERBATIM  
-     * 
-     * Run in order: extractDateFromVerbatim, then eventDateFromYearStartEndDay, then eventDateFromYearMonthDay
-     * 
-     * @see eventDateFromYearStartEndDay
-     * @see eventDateFromYearMonthDay
-     * 
-     * @param eventDate to check for emptyness
-     * @param verbatimEventDate to try to replace a non-empty event date.
-     * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
-     *    resultState is AMENDED if a new value is proposed.
-     *    
+     *
+     * @param eventDate the provided dwc:eventDate to try to populate if empty
+     * @param verbatimEventDate the provided dwc:verbatimEventDate from which to try to parse an eventDate
+     * @return DQResponse the response of type AmendmentValue to return, with a value containing
+     *  a key for dwc:eventDate and a resultState is AMENDED if a new value is proposed.
      */
-    //@Provides(value = "EVENTDATE_FILLED_IN_FROM_VERBATIM")
-    @Provides(value="urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812")
-    @Amendment( label = "AMENDMENT_EVENTDATE_FROM_VERBATIM", description="The value of dwc:eventDate was interpreted from dwc:verbatimEventDate")
-    @Specification(value="The value of dwc:eventDate was interpreted from dwc:verbatimEventDate The field dwc:eventDate is EMPTY and the field dwc:verbatimEventDate is not EMPTY and is interpretable as an ISO 8601:2004(E) date")
-	//@Specification(value = "If a dwc:eventDate is empty and the verbatimEventDate is not empty fill in dwc:eventDate " +
-	//		"based on value from dwc:verbatimEventDate")
-    public static DQResponse<AmendmentValue>  extractDateFromVerbatim(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "dwc:verbatimEventDate") String verbatimEventDate) {
-		DQResponse<AmendmentValue> result = new DQResponse<>();
-
+    @Provides("6d0a0c10-5e4a-4759-b448-88932f399812")
+    public static DQResponse<AmendmentValue> amendmentEventdateFromVerbatim(
+    		@ActedUpon("dwc:eventDate") String eventDate, 
+    		@Consulted("dwc:verbatimEventDate") String verbatimEventDate) {
+    	DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
+		
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY 
+        // or the value of dwc:verbatimEventDate is EMPTY or not unambiguously 
+        // interpretable as an ISO 8601-1:2019 date; AMENDED if the 
+        // value of dwc:eventDate was unambiguously interpreted from 
+        // dwc:verbatimEventDate; otherwise NOT_AMENDED 
+		
 		if (DateUtils.isEmpty(eventDate)) {
 			if (!DateUtils.isEmpty(verbatimEventDate)) {
 				EventResult extractResponse = DateUtils.extractDateFromVerbatimER(verbatimEventDate);
 				if (!extractResponse.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
 						(extractResponse.getResultState().equals(EventResult.EventQCResultState.RANGE) ||
-								extractResponse.getResultState().equals(EventResult.EventQCResultState.DATE) ||
-								extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS) ||
-								extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)
-						)
-						)
+								extractResponse.getResultState().equals(EventResult.EventQCResultState.DATE)) )
 				{
 					Map<String, String> extractedValues = new HashMap<>();
 					extractedValues.put("dwc:eventDate", extractResponse.getResult());
-
 					result.setValue(new AmendmentValue(extractedValues));
-
+					result.setResultState(ResultState.AMENDED);
+				} else if (!extractResponse.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
+						( extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS) ||
+								extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)))
+				{
+					result.setResultState(ResultState.NOT_AMENDED);
 					if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
-						result.setResultState(ResultState.AMBIGUOUS);
+				        //TODO:  Implement specification
+				        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY 
+				        // or the value of dwc:verbatimEventDate is EMPTY or not unambiguously 
+				        // interpretable as an ISO 8601-1:2019 date; AMENDED if the 
+				        // value of dwc:eventDate was unambiguously interpreted from 
+				        //dwc:verbatimEventDate; otherwise NOT_AMENDED 				result.addComment("Supplied verbatimEventDate [" + verbatimEventDate + "] is ambiguous.");
 						result.addComment(extractResponse.getComment());
 					} else {
 						if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
 							result.addComment("Interpretation of verbatimEventDate [" + verbatimEventDate + "] is suspect.");
 							result.addComment(extractResponse.getComment());
 						}
-						result.setResultState(ResultState.AMENDED);
 					}
 				} else {
 					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -440,7 +453,7 @@ public class DwCEventDQ {
 				result.addComment("verbatimEventDate does not contains a value.");
 			}
 		} else {
-			result.setResultState(ResultState.NOT_AMENDED);
+			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
 			result.addComment("eventDate contains a value, not changing.");
 		}
 

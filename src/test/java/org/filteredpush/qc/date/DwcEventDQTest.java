@@ -380,47 +380,53 @@ public class DwcEventDQTest {
 	}
 	
 	@Test
-	public void testExtractDateFromVerbatim() { 
+	public void testAmendmentEventdateFromVerbatim() { 
+		
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY 
+        // or the value of dwc:verbatimEventDate is EMPTY or not unambiguously 
+        // interpretable as an ISO 8601-1:2019 date; AMENDED if the 
+        // value of dwc:eventDate was unambiguously interpreted from 
+        // dwc:verbatimEventDate; otherwise NOT_AMENDED 
+		
 		String eventDate = "";
 		String verbatimEventDate = "Jan 1884";
-		DQResponse<AmendmentValue> result = DwCEventDQ.extractDateFromVerbatim(eventDate,verbatimEventDate);
+		DQResponse<AmendmentValue> result = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate,verbatimEventDate);
 		assertEquals(ResultState.AMENDED, result.getResultState());
 		assertEquals("1884-01",result.getValue().getObject().get("dwc:eventDate"));
 		assertEquals(1,result.getValue().getObject().size());
 
 		verbatimEventDate = "1 Mar 1884";
-		result = DwCEventDQ.extractDateFromVerbatim(eventDate,verbatimEventDate);
+		result = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate,verbatimEventDate);
 		assertEquals(ResultState.AMENDED, result.getResultState());
 		assertEquals("1884-03-01",result.getValue().getObject().get("dwc:eventDate"));
 		assertEquals(1,result.getValue().getObject().size());		
 		
 		eventDate = "1884";
 		verbatimEventDate = "1 Mar 1884";
-		result = DwCEventDQ.extractDateFromVerbatim(eventDate,verbatimEventDate);
+		result = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate,verbatimEventDate);
 		assertEquals(ResultState.NOT_AMENDED, result.getResultState());
 		assertEquals(0,result.getValue().getObject().size());			
 		eventDate = "1884-03-01";
 		verbatimEventDate = "1 Mar 1884";
-		result = DwCEventDQ.extractDateFromVerbatim(eventDate,verbatimEventDate);
+		result = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate,verbatimEventDate);
 		assertEquals(ResultState.NOT_AMENDED, result.getResultState());
 		assertEquals(0,result.getValue().getObject().size());		
 		
 		eventDate = null;
 		verbatimEventDate = "";
-		result = DwCEventDQ.extractDateFromVerbatim(eventDate,verbatimEventDate);
+		result = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate,verbatimEventDate);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
 		assertEquals(0,result.getValue().getObject().size());			
 		
 		eventDate = null;
 		verbatimEventDate = "5-8-1884";
-		result = DwCEventDQ.extractDateFromVerbatim(eventDate,verbatimEventDate);
-		assertEquals(ResultState.AMBIGUOUS, result.getResultState());
-		assertEquals("1884-05-08/1884-08-05",result.getValue().getObject().get("dwc:eventDate"));
-		assertEquals(1,result.getValue().getObject().size());		
+		result = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate,verbatimEventDate);
+		assertEquals(ResultState.NOT_AMENDED, result.getResultState());
+		assertNull(result.getValue());
 		
 		eventDate = null;
 		verbatimEventDate = "2001/Feb/29";
-		result = DwCEventDQ.extractDateFromVerbatim(eventDate,verbatimEventDate);
+		result = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate,verbatimEventDate);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
 		assertEquals(0,result.getValue().getObject().size());			
 		

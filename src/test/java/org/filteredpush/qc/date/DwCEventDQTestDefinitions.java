@@ -8,6 +8,7 @@ import static org.junit.Assert.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.datakurator.ffdq.api.DQResponse;
+import org.datakurator.ffdq.api.result.AmendmentValue;
 import org.datakurator.ffdq.api.result.ComplianceValue;
 import org.datakurator.ffdq.api.result.NumericalValue;
 import org.datakurator.ffdq.model.ResultState;
@@ -161,7 +162,46 @@ public class DwCEventDQTestDefinitions {
 	 */
 	@Test
 	public void testAmendmentEventdateFromVerbatim() {
-		fail("Not yet implemented");
+		
+        //TODO:  Implement specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY 
+        // or the value of dwc:verbatimEventDate is EMPTY or not unambiguously 
+        // interpretable as an ISO 8601-1:2019 date; AMENDED if the 
+        // value of dwc:eventDate was unambiguously interpreted from 
+        //dwc:verbatimEventDate; otherwise NOT_AMENDED 
+		
+		String eventDate = "1900";
+		String verbatimEventDate = "";
+		DQResponse<AmendmentValue> response = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate, verbatimEventDate);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(0, response.getValue().getObject().size());
+		logger.debug(response.getComment());
+		eventDate = "";
+		verbatimEventDate = "";
+		response = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate, verbatimEventDate);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(0, response.getValue().getObject().size());
+		logger.debug(response.getComment());
+		eventDate = "";
+		verbatimEventDate = "foo";
+		response = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate, verbatimEventDate);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(0, response.getValue().getObject().size());
+		logger.debug(response.getComment());
+		eventDate = "";
+		verbatimEventDate = "1932/11/23";
+		response = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate, verbatimEventDate);
+		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(1, response.getValue().getObject().size());
+		assertEquals("{dwc:eventDate=1932-11-23}", response.getValue().getObject().toString());
+		logger.debug(response.getComment());
+		eventDate = "";
+		verbatimEventDate = "2/3 1932";
+		response = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate, verbatimEventDate);
+		assertEquals(ResultState.NOT_AMENDED.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(0, response.getValue().getObject().size());
+		logger.debug(response.getComment());
+		
 	}
 
 	/**
