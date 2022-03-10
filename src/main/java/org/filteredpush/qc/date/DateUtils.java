@@ -2998,6 +2998,21 @@ public class DateUtils {
     		cleaned = cleaned.replace("Jnry", "January");
     		cleaned = cleaned.replace("Februar", "February");
     		
+    		// handle all lower case english to prevent partial matches on 
+    		// lower case to month conversions that follow
+    		cleaned = cleaned.replace("january", "January");
+    		cleaned = cleaned.replace("february", "February");
+    		cleaned = cleaned.replace("march", "March");
+    		cleaned = cleaned.replace("april", "April");
+    		cleaned = cleaned.replace("may", "May");
+    		cleaned = cleaned.replace("june", "June");
+    		cleaned = cleaned.replace("july", "July");
+    		cleaned = cleaned.replace("august", "August");
+    		cleaned = cleaned.replace("september", "Sepember");
+    		cleaned = cleaned.replace("october", "October");
+    		cleaned = cleaned.replace("november", "November");
+    		cleaned = cleaned.replace("december", "December");
+    		
     		// Italian months are lower case, if capitalized, skip a step and go right to english.
     		cleaned = cleaned.replace("Dicembre", "December");
     		cleaned = cleaned.replace("dicembre", "December");
@@ -3064,7 +3079,7 @@ public class DateUtils {
     		cleaned = cleaned.replace("Mayo", "May");
     		cleaned = cleaned.replace("mayo", "May");
     		cleaned = cleaned.replace("Junio", "June");
-    		cleaned = cleaned.replace("junio", "June");
+    		cleaned = cleaned.replace("junio", "June");  // order matters, must come before juni, da_DK below.
     		cleaned = cleaned.replace("Julio", "July");
     		cleaned = cleaned.replace("julio", "July");
     		cleaned = cleaned.replace("Agosto", "August");
@@ -3079,6 +3094,14 @@ public class DateUtils {
     		cleaned = cleaned.replace("noviembre", "November");
     		cleaned = cleaned.replace("Diciembre", "December");
     		cleaned = cleaned.replace("diciembre", "December");
+    		// likewise Danish (excluding same as english)
+    		cleaned = cleaned.replace("januar", "January");
+    		cleaned = cleaned.replace("februar", "February");
+    		cleaned = cleaned.replace("marts", "March");
+    		cleaned = cleaned.replace("maj", "May");
+    		cleaned = cleaned.replace("juni", "June");
+    		cleaned = cleaned.replace("juli", "July");
+    		cleaned = cleaned.replace("oktober", "October");
     		
     		// Welsh
     		cleaned = cleaned.replace("Ionawr", "January");
