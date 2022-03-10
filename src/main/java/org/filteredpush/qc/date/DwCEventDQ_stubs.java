@@ -298,31 +298,5 @@ public class DwCEventDQ_stubs {
         return result;
     }
 
-    /**
-     * #132 Amendment SingleRecord Completeness: eventdate from yearstartdayofyearenddayofyear
-     *
-     * Provides: AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR
-     *
-     * @param startDayOfYear the provided dwc:startDayOfYear to evaluate
-     * @param eventDate the provided dwc:eventDate to evaluate
-     * @param year the provided dwc:year to evaluate
-     * @param endDayOfYear the provided dwc:endDayOfYear to evaluate
-     * @return DQResponse the response of type AmendmentValue to return
-     */
-    @Provides("eb0a44fa-241c-4d64-98df-ad4aa837307b")
-    public DQResponse<AmendmentValue> amendmentEventdateFromYearstartdayofyearenddayofyear(@ActedUpon("dwc:startDayOfYear") String startDayOfYear, @ActedUpon("dwc:eventDate") String eventDate, @ActedUpon("dwc:year") String year, @ActedUpon("dwc:endDayOfYear") String endDayOfYear) {
-        DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
-
-        //TODO:  Implement specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate was not 
-        // EMPTY or dwc:year was EMPTY or both dwc:startDayOfYear and 
-        // dwc:endDayOfYear were EMPTY or the values were not interpretable; 
-        // AMENDED if dwc:eventDate was FILLED_IN from the values in 
-        // dwc:year, dwc:startDayOfYear and dwc:endDayOfYear; otherwise 
-        //NOT_AMENDED 
-
-        return result;
-    }
-
 
 }

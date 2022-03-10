@@ -684,6 +684,24 @@ public class DwcEventDQTest {
 		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET,result.getResultState());			
 		
+		// Error cases in test validation data  585, 586
+		eventDate = ""; 
+		year = "2021"; 
+		month = "10";
+		day = "";
+		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(ResultState.AMENDED,result.getResultState());
+		assertEquals("2021-10", result.getValue().getObject().get("dwc:eventDate")); 
+		
+		eventDate = ""; 
+		year = "2021"; 
+		month = "10";
+		day = "29";
+		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(ResultState.AMENDED,result.getResultState());
+		assertEquals("2021-10-29", result.getValue().getObject().get("dwc:eventDate")); 			
+		
+		
 	}
 	
 	@Test

@@ -312,9 +312,24 @@ public class DwCEventDQTestDefinitions {
 		eventDate="";
 		year="1880";
 		month="";
-		day="150";
+		day="150";  // out of range
 		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
 		assertEquals(ResultState.NOT_AMENDED.getLabel(), result.getResultState().getLabel());
+		
+		// Notes in issue: "If dwc:year and dwc:day are present, but dwc:month is not supplied, 
+		// then just the year should be given as the proposed amendment."
+		eventDate="";
+		year="1880";
+		month=""; // empty
+		day="15";  
+		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(ResultState.AMENDED.getLabel(), result.getResultState().getLabel());
+		assertNotNull(result.getValue().getObject());
+		resultValues = result.getValue().getObject();
+		assertTrue(resultValues.containsKey("dwc:eventDate"));
+		assertEquals("1880",resultValues.get("dwc:eventDate"));
+		assertEquals(1,resultValues.size());
+		
 	}
 
 	/**
@@ -370,7 +385,91 @@ public class DwCEventDQTestDefinitions {
 	 */
 	@Test
 	public void testAmendmentEventdateFromYearstartdayofyearenddayofyear() {
-		fail("Not yet implemented");
+		
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate was not 
+        // EMPTY or dwc:year was EMPTY or both dwc:startDayOfYear and 
+        // dwc:endDayOfYear were EMPTY or the values were not interpretable; 
+        // AMENDED if dwc:eventDate was FILLED_IN from the values in 
+        // dwc:year, dwc:startDayOfYear and dwc:endDayOfYear; otherwise 
+        // NOT_AMENDED 
+		
+		String eventDate = "1890";
+		String year = "";
+		String startDayOfYear = "";
+		String endDayOfYear = "";
+		DQResponse<AmendmentValue> response = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		
+		eventDate = null;
+		year = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		response = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		
+		eventDate = null;
+		year = "1890";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		response = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		
+		eventDate = null;
+		year = "";
+		startDayOfYear = "5";
+		endDayOfYear = "180";
+		response = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		
+		eventDate = null;
+		year = "";
+		startDayOfYear = "5";
+		endDayOfYear = "180";
+		response = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+			
+		eventDate = null;
+		year = "1890";
+		startDayOfYear = "X";
+		endDayOfYear = "180";
+		response = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+			
+		eventDate = null;
+		year = "32";
+		startDayOfYear = "5";
+		endDayOfYear = "180";
+		response = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		
+		eventDate = "";
+		year = "1932";
+		startDayOfYear = "5";
+		endDayOfYear = "180";
+		response = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel());
+		assertEquals(1,response.getValue().getObject().size());
+		assertEquals("dwc:eventDate",response.getValue().getObject().keySet().iterator().next());
+		assertEquals("1932-01-05/1932-06-28",response.getValue().getObject().get("dwc:eventDate"));
+		
+		eventDate = "";
+		year = "1932";
+		startDayOfYear = "5";
+		endDayOfYear = "";
+		response = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel());
+		assertEquals(1,response.getValue().getObject().size());
+		assertEquals("dwc:eventDate",response.getValue().getObject().keySet().iterator().next());
+		assertEquals("1932-01-05",response.getValue().getObject().get("dwc:eventDate"));
+			
+		// NOTE: This may change.  Not clearly specified in the issue.
+		eventDate = "";
+		year = "1932";
+		startDayOfYear = "";
+		endDayOfYear = "5";
+		response = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
 	}
 
 	/**

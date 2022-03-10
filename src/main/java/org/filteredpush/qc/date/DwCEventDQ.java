@@ -1092,12 +1092,18 @@ public class DwCEventDQ {
     	return result;
     }
 
+    @Deprecated
+    public static final DQResponse<AmendmentValue> eventDateFromYearStartEndDay(@ActedUpon(value="dwc:eventDate") String eventDate, @Consulted(value="dwc:year") String year, @Consulted(value="dwc:startDayOfYear") String startDay, @Consulted(value="dwc:endDayOfYear") String endDay ) {
+    	return amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate,year,startDay,endDay);
+    }
 
     /**
      * Given a year and a start and end day, propose a value to fill in an eventDate if it is not empty and if
      * both year and start day are not empty.
      *
-     * TG2-AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR
+     * #132 Amendment SingleRecord Completeness: eventdate from yearstartdayofyearenddayofyear
+     *
+     * Provides: AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR
      *
      * Run in order: extractDateFromVerbatim, then eventDateFromYearStartEndDay, then eventDateFromYearMonthDay
      *
@@ -1108,13 +1114,31 @@ public class DwCEventDQ {
      * @param year from which to construct an event date
      * @param startDay from which to construct an event date
      * @param endDay from which to construct an event date
-     * @return an EventDQAmmendment which may contain a proposed ammendment.
+     * @return DQResponse the response of type AmendmentValue to return
      */
     @Provides(value="urn:uuid:eb0a44fa-241c-4d64-98df-ad4aa837307b")
-    @Amendment( label = "AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR", description="The value of dwc:eventDate was interpreted from the values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear")
-    @Specification(value="The value of dwc:eventDate was interpreted from the values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear The field dwc:eventDate is EMPTY and at least dwc:year and one of dwc:startDayOfYear or dwc:endDayOfYear must not be EMPTY and must be interpretable.")
-    public static final DQResponse<AmendmentValue> eventDateFromYearStartEndDay(@ActedUpon(value="dwc:eventDate") String eventDate, @Consulted(value="dwc:year") String year, @Consulted(value="dwc:startDayOfYear") String startDay, @Consulted(value="dwc:endDayOfYear") String endDay ) {
+    public static final DQResponse<AmendmentValue> amendmentEventdateFromYearstartdayofyearenddayofyear(
+    		@ActedUpon(value="dwc:eventDate") String eventDate, 
+    		@Consulted(value="dwc:year") String year, 
+    		@Consulted(value="dwc:startDayOfYear") String startDay, 
+    		@Consulted(value="dwc:endDayOfYear") String endDay ) {
+    	
     	DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
+    	
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate was not 
+        // EMPTY or dwc:year was EMPTY or both dwc:startDayOfYear and 
+        // dwc:endDayOfYear were EMPTY or the values were not interpretable; 
+        // AMENDED if dwc:eventDate was FILLED_IN from the values in 
+        // dwc:year, dwc:startDayOfYear and dwc:endDayOfYear; otherwise 
+        // NOT_AMENDED 
+    	
+    	// NOTE (commented in issue), no path leads to NOT_AMENDED if the last clause of the 
+    	// internal prerequisites not met applies to year as well as start day and end day of year.
+    	// implemented as such here.
+    	// NOTE (commented in issue) path for value in year and endDayOfYear, but not startDayOfYear
+    	// isn't clear in the issue, here status returns internal prerequisites not met.
+    	
     	if (DateUtils.isEmpty(year) || DateUtils.isEmpty(startDay)) {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		result.addComment("Either year or startDayOfYear was not provided.");
@@ -1191,6 +1215,7 @@ public class DwCEventDQ {
         // interpreted from the values in dwc:year, dwc:month and dwc:day; 
         // otherwise NOT_AMENDED 
     	
+    	
     	DQResponse<AmendmentValue> result = new DQResponse<>();
     	if (DateUtils.isEmpty(year)) {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -1202,26 +1227,41 @@ public class DwCEventDQ {
     	    try {
      	       Integer.parseInt(year);
      	       try {
+     	    	   boolean hasMonth = false;
      	    	   if (!DateUtils.isEmpty(month)) {
      	    		   if (month.matches("^[XIVxiv]+$")) { 
      	    			   // Roman numeral month values are interpretable as numbers.
      	    			   logger.debug(month);
      	    			   if (DateUtils.romanMonthToInteger(month)==null) { 
      	    				   Integer.parseInt(month);
+     	    				   hasMonth=true;
      	    			   } else { 
      	    				   String numericmonth = DateUtils.romanMonthToInteger(month).toString();
      	    				   result.addComment("Converting month ["+month+"] to ["+ numericmonth +"] .");
      	    				   month = DateUtils.romanMonthToInteger(month).toString();
+     	    				   if (month!=null && month.length()>0) { 
+     	    					   hasMonth=true;
+     	    				   }
      	    			   }
      	    			   logger.debug(month);
      	    		   } else { 
      	    			   Integer.parseInt(month);
+     	    			   hasMonth=true;
      	    		   }
      	    	   }
      	    	   if (!DateUtils.isEmpty(day)) {
-     	    		   Integer.parseInt(day);
+     	    		   Integer numericDay = Integer.parseInt(day);
+     	    		   if (!DateUtils.isDayInRange(numericDay)) {
+     	    			   throw new NumberFormatException("The provided value for Day is out of range for a day");
+     	    		   }
      	    	   }
+     	    	   // try, may raise exception
      	    	   String resultDateString = DateUtils.createEventDateFromParts("", "", "", year, month, day);
+     	    	   if (!hasMonth) { 
+     	    		   // From Notes:  If dwc:year and dwc:day are present, 
+     	    		   // but dwc:month is not supplied, then just the year should be given as the proposed amendment.
+     	    		   resultDateString = DateUtils.createEventDateFromParts("", "", "", year, "", "");
+     	    	   }
      	    	   if (DateUtils.isEmpty(resultDateString)) {
      	    		   result.setResultState(ResultState.NOT_AMENDED);
      	    		   result.addComment("Unable to construct an unabmiguous ISO date from year ["+year+"], month ["+ month +"] and day ["+ day +"].");
