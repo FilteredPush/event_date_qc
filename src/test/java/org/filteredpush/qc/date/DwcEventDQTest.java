@@ -150,16 +150,16 @@ public class DwcEventDQTest {
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 
 		result = DwCEventDQ.validationDayNotstandard(null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		assertNull(result.getValue());
 		
 		result = DwCEventDQ.validationDayNotstandard("");
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		assertNull(result.getValue());
 	
 		result = DwCEventDQ.validationDayNotstandard(" ");
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		assertNull(result.getValue());
 		
 		result = DwCEventDQ.validationDayNotstandard("A");
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
@@ -714,7 +714,7 @@ public class DwcEventDQTest {
 				assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 				assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 				
-				result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+				result = DwCEventDQ.validationStartdayofyearOutofrange(Integer.toString(day), Integer.toString(year));
 				assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 				assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 			}
@@ -726,7 +726,7 @@ public class DwcEventDQTest {
 		result = DwCEventDQ.validationEnddayofyearOutofrange(Integer.toString(day), Integer.toString(year));
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
-		result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+		result = DwCEventDQ.validationStartdayofyearOutofrange(Integer.toString(day), Integer.toString(year));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
@@ -736,7 +736,7 @@ public class DwcEventDQTest {
 		result = DwCEventDQ.validationEnddayofyearOutofrange(Integer.toString(day), Integer.toString(year));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
-		result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+		result = DwCEventDQ.validationStartdayofyearOutofrange(Integer.toString(day), Integer.toString(year));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());		
 		
@@ -745,7 +745,7 @@ public class DwcEventDQTest {
 		result = DwCEventDQ.validationEnddayofyearOutofrange(Integer.toString(day), Integer.toString(year));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
-		result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+		result = DwCEventDQ.validationStartdayofyearOutofrange(Integer.toString(day), Integer.toString(year));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 		
@@ -754,7 +754,7 @@ public class DwcEventDQTest {
 		result = DwCEventDQ.validationEnddayofyearOutofrange(Integer.toString(day), Integer.toString(year));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
-		result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+		result = DwCEventDQ.validationStartdayofyearOutofrange(Integer.toString(day), Integer.toString(year));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());		
 		
@@ -764,7 +764,7 @@ public class DwcEventDQTest {
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
 		
 		day = -1;
-		result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day),"");
+		result = DwCEventDQ.validationStartdayofyearOutofrange(Integer.toString(day),"");
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());		
 		

@@ -369,7 +369,103 @@ public class DwCEventDQTestDefinitions {
 	 */
 	@Test
 	public void testValidationStartdayofyearOutofrange() {
-		fail("Not yet implemented");
+		
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:startDayOfYear is 
+        // EMPTY or if the value of dwc:startDayOfYear is equal to 
+        // 366 and (dwc:eventDate is EMPTY or the value of dwc:eventDate 
+        // can not be interpreted to find single year or a start year 
+        // in a range); COMPLIANT if the value of dwc:startDayOfYear 
+        // is an integer between 1 and 365, inclusive, or if the value 
+        // of dwc:startDayOfYear is 366 and the start year interpreted 
+        // from dwc:eventDate is a leap year; otherwise NOT_COMPLIANT 
+        //
+    	
+		
+		String startDayOfYear = null;
+		String eventDate = null;
+		DQResponse<ComplianceValue> response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		assertNull(response.getValue());
+		logger.debug(response.getComment());
+		
+		startDayOfYear = "366";
+		eventDate = null;
+		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		assertNull(response.getValue());
+		logger.debug(response.getComment());
+		
+		startDayOfYear = "366";
+		eventDate = "Foo";
+		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		assertNull(response.getValue());
+		logger.debug(response.getComment());
+		
+		startDayOfYear = "365";
+		eventDate = "Foo";
+		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		startDayOfYear = "365";
+		eventDate = "";
+		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		startDayOfYear = "365";
+		eventDate = "1980";
+		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		startDayOfYear = "365";
+		eventDate = "1981";
+		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		startDayOfYear = "366";
+		eventDate = "1980";
+		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		startDayOfYear = "366";
+		eventDate = "1981";
+		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		startDayOfYear = "366";
+		eventDate = "1979-01-01/1980-01-10";  // only start year is examined, not other parts of date for this test.
+		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		startDayOfYear = "366";
+		eventDate = "1980-12-31/1981-12-31";
+		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		startDayOfYear = "foo";
+		eventDate = "1980-12-31/1981-12-31";
+		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
 	}
 
 	/**
@@ -637,10 +733,10 @@ public class DwCEventDQTestDefinitions {
 	@Test
 	public void testValidationDayNotstandard() {
 		
-        //TODO:  Implement specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; COMPLIANT 
-        // if the value of the field dwc:day is an integer between 
-        //1 and 31 inclusive; otherwise NOT_COMPLIANT. 
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; COMPLIANT
+        // if the value of the field dwc:day is an integer between
+        // 1 and 31 inclusive; otherwise NOT_COMPLIANT.
 		
 		String day = "1";
 		DQResponse<ComplianceValue> result = DwCEventDQ.validationDayNotstandard(day);
@@ -659,9 +755,7 @@ public class DwCEventDQTestDefinitions {
 		logger.debug(result.getComment());
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
 		assertNull(result.getValue());
-		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
 		
-		fail("Not yet implemented");
 	}
 
 }
