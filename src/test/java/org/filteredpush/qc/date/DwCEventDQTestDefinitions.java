@@ -377,7 +377,100 @@ public class DwCEventDQTestDefinitions {
 	 */
 	@Test
 	public void testValidationEnddayofyearOutofrange() {
-		fail("Not yet implemented");
+		
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:endDayOfYear is EMPTY 
+        // or if the value of dwc:endDayOfYear is equal to 366 and 
+        // (dwc:eventDate is EMPTY or the value of dwc:eventDate cannot 
+        // be interpreted to find a single year or an end year in a 
+        // range); COMPLIANT if the value of dwc:endDayOfYear is an 
+        // integer between 1 and 365 inclusive, or if the value of 
+        // dwc:endDayOfYear is 366 and the end year interpreted from 
+        //dwc:eventDate is a leap year; otherwise NOT_COMPLIANT 
+    	
+		String endDayOfYear = null;
+		String eventDate = null;
+		DQResponse<ComplianceValue> response = DwCEventDQ.validationEnddayofyearOutofrange(endDayOfYear, eventDate);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		assertNull(response.getValue());
+		logger.debug(response.getComment());
+		
+		endDayOfYear = "366";
+		eventDate = null;
+		response = DwCEventDQ.validationEnddayofyearOutofrange(endDayOfYear, eventDate);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		assertNull(response.getValue());
+		logger.debug(response.getComment());
+		
+		endDayOfYear = "366";
+		eventDate = "Foo";
+		response = DwCEventDQ.validationEnddayofyearOutofrange(endDayOfYear, eventDate);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		assertNull(response.getValue());
+		logger.debug(response.getComment());
+		
+		endDayOfYear = "365";
+		eventDate = "Foo";
+		response = DwCEventDQ.validationEnddayofyearOutofrange(endDayOfYear, eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		endDayOfYear = "365";
+		eventDate = "";
+		response = DwCEventDQ.validationEnddayofyearOutofrange(endDayOfYear, eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		endDayOfYear = "365";
+		eventDate = "1980";
+		response = DwCEventDQ.validationEnddayofyearOutofrange(endDayOfYear, eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		endDayOfYear = "365";
+		eventDate = "1981";
+		response = DwCEventDQ.validationEnddayofyearOutofrange(endDayOfYear, eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		endDayOfYear = "366";
+		eventDate = "1980";
+		response = DwCEventDQ.validationEnddayofyearOutofrange(endDayOfYear, eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		endDayOfYear = "366";
+		eventDate = "1981";
+		response = DwCEventDQ.validationEnddayofyearOutofrange(endDayOfYear, eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		endDayOfYear = "366";
+		eventDate = "1979-01-01/1980-01-10";  // only end year is examined, not other parts of date for this test.
+		response = DwCEventDQ.validationEnddayofyearOutofrange(endDayOfYear, eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		endDayOfYear = "366";
+		eventDate = "1980-12-31/1981-12-31";
+		response = DwCEventDQ.validationEnddayofyearOutofrange(endDayOfYear, eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		endDayOfYear = "foo";
+		eventDate = "1980-12-31/1981-12-31";
+		response = DwCEventDQ.validationEnddayofyearOutofrange(endDayOfYear, eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
 	}
 
 	/**

@@ -272,31 +272,5 @@ public class DwCEventDQ_stubs {
         return result;
     }
 
-    /**
-     * #131 Validation SingleRecord Conformance: enddayofyear outofrange
-     *
-     * Provides: VALIDATION_ENDDAYOFYEAR_OUTOFRANGE
-     *
-     * @param eventDate the provided dwc:eventDate to evaluate
-     * @param endDayOfYear the provided dwc:endDayOfYear to evaluate
-     * @return DQResponse the response of type ComplianceValue  to return
-     */
-    @Provides("9a39d88c-7eee-46df-b32a-c109f9f81fb8")
-    public DQResponse<ComplianceValue> validationEnddayofyearOutofrange(@ActedUpon("dwc:eventDate") String eventDate, @ActedUpon("dwc:endDayOfYear") String endDayOfYear) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
-
-        //TODO:  Implement specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:endDayOfYear is EMPTY 
-        // or if the value of dwc:endDayOfYear is equal to 366 and 
-        // (dwc:eventDate is EMPTY or the value of dwc:eventDate cannot 
-        // be interpreted to find a single year or an end year in a 
-        // range); COMPLIANT if the value of dwc:endDayOfYear is an 
-        // integer between 1 and 365 inclusive, or if the value of 
-        // dwc:endDayOfYear is 366 and the end year interpreted from 
-        //dwc:eventDate is a leap year; otherwise NOT_COMPLIANT 
-
-        return result;
-    }
-
 
 }

@@ -710,7 +710,7 @@ public class DwcEventDQTest {
 		for (int year = 1900; year<=1903; year++) { 
 			for (int day= 1; day<=365; day++) { 
 				logger.debug(day + "-" + year);
-				result = DwCEventDQ.isEndDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+				result = DwCEventDQ.validationEnddayofyearOutofrange(Integer.toString(day), Integer.toString(year));
 				assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 				assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 				
@@ -723,8 +723,8 @@ public class DwcEventDQTest {
 		// A leap year
 		int year = 1932;
 		int day = 366;
-		result = DwCEventDQ.isEndDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		result = DwCEventDQ.validationEnddayofyearOutofrange(Integer.toString(day), Integer.toString(year));
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
@@ -733,7 +733,7 @@ public class DwcEventDQTest {
 		// not a leap year
 		year = 2001;
 		day = 366;  // out of range
-		result = DwCEventDQ.isEndDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+		result = DwCEventDQ.validationEnddayofyearOutofrange(Integer.toString(day), Integer.toString(year));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
@@ -742,7 +742,7 @@ public class DwcEventDQTest {
 		
 		year = 2001;
 		day = 0;  // out of range
-		result = DwCEventDQ.isEndDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+		result = DwCEventDQ.validationEnddayofyearOutofrange(Integer.toString(day), Integer.toString(year));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
@@ -751,7 +751,7 @@ public class DwcEventDQTest {
 		
 		year = 2001;
 		day = 367;  // out of range
-		result = DwCEventDQ.isEndDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
+		result = DwCEventDQ.validationEnddayofyearOutofrange(Integer.toString(day), Integer.toString(year));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day), Integer.toString(year));
@@ -760,10 +760,26 @@ public class DwcEventDQTest {
 		
 		// test with no year
 		day = 366;  
-		result = DwCEventDQ.isEndDayOfYearInRangeForYear(Integer.toString(day),"");
+		result = DwCEventDQ.validationEnddayofyearOutofrange(Integer.toString(day),"");
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		
+		day = -1;
 		result = DwCEventDQ.startDayOfYearInRangeForYear(Integer.toString(day),"");
-		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());		
+		
+		String eventDate = "1980-12-31";
+		day = 366;  
+		result = DwCEventDQ.validationEnddayofyearOutofrange(Integer.toString(day),eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "1980-12-01";	// ending year is extracted from event date, not rest of date
+		day = 366;  
+		result = DwCEventDQ.validationEnddayofyearOutofrange(Integer.toString(day),eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());  
+		
 	}
 	
 	@Test 

@@ -28,6 +28,7 @@ import org.datakurator.ffdq.api.result.NumericalValue;
 import org.datakurator.ffdq.model.ResultState;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -1034,21 +1035,55 @@ public class DwCEventDQ {
     	return result;
     }
 
+    
     /**
-     * Given a year and an end day of a date range in days of the year, test whether or not
-     * the value for endDayOfYear is in range for the days in that year (1-365, or 366  in leap year).
+     * Given an eventDate and an end day of a date range in days of the year, test whether or not
+     * the value for endDayOfYear is in range for the days in the end year of the eventDate 
+     * enddayofyear in the range (1-365, or 366 in leap year).
      *
-     * TG2-VALIDATION_ENDDAYOFYEAR_OUTOFRANGE
+     * #131 Validation SingleRecord Conformance: enddayofyear outofrange
+     * 
+     * Provides: VALIDATION_ENDDAYOFYEAR_OUTOFRANGE
      *
-     * @param endDay to evaluate for range
-     * @param year to examine for day 366, in range in in a leap year.
-     * @return an DQValidationResponse object describing whether the date year-endDayOfYear exists.
+     * @param endDay the provided dwc:endDayOfYear to evaluate for range 1-365 or 1-366 
+     * @param eventDate to check to see if the year or the end year of the range has 
+     *   a day 366, in range in in a leap year.
+     * @return DQResponse the response of type ComplianceValue  to return
      */
-    @Provides(value="urn:uuid:9a39d88c-7eee-46df-b32a-c109f9f81fb8")
-    @Validation( label = "VALIDATION_ENDDAYOFYEAR_OUTOFRANGE", description="The value of dwc:endDayOfYear is a valid day given the year.")
-    @Specification(value="The value of dwc:endDayOfYear is a valid day given the year. The value of dwc:endDayOfYear is a number. If present dwc:year must be an integer. This test should be run after the test TG2-AMENDMENT_EVENT_FROM_EVENTDATE (#52)")
-    public static final DQResponse<ComplianceValue> isEndDayOfYearInRangeForYear(@ActedUpon(value="dwc:endDayOfYear") String endDay, @Consulted(value="dwc:year")String year) {
+    @Provides("9a39d88c-7eee-46df-b32a-c109f9f81fb8")
+    public static final DQResponse<ComplianceValue> validationEnddayofyearOutofrange(
+    		@ActedUpon(value="dwc:endDayOfYear") String endDay, 
+    		@Consulted(value="dwc:eventDate")String eventDate) {
+    	
+        //TODO:  Implement specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:endDayOfYear is EMPTY 
+        // or if the value of dwc:endDayOfYear is equal to 366 and 
+        // (dwc:eventDate is EMPTY or the value of dwc:eventDate cannot 
+        // be interpreted to find a single year or an end year in a 
+        // range); COMPLIANT if the value of dwc:endDayOfYear is an 
+        // integer between 1 and 365 inclusive, or if the value of 
+        // dwc:endDayOfYear is 366 and the end year interpreted from 
+        //dwc:eventDate is a leap year; otherwise NOT_COMPLIANT 
+    	
     	DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+    	
+    	String year = ""; 
+    	
+    	boolean eventDateParseFailure = false;
+    	if (!DateUtils.isEmpty(eventDate)) { 
+    		try {
+    			Integer endYearInt = new LocalDateInterval(eventDate).getEndDate().getYear();
+    			year = Integer.toString(endYearInt);
+    		} catch (DateTimeParseException | EmptyDateException e1) {
+    			logger.debug(e1.getMessage());
+    			eventDateParseFailure = true;
+    		}
+    	}
+    	
+    	logger.debug(endDay);
+    	logger.debug(eventDate);
+    	logger.debug(year);
+    	
     	if (DateUtils.isEmpty(endDay)) {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		result.addComment("endDayOfYear was not provided.");
@@ -1062,7 +1097,11 @@ public class DwCEventDQ {
     	       } else if (numericEndDay==366) {
     	           if (DateUtils.isEmpty(year)) {
     		            result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-    		            result.addComment("year was not provided and day is 366, could be valid in a leap year.");
+    		            if (eventDateParseFailure) {
+    		            	result.addComment("unable to extract year from provided eventDate and day is 366, could be valid in a leap year.");
+    		            } else {
+    		            	result.addComment("year was not provided and day is 366, could be valid in a leap year.");
+    		            }
     	           } else {
     	        	   String potentialDay = DateUtils.createEventDateFromParts("", endDay, "", year, "", "");
     	        	   if (DateUtils.isEmpty(potentialDay)) {
@@ -1085,7 +1124,8 @@ public class DwCEventDQ {
     		       result.addComment("endDayOfYear [" + endDay + "] is out of range for days in the year.");
     	       }
     	    } catch (NumberFormatException e) {
-    		   result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    		   result.setResultState(ResultState.RUN_HAS_RESULT);
+    		   result.setValue(ComplianceValue.NOT_COMPLIANT);
     		   result.addComment("endDayOfYear [" + endDay + "] is not a number.");
     	    }
     	}
