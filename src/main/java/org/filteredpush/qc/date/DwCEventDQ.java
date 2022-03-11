@@ -1125,23 +1125,18 @@ public class DwCEventDQ {
     	
     	DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
     	
-        // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate was not 
-        // EMPTY or dwc:year was EMPTY or both dwc:startDayOfYear and 
-        // dwc:endDayOfYear were EMPTY or the values were not interpretable; 
-        // AMENDED if dwc:eventDate was FILLED_IN from the values in 
-        // dwc:year, dwc:startDayOfYear and dwc:endDayOfYear; otherwise 
-        // NOT_AMENDED 
+    	// Specification (Updated 2022 Mar 10)
+    	// INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate was not 
+    	// EMPTY or any of dwc:year, dwc:startDayOfYear, or dwc:endDayOfYear were EMPTY 
+    	// or any of the values in dwc:year, dwc:startDayOfYear, or dwc:endDayOfYear 
+    	// were not independently interpretable; AMENDED if dwc:eventDate was FILLED_IN 
+    	// from the values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear; 
+    	// if the value of dwc:endDayOfYear is less than the value of dwc:startDayOfYear, 
+    	// or otherwise NOT_AMENDED
     	
-    	// NOTE (commented in issue), no path leads to NOT_AMENDED if the last clause of the 
-    	// internal prerequisites not met applies to year as well as start day and end day of year.
-    	// implemented as such here.
-    	// NOTE (commented in issue) path for value in year and endDayOfYear, but not startDayOfYear
-    	// isn't clear in the issue, here status returns internal prerequisites not met.
-    	
-    	if (DateUtils.isEmpty(year) || DateUtils.isEmpty(startDay)) {
+    	if (DateUtils.isEmpty(year) || DateUtils.isEmpty(startDay) || DateUtils.isEmpty(endDay)) {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-    		result.addComment("Either year or startDayOfYear was not provided.");
+    		result.addComment("One of year, startDayOfYear, or endDayOfYear was not provided.");
     	} else if (!DateUtils.isEmpty(eventDate)) {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		result.addComment("A value exists in dwc:eventDate, ammendment not attempted.");
@@ -1149,24 +1144,40 @@ public class DwCEventDQ {
     	    try {
      	       Integer numericYear = Integer.parseInt(year);
      	       Integer numericStartDay = Integer.parseInt(startDay);
-     	       if (!DateUtils.isEmpty(endDay)) {
-     	           Integer numericEndDay = Integer.parseInt(endDay);
-     	       }
+     	       Integer numericEndDay = Integer.parseInt(endDay);
+     	       logger.debug(numericStartDay);
+     	       if (numericStartDay < 1 || numericStartDay > 366 || numericEndDay < 1 || numericEndDay > 366) { 
+     	    	   // out of range for possible days of year, report and fail.
+     	    	   if (numericStartDay < 1 || numericStartDay > 366) { 
+     	    		   result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+     	    		   result.addComment("startDayOfYear [" + startDay + "], is out of range for possible days of the year.");
+     	    	   }
+     	    	   if (numericEndDay < 1 || numericEndDay > 366) { 
+     	    		   result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+     	    		   result.addComment("endDayOfYear [" + endDay + "], is out of range for possible days of the year.");
+     	    	   }
+     	       } else { 
+     	    	   // see if a valid date range can be constructed.
+     	    	   String resultDateString = DateUtils.createEventDateFromParts("", startDay, endDay, year, "", "");
+     	    	   logger.debug(resultDateString);
 
-     	       String resultDateString = DateUtils.createEventDateFromParts("", startDay, endDay, year, "", "");
-
-     	       if (DateUtils.isEmpty(resultDateString)) {
-     	    	   result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-     		       result.addComment("Unable to construct a valid ISO date from startDayOfYear [" + startDay + "], year ["+year+"], and endDayOfYear ["+ endDay +"].");
-     	       } else {
-     	    	   result.setResultState(ResultState.AMENDED);
-     	    	   Map<String, String> values = new HashMap<>();
-     	    	   values.put("dwc:eventDate", resultDateString);
-     	    	   result.setValue(new AmendmentValue(values));
-     		       result.addComment("FILLED IN EMPTY dwc:eventDate from startDayOfYear [" + startDay + "], year ["+year+"], and endDayOfYear ["+ endDay +"].");
-     	       }
-
-     	    } catch (NumberFormatException e) {
+     	    	   if (DateUtils.isEmpty(resultDateString)) {
+     	    		   if (numericEndDay < numericStartDay) { 
+     	    			   result.setResultState(ResultState.NOT_AMENDED);
+     	    			   result.addComment("Not attempting to amend, startDayOfYear [" + startDay + "] is greater than endDayOfYear ["+ endDay +"].");
+     	    		   } else { 
+     	    			   result.setResultState(ResultState.NOT_AMENDED);
+     	    			   result.addComment("Unable to construct a valid ISO date from startDayOfYear [" + startDay + "], year ["+year+"], and endDayOfYear ["+ endDay +"].");
+     	    		   }
+     	    	   } else {
+     	    		   result.setResultState(ResultState.AMENDED);
+     	    		   Map<String, String> values = new HashMap<>();
+     	    		   values.put("dwc:eventDate", resultDateString);
+     	    		   result.setValue(new AmendmentValue(values));
+     	    		   result.addComment("FILLED IN EMPTY dwc:eventDate from startDayOfYear [" + startDay + "], year ["+year+"], and endDayOfYear ["+ endDay +"].");
+     	    	   }
+     	       } 
+    	    } catch (NumberFormatException e) {
      		   result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
      		   result.addComment("One of startDayOfYear [" + startDay + "], year ["+year+"], or endDayOfYear ["+ endDay +"] is not a number.");
      	    }

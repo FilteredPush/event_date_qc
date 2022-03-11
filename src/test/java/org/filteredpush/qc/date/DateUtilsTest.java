@@ -117,11 +117,11 @@ public class DateUtilsTest {
 		assertEquals("1882-04-04", DateUtils.createEventDateFromParts("04/04/1882", null, null, null, null, null));
 		assertEquals("1882-02-03/1882-03-02", DateUtils.createEventDateFromParts("02/03/1882", null, null, null, null, null));
 		
-		assertEquals("1882-01-01/1882-01-31", DateUtils.createEventDateFromParts("1882-01", null, null, null, null, null));
-		assertEquals("1882-04-01/1882-04-30", DateUtils.createEventDateFromParts("1882-04", null, null, null, null, null));
-		assertEquals("1882-01-01/1882-01-31", DateUtils.createEventDateFromParts("1882-Jan", null, null, null, null, null));
-		assertEquals("1882-01-01/1882-01-31", DateUtils.createEventDateFromParts("1882/Jan", null, null, null, null, null));
-		assertEquals("1882-01-01/1882-12-31", DateUtils.createEventDateFromParts("1882", null, null, null, null, null));
+		assertEquals("1882-01", DateUtils.createEventDateFromParts("1882-01", null, null, null, null, null));
+		assertEquals("1882-04", DateUtils.createEventDateFromParts("1882-04", null, null, null, null, null));
+		assertEquals("1882-01", DateUtils.createEventDateFromParts("1882-Jan", null, null, null, null, null));
+		assertEquals("1882-01", DateUtils.createEventDateFromParts("1882/Jan", null, null, null, null, null));
+		assertEquals("1882", DateUtils.createEventDateFromParts("1882", null, null, null, null, null));
 		
 		assertEquals("1890-02-01", DateUtils.createEventDateFromParts("1890-032", null, null, null, null, null));
 		assertEquals("1890-02-01", DateUtils.createEventDateFromParts("1890-032", "32", "32", null, null, null));

@@ -387,12 +387,13 @@ public class DwCEventDQTestDefinitions {
 	public void testAmendmentEventdateFromYearstartdayofyearenddayofyear() {
 		
         // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate was not 
-        // EMPTY or dwc:year was EMPTY or both dwc:startDayOfYear and 
-        // dwc:endDayOfYear were EMPTY or the values were not interpretable; 
-        // AMENDED if dwc:eventDate was FILLED_IN from the values in 
-        // dwc:year, dwc:startDayOfYear and dwc:endDayOfYear; otherwise 
-        // NOT_AMENDED 
+    	// INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate was not 
+    	// EMPTY or any of dwc:year, dwc:startDayOfYear, or dwc:endDayOfYear were EMPTY 
+    	// or any of the values in dwc:year, dwc:startDayOfYear, or dwc:endDayOfYear 
+    	// were not independently interpretable; AMENDED if dwc:eventDate was FILLED_IN 
+    	// from the values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear; 
+    	// if the value of dwc:endDayOfYear is less than the value of dwc:startDayOfYear, 
+    	// or otherwise NOT_AMENDED
 		
 		String eventDate = "1890";
 		String year = "";
@@ -423,7 +424,7 @@ public class DwCEventDQTestDefinitions {
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
 		
 		eventDate = null;
-		year = "";
+		year = "foo";
 		startDayOfYear = "5";
 		endDayOfYear = "180";
 		response = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDayOfYear, endDayOfYear);
@@ -437,11 +438,21 @@ public class DwCEventDQTestDefinitions {
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
 			
 		eventDate = null;
+		year = "1890";
+		startDayOfYear = "5";
+		endDayOfYear = "Foo";
+		response = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		
+		eventDate = null;
 		year = "32";
 		startDayOfYear = "5";
 		endDayOfYear = "180";
 		response = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel());
+		assertEquals(1,response.getValue().getObject().size());
+		assertEquals("dwc:eventDate",response.getValue().getObject().keySet().iterator().next());
+		assertEquals("0032-01-05/0032-06-28",response.getValue().getObject().get("dwc:eventDate"));
 		
 		eventDate = "";
 		year = "1932";
@@ -454,22 +465,53 @@ public class DwCEventDQTestDefinitions {
 		assertEquals("1932-01-05/1932-06-28",response.getValue().getObject().get("dwc:eventDate"));
 		
 		eventDate = "";
-		year = "1932";
-		startDayOfYear = "5";
-		endDayOfYear = "";
+		year = "1980";
+		startDayOfYear = "1";
+		endDayOfYear = "366";  // leap year
 		response = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel());
 		assertEquals(1,response.getValue().getObject().size());
 		assertEquals("dwc:eventDate",response.getValue().getObject().keySet().iterator().next());
-		assertEquals("1932-01-05",response.getValue().getObject().get("dwc:eventDate"));
+		assertEquals("1980",response.getValue().getObject().get("dwc:eventDate"));
+		
+		eventDate = "";
+		year = "1980";
+		startDayOfYear = "366";
+		endDayOfYear = "366";  // leap year
+		response = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel());
+		assertEquals(1,response.getValue().getObject().size());
+		assertEquals("dwc:eventDate",response.getValue().getObject().keySet().iterator().next());
+		assertEquals("1980-12-31",response.getValue().getObject().get("dwc:eventDate"));
+		
+		eventDate = "";
+		year = "1932";
+		startDayOfYear = "5";
+		endDayOfYear = "";
+		response = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
 			
-		// NOTE: This may change.  Not clearly specified in the issue.
 		eventDate = "";
 		year = "1932";
 		startDayOfYear = "";
 		endDayOfYear = "5";
 		response = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		
+		eventDate = "";
+		year = "1932";
+		startDayOfYear = "180";
+		endDayOfYear = "5";
+		response = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.NOT_AMENDED.getLabel(), response.getResultState().getLabel());
+		
+		eventDate = "";
+		year = "1981";
+		startDayOfYear = "1";
+		endDayOfYear = "366"; // not a leap year
+		response = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.NOT_AMENDED.getLabel(), response.getResultState().getLabel());	
+		
 	}
 
 	/**

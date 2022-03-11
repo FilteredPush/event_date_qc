@@ -39,6 +39,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.datakurator.ffdq.api.ResultState;
 import org.filteredpush.qc.date.EventResult.EventQCResultState;
 import org.filteredpush.qc.date.LocalDateInterval.DatePair;
 
@@ -143,23 +144,35 @@ public class DateUtils {
 	 */
 	public static String createEventDateFromParts(String verbatimEventDate, String startDayOfYear, String endDayOfYear, String year, String month, String day) {
 		String result = null;
+		
+		logger.debug(verbatimEventDate);
+		logger.debug(startDayOfYear);
+		logger.debug(endDayOfYear);
+		logger.debug(year);
+		logger.debug(month);
+		logger.debug(day);
 
 		if (verbatimEventDate!=null && verbatimEventDate.trim().length()>0) { 
-			Map<String,String> verbatim = extractDateToDayFromVerbatim(verbatimEventDate, DateUtils.YEAR_BEFORE_SUSPECT); 
-			if (verbatim.size()>0) { 
-				if (verbatim.get("resultState")!=null && verbatim.get("resultState").equals("date")) { 
-					result = verbatim.get("result");
+			EventResult verbatim = extractDateToDayFromVerbatimER(verbatimEventDate, DateUtils.YEAR_BEFORE_SUSPECT); 
+			if (!verbatim.getResultState().equals(EventQCResultState.NOT_RUN)) { 
+				if (verbatim.getResultState().equals(EventQCResultState.DATE)) { 
+					result = verbatim.getResult();
 				}
-				if (verbatim.get("resultState")!=null && verbatim.get("resultState").equals("ambiguous")) { 
-					result = verbatim.get("result");
+				if (verbatim.getResultState().equals(EventQCResultState.AMBIGUOUS)) { 
+					result = verbatim.getResult();
 				}		
-				if (verbatim.get("resultState")!=null && verbatim.get("resultState").equals("range")) { 
-					result = verbatim.get("result");
+				if (verbatim.getResultState().equals(EventQCResultState.RANGE)) { 
+					result = verbatim.getResult();
+				}					
+				if (verbatim.getResultState().equals(EventQCResultState.SUSPECT)) { 
+					result = verbatim.getResult();
 				}					
 			}
+			logger.debug(result);
 		}
 		if (year!=null && year.matches("[0-9]{4}") && isEmpty(month) && isEmpty(day) && isEmpty(startDayOfYear)) { 
 		    result = year;
+			logger.debug(result);
 		}		
 		if (year!=null && year.matches("[0-9]{4}") && 
 				(month==null || month.trim().length()==0) && 
@@ -174,15 +187,16 @@ public class DateUtils {
 				} else { 
 					assembly.append(year).append("-").append(String.format("%03d",Integer.parseInt(startDayOfYear)));
 				}
-			    Map<String,String> verbatim = extractDateToDayFromVerbatim(assembly.toString(), DateUtils.YEAR_BEFORE_SUSPECT) ;
-			    logger.debug(verbatim.get("resultState"));
-			    logger.debug(verbatim.get("result"));
-				if (verbatim.get("resultState")!=null && (verbatim.get("resultState").equals("date") || verbatim.get("resultState").equals("range"))) { 
-					result = verbatim.get("result");
+			    EventResult verbatim = extractDateToDayFromVerbatimER(assembly.toString(), DateUtils.YEAR_BEFORE_SUSPECT) ;
+			    logger.debug(verbatim.getResultState().toString());
+			    logger.debug(verbatim.getResult());
+				if (verbatim.getResultState().equals(EventQCResultState.DATE) || verbatim.getResultState().equals(EventQCResultState.RANGE)) { 
+					result = verbatim.getResult();
 				}
 			} catch (Exception e) {
 				logger.debug(e.getMessage());
 			}
+			logger.debug(result);
 		}		
 		if (    (verbatimEventDate!=null && verbatimEventDate.matches("^[0-9]{4}$")) &&
 				(year==null || year.trim().length()==0) && 
@@ -198,23 +212,65 @@ public class DateUtils {
 				} else { 
 					assembly.append(verbatimEventDate).append("-").append(String.format("%03d",Integer.parseInt(startDayOfYear)));
 				}
-			    Map<String,String> verbatim = extractDateToDayFromVerbatim(assembly.toString(), DateUtils.YEAR_BEFORE_SUSPECT) ;
-			    logger.debug(verbatim.get("resultState"));
-			    logger.debug(verbatim.get("result"));
-				if (verbatim.get("resultState")!=null && (verbatim.get("resultState").equals("date") || verbatim.get("resultState").equals("range"))) { 
-					result = verbatim.get("result");
+			    EventResult verbatim = extractDateToDayFromVerbatimER(assembly.toString(), DateUtils.YEAR_BEFORE_SUSPECT) ;
+			    logger.debug(verbatim.getResultState().toString());
+			    logger.debug(verbatim.getResult());
+				if (verbatim.getResultState().equals(EventQCResultState.DATE)
+						|| verbatim.getResultState().equals(EventQCResultState.RANGE)
+						|| verbatim.getResultState().equals(EventQCResultState.SUSPECT)
+				) { 
+					result = verbatim.getResult();
 				}
 			} catch (Exception e) {
 				logger.debug(e.getMessage());
 			}
+			logger.debug(result);
 		}			
+		if (!DateUtils.isEmpty(year) && 
+			DateUtils.isEmpty(month) &&
+			DateUtils.isEmpty(day) &&
+			DateUtils.isEmpty(verbatimEventDate) &&
+			!DateUtils.isEmpty(startDayOfYear) &&
+			!DateUtils.isEmpty(endDayOfYear)
+			)
+		{
+			try { 
+				Integer yearInt = Integer.parseInt(year.trim());
+				Integer startInt = Integer.parseInt(startDayOfYear.trim());
+				Integer endInt = Integer.parseInt(endDayOfYear.trim());
+				String toTest = String.format("%04d", yearInt).concat("-");
+				toTest = toTest.concat(String.format("%03d", startInt));
+				toTest = toTest.concat("/");
+				toTest = toTest.concat(String.format("%04d", yearInt)).concat("-");
+				toTest = toTest.concat(String.format("%03d", endInt));
+				logger.debug(toTest);
+
+				result = new LocalDateInterval(toTest).toString();
+			} catch (NumberFormatException | DateTimeParseException | EmptyDateException e) {
+				logger.debug(e.getMessage());
+			}
+			logger.debug(result);
+		}
 		if (year!=null && year.matches("[0-9]{4}") && month!=null && month.matches("[0-9]{1,2}") &&( day==null || day.trim().length()==0 )) {  
 		    result = String.format("%04d",Integer.parseInt(year)) + "-" + String.format("%02d",Integer.parseInt(month));
+			logger.debug(result);
 		}
 		if (year!=null && year.matches("[0-9]{4}") && month!=null && month.matches("[0-9]{1,2}") && day!=null && day.matches("[0-9]{1,2}")) {  
 		    result = String.format("%04d",Integer.parseInt(year)) + "-" + 
                      String.format("%02d",Integer.parseInt(month)) + "-" + 
                      String.format("%02d",Integer.parseInt(day));
+			logger.debug(result);
+		}
+		if (!DateUtils.isEmpty(result)) { 
+			logger.debug(result);
+			// confirm the result and make sure it is represented in consistent form.
+			try {
+				result = new LocalDateInterval(result).toString();
+				logger.debug(result);
+			} catch (DateTimeParseException | EmptyDateException e) {
+				result = null;
+				logger.error(e.getMessage());
+			}
 		}
 		return result;
 	}

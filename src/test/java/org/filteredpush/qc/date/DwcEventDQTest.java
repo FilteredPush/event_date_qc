@@ -484,7 +484,7 @@ public class DwcEventDQTest {
 		String year = "1980";
 		String startDay = "5";
 		String endDay = "6";
-		DQResponse<AmendmentValue> result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
+		DQResponse<AmendmentValue> result = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDay, endDay);
 		assertEquals(ResultState.AMENDED.getLabel(),result.getResultState().getLabel());
 		assertEquals("1980-01-05/1980-01-06", result.getValue().getObject().get("dwc:eventDate"));
 		
@@ -492,37 +492,37 @@ public class DwcEventDQTest {
 		year = "1980";
 		startDay = "5";
 		endDay = "6";
-		result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
+		result = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDay, endDay);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET,result.getResultState()); 
 		
 		eventDate = "";
 		year = "1980";
 		startDay = "day5";  // not a number
 		endDay = "6";
-		result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
+		result = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDay, endDay);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET,result.getResultState());
 		
 		eventDate = "";
 		year = "1980";  // a leap year
 		startDay = "1";
 		endDay = "366";  
-		result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
+		result = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDay, endDay);
 		assertEquals(ResultState.AMENDED.getLabel(),result.getResultState().getLabel());
-		assertEquals("1980-01-01/1980-12-31", result.getValue().getObject().get("dwc:eventDate"));
+		assertEquals("1980", result.getValue().getObject().get("dwc:eventDate"));
 		
 		eventDate = "";
 		year = "1981";  // not a leap year
 		startDay = "1";
 		endDay = "365";  
-		result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
+		result = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDay, endDay);
 		assertEquals(ResultState.AMENDED.getLabel(),result.getResultState().getLabel());
-		assertEquals("1981-01-01/1981-12-31", result.getValue().getObject().get("dwc:eventDate"));
+		assertEquals("1981", result.getValue().getObject().get("dwc:eventDate"));
 		
 		eventDate = "";
 		year = "1981";  // not a leap year
 		startDay = "45";
 		endDay = "280";  
-		result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
+		result = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDay, endDay);
 		assertEquals(ResultState.AMENDED.getLabel(),result.getResultState().getLabel());
 		assertEquals("1981-02-14/1981-10-07", result.getValue().getObject().get("dwc:eventDate"));		
 		
@@ -530,7 +530,7 @@ public class DwcEventDQTest {
 		year = "1980";  // a leap year
 		startDay = "45";  // spans leap day
 		endDay = "280";  
-		result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
+		result = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDay, endDay);
 		assertEquals(ResultState.AMENDED.getLabel(),result.getResultState().getLabel());
 		assertEquals("1980-02-14/1980-10-06", result.getValue().getObject().get("dwc:eventDate"));			
 		
@@ -538,22 +538,22 @@ public class DwcEventDQTest {
 		year = "1981";  // not a leap year
 		startDay = "1";
 		endDay = "366";  
-		result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
-		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET,result.getResultState());		
+		result = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDay, endDay);
+		assertEquals(ResultState.NOT_AMENDED.getLabel(),result.getResultState().getLabel());		
 		
 		eventDate = "";
 		year = "1980";
 		startDay = "900";  // out of range
 		endDay = "920";
-		result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
-		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET,result.getResultState());
+		result = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDay, endDay);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(),result.getResultState().getLabel());
 		
 		eventDate = "";
 		year = "1980";
 		startDay = "200";  // start and end reversed or in different years.
 		endDay = "10";
-		result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
-		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET,result.getResultState());	
+		result = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDay, endDay);
+		assertEquals(ResultState.NOT_AMENDED.getLabel(),result.getResultState().getLabel());
 		
 		// Example given in TG2 definition: 
 		//dwc:year=1999, dwc:startDayOfYear=123, dwc:endDayOfYear=125 
@@ -562,7 +562,7 @@ public class DwcEventDQTest {
 		year = "1999"; 
 		startDay = "123"; 
 		endDay = "125";  
-		result = DwCEventDQ.eventDateFromYearStartEndDay(eventDate, year, startDay, endDay);
+		result = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate, year, startDay, endDay);
 		assertEquals(ResultState.AMENDED.getLabel(),result.getResultState().getLabel());
 		assertEquals("1999-05-03/1999-05-05", result.getValue().getObject().get("dwc:eventDate"));	
 		
