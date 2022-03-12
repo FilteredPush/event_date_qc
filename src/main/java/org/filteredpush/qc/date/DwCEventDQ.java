@@ -44,36 +44,36 @@ import java.util.Map;
  * 
  * Provides support for the following TDWG DQIG TG2 validations
  * 
+ * VALIDATION_EVENT_TEMPORAL_EMPTY 41267642-60ff-4116-90eb-499fee2cd83f
  * VALIDATION_EVENTDATE_EMPTY f51e15a6-a67d-4729-9c28-3766299d2985
+ * VALIDATION_EVENTDATE_OUTOFRANGE 3cff4dc4-72e9-4abe-9bf3-8a30f1618432
  * VALIDATION_YEAR_EMPTY c09ecbf9-34e3-4f3e-b74a-8796af15e59f
  * VALIDATION_DAY_NOTSTANDARD 47ff73ba-0028-4f79-9ce1-ee7008d66498
  * VALIDATION_EVENTDATE_OUTOFRANGE 3cff4dc4-72e9-4abe-9bf3-8a30f1618432
+ * VALIDATION_MONTH_NOTSTANDARD 01c6dafa-0886-4b7e-9881-2c3018c98bdc
+ * VALIDATION_STARTDAYOFYEAR_OUTOFRANGE 85803c7e-2a5a-42e1-b8d3-299a44cafc46
+ * VALIDATION_ENDDAYOFYEAR_OUTOFRANGE 9a39d88c-7eee-46df-b32a-c109f9f81fb8
  * 
  * TODO: Update: 
- * VALIDATION_DAY_OUTOFRANGE   5618f083-d55a-4ac2-92b5-b9fb227b832f   ** Differs
+ * VALIDATION_DAY_OUTOFRANGE  8d787cb5-73e2-4c39-9cd1-67c7361dc02e   ** Differs
  * 
  * Provides support for the following TDWG DQIG TG2 amendments 
  * 
+ * AMENDMENT_DAY_STANDARDIZED b129fa4d-b25b-43f7-9645-5ed4d44b357b
+ * AMENDMENT_MONTH_STANDARDIZED 2e371d57-1eb3-4fe3-8a61-dff43ced50cf
  * AMENDMENT_EVENTDATE_FROM_VERBATIM 6d0a0c10-5e4a-4759-b448-88932f399812
+ * AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR eb0a44fa-241c-4d64-98df-ad4aa837307b
+ * AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY 3892f432-ddd0-4a0a-b713-f2e2ecbd879d
  * 
  * Provides support for the following draft TDWG DQIG TG2 validations and amendments.  
  * (Old list, to update)   
  * ?? TG2-VALIDATION_EVENTDATE_NOTSTANDARD 4f2bf8fd-fc5c-493f-a44c-e7b16153c803
  * TG2-AMENDMENT_EVENTDATE_STANDARDIZED  	718dfc3c-cb52-4fca-b8e2-0e722f375da7
- * TG2-VALIDATION_MONTH_OUTOFRANGE isMonthInRange(@ActedUpon(value = "dwc:month") String month) 
  * TG2-VALIDATION_DAY_OUTOFRANGE isDayPossibleForMonthYear(@Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) 
- * TG2-VALIDATION_STARTDAYOFYEAR_OUTOFRANGE
- * TG2-VALIDATION_ENDDAYOFYEAR_OUTOFRANGE 
- * TG2-AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR
- * TG2-AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY 
- * TG2-AMENDMENT_MONTH_STANDARDIZED 
- * TG2-AMENDMENT_DAY_STANDARDIZED 
  * TG2-VALIDATION_EVENT_INCONSISTENT isConsistent(String eventDate, String startDayOfYear, String endDayOfYear, String year, String month, String day 
- * TG2-VALIDATION_EVENT_EMPTY
  * An equivalent measure for TG2-VALIDATION_EVENT_EMPTY
  * TG2-AMENDMENT_EVENT_FROM_EVENTDATE  	710fe118-17e1-440f-b428-88ba3f547d6d
  * TG2-VALIDATION_YEAR_OUTOFRANGE 
- * TG2-VALIDATION_EVENTDATE_OUTOFRANGE  
  * 
  * Also Provides support for the following supplemental, under discussion or other tests: 
  *   DAY_IN_RANGE.  isDayInRange(@ActedUpon(value = "dwc:day") String day)   
@@ -82,6 +82,8 @@ import java.util.Map;
  *   EVENTDATE_PRECISON_MONTH_OR_BETTER  TODO: not yet implemented.
  *   EVENTDATE_PRECISON_YEAR_OR_BETTER isEventDateYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) 
  *                                also isEventDateJulianYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) 
+ * 
+ * MEASURE_EVENT_NOTEMPTY 9dc97514-3b88-4afc-931d-5fc386be21ee (other)
  *  
  *  Also provides (intended to prepare upstream data for Darwin Core: 
  *     UPSTREAM_EVENTDATE_FILLED_IN_FROM_START_END  extractDateFromStartEnd(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "startDate") String startDate, @Consulted(value="endDate") String endDate) 
@@ -142,7 +144,7 @@ public class DwCEventDQ {
 	@Validation( label = "VALIDATION_MONTH_NOTSTANDARD", description="#126 Validation SingleRecord Conformance: month notstandard")
 	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:month is EMPTY; COMPLIANT if the value of dwc:month is an integer between 1 and 12 inclusive; otherwise NOT_COMPLIANT")
 	--
-	@Provides(value="urn:uuid:5618f083-d55a-4ac2-92b5-b9fb227b832f")
+	@Provides(value="urn:uuid:8d787cb5-73e2-4c39-9cd1-67c7361dc02e")
 	@Validation( label = "VALIDATION_DAY_OUTOFRANGE", description="#125 Validation SingleRecord Conformance: day outofrange")
 	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if (a) dwc:day is EMPTY (b) is not an integer, or (c) dwc:day is an integer between 29 and 31 inclusive and dwc:month is not an integer between 1 and 12, or (d) dwc:month is the integer 2 and dwc:day is the integer 29 and dwc:year is not a valid ISO 8601 year; COMPLIANT (a) if the value of the field dwc:day is an integer between 1 and 28 inclusive, or (b) dwc:day is an integer between 29 and 30 and dwc:month is an integer in the set (4,6,9,11), or (c) dwc:day is an integer between 29 and 31 and dwc:month is an integer in the set (1,3,5,7,8,10,12), or (d) dwc:day is the integer 29 and dwc:month is the integer 2 and dwc:year is a valid leap year (evenly divisible by 400 or (evenly divisible by 4 but not evenly divisible by 100)); otherwise NOT_COMPLIANT.")
 	--
@@ -724,13 +726,6 @@ public class DwCEventDQ {
 		return result;
     }
 
-    /**
-     * @param month the provided dwc:month to evaluate
-     * @return DQResponse the response of type ComplianceValue  to return
-     */
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
-
-
  
 	@Deprecated
     public static DQResponse<ComplianceValue> isMonthInRange(@ActedUpon(value="dwc:month") String month) {
@@ -882,7 +877,7 @@ public class DwCEventDQ {
      * @param day to check
      * @return an DQValidationResponse object describing whether day exists in year-month-day.
      */
-    @Provides(value="urn:uuid:5618f083-d55a-4ac2-92b5-b9fb227b832f")
+    @Provides(value="urn:uuid:8d787cb5-73e2-4c39-9cd1-67c7361dc02e")
     @Validation( label = "VALIDATION_DAY_OUTOFRANGE", description="The value of dwc:day is a valid day given the month and year.")
     @Specification(value="INTERNAL_PREREQUISITES_NOT_MET if any of the fields dwc:day, dwc:month and dwc:year are not " +
             "present or are EMPTY; COMPLIANT if the value of the field dwc:day is a valid day given the month and year; " + 
@@ -1216,7 +1211,7 @@ public class DwCEventDQ {
      * @param endDay from which to construct an event date
      * @return DQResponse the response of type AmendmentValue to return
      */
-    @Provides(value="urn:uuid:eb0a44fa-241c-4d64-98df-ad4aa837307b")
+    @Provides(value="eb0a44fa-241c-4d64-98df-ad4aa837307b")
     public static final DQResponse<AmendmentValue> amendmentEventdateFromYearstartdayofyearenddayofyear(
     		@ActedUpon(value="dwc:eventDate") String eventDate, 
     		@Consulted(value="dwc:year") String year, 
@@ -1852,6 +1847,7 @@ public class DwCEventDQ {
      * one of them contains some value.  This may or may not be a meaningful value, and this may or
      * may not be interpretable to a date or date range.
      *
+	 * MEASURE_EVENT_NOTEMPTY 
      * Equivalent measure for TG2-VALIDATION_EVENT_EMPTY
      *
      * @param eventDate to examine

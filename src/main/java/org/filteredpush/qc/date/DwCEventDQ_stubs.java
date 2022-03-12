@@ -156,7 +156,7 @@ public class DwCEventDQ_stubs {
      * @param day the provided dwc:day to evaluate
      * @return DQResponse the response of type ComplianceValue  to return
      */
-    @Provides("5618f083-d55a-4ac2-92b5-b9fb227b832f")
+    @Provides("8d787cb5-73e2-4c39-9cd1-67c7361dc02e")
     public DQResponse<ComplianceValue> validationDayOutofrange(@ActedUpon("dwc:year") String year, @ActedUpon("dwc:month") String month, @ActedUpon("dwc:day") String day) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
