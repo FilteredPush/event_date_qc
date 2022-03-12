@@ -262,8 +262,9 @@ public class DwCEventDQ {
 	}
 
 	/**
-	 * #33 Validation SingleRecord Completeness: eventdate empty
 	 * Test to see whether or not a dwc:eventDate contains any value.
+	 * 
+	 * #33 Validation SingleRecord Completeness: eventdate empty
 	 *
 	 * Provides: VALIDATION_EVENTDATE_EMPTY
 	 *
@@ -291,8 +292,11 @@ public class DwCEventDQ {
 
 	
 	/**
-     * #49 Validation SingleRecord Completeness: year empty
 	 * Test to see whether or not a dwc:year contains any value.
+	 * 
+     * #49 Validation SingleRecord Completeness: year empty
+     * 
+     * Provides VALIDATION_YEAR_EMPTY
 	 * 
      * @param year the provided dwc:year to evaluate for the presence of some value
      * @return DQVResponse of type ComplianceValue describing whether any value is present dwc:year.
