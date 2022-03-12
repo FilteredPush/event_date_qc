@@ -184,65 +184,71 @@ public class DwcEventDQTest {
 	}
 
 	/**
-	 * Test method for {@link org.filteredpush.qc.date.DwCEventDQ#isMonthInRange(java.lang.String)}.
+	 * Test method for {@link org.filteredpush.qc.date.DwCEventDQ#validationMonthNotstandard(java.lang.String)}.
 	 */
 	@Test
 	public void testIsMonthInRange() {
 		DQResponse<ComplianceValue> result = null;
 		for (int i = 1; i<=12; i++) { 
-			result = DwCEventDQ.isMonthInRange(Integer.toString(i));
+			result = DwCEventDQ.validationMonthNotstandard(Integer.toString(i));
 			assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 			assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		}
-		result = DwCEventDQ.isMonthInRange(" 1 ");
+		result = DwCEventDQ.validationMonthNotstandard(" 1 ");
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
-		result = DwCEventDQ.isMonthInRange("01");
+		result = DwCEventDQ.validationMonthNotstandard("01");
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 
 		int i=0;
-		result = DwCEventDQ.isMonthInRange(Integer.toString(i));
+		result = DwCEventDQ.validationMonthNotstandard(Integer.toString(i));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 
 		i=13;
-		result = DwCEventDQ.isMonthInRange(Integer.toString(i));
+		result = DwCEventDQ.validationMonthNotstandard(Integer.toString(i));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 
 		i=-1;
-		result = DwCEventDQ.isMonthInRange(Integer.toString(i));
+		result = DwCEventDQ.validationMonthNotstandard(Integer.toString(i));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 
 		i=Integer.MAX_VALUE;
-		result = DwCEventDQ.isMonthInRange(Integer.toString(i));
+		result = DwCEventDQ.validationMonthNotstandard(Integer.toString(i));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 
 		i=Integer.MIN_VALUE;
-		result = DwCEventDQ.isMonthInRange(Integer.toString(i));
+		result = DwCEventDQ.validationMonthNotstandard(Integer.toString(i));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 
-		result = DwCEventDQ.isMonthInRange(null);
+		result = DwCEventDQ.validationMonthNotstandard(null);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
-		result = DwCEventDQ.isMonthInRange("");
+		result = DwCEventDQ.validationMonthNotstandard("");
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
-		result = DwCEventDQ.isMonthInRange(" ");
-		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
-		result = DwCEventDQ.isMonthInRange("A");
-		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
-		result = DwCEventDQ.isMonthInRange("1.5");
-		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
-		result = DwCEventDQ.isMonthInRange("**");
+		result = DwCEventDQ.validationMonthNotstandard(" ");
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
 		
-		result = DwCEventDQ.isMonthInRange("Jan");
-		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
-		result = DwCEventDQ.isMonthInRange("January");
-		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
+		result = DwCEventDQ.validationMonthNotstandard("A");
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		result = DwCEventDQ.validationMonthNotstandard("1.5");
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		result = DwCEventDQ.validationMonthNotstandard("**");
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		
+		result = DwCEventDQ.validationMonthNotstandard("Jan");
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		result = DwCEventDQ.validationMonthNotstandard("January");
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 	}
 
 	@Test

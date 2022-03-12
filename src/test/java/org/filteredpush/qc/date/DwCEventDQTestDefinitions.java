@@ -345,7 +345,50 @@ public class DwCEventDQTestDefinitions {
 	 */
 	@Test
 	public void testValidationMonthNotstandard() {
-		fail("Not yet implemented");
+		
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:month is EMPTY; COMPLIANT 
+        // if the value of dwc:month is interpretable as an integer 
+        // between 1 and 12 inclusive; otherwise NOT_COMPLIANT 
+		
+		String month = null;
+		DQResponse<ComplianceValue> response = DwCEventDQ.validationMonthNotstandard(month);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		assertNull(response.getValue());
+		logger.debug(response.getComment());
+		
+		for (int m=1; m<13; m++) { 
+			month = Integer.toString(m);
+			response = DwCEventDQ.validationMonthNotstandard(month);
+			assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+			assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
+			logger.debug(response.getComment());
+			
+			month = String.format("%02d", m);
+			response = DwCEventDQ.validationMonthNotstandard(month);
+			assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+			assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
+			logger.debug(response.getComment());
+		}
+		
+		month = "foo";
+		response = DwCEventDQ.validationMonthNotstandard(month);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		month = "x";
+		response = DwCEventDQ.validationMonthNotstandard(month);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		month = "IV";
+		response = DwCEventDQ.validationMonthNotstandard(month);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
 	}
 
 	/**

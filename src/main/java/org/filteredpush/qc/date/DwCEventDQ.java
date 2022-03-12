@@ -721,30 +721,38 @@ public class DwCEventDQ {
     }
 
     /**
+     * @param month the provided dwc:month to evaluate
+     * @return DQResponse the response of type ComplianceValue  to return
+     */
+        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+
+
+ 
+	@Deprecated
+    public static DQResponse<ComplianceValue> isMonthInRange(@ActedUpon(value="dwc:month") String month) {
+		return validationMonthNotstandard(month);
+	}
+    /**
      * Test to see whether a provided month is in the range of integer values that form months of the year.
      *
-     * Provides: MONTH_IN_RANGE
+     * #126 Validation SingleRecord Conformance: month notstandard
      *
-     * TG2-VALIDATION_MONTH_OUTOFRANGE
+     * Provides: VALIDATION_MONTH_NOTSTANDARD
      *
-     * @param month  a string to test
+     * @param month the provided dwc:month string to evaluate
      * @return COMPLIANT if month is an integer in the range 1 to 12 inclusive, NOT_COMPLIANT if month is
      *     an integer outside this range, INTERNAL_PREREQUSISITES_NOT_MET if month is empty or an integer
      *     cannot be parsed from month.
      */
-    // @Provides(value = "MONTH_IN_RANGE")
-    // Corresponds to TG2-VALIDATION_MONTH_OUTOFRANGE
-    //@Provides(value = "urn:uuid:01c6dafa-0886-4b7e-9881-2c3018c98bdc")  // MONTH_INVALID/MONTH_IN_RANGE
-	//@Validation(label = "Month In Range", description = "Test to see whether a provided month is in the range of " +
-	//		"integer values that form months of the year.")
-	//@Specification(value = "Compliant if month is an integer in the range 1 to 12 inclusive, otherwise not compliant. " +
-	//		"Internal prerequisites not met if month is empty or an integer cannot be parsed from month.")
-    @Provides(value="urn:uuid:01c6dafa-0886-4b7e-9881-2c3018c98bdc")
-    @Validation( label = "VALIDATION_MONTH_OUTOFRANGE", description="The value of dwc:month is between 1 and 12, inclusive")
-    @Specification(value="The value of dwc:month is between 1 and 12, inclusive The value of dwc:month is a number.")
-    public static DQResponse<ComplianceValue> isMonthInRange(@ActedUpon(value="dwc:month") String month) {
+    @Provides("01c6dafa-0886-4b7e-9881-2c3018c98bdc")
+    public static DQResponse<ComplianceValue> validationMonthNotstandard(@ActedUpon("dwc:month") String month) {
     	DQResponse<ComplianceValue> result = new DQResponse<>();
 
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:month is EMPTY; COMPLIANT 
+        // if the value of dwc:month is interpretable as an integer 
+        // between 1 and 12 inclusive; otherwise NOT_COMPLIANT 
+    	
     	if (DateUtils.isEmpty(month)) {
     		result.addComment("No value provided for month.");
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -761,7 +769,8 @@ public class DwCEventDQ {
     			result.setResultState(ResultState.RUN_HAS_RESULT);
     		} catch (NumberFormatException e) {
     			logger.debug(e.getMessage());
-    			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    			result.setResultState(ResultState.RUN_HAS_RESULT);
+    			result.setValue(ComplianceValue.NOT_COMPLIANT);
     			result.addComment(e.getMessage());
     		}
     	}
@@ -867,7 +876,7 @@ public class DwCEventDQ {
     public static DQResponse<ComplianceValue> isDayPossibleForMonthYear(@Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) {
     	DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
-    	DQResponse<ComplianceValue> monthResult =  isMonthInRange(month);
+    	DQResponse<ComplianceValue> monthResult =  validationMonthNotstandard(month);
     	DQResponse<ComplianceValue> dayResult =  validationDayNotstandard(day);
 
     	if (monthResult.getResultState().equals(ResultState.RUN_HAS_RESULT)) {
@@ -935,7 +944,7 @@ public class DwCEventDQ {
 			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
 			result.addComment("Either month or day was not provided.");
 		} else {
-			DQResponse<ComplianceValue> monthResult =  isMonthInRange(month);
+			DQResponse<ComplianceValue> monthResult =  validationMonthNotstandard(month);
 			DQResponse<ComplianceValue> dayResult =  validationDayNotstandard(day);
 
 			if (monthResult.getResultState().equals(ResultState.RUN_HAS_RESULT)) {

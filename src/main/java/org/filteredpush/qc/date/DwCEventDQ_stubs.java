@@ -184,26 +184,6 @@ public class DwCEventDQ_stubs {
     }
 
     /**
-     * #126 Validation SingleRecord Conformance: month notstandard
-     *
-     * Provides: VALIDATION_MONTH_NOTSTANDARD
-     *
-     * @param month the provided dwc:month to evaluate
-     * @return DQResponse the response of type ComplianceValue  to return
-     */
-    @Provides("01c6dafa-0886-4b7e-9881-2c3018c98bdc")
-    public DQResponse<ComplianceValue> validationMonthNotstandard(@ActedUpon("dwc:month") String month) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
-
-        //TODO:  Implement specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:month is EMPTY; COMPLIANT 
-        // if the value of dwc:month is interpretable as an integer 
-        //between 1 and 12 inclusive; otherwise NOT_COMPLIANT 
-
-        return result;
-    }
-
-    /**
      * #127 Amendment SingleRecord Conformance: day standardized
      *
      * Provides: AMENDMENT_DAY_STANDARDIZED
@@ -240,33 +220,6 @@ public class DwCEventDQ_stubs {
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:month is EMPTY; AMENDED 
         // if the value of dwc:month was able to be interpreted as 
         // a integer between 1 and 12 inclusive; otherwise NOT_AMENDED 
-        //
-
-        return result;
-    }
-
-    /**
-     * #130 Validation SingleRecord Conformance: startdayofyear outofrange
-     *
-     * Provides: VALIDATION_STARTDAYOFYEAR_OUTOFRANGE
-     *
-     * @param startDayOfYear the provided dwc:startDayOfYear to evaluate
-     * @param eventDate the provided dwc:eventDate to evaluate
-     * @return DQResponse the response of type ComplianceValue  to return
-     */
-    @Provides("85803c7e-2a5a-42e1-b8d3-299a44cafc46")
-    public DQResponse<ComplianceValue> validationStartdayofyearOutofrange(@ActedUpon("dwc:startDayOfYear") String startDayOfYear, @ActedUpon("dwc:eventDate") String eventDate) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
-
-        //TODO:  Implement specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:startDayOfYear is 
-        // EMPTY or if the value of dwc:startDayOfYear is equal to 
-        // 366 and (dwc:eventDate is EMPTY or the value of dwc:eventDate 
-        // can not be interpreted to find single year or a start year 
-        // in a range); COMPLIANT if the value of dwc:startDayOfYear 
-        // is an integer between 1 and 365, inclusive, or if the value 
-        // of dwc:startDayOfYear is 366 and the start year interpreted 
-        // from dwc:eventDate is a leap year; otherwise NOT_COMPLIANT 
         //
 
         return result;
