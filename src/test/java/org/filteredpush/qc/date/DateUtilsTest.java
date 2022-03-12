@@ -536,15 +536,25 @@ public class DateUtilsTest {
     
     @Test
     public void measureDateDurationTest() { 
-    	assertEquals(0,DateUtils.measureDurationSeconds(""));
-    	assertEquals(86400,DateUtils.measureDurationSeconds("1980-02-02"));
-    	assertEquals(86400,DateUtils.measureDurationSeconds("1980-234"));
-    	assertEquals(86400*29,DateUtils.measureDurationSeconds("1980-02"));
-    	assertEquals(86400*28,DateUtils.measureDurationSeconds("1982-02"));
-    	assertEquals(86400*365,DateUtils.measureDurationSeconds("1981"));
-    	assertEquals(86400*366,DateUtils.measureDurationSeconds("1980"));  // leap year
-    	assertEquals(86400*365,DateUtils.measureDurationSeconds("1970"));  // has two leap seconds, ingnored.
-    	assertEquals((86400*(31+20)),DateUtils.measureDurationSeconds("1880-03-01/1880-04-20"));
+    	try { 
+    		assertEquals(0,DateUtils.measureDurationSeconds(""));
+    		assertEquals(86400,DateUtils.measureDurationSeconds("1980-02-02"));
+    		assertEquals(86400,DateUtils.measureDurationSeconds("1980-234"));
+    		assertEquals(86400*29,DateUtils.measureDurationSeconds("1980-02"));
+    		assertEquals(86400*28,DateUtils.measureDurationSeconds("1982-02"));
+    		assertEquals(86400*365,DateUtils.measureDurationSeconds("1981"));
+    		assertEquals(86400*366,DateUtils.measureDurationSeconds("1980"));  // leap year
+    		assertEquals(86400*365,DateUtils.measureDurationSeconds("1970"));  // has two leap seconds, ingnored.
+    		assertEquals((86400*(31+20)),DateUtils.measureDurationSeconds("1880-03-01/1880-04-20"));
+    	} catch (TimeExtractionException e) { 
+    		fail("Unexpected TimeExtractionException" + e.getMessage());
+    	}
+    	try { 
+    		assertEquals(86400*365,DateUtils.measureDurationSeconds("Foo19"));
+    		fail("Failed to throw TimeExtractionException");
+    	} catch (TimeExtractionException e) { 
+    		assertTrue(e.getClass().equals(TimeExtractionException.class));
+    	}
     }
     
 

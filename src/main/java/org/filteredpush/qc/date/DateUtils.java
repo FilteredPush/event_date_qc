@@ -2880,7 +2880,7 @@ public class DateUtils {
      * @param eventDate to test.
      * @return the duration of eventDate in seconds.
      */    
-    public static long measureDurationSeconds(String eventDate) { 
+    public static long measureDurationSeconds(String eventDate) throws TimeExtractionException { 
     	long result = 0l;
     	if (!isEmpty(eventDate)) { 
     		if (eventDate.matches("^[0-9]{4}-[0-9]{2}-[0-9]{2}$")) { 
@@ -2895,8 +2895,8 @@ public class DateUtils {
 					interval = new LocalDateInterval(eventDate);
 					result = interval.toDuration().getSeconds();
 				} catch (DateTimeParseException | EmptyDateException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.debug(e.getMessage());
+					throw new TimeExtractionException(e.getMessage());
 				}
     			// TODO: implement with times.
 /*    			
@@ -3696,6 +3696,75 @@ public class DateUtils {
 				case "XII": result = Integer.valueOf(12); break;
 			}
 		} 
+		return result;
+	}
+	
+	public static Map<String, Integer> getDayStringMap(){ 
+		Map<String, Integer> result = new HashMap<String,Integer>();
+		result.put("one",1);
+		result.put("first",1);
+		result.put("two",2);
+		result.put("second",2);
+		result.put("three",3);
+		result.put("third",3);
+		result.put("four",4);
+		result.put("fourth",4);
+		result.put("five",5);
+		result.put("fifth",5);
+		result.put("six",6);
+		result.put("sixth",6);
+		result.put("seven",7);
+		result.put("seventh",7);
+		result.put("eight",8);
+		result.put("eighth",8);
+		result.put("nine",9);
+		result.put("ninth",9);
+		result.put("ten",10);
+		result.put("tenth",10);
+		result.put("eleven",11);
+		result.put("eleventh",11);
+		result.put("twelve",12);
+		result.put("twelfth",12);
+		result.put("thirteen",13);
+		result.put("thirteenth",13);
+		result.put("fourteen",14);
+		result.put("fourteenth",14);
+		result.put("fifteen",15);
+		result.put("fifteenth",15);
+		result.put("sixteen",16);
+		result.put("sixteenth",16);
+		result.put("seventeen",17);
+		result.put("seventeenth",17);
+		result.put("eightteen",18);
+		result.put("eighteenth",18);
+		result.put("nineteen",19);
+		result.put("ninteenth",19);
+		result.put("twenty",20);
+		result.put("twenteth",21);
+		result.put("twentyone",21);
+		result.put("twentyfirst",21);
+		result.put("twentytwo",22);
+		result.put("twentysecond",22);
+		result.put("twentythree",23);
+		result.put("twentythird",23);
+		result.put("twentyfour",24);
+		result.put("twentyfourth",24);
+		result.put("twentyfive",25);
+		result.put("twentyfifth",25);
+		result.put("twentysix",26);
+		result.put("twentysixth",26);
+		result.put("twentyseven",27);
+		result.put("twentyseventh",27);
+		result.put("twentyeight",28);
+		result.put("twentyeighth",28);
+		result.put("twentynine",29);
+		result.put("twentyninth",29);
+		result.put("thirty",30);
+		result.put("thirtyeth",30);
+		result.put("thirtyone",31);
+		result.put("thirtyfirst",31);
+		result.put("thirtytwo",32);
+		result.put("thirtysecond",32);
 		return result;
 	}
     

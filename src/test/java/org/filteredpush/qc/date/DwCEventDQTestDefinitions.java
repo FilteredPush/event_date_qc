@@ -396,7 +396,82 @@ public class DwCEventDQTestDefinitions {
 	 */
 	@Test
 	public void testAmendmentDayStandardized() {
-		fail("Not yet implemented");
+		
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; AMENDED 
+        // if the value of dwc:day was unambiguously interpreted as 
+        // an integer between 1 and 31 inclusive; otherwise NOT_AMENDED 
+        //
+		
+		String day = null;
+		DQResponse<AmendmentValue> response = DwCEventDQ.amendmentDayStandardized(day);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		assertEquals(0,response.getValue().getObject().size());
+		logger.debug(response.getComment());
+		
+		day = " ";
+		response = DwCEventDQ.amendmentDayStandardized(day);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		assertEquals(0,response.getValue().getObject().size());
+		logger.debug(response.getComment());
+		Map<String,String> value;
+		
+		for (int d=1; d<31; d++) { 
+			day = Integer.toString(d);
+			response = DwCEventDQ.amendmentDayStandardized(day);
+			assertEquals(ResultState.NOT_AMENDED.getLabel(), response.getResultState().getLabel());
+			assertEquals(0,response.getValue().getObject().size());
+			logger.debug(response.getComment());
+			
+			if (d<10) { 
+				day = String.format("%02d", d);
+				response = DwCEventDQ.amendmentDayStandardized(day);
+				assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel());
+				assertEquals(1, response.getValue().getObject().size());
+				value = response.getValue().getObject();
+				assertTrue(value.containsKey("dwc:day"));
+				assertEquals(Integer.valueOf(d), Integer.valueOf(value.get("dwc:day")));
+				logger.debug(response.getComment());
+			} else {
+				day = String.format("%03d", d);
+				response = DwCEventDQ.amendmentDayStandardized(day);
+				assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel());
+				assertEquals(1, response.getValue().getObject().size());
+				value = response.getValue().getObject();
+				assertTrue(value.containsKey("dwc:day"));
+				assertEquals(Integer.valueOf(d), Integer.valueOf(value.get("dwc:day")));
+				logger.debug(response.getComment());
+			}
+			
+			day = Integer.toString(d);
+			response = DwCEventDQ.amendmentDayStandardized(" " + day + " ");
+			assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel());
+			assertEquals(1, response.getValue().getObject().size());
+			value = response.getValue().getObject();
+			assertTrue(value.containsKey("dwc:day"));
+			assertEquals(Integer.valueOf(d), Integer.valueOf(value.get("dwc:day")));
+			logger.debug(response.getComment());
+			
+		}
+		day = "1st";
+		response = DwCEventDQ.amendmentDayStandardized(" " + day + " ");
+		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel());
+		assertEquals(1, response.getValue().getObject().size());
+		value = response.getValue().getObject();
+		assertTrue(value.containsKey("dwc:day"));
+		assertEquals(Integer.valueOf(1), Integer.valueOf(value.get("dwc:day")));
+		logger.debug(response.getComment());
+
+		day = "X";
+		response = DwCEventDQ.amendmentDayStandardized(day);
+		assertEquals(ResultState.NOT_AMENDED.getLabel(), response.getResultState().getLabel());
+		assertEquals(0,response.getValue().getObject().size());
+		
+		day = "3rd Wednesday";
+		response = DwCEventDQ.amendmentDayStandardized(day);
+		assertEquals(ResultState.NOT_AMENDED.getLabel(), response.getResultState().getLabel());
+		assertEquals(0,response.getValue().getObject().size());
+
 	}
 
 	/**
@@ -404,7 +479,97 @@ public class DwCEventDQTestDefinitions {
 	 */
 	@Test
 	public void testAmendmentMonthStandardized() {
-		fail("Not yet implemented");
+		
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:month is EMPTY; AMENDED 
+        // if the value of dwc:month was able to be interpreted as 
+        // a integer between 1 and 12 inclusive; otherwise NOT_AMENDED 
+        //
+
+		String month = null;
+		DQResponse<AmendmentValue> response = DwCEventDQ.amendmentMonthStandardized(month);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		assertEquals(0,response.getValue().getObject().size());
+		logger.debug(response.getComment());
+		
+		month = " ";
+		response = DwCEventDQ.amendmentMonthStandardized(month);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		assertEquals(0,response.getValue().getObject().size());
+		logger.debug(response.getComment());
+		Map<String,String> value;
+		
+		for (int m=1; m<13; m++) { 
+			month = Integer.toString(m);
+			response = DwCEventDQ.amendmentMonthStandardized(month);
+			assertEquals(ResultState.NOT_AMENDED.getLabel(), response.getResultState().getLabel());
+			assertEquals(0,response.getValue().getObject().size());
+			logger.debug(response.getComment());
+			
+			if (m<10) { 
+				month = String.format("%02d", m);
+				response = DwCEventDQ.amendmentMonthStandardized(month);
+				assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel());
+				assertEquals(1, response.getValue().getObject().size());
+				value = response.getValue().getObject();
+				assertTrue(value.containsKey("dwc:month"));
+				assertEquals(Integer.valueOf(m), Integer.valueOf(value.get("dwc:month")));
+				logger.debug(response.getComment());
+			} else {
+				month = String.format("%03d", m);
+				response = DwCEventDQ.amendmentMonthStandardized(month);
+				assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel());
+				assertEquals(1, response.getValue().getObject().size());
+				value = response.getValue().getObject();
+				assertTrue(value.containsKey("dwc:month"));
+				assertEquals(Integer.valueOf(m), Integer.valueOf(value.get("dwc:month")));
+				logger.debug(response.getComment());
+			}
+			
+			month = String.format("%02d", m);
+			response = DwCEventDQ.amendmentMonthStandardized(" " + month + " ");
+			assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel());
+			assertEquals(1, response.getValue().getObject().size());
+			value = response.getValue().getObject();
+			assertTrue(value.containsKey("dwc:month"));
+			assertEquals(Integer.valueOf(m), Integer.valueOf(value.get("dwc:month")));
+			logger.debug(response.getComment());
+		}	
+		
+		month = "34";
+		response = DwCEventDQ.amendmentMonthStandardized(month);
+		assertEquals(ResultState.NOT_AMENDED.getLabel(), response.getResultState().getLabel());
+		assertEquals(0,response.getValue().getObject().size());
+		logger.debug(response.getComment());
+		
+		month = "Jan";
+		response = DwCEventDQ.amendmentMonthStandardized(month);
+		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel());
+		assertEquals(1, response.getValue().getObject().size());
+		value = response.getValue().getObject();
+		assertTrue(value.containsKey("dwc:month"));
+		assertEquals(Integer.valueOf(1), Integer.valueOf(value.get("dwc:month")));
+		logger.debug(response.getComment());
+		
+		month = "IV";
+		response = DwCEventDQ.amendmentMonthStandardized(month);
+		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel());
+		assertEquals(1, response.getValue().getObject().size());
+		value = response.getValue().getObject();
+		assertTrue(value.containsKey("dwc:month"));
+		assertEquals(Integer.valueOf(4), Integer.valueOf(value.get("dwc:month")));
+		logger.debug(response.getComment());
+		
+		month = "x";
+		response = DwCEventDQ.amendmentMonthStandardized(month);
+		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel());
+		assertEquals(1, response.getValue().getObject().size());
+		value = response.getValue().getObject();
+		assertTrue(value.containsKey("dwc:month"));
+		assertEquals(Integer.valueOf(10), Integer.valueOf(value.get("dwc:month")));
+		logger.debug(response.getComment());
+		
+		
 	}
 
 	/**
@@ -766,8 +931,27 @@ public class DwCEventDQTestDefinitions {
 		measure = DwCEventDQ.measureEventdatePrecisioninseconds("");
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, measure.getResultState());
 		
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("Foo");
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), measure.getResultState().getLabel());
 		
-		fail("Not yet implemented");
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1880-15-35");
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), measure.getResultState().getLabel());
+		
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1970");
+		seconds = (60l*60l*24l*365); // not leap year, leap seconds ignored.
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
+		
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1980");
+		seconds = (60l*60l*24l*366); // leap year 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
+		
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1981");
+		seconds = (60l*60l*24l*365); // not leap year 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
+		
 	}
 
 	/**

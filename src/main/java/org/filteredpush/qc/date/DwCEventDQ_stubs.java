@@ -183,47 +183,4 @@ public class DwCEventDQ_stubs {
         return result;
     }
 
-    /**
-     * #127 Amendment SingleRecord Conformance: day standardized
-     *
-     * Provides: AMENDMENT_DAY_STANDARDIZED
-     *
-     * @param day the provided dwc:day to evaluate
-     * @return DQResponse the response of type AmendmentValue to return
-     */
-    @Provides("b129fa4d-b25b-43f7-9645-5ed4d44b357b")
-    public DQResponse<AmendmentValue> amendmentDayStandardized(@ActedUpon("dwc:day") String day) {
-        DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
-
-        //TODO:  Implement specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; AMENDED 
-        // if the value of dwc:day was unambiguously interpreted as 
-        // an integer between 1 and 31 inclusive; otherwise NOT_AMENDED 
-        //
-
-        return result;
-    }
-
-    /**
-     * #128 Amendment SingleRecord Conformance: month standardized
-     *
-     * Provides: AMENDMENT_MONTH_STANDARDIZED
-     *
-     * @param month the provided dwc:month to evaluate
-     * @return DQResponse the response of type AmendmentValue to return
-     */
-    @Provides("2e371d57-1eb3-4fe3-8a61-dff43ced50cf")
-    public DQResponse<AmendmentValue> amendmentMonthStandardized(@ActedUpon("dwc:month") String month) {
-        DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
-
-        //TODO:  Implement specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:month is EMPTY; AMENDED 
-        // if the value of dwc:month was able to be interpreted as 
-        // a integer between 1 and 12 inclusive; otherwise NOT_AMENDED 
-        //
-
-        return result;
-    }
-
-
 }

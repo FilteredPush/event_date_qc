@@ -795,15 +795,20 @@ public class DwCEventDQ {
     	} else {
     		if (DateUtils.eventDateValid(eventDate)) {
     			logger.debug(eventDate);
-    			logger.debug(DateUtils.measureDurationSeconds(eventDate));
-    			if (DateUtils.measureDurationSeconds(eventDate)<= 31557600) {
-    				result.setValue(ComplianceValue.COMPLIANT);
-    				result.addComment("Provided value for eventDate '" + eventDate + "' has a duration less than or equal to one Julian year of 365.25 days.");
-    			}  else {
-    				result.setValue(ComplianceValue.NOT_COMPLIANT);
-    				result.addComment("Provided value for eventDate '" + eventDate + "' has a duration more than one Julian year of 365.25 days.");
+    			try {
+    				logger.debug(DateUtils.measureDurationSeconds(eventDate));
+    				if (DateUtils.measureDurationSeconds(eventDate)<= 31557600) {
+    					result.setValue(ComplianceValue.COMPLIANT);
+    					result.addComment("Provided value for eventDate '" + eventDate + "' has a duration less than or equal to one Julian year of 365.25 days.");
+    				}  else {
+    					result.setValue(ComplianceValue.NOT_COMPLIANT);
+    					result.addComment("Provided value for eventDate '" + eventDate + "' has a duration more than one Julian year of 365.25 days.");
+    				}
+    				result.setResultState(ResultState.RUN_HAS_RESULT);
+    			} catch (TimeExtractionException e) {
+    				result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    				result.addComment("Unabel to extract duration from provided dwc:eventDate value." + e.getMessage());
     			}
-    			result.setResultState(ResultState.RUN_HAS_RESULT);
     		} else {
     			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     			result.addComment("provided dwc:eventDate not recognized as a valid date value.");
@@ -824,6 +829,7 @@ public class DwCEventDQ {
     		result.addComment("No value provided for eventDate.");
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     	} else {
+    		try { 
     		if (DateUtils.includesLeapDay(eventDate)) {
     			if (DateUtils.eventDateValid(eventDate)) {
     				if (DateUtils.measureDurationSeconds(eventDate)<= 31622400) {
@@ -852,6 +858,10 @@ public class DwCEventDQ {
     				result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     				result.addComment("provided dwc:eventDate not recognized as a valid date value.");
     			}
+    		}
+    		} catch (TimeExtractionException e) { 
+    			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    			result.addComment("Unable to extract duration from provided dwc:eventDate value." + e.getMessage());
     		}
     	}
     	return result;
@@ -1272,6 +1282,11 @@ public class DwCEventDQ {
      		   result.addComment("One of startDayOfYear [" + startDay + "], year ["+year+"], or endDayOfYear ["+ endDay +"] is not a number.");
      	    }
     	}
+    	// make sure that an empty value map is returned instead of null.
+    	if (result.getValue() == null) {
+    		result.setValue(new AmendmentValue(new HashMap<String, String>()));
+		}
+    	
     	return result;
     }
 
@@ -1385,33 +1400,63 @@ public class DwCEventDQ {
      		   result.addComment("Value provided for year [" + year + "] is not a number.");
      	    }
     	}
+    	// make sure that an empty value map is returned instead of null.
+    	if (result.getValue() == null) {
+    		result.setValue(new AmendmentValue(new HashMap<String, String>()));
+		}
+    	
     	return result;
     }
-
-
+    
+    @Deprecated
+    public static final DQResponse<AmendmentValue> standardizeMonth(@ActedUpon(value="dwc:month") String month) {
+    	return amendmentMonthStandardized(month);
+    }
     /**
      * Given a value of dwc:month, check to see if that month is an integer, if not, attempt to
      * propose a suitable integer for the month of the year from the value provided.
      *
-     * TG2-AMENDMENT_MONTH_STANDARDIZED
+     * #128 Amendment SingleRecord Conformance: month standardized
      *
-     * @param month the value of dwc:month to assess
-     * @return an EventDQAmmendment which may contain a proposed ammendment.
+     * Provides: AMENDMENT_MONTH_STANDARDIZED
+     *
+     * @param month the provided dwc:month to evaluate
+     * @return DQResponse the response of type AmendmentValue to return
      */
-    @Provides(value="urn:uuid:2e371d57-1eb3-4fe3-8a61-dff43ced50cf")
-    @Amendment( label = "AMENDMENT_MONTH_STANDARDIZED", description="The value of dwc:month was interpreted to be a number between 1 and 12, inclusive")
-    @Specification(value="The value of dwc:month was interpreted to be a number between 1 and 12, inclusive The field dwc:month is not EMPTY.")
-    public static final DQResponse<AmendmentValue> standardizeMonth(@ActedUpon(value="dwc:month") String month) {
+    @Provides("2e371d57-1eb3-4fe3-8a61-dff43ced50cf")
+    public static final DQResponse<AmendmentValue> amendmentMonthStandardized(@ActedUpon(value="dwc:month") String month) {
     	DQResponse<AmendmentValue> result = new DQResponse<>();
+    	
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:month is EMPTY; AMENDED 
+        // if the value of dwc:month was able to be interpreted as 
+        // a integer between 1 and 12 inclusive; otherwise NOT_AMENDED 
+        //
+    	
     	if (DateUtils.isEmpty(month)) {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		result.addComment("No value for dwc:month was provided.");
     	} else {
 
     		try {
-    			Integer monthnumeric = Integer.parseInt(month);
-    			result.setResultState(ResultState.NOT_AMENDED);
+    			Integer monthNumeric = Integer.parseInt(month);
     			result.addComment("A value for dwc:month parsable as an integer was provided.");
+    			if (monthNumeric >= 1 && monthNumeric <=12) { 
+    				result.addComment("Provided value for dwc:month was in the range 1-12.");
+    				if (Integer.toString(monthNumeric).equals(month)) { 
+    					result.setResultState(ResultState.NOT_AMENDED);
+    					result.addComment("No change needed.");
+    				} else {
+    					result.setResultState(ResultState.AMENDED);
+						Map<String, String> values = new HashMap<>();
+						values.put("dwc:month", monthNumeric.toString());
+						result.setValue(new AmendmentValue(values));
+    					result.addComment("Interpreted provided value for dwc:month ["+month+"] as ["+monthNumeric.toString()+"].");
+    				}
+    			} else {
+    				result.addComment("Provided value for dwc:month was outside the range 1-12.");
+    				result.setResultState(ResultState.NOT_AMENDED);
+    			}
     		} catch (NumberFormatException e) {
     			// Convert roman numerals, some problematic forms of abbreviations,
     			// non-english capitalization variants, absence of exepected accented characters,
@@ -1420,7 +1465,7 @@ public class DwCEventDQ {
     			// Strip any trailing period off of month name.
     			String monthTrim = monthConverted.replaceFirst("\\.$", "").trim();
     			if (DateUtils.isEmpty(monthTrim)) {
-    				result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    				result.setResultState(ResultState.NOT_AMENDED);
     				result.addComment("Unable to parse a meaningfull value for month from dwc:month ["+month+"].");
     			} else {
     				// Add the month string into the first day of that month in 1800, and see if
@@ -1439,71 +1484,140 @@ public class DwCEventDQ {
 						result.setValue(new AmendmentValue(values));
     					result.addComment("Interpreted provided value for dwc:month ["+month+"] as ["+monthNumeric.toString()+"].");
     				} else {
-    					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    					result.setResultState(ResultState.NOT_AMENDED);
     					result.addComment("Unable to parse a meaningfull value for month from dwc:month ["+month+"].");
     				}
     			}
     		}
 
     	}
+    	// make sure that an empty value map is returned instead of null.
+    	if (result.getValue() == null) {
+    		result.setValue(new AmendmentValue(new HashMap<String, String>()));
+		}
     	return result;
     }
 
-
+    @Deprecated
+    public static final DQResponse<AmendmentValue> standardizeDay(@ActedUpon(value="dwc:day") String day) {
+    	return amendmentDayStandardized(day);
+    }
     /**
      * Given a dwc:day, if the day is not empty and not an integer, attempt to interpret the value
-     * as a day of the month.   Note: Implementation here is only guided by the example in the
-     * test description, trailing non-numeric characters are removed.
+     * as a day of the month.   
      *
-     * This implementation is subject to change.
+     * #127 Amendment SingleRecord Conformance: day standardized
      *
-     * TG2-AMENDMENT_DAY_STANDARDIZED
+     * Provides: AMENDMENT_DAY_STANDARDIZED
      *
-     * @param day to evaluate
-     * @return an EventDQAmmendment which may contain a proposed amendment for key dwc:day.
+     * @param day the provided dwc:day to evaluate
+     * @return DQResponse the response of type AmendmentValue to return
      */
-    @Provides(value="urn:uuid:b129fa4d-b25b-43f7-9645-5ed4d44b357b")
-    @Amendment( label = "AMENDMENT_DAY_STANDARDIZED", description="The value of dwc:day was interpreted to be a number between 1 and 31, inclusive")
-    @Specification(value="The value of dwc:day was interpreted to be a number between 1 and 31, inclusive The field dwc:day is not EMPTY.")
-    public static final DQResponse<AmendmentValue> standardizeDay(@ActedUpon(value="dwc:day") String day) {
+    @Provides("b129fa4d-b25b-43f7-9645-5ed4d44b357b")
+    public static final DQResponse<AmendmentValue> amendmentDayStandardized(@ActedUpon(value="dwc:day") String day) {
     	DQResponse<AmendmentValue> result = new DQResponse<>();
+
+    	// Specification
+    	// INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; AMENDED 
+    	// if the value of dwc:day was unambiguously interpreted as 
+    	// an integer between 1 and 31 inclusive; otherwise NOT_AMENDED 
+    	//
+
     	if (DateUtils.isEmpty(day)) {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		result.addComment("No value for dwc:day was provided.");
     	} else {
-    		try {
-    			Integer dayNumeric = Integer.parseInt(day);
-    			result.setResultState(ResultState.NOT_AMENDED);
-    			result.addComment("A value for dwc:day parsable as an integer was provided.");
-    		} catch (NumberFormatException e) {
-    			// Strip off any trailing non-numeric characters.
-    			String dayTrimmed = day.replaceAll("[^0-9]+$", "");
-    			// Try again
+    		Map<String,Integer> daysTextMap = DateUtils.getDayStringMap();
+    		String key = day.trim().toLowerCase().replace(" ", "");
+    		if (daysTextMap.containsKey(key)) { 
+    			result.setResultState(ResultState.AMENDED);
+    			Map<String, String> values = new HashMap<>();
+    			String dayInterpreted = Integer.toString(daysTextMap.get(key)).trim();
+    			values.put("dwc:day", dayInterpreted) ;
+    			result.setValue(new AmendmentValue(values));
+    			result.addComment("Interpreted provided value for dwc:day ["+day+"] as ["+dayInterpreted+"].");
+    		} else { 
+
     			try {
-    				Integer dayNumeric = Integer.parseInt(dayTrimmed);
-    				if (dayNumeric>0 && dayNumeric<32) {
-    					result.setResultState(ResultState.AMENDED);
-
-						Map<String, String> values = new HashMap<>();
-						values.put("dwc:day", dayNumeric.toString());
-						result.setValue(new AmendmentValue(values));
-    					result.addComment("Interpreted provided value for dwc:day ["+day+"] as ["+dayNumeric.toString()+"].");
-    				} else {
-    					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-    					result.addComment("Unable to parse a meaningfull value for day of month from dwc:day ["+day+"].");
-
+    				Integer dayNumeric = Integer.parseInt(day);
+    				result.addComment("A value for dwc:day parsable as an integer was provided.");
+    				String dayTrimmed = day.replaceAll("[^0-9]", "");
+    				String dayCleaned = dayNumeric.toString();
+    				logger.debug(day);
+    				logger.debug(dayTrimmed);
+    				logger.debug(dayCleaned);
+    				if (dayTrimmed.equals(day) && dayCleaned.equals(day) ) { 
+    					if (dayNumeric>0 && dayNumeric<32) {
+    						result.setResultState(ResultState.NOT_AMENDED);
+    						result.addComment("Provided value for dwc:day ["+day+"] is an integer in the range 1 to 32.");
+    					} else {
+    						result.setResultState(ResultState.NOT_AMENDED);
+    						result.addComment("Unable to parse a meaningfull value for day of month from dwc:day ["+day+"].");
+    					}
+    				} else { 				
+    					result.addComment("Extra non-numeric characters in dwc:day [" + day + "] were removed to form ["+ dayCleaned +"].");
+    					if (dayNumeric>0 && dayNumeric<32) {
+    						result.setResultState(ResultState.AMENDED);
+    						Map<String, String> values = new HashMap<>();
+    						values.put("dwc:day", dayCleaned);
+    						result.setValue(new AmendmentValue(values));
+    						result.addComment("Interpreted provided value for dwc:day ["+day+"] as ["+dayNumeric.toString()+"].");
+    					} else {
+    						result.setResultState(ResultState.NOT_AMENDED);
+    						result.addComment("Unable to parse a meaningfull value for day of month from dwc:day ["+day+"].");
+    					}
     				}
-    			} catch (NumberFormatException ex) {
-    				result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-    				result.addComment("Unable to interpret value provided for dwc:day ["+ day + "] as a day of the month.");
+    			} catch (NumberFormatException e) {
+
+
+    				// Strip off any trailing non-numeric characters.
+    				String dayTrimmed = day.replaceAll("[^0-9]+$", "");
+    				logger.debug(day);
+    				logger.debug(dayTrimmed);
+    				boolean failed = false;
+    				if (!dayTrimmed.equals(day)) { 
+    					// rule out ambiguous patterns
+    					logger.debug(dayTrimmed);
+    					if (day.matches("[0-9]{1,2}[stndrh]{2}\\.{0,1} [A-Za-z]+")) { 
+    						logger.debug(day);
+    						result.setResultState(ResultState.NOT_AMENDED);
+    						result.addComment("A value for dwc:day matches the pattern 'dd(st|nd|rd|th) DayOfWeek' and is ambiguous.");
+    						failed = true;
+    					}
+    				}
+    				logger.debug(failed);
+    				if (!failed) { 
+    					// Try again
+    					try {
+    						Integer dayNumeric = Integer.parseInt(dayTrimmed.trim());
+    						logger.debug(dayNumeric);
+    						if (dayNumeric>0 && dayNumeric<32) {
+    							result.setResultState(ResultState.AMENDED);
+
+    							Map<String, String> values = new HashMap<>();
+    							values.put("dwc:day", dayNumeric.toString());
+    							result.setValue(new AmendmentValue(values));
+    							result.addComment("Interpreted provided value for dwc:day ["+day+"] as ["+dayNumeric.toString()+"].");
+    						} else {
+    							result.setResultState(ResultState.NOT_AMENDED);
+    							result.addComment("Unable to parse a meaningfull value for day of month from dwc:day ["+day+"].");
+
+    						}
+    					} catch (NumberFormatException ex) {
+    						logger.debug(ex.getMessage(), ex);
+    						result.setResultState(ResultState.NOT_AMENDED);
+    						result.addComment("Unable to interpret value provided for dwc:day ["+ day + "] as a day of the month.");
+    						logger.debug(result.getComment());
+    					}
+    				}
     			}
     		}
-
     	}
 
+    	// make sure that an empty value map is returned instead of null.
     	if (result.getValue() == null) {
     		result.setValue(new AmendmentValue(new HashMap<String, String>()));
-		}
+    	}
 
     	return result;
     }
