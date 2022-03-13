@@ -1920,56 +1920,66 @@ public class DwcEventDQTest {
 	public void testYearInRange() {
 		String year = null;
 		
-		DQResponse<ComplianceValue> result = DwCEventDQ.isYearInRange(year, null);
+		DQResponse<ComplianceValue> result = DwCEventDQ.validationYearOutofrange(year, null, null);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
 		
-		result = DwCEventDQ.isYearInRange(year, 1900);
+		result = DwCEventDQ.validationYearOutofrange(year, 1900, null);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
 		
 		year = "1700";
-		result = DwCEventDQ.isYearInRange(year, null);
+		result = DwCEventDQ.validationYearOutofrange(year, null, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
 		year = "1699";
-		result = DwCEventDQ.isYearInRange(year, null);
+		result = DwCEventDQ.validationYearOutofrange(year, null, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());		
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+		
+		year = "1600";
+		result = DwCEventDQ.validationYearOutofrange(year, null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		year = "1599";
+		result = DwCEventDQ.validationYearOutofrange(year, null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 		
 		Integer upperBound = LocalDateTime.now().getYear();
-		for (int i=1701; i<=upperBound; i++) { 
-			result = DwCEventDQ.isYearInRange(Integer.toString(i), null);
+		for (int i=1601; i<=upperBound; i++) { 
+			result = DwCEventDQ.validationYearOutofrange(Integer.toString(i), 1600, upperBound);
 			assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 			assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		}
 		
 		year = Integer.toString(upperBound + 1);
-		result = DwCEventDQ.isYearInRange(year, null);
+		result = DwCEventDQ.validationYearOutofrange(year, null, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		
 		year = "1899";
-		result = DwCEventDQ.isYearInRange(year, 1900);
+		result = DwCEventDQ.validationYearOutofrange(year, 1900, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		
 		year = "1900";
-		result = DwCEventDQ.isYearInRange(year, 1900);
+		result = DwCEventDQ.validationYearOutofrange(year, 1900, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());		
 		
 		year = "1901";
-		result = DwCEventDQ.isYearInRange(year, 1900);
+		result = DwCEventDQ.validationYearOutofrange(year, 1900, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
 		
 		year = Integer.toString(LocalDateTime.now().getYear());
-		result = DwCEventDQ.isYearInRange(year, 1900);
+		result = DwCEventDQ.validationYearOutofrange(year, 1900, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
 		
 		year = Integer.toString(LocalDateTime.now().getYear() + 1);
-		result = DwCEventDQ.isYearInRange(year, 1900);
+		result = DwCEventDQ.validationYearOutofrange(year, 1900, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());				
 		

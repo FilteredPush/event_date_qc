@@ -156,7 +156,46 @@ public class DwCEventDQTestDefinitions {
 	 */
 	@Test
 	public void testValidationYearOutofrange() {
-		fail("Not yet implemented");
+		
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:year is not present, 
+        // or is EMPTY or cannot be interpreted as an integer; COMPLIANT 
+        // if the value of dwc:year is within the Parameter range; 
+        //otherwise NOT_COMPLIANT 
+
+        // This test is defined as parameterized.
+        // bdq:earliestDate="1600"; bdq:latestDate=current year
+		
+		String year = "";
+		DQResponse<ComplianceValue> result = DwCEventDQ.validationYearOutofrange(year, null, null);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		assertNull(result.getValue());
+		
+		year = "foo";
+		result = DwCEventDQ.validationYearOutofrange(year, null, null);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		assertNull(result.getValue());
+		
+		year = "1880";
+		result = DwCEventDQ.validationYearOutofrange(year, null, null);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		year = "1580";
+		result = DwCEventDQ.validationYearOutofrange(year, null, null);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		year = "2000";
+		result = DwCEventDQ.validationYearOutofrange(year, 1900, 1999);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
 	}
 
 	/**
@@ -165,12 +204,12 @@ public class DwCEventDQTestDefinitions {
 	@Test
 	public void testAmendmentEventdateFromVerbatim() {
 		
-        //TODO:  Implement specification
+        // Specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY 
         // or the value of dwc:verbatimEventDate is EMPTY or not unambiguously 
         // interpretable as an ISO 8601-1:2019 date; AMENDED if the 
         // value of dwc:eventDate was unambiguously interpreted from 
-        //dwc:verbatimEventDate; otherwise NOT_AMENDED 
+        // dwc:verbatimEventDate; otherwise NOT_AMENDED 
 		
 		String eventDate = "1900";
 		String verbatimEventDate = "";

@@ -53,6 +53,7 @@ import java.util.Map;
  * VALIDATION_MONTH_NOTSTANDARD 01c6dafa-0886-4b7e-9881-2c3018c98bdc
  * VALIDATION_STARTDAYOFYEAR_OUTOFRANGE 85803c7e-2a5a-42e1-b8d3-299a44cafc46
  * VALIDATION_ENDDAYOFYEAR_OUTOFRANGE 9a39d88c-7eee-46df-b32a-c109f9f81fb8
+ * #84 VALIDATION_YEAR_OUTOFRANGE ad0c8855-de69-4843-a80c-a5387d20fbc8
  * 
  * TODO: Update: 
  * VALIDATION_DAY_OUTOFRANGE  8d787cb5-73e2-4c39-9cd1-67c7361dc02e   ** Differs
@@ -2019,30 +2020,57 @@ public class DwCEventDQ {
     	return result;
 	}
     
+    @Provides("ad0c8855-de69-4843-a80c-a5387d20fbc8")
+    public DQResponse<ComplianceValue> validationYearOutofrange(@ActedUpon("dwc:year") String year) {
+        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+
+    	Integer upperBound = LocalDateTime.now().getYear();
+
+        return validationYearOutofrange(year, 1600, upperBound);
+    }
 	
 	/**
-	 * Given a year, evaluate whether that year falls in the range between a provided lower bound and the current
-	 * year, inclusive of the lower bound and the current year.  If null is provided for lowerBound, then the value
-	 * 1700 will be used as the lower bound.  This implementation uses the year from the local date/time as the upper 
-	 * bound, and will give different answers for values of year within 1 of the current year when run in different 
-	 * time zones within one day of a year boundary (i.e. this test is not suitable for fine grained evaluations of 
-	 * time).
+	 * Given a year, evaluate whether that year falls in the range between provided upper and lower bounds inclusive.
+	 * If null is provided for lowerBound, then the value 1600 will be used as the lower bound.  If null is porovided
+	 * for the upper bound, the current year will be used.  This implementation uses the year from the local date/time 
+	 * as the upper bound, and will give different answers for values of year within 1 of the current year when run 
+	 * in different time zones within one day of a year boundary, thus this test is not suitable for fine grained 
+	 * evaluations of time.
 	 * 
-     * TG2-VALIDATION_YEAR_OUTOFRANGE 
+     * #84 Validation SingleRecord Conformance: year outofrange
+     *
+     * Provides: VALIDATION_YEAR_OUTOFRANGE
      * 
-	 * @param year to evaluate
-	 * @param lowerBound integer for lower bound of range of in range years, if null 1700 will be used.
-     * @return an DQValidationResponse object describing whether the provided value is in range.
+     * Parameters: bdq:earliestDate="1600"; bdq:latestDate=current year
+     * 
+     * @param year the provided dwc:year to evaluate
+	 * @param bdq:earliestDate integer for lower bound of range of in range years, if null 1600 will be used.
+	 * @param bdq:latestDate integer for upper bound of range of in range years, if null current year will be used.
+     * @return DQResponse the response of type ComplianceValue to return
 	 */
-    @Provides(value = "urn:uuid:ad0c8855-de69-4843-a80c-a5387d20fbc8")   // GUID for DAY_INVALID/DAY_IN_RANGE
-    @Validation( label = "VALIDATION_YEAR_OUTOFRANGE", description="The value of dwc:year is between a designated minimum value and the current year, inclusive")
-    @Specification(value="The value of dwc:year is between a designated minimum value and the current year, inclusive The value of dwc:year is a number.")
-    public static DQResponse<ComplianceValue> isYearInRange(@ActedUpon(value = "dwc:year") String year,  @Parameter(name = "validationYearLowerBound") Integer lowerBound) {
+    @Provides("ad0c8855-de69-4843-a80c-a5387d20fbc8")
+    public static DQResponse<ComplianceValue> validationYearOutofrange(
+    		@ActedUpon(value = "dwc:year") String year,  
+    		@Parameter(name = "bdq:earliestDate") Integer lowerBound,
+    		@Parameter(name = "bdq:latestDate") Integer upperBound) 
+    {
     	DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+    	
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:year is not present, 
+        // or is EMPTY or cannot be interpreted as an integer; COMPLIANT 
+        // if the value of dwc:year is within the Parameter range; 
+        // otherwise NOT_COMPLIANT 
+
+        // This test is defined as parameterized.
+        // bdq:earliestDate="1600"; bdq:latestDate=current year
+    	
     	if (lowerBound==null) { 
-    		lowerBound = 1700;
+    		lowerBound = 1600;
     	}
-    	Integer upperBound = LocalDateTime.now().getYear();
+    	if (upperBound==null) { 
+    		upperBound = LocalDateTime.now().getYear();
+    	}
     	if (DateUtils.isEmpty(year)) {
     		result.addComment("No value provided for dwc:year.");
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
