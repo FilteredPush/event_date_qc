@@ -487,13 +487,13 @@ public class DwcEventDQTest {
 	@Test
 	public void testCorrectEventDateFormat() { 
 		String eventDate = "Jan 1884";
-		DQResponse<AmendmentValue> result = DwCEventDQ.correctEventDateFormat(eventDate);
+		DQResponse<AmendmentValue> result = DwCEventDQ.amendmentEventdateStandardized(eventDate);
 		assertEquals(ResultState.AMENDED, result.getResultState());
 		assertEquals("1884-01",result.getValue().getObject().get("dwc:eventDate"));
 		assertEquals(1,result.getValue().getObject().size());	
 		
 		eventDate = "1 Jan 1884";
-		result = DwCEventDQ.correctEventDateFormat(eventDate);
+		result = DwCEventDQ.amendmentEventdateStandardized(eventDate);
 		assertEquals(ResultState.AMENDED, result.getResultState());
 		assertEquals("1884-01-01",result.getValue().getObject().get("dwc:eventDate"));
 		assertEquals(1,result.getValue().getObject().size());		
@@ -501,31 +501,31 @@ public class DwcEventDQTest {
 		/* Case that inspired adding this method, typical use of / instead of - in dates. 
 		 */
 		eventDate = "1884/01/02";
-		result = DwCEventDQ.correctEventDateFormat(eventDate);
+		result = DwCEventDQ.amendmentEventdateStandardized(eventDate);
 		assertEquals(ResultState.AMENDED, result.getResultState());
 		assertEquals("1884-01-02",result.getValue().getObject().get("dwc:eventDate"));
 		assertEquals(1,result.getValue().getObject().size());		
 		
 		eventDate = "1884-01-02";
-		result = DwCEventDQ.correctEventDateFormat(eventDate);
+		result = DwCEventDQ.amendmentEventdateStandardized(eventDate);
 		assertEquals(ResultState.NOT_AMENDED, result.getResultState());		
 	
 		eventDate = "";
-		result = DwCEventDQ.correctEventDateFormat(eventDate);
+		result = DwCEventDQ.amendmentEventdateStandardized(eventDate);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());		
 		
-		result = DwCEventDQ.correctEventDateFormat(null);
+		result = DwCEventDQ.amendmentEventdateStandardized(null);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
 		
 		eventDate = "2305345ifo342fd,cofaga";
-		result = DwCEventDQ.correctEventDateFormat(eventDate);
+		result = DwCEventDQ.amendmentEventdateStandardized(eventDate);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
 		
 		eventDate = "02/03/1884";
-		result = DwCEventDQ.correctEventDateFormat(eventDate);
-		assertEquals(ResultState.AMBIGUOUS, result.getResultState());	
-		assertEquals("1884-02-03/1884-03-02",result.getValue().getObject().get("dwc:eventDate"));
-		assertEquals(1,result.getValue().getObject().size());				
+		result = DwCEventDQ.amendmentEventdateStandardized(eventDate);
+		assertEquals(ResultState.NOT_AMENDED, result.getResultState());	
+		//assertEquals("1884-02-03/1884-03-02",result.getValue().getObject().get("dwc:eventDate"));
+		assertEquals(0,result.getValue().getObject().size());				
 		
 	}
 	

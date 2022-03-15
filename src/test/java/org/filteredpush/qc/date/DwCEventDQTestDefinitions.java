@@ -132,7 +132,36 @@ public class DwCEventDQTestDefinitions {
 	 */
 	@Test
 	public void testAmendmentEventdateStandardized() {
-		fail("Not yet implemented");
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; 
+        // AMENDED if the value of dwc:eventDate was changed to unambiguously 
+        // conform with an ISO 8601-1:2019 date; otherwise NOT_AMENDED 
+		
+		String eventDate = "";
+		DQResponse<AmendmentValue> response = DwCEventDQ.amendmentEventdateStandardized(eventDate);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(0, response.getValue().getObject().size());
+		logger.debug(response.getComment());
+		
+		eventDate = "1900";
+		response = DwCEventDQ.amendmentEventdateStandardized(eventDate);
+		assertEquals(ResultState.NOT_AMENDED.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(0, response.getValue().getObject().size());
+		logger.debug(response.getComment());
+		
+		eventDate = "04/03/1900";
+		response = DwCEventDQ.amendmentEventdateStandardized(eventDate);
+		assertEquals(ResultState.NOT_AMENDED.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(0, response.getValue().getObject().size());
+		logger.debug(response.getComment());
+		
+		eventDate = "1892/04/20";
+		response = DwCEventDQ.amendmentEventdateStandardized(eventDate);
+		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(1, response.getValue().getObject().size());
+		assertEquals("1892-04-20", response.getValue().getObject().get("dwc:eventDate"));
+		logger.debug(response.getComment());
+		
 	}
 
 	/**

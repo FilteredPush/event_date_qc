@@ -40,14 +40,14 @@ import java.util.Map;
  *
  * Provides support for the following TDWG DQIG TG2 measures: 
  *
- * MEASURE_EVENTDATE_PRECISIONINSECONDS 56b6c695-adf1-418e-95d2-da04cad7be53
+ * #140 MEASURE_EVENTDATE_PRECISIONINSECONDS 56b6c695-adf1-418e-95d2-da04cad7be53
  * 
  * Provides support for the following TDWG DQIG TG2 validations
  * 
- * VALIDATION_EVENT_TEMPORAL_EMPTY 41267642-60ff-4116-90eb-499fee2cd83f
+ * #88 VALIDATION_EVENT_TEMPORAL_EMPTY 41267642-60ff-4116-90eb-499fee2cd83f
  * VALIDATION_EVENTDATE_EMPTY f51e15a6-a67d-4729-9c28-3766299d2985
  * VALIDATION_EVENTDATE_OUTOFRANGE 3cff4dc4-72e9-4abe-9bf3-8a30f1618432
- * VALIDATION_YEAR_EMPTY c09ecbf9-34e3-4f3e-b74a-8796af15e59f
+ * #49 VALIDATION_YEAR_EMPTY c09ecbf9-34e3-4f3e-b74a-8796af15e59f
  * VALIDATION_DAY_NOTSTANDARD 47ff73ba-0028-4f79-9ce1-ee7008d66498
  * VALIDATION_EVENTDATE_OUTOFRANGE 3cff4dc4-72e9-4abe-9bf3-8a30f1618432
  * VALIDATION_MONTH_NOTSTANDARD 01c6dafa-0886-4b7e-9881-2c3018c98bdc
@@ -63,11 +63,11 @@ import java.util.Map;
  * AMENDMENT_EVENTDATE_FROM_VERBATIM 6d0a0c10-5e4a-4759-b448-88932f399812
  * AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR eb0a44fa-241c-4d64-98df-ad4aa837307b
  * AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY 3892f432-ddd0-4a0a-b713-f2e2ecbd879d
+ * #61 AMENDMENT_EVENTDATE_STANDARDIZED  	718dfc3c-cb52-4fca-b8e2-0e722f375da7
  * 
  * Provides support for the following draft TDWG DQIG TG2 validations and amendments.  
  * (Old list, to update)   
  * ?? TG2-VALIDATION_EVENTDATE_NOTSTANDARD 4f2bf8fd-fc5c-493f-a44c-e7b16153c803
- * TG2-AMENDMENT_EVENTDATE_STANDARDIZED  	718dfc3c-cb52-4fca-b8e2-0e722f375da7
  * TG2-VALIDATION_DAY_OUTOFRANGE isDayPossibleForMonthYear(@Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) 
  * TG2-VALIDATION_EVENT_INCONSISTENT isConsistent(String eventDate, String startDayOfYear, String endDayOfYear, String year, String month, String day 
  * An equivalent measure for TG2-VALIDATION_EVENT_EMPTY
@@ -614,29 +614,34 @@ public class DwCEventDQ {
     	return result;
     }
 
+    @Deprecated
+    public DQResponse<AmendmentValue> correctEventDateFormat(@ActedUpon("dwc:eventDate") String eventDate) {
+        return amendmentEventdateStandardized(eventDate);
+    }
+    
     /**
      * Given an event date, check to see if it is empty or contains a valid date value.  If it contains
      * a value that is not a valid date, propose a properly formatted eventDate as an amendment.
      *
-     * TODO: Need to confirm GUID, EVENTDATE_FORMAT_CORRECTION and TG2-AMENDMENT_EVENTDATE_STANDARDIZED may be
-     * the same thing with different guids.
+     * #61 Amendment SingleRecord Conformance: eventdate standardized
      *
-     * TG2-AMENDMENT_EVENTDATE_STANDARDIZED  	718dfc3c-cb52-4fca-b8e2-0e722f375da7
+     * Provides: AMENDMENT_EVENTDATE_STANDARDIZED
      *
-     * @param eventDate to check
-     * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
+     * @param eventDate the provided dwc:eventDate to evaluate
+     * @return DQResponse the response of type AmendmentValue to return
+     *    with a value containing a key for dwc:eventDate and a
      *    resultState is AMENDED if a new value is proposed.
      */
-    //@Provides(value = "EVENTDATE_FORMAT_CORRECTION")
-	//@Provides(value = "urn:uuid:134c7b4f-1261-41ec-acb5-69cd4bc8556f")
-    @Provides(value="urn:uuid:718dfc3c-cb52-4fca-b8e2-0e722f375da7")
-    @Amendment( label = "AMENDMENT_EVENTDATE_STANDARDIZED", description="The field dwc:eventDate was altered to conform with ISO 8601:2004(E)")
-    @Specification(value="The field dwc:eventDate was altered to conform with ISO 8601:2004(E) The field dwc:eventDate is not EMPTY.")
-	// @Specification(value = "Check dwc:eventDate to see if it is empty or contains a valid date value. If it contains a " +
-	//		"value that is not a valid date, propose a properly formatted eventDate as an amendment.")
-    public static DQResponse<AmendmentValue> correctEventDateFormat(@ActedUpon(value = "dwc:eventDate") String eventDate) {
+    @Provides("718dfc3c-cb52-4fca-b8e2-0e722f375da7")
+    public static DQResponse<AmendmentValue> amendmentEventdateStandardized(
+    		@ActedUpon(value = "dwc:eventDate") String eventDate) {
 		DQResponse<AmendmentValue> result = new DQResponse<>();
 
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; 
+        // AMENDED if the value of dwc:eventDate was changed to unambiguously 
+        // conform with an ISO 8601-1:2019 date; otherwise NOT_AMENDED 
+        
 		if (DateUtils.eventDateValid(eventDate)) {
 			result.setResultState(ResultState.NOT_AMENDED);
 			result.addComment("eventDate contains a correctly formatted date, not changing.");
@@ -654,25 +659,28 @@ public class DwCEventDQ {
 						)
 						)
 				{
-					Map<String, String> correctedValues = new HashMap<>();
-					correctedValues.put("dwc:eventDate", extractResponse.getResult());
-					result.setValue(new AmendmentValue(correctedValues));
-
 					if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
-						result.setResultState(ResultState.AMBIGUOUS);
+						result.setResultState(ResultState.NOT_AMENDED);
+						result.addComment("Interpretation of eventDate [" + eventDate + "] is ambiguous, not changing.");
+						result.addComment(extractResponse.getComment());
+					} else if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
+						result.addComment("Interpretation of eventDate [" + eventDate + "] is suspect, not changing.");
 						result.addComment(extractResponse.getComment());
 					} else {
-						if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
-							result.addComment("Interpretation of eventDate [" + eventDate + "] is suspect.");
-							result.addComment(extractResponse.getComment());
-						}
 						result.setResultState(ResultState.AMENDED);
+						Map<String, String> correctedValues = new HashMap<>();
+						correctedValues.put("dwc:eventDate", extractResponse.getResult());
+						result.setValue(new AmendmentValue(correctedValues));
+						result.addComment("Provided eventDate [" + eventDate + "] interpreted as ["+extractResponse.getResult() +"].");
 					}
 				} else {
 					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
 					result.addComment("Unable to extract a date from " + eventDate);
 				}
 			}
+		}
+		if (result.getValue() == null) {
+			result.setValue(new AmendmentValue(new HashMap<String, String>()));
 		}
 		return result;
     }
