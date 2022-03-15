@@ -169,7 +169,30 @@ public class DwCEventDQTestDefinitions {
 	 */
 	@Test
 	public void testValidationEventdateNotstandard() {
-		fail("Not yet implemented");
+		
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; 
+        // COMPLIANT if the value of dwc:eventDate is a valid ISO 8601-1:2019 
+        // date; otherwise NOT_COMPLIANT 
+		
+		String eventDate = "";
+		DQResponse<ComplianceValue> result = DwCEventDQ.validationEventdateNotstandard(eventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		assertNull(result.getValue());
+		
+		eventDate = "1979-06-15";
+		result = DwCEventDQ.validationEventdateNotstandard(eventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1979/06/15";
+		result = DwCEventDQ.validationEventdateNotstandard(eventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+
 	}
 
 	/**

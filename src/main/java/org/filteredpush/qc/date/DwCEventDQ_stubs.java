@@ -42,25 +42,6 @@ public class DwCEventDQ_stubs {
         return result;
     }
 
-    /**
-     * #66 Validation SingleRecord Conformance: eventdate notstandard
-     *
-     * Provides: VALIDATION_EVENTDATE_NOTSTANDARD
-     *
-     * @param eventDate the provided dwc:eventDate to evaluate
-     * @return DQResponse the response of type ComplianceValue  to return
-     */
-    @Provides("4f2bf8fd-fc5c-493f-a44c-e7b16153c803")
-    public DQResponse<ComplianceValue> validationEventdateNotstandard(@ActedUpon("dwc:eventDate") String eventDate) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
-
-        //TODO:  Implement specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; 
-        // COMPLIANT if the value of dwc:eventDate is a valid ISO 8601-1:2019 
-        //date; otherwise NOT_COMPLIANT 
-
-        return result;
-    }
 
     /**
      * #67 Validation SingleRecord Consistency: eventdate inconsistent

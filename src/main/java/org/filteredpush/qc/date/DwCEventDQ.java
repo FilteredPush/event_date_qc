@@ -55,6 +55,7 @@ import java.util.Map;
  * VALIDATION_ENDDAYOFYEAR_OUTOFRANGE 9a39d88c-7eee-46df-b32a-c109f9f81fb8
  * #84 VALIDATION_YEAR_OUTOFRANGE ad0c8855-de69-4843-a80c-a5387d20fbc8
  * #125 VALIDATION_DAY_OUTOFRANGE 8d787cb5-73e2-4c39-9cd1-67c7361dc02e
+ * #66 VALIDATION_EVENTDATE_NOTSTANDARD 4f2bf8fd-fc5c-493f-a44c-e7b16153c803
  * 
  * Provides support for the following TDWG DQIG TG2 amendments 
  * 
@@ -67,7 +68,6 @@ import java.util.Map;
  * 
  * Provides support for the following draft TDWG DQIG TG2 validations and amendments.  
  * (Old list, to update)   
- * ?? TG2-VALIDATION_EVENTDATE_NOTSTANDARD 4f2bf8fd-fc5c-493f-a44c-e7b16153c803
  * TG2-VALIDATION_DAY_OUTOFRANGE isDayPossibleForMonthYear(@Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) 
  * TG2-VALIDATION_EVENT_INCONSISTENT isConsistent(String eventDate, String startDayOfYear, String endDayOfYear, String year, String month, String day 
  * An equivalent measure for TG2-VALIDATION_EVENT_EMPTY
@@ -569,28 +569,32 @@ public class DwCEventDQ {
 		return result;
     }
 
-
+    /**
+     *
+     * 
+     */
+	@Deprecated
+	public static DQResponse<ComplianceValue> isEventDateValid(@ActedUpon(value = "dwc:eventDate") String eventdate) {
+        return validationEventdateNotstandard(eventdate);
+    }
     /**
      * Test to see whether a provided dwc:eventDate is a validly formated ISO date.
+     * 
+     * #66 Validation SingleRecord Conformance: eventdate notstandard
      *
-     * Provides: EventDateValid
-     * TODO: needs clarification in the standard test suite, this may or may not be:
-     * ??  TG2-VALIDATION_EVENTDATE_NOTSTANDARD 4f2bf8fd-fc5c-493f-a44c-e7b16153c803
+     * Provides: VALIDATION_EVENTDATE_NOTSTANDARD
      *
-     * @param eventdate  a string to test
-     * @return COMPLIANT if modified is a validly formated ISO date/time with a duration of less than one day, NOT_COMPLIANT if
-     *     not an ISO date/time or a range of days, INTERNAL_PREREQUSISITES_NOT_MET if modified is empty.
+     * @param eventDate the provided dwc:eventDate to evaluate
+     * @return DQResponse the response of type ComplianceValue  to return
      */
-    //@Provides(value = "urn:uuid:f413594a-df57-41ea-a187-b8c6c6379b45")  // VALIDATION_EVENT_DATE_EXISTS
-    @Provides(value="urn:uuid:4f2bf8fd-fc5c-493f-a44c-e7b16153c803")
-    @Validation( label = "VALIDATION_EVENTDATE_NOTSTANDARD", description="The value of dwc:eventDate is a correctly formatted ISO 8601:2004(E) date")
-    @Specification(value="The value of dwc:eventDate is a correctly formatted ISO 8601:2004(E) date The field dwc:eventDate is not EMPTY.")
-	//@Validation(label = "Event date correctly formatted and exists", description = "Test to see whether a provided dwc:eventDate " +
-	//		"is a validly formated ISO date or date/time for an existing date.")
-	//@Specification(value = "Compliant if dwc:eventDate can to parsed as an actual ISO date, otherwise not compliant. " +
-	//		"Internal prerequisites not met if dwc:eventDate is empty.")
-    public static DQResponse<ComplianceValue> isEventDateValid(@ActedUpon(value = "dwc:eventDate") String eventdate) {
+    @Provides("4f2bf8fd-fc5c-493f-a44c-e7b16153c803")
+    public static DQResponse<ComplianceValue> validationEventdateNotstandard(
+    		@ActedUpon(value = "dwc:eventDate") String eventdate) {
 		DQResponse<ComplianceValue> result = new DQResponse<>();
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; 
+        // COMPLIANT if the value of dwc:eventDate is a valid ISO 8601-1:2019 
+        // date; otherwise NOT_COMPLIANT 
 
     	if (DateUtils.isEmpty(eventdate)) {
     		result.addComment("No value provided for dwc:eventDate.");
@@ -606,8 +610,9 @@ public class DwCEventDQ {
     			}
     			result.setResultState(ResultState.RUN_HAS_RESULT);
     		} catch (Exception e) {
+    			result.setValue(ComplianceValue.NOT_COMPLIANT);
+    			result.addComment("Provided value for dwc:eventDate '" + eventdate + "' is unable to be interpreted as an ISO date .");
     			logger.debug(e.getMessage());
-    			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     			result.addComment(e.getMessage());
     		}
     	}
