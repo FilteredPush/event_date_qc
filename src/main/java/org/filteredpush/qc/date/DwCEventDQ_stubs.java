@@ -43,27 +43,6 @@ public class DwCEventDQ_stubs {
     }
 
     /**
-     * #61 Amendment SingleRecord Conformance: eventdate standardized
-     *
-     * Provides: AMENDMENT_EVENTDATE_STANDARDIZED
-     *
-     * @param eventDate the provided dwc:eventDate to evaluate
-     * @return DQResponse the response of type AmendmentValue to return
-     */
-    @Provides("718dfc3c-cb52-4fca-b8e2-0e722f375da7")
-    public DQResponse<AmendmentValue> amendmentEventdateStandardized(@ActedUpon("dwc:eventDate") String eventDate) {
-        DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
-
-        //TODO:  Implement specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; 
-        // AMENDED if the value of dwc:eventDate was changed to unambiguously 
-        // conform with an ISO 8601-1:2019 date; otherwise NOT_AMENDED 
-        //
-
-        return result;
-    }
-
-    /**
      * #66 Validation SingleRecord Conformance: eventdate notstandard
      *
      * Provides: VALIDATION_EVENTDATE_NOTSTANDARD
