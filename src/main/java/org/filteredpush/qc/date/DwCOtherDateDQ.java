@@ -17,6 +17,7 @@ import org.datakurator.ffdq.model.ResultState;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,9 +25,9 @@ import java.util.Map;
  * FFDQ tests for Date related concepts in Darwin Core outside of the Event class.
  * 
  * Provides Core TG2 tests: 
- *   TG2-VALIDATION_DATEIDENTIFIED_OUTOFRANGE
- *   TG2-VALIDATION_DATEIDENTIFIED_NOTSTANDARD
- *   TG2-AMENDMENT_DATEIDENTIFIED_STANDARDIZED
+ *   #76 VALIDATION_DATEIDENTIFIED_OUTOFRANGE dc8aae4b-134f-4d75-8a71-c4186239178e
+ *   #69 VALIDATION_DATEIDENTIFIED_NOTSTANDARD 66269bdd-9271-4e76-b25c-7ab81eebe1d8
+ *   #26 AMENDMENT_DATEIDENTIFIED_STANDARDIZED 39bb2280-1215-447b-9221-fd13bc990641
  *   
  * Also provides: 
  *   Date Modified Format Correction (supplemental)  
@@ -280,9 +281,45 @@ public class DwCOtherDateDQ {
 						} 
 					}
 				} else {
-					// change in specification, internal prerequisites not met only if empty.
-					result.setResultState(ResultState.NOT_AMENDED);
-					result.addComment("Unable to extract a date from " + dateIdentified);
+					boolean matched = false;
+					logger.debug(dateIdentified);
+					if (dateIdentified.matches("^[0-9]{4}.[0-9]{2}.[0-9]{2}$")) { 
+						try {
+							// try to see if this is yyyy-dd-mm error for yyyy-mm-dd
+							Integer secondBit = Integer.parseInt(dateIdentified.substring(5,7));
+							Integer thirdBit = Integer.parseInt(dateIdentified.substring(8));
+							if (secondBit>12 && thirdBit<12) {
+								// try switching second and third parts of date.
+								String toTest = dateIdentified.substring(0, 4).concat("-").concat(dateIdentified.substring(8)).concat("-").concat(dateIdentified.substring(5, 7));
+								logger.debug(toTest);
+								LocalDateInterval testingToTest = new LocalDateInterval(toTest);
+								if (testingToTest!=null && testingToTest.isSingleDay()) { 
+									Map<String, String> correctedValues = new HashMap<>();
+									correctedValues.put("dwc:dateIdentified", testingToTest.toString());
+									result.addComment("Unabmiguous interpretation of dwc:dateIdentified [" + dateIdentified + "] as ["+ extractResponse.getResult() +"].");
+									result.setResultState(ResultState.AMENDED);
+									result.setValue(new AmendmentValue(correctedValues));
+									matched = true;
+								}
+							}
+						} catch (Exception e) {
+							logger.debug(e.getMessage());
+						}
+					}
+					if (!matched) { 
+						EventResult tryVerbatimResult = DateUtils.extractDateFromVerbatimER(dateIdentified);
+						if (tryVerbatimResult.getResultState().equals(EventResult.EventQCResultState.DATE)) { 
+							Map<String, String> correctedValues = new HashMap<>();
+							correctedValues.put("dwc:dateIdentified", tryVerbatimResult.getResult());
+							result.addComment("Unabmiguous interpretation of dwc:dateIdentified [" + dateIdentified + "] as ["+ extractResponse.getResult() +"].");
+							result.setResultState(ResultState.AMENDED);
+							result.setValue(new AmendmentValue(correctedValues));
+						} else { 
+							// per specification, internal prerequisites not met only if empty, failure result is NOT_AMENDED.
+							result.setResultState(ResultState.NOT_AMENDED);
+							result.addComment("Unable to extract a date from " + dateIdentified);
+						} 
+					} 
 				}
 			}
 		}        

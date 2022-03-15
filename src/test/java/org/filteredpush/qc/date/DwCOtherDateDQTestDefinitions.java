@@ -220,6 +220,16 @@ public class DwCOtherDateDQTestDefinitions {
 		logger.debug(result.getComment());
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
 		assertNull(result.getValue());
+		
+		dateIdentified = "1885-23-09";
+		result = DwCOtherDateDQ.amendmentDateidentifiedStandardized(dateIdentified);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.AMENDED.getLabel(), result.getResultState().getLabel());
+		keys = result.getValue().getObject().keySet();
+		assertEquals(1, keys.size());
+		assertEquals("1885-09-23", result.getValue().getObject().get("dwc:dateIdentified"));
+		
+		
 	}
 
 }
