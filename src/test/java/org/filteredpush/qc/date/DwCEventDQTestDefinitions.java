@@ -72,7 +72,43 @@ public class DwCEventDQTestDefinitions {
 		// Parameters. This test is defined as parameterized.
 		// Default values: bdq:earliestValidDate="1600"; bdq:latestValidDate=current year
 		
-		fail("Not yet implemented");
+		
+		String eventDate = "";
+		DQResponse<ComplianceValue> result = DwCEventDQ.validationEventdateOutofrange(eventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		assertNull(result.getValue());
+
+		eventDate = "3/4/5";
+		result = DwCEventDQ.validationEventdateOutofrange(eventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		assertNull(result.getValue());
+		
+		eventDate = "1880";
+		result = DwCEventDQ.validationEventdateOutofrange(eventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1600/2000";
+		result = DwCEventDQ.validationEventdateOutofrange(eventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1599";
+		result = DwCEventDQ.validationEventdateOutofrange(eventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1599/1900";
+		result = DwCEventDQ.validationEventdateOutofrange(eventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
 	}
 	
 	/**
@@ -87,7 +123,48 @@ public class DwCEventDQTestDefinitions {
 		
 		// Parameters. This test is defined as parameterized.
 		// Default values: bdq:earliestValidDate="1600"; bdq:latestValidDate=current year
-		fail("Not yet implemented");
+		
+		String eventDate = "";
+		DQResponse<ComplianceValue> result = DwCEventDQ.validationEventdateOutofrange(eventDate, "1800-01-01", "1899-12-31");
+		logger.debug(result.getComment());
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		assertNull(result.getValue());
+
+		eventDate = "3/4/5";
+		result = DwCEventDQ.validationEventdateOutofrange(eventDate, "1800-01-01", "1899-12-31");
+		logger.debug(result.getComment());
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		assertNull(result.getValue());
+		
+		eventDate = "1880";
+		result = DwCEventDQ.validationEventdateOutofrange(eventDate, "1800-01-01", "1899-12-31");
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+	
+		eventDate = "1880-03-05/1889-06-03";
+		result = DwCEventDQ.validationEventdateOutofrange(eventDate, "1800-01-01", "1899-12-31");
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1600/2000";
+		result = DwCEventDQ.validationEventdateOutofrange(eventDate, "1800-01-01", "1899-12-31");
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1599";
+		result = DwCEventDQ.validationEventdateOutofrange(eventDate, "1800-01-01", "1899-12-31");
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1799/1832";
+		result = DwCEventDQ.validationEventdateOutofrange(eventDate, "1800-01-01", "1899-12-31");
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 
 	}
 	
