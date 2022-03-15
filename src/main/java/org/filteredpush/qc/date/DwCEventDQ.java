@@ -65,6 +65,7 @@ import java.util.Map;
  * AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR eb0a44fa-241c-4d64-98df-ad4aa837307b
  * AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY 3892f432-ddd0-4a0a-b713-f2e2ecbd879d
  * #61 AMENDMENT_EVENTDATE_STANDARDIZED  	718dfc3c-cb52-4fca-b8e2-0e722f375da7
+ * #52 AMENDMENT_EVENT_FROM_EVENTDATE 710fe118-17e1-440f-b428-88ba3f547d6d
  * 
  * Provides support for the following draft TDWG DQIG TG2 validations and amendments.  
  * (Old list, to update)   
@@ -2038,27 +2039,38 @@ public class DwCEventDQ {
 		return result;
 	}
 
-
+	@Deprecated
+	public static DQResponse<AmendmentValue> fillInEventFromEventDate(
+    		@Consulted(value = "dwc:eventDate") String eventDate,
+			@ActedUpon(value = "dwc:year") String year,
+			@ActedUpon(value = "dwc:month") String month,
+			@ActedUpon(value = "dwc:day") String day,
+			@ActedUpon(value = "dwc:startDayOfYear") String startDayOfYear,
+			@ActedUpon(value = "dwc:endDayOfYear") String endDayOfYear
+			)
+	{
+		return amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+	}
 
 	/**
 	 * Given a set of event terms, examine the content of eventDate, and if it is correctly formatted and
 	 * can be interpreted, fill in any empty of the following terms (year, month, day, startDayOfYear, endDayOfYear)
 	 * with appropriate values.
 	 *
-     *TG2-AMENDMENT_EVENT_FROM_EVENTDATE  	710fe118-17e1-440f-b428-88ba3f547d6d
+     * #52 Amendment SingleRecord Completeness: event from eventdate
+     *
+     * Provides: AMENDMENT_EVENT_FROM_EVENTDATE
 	 *
-	 * @param eventDate to examine
-	 * @param year to check for emptyness
-	 * @param month to check for emptyness
-	 * @param day to check for emptyness
-	 * @param startDayOfYear to check for emptyness
-	 * @param endDayOfYear to check for emptyness
-     * @return an EventDQAmmendment which may contain a proposed amendment for key dwc:day.
+     * @param eventDate the provided dwc:eventDate to evaluate
+     * @param year the provided dwc:year to evaluate for emptyness and fill in 
+     * @param month the provided dwc:month to evaluate for emptyness and fill in
+     * @param day the provided dwc:day to evaluate for emptyness and fill in
+     * @param startDayOfYear the provided dwc:startDayOfYear to evaluate for emptyness and fill in
+     * @param endDayOfYear the provided dwc:endDayOfYear to evaluate for emptyness and fill in 
+     * @return DQResponse the response of type AmendmentValue to return 
 	 */
-	@Provides(value="urn:uuid:710fe118-17e1-440f-b428-88ba3f547d6d")
-    @Amendment( label = "AMENDMENT_EVENT_FROM_EVENTDATE", description="One or more empty component terms of the dwc:Event class (dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear) have been filled in from a valid value in the term dwc:eventDate.")
-    @Specification(value="One or more empty component terms of the dwc:Event class (dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear) have been filled in from a valid value in the term dwc:eventDate. The field dwc:eventDate is not EMPTY and contains a valid ISO 8601:2004(E).  Run this amendment after any other amendment which may affect dwc:eventDate.")
-	public static DQResponse<AmendmentValue> fillInEventFromEventDate(
+    @Provides("710fe118-17e1-440f-b428-88ba3f547d6d")
+	public static DQResponse<AmendmentValue> amendmentEventFromEventdate(
     		@Consulted(value = "dwc:eventDate") String eventDate,
 			@ActedUpon(value = "dwc:year") String year,
 			@ActedUpon(value = "dwc:month") String month,
@@ -2068,6 +2080,16 @@ public class DwCEventDQ {
 			)
 		{
     	DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
+    	
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
+        // or does not contain a valid ISO 8601-1:2019 date; AMENDED 
+        // if one or more EMPTY terms of the dwc:Event class (dwc:year, 
+        // dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear) 
+        // have been filled in from a valid unambiguously interpretable 
+        // value in dwc:eventDate and eventDate is wholly within one 
+        // year; otherwise NOT_AMENDED 
+    	
     	if (DateUtils.isEmpty(eventDate)) {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		result.addComment("No value for dwc:eventDate was provided, no data to fill in from.");
@@ -2085,13 +2107,16 @@ public class DwCEventDQ {
     				result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     				result.addComment("Provided value for dwc:eventDate ["+ eventDate +"] appears to be correctly formatted, but could not be interpreted as a valid date.");
 
+    			} else if (isRange && interval.getStart().getYear() != interval.getEnd().getYear() ) {
+    				result.setResultState(ResultState.NOT_AMENDED);
+    				result.addComment("Provided value for dwc:eventDate ["+ eventDate +"] represents a range of more than one year, not amending.");
     			} else {
     				Map<String, String> values = new HashMap<>();
 
     				if (DateUtils.isEmpty(day)) {
     					String newDay = Integer.toString(interval.getStartDate().getDayOfMonth());
 						values.put("dwc:day", newDay );
-    					result.setResultState(ResultState.FILLED_IN);
+    					result.setResultState(ResultState.AMENDED);
     					if (isRange) {
     						result.addComment("Added day ["+ newDay+"] from start day of range ["+eventDate+"].");
     					} else {
@@ -2101,7 +2126,7 @@ public class DwCEventDQ {
     				if (DateUtils.isEmpty(month)) {
     					String newMonth = Integer.toString(interval.getStartDate().getMonthValue());
     					values.put("dwc:month", newMonth );
-    					result.setResultState(ResultState.FILLED_IN);
+    					result.setResultState(ResultState.AMENDED);
     					if (isRange) {
     						result.addComment("Added month ["+ newMonth +"] from start month of eventDate ["+eventDate+"].");
     					} else {
@@ -2111,7 +2136,7 @@ public class DwCEventDQ {
     				if (DateUtils.isEmpty(month)) {
     					String newMonth = Integer.toString(interval.getStartDate().getMonthValue());
     					values.put("dwc:month", newMonth );
-    					result.setResultState(ResultState.FILLED_IN);
+    					result.setResultState(ResultState.AMENDED);
     					if (isRange) {
     						result.addComment("Added month ["+ newMonth +"] from start month of eventDate ["+eventDate+"].");
     					} else {
@@ -2121,7 +2146,7 @@ public class DwCEventDQ {
     				if (DateUtils.isEmpty(year)) {
     					String newYear = Integer.toString(interval.getStartDate().getYear());
     					values.put("dwc:year", newYear );
-    					result.setResultState(ResultState.FILLED_IN);
+    					result.setResultState(ResultState.AMENDED);
     					if (isRange) {
     						result.addComment("Added year ["+ newYear +"] from start month of eventDate ["+eventDate+"].");
     					} else {
@@ -2132,7 +2157,7 @@ public class DwCEventDQ {
     				if (DateUtils.isEmpty(startDayOfYear)) {
     					String newDay = Integer.toString(interval.getStartDate().getDayOfYear());
     					values.put("dwc:startDayOfYear", newDay );
-    					result.setResultState(ResultState.FILLED_IN);
+    					result.setResultState(ResultState.AMENDED);
     					if (isRange) {
     						result.addComment("Added startDayOfYear ["+ newDay +"] from start day of eventDate ["+eventDate+"].");
     					} else {
@@ -2143,7 +2168,7 @@ public class DwCEventDQ {
     				if (DateUtils.isEmpty(endDayOfYear)) {
     					String newDay = Integer.toString(interval.getEndDate().getDayOfYear());
     					values.put("dwc:endDayOfYear", newDay );
-    					result.setResultState(ResultState.FILLED_IN);
+    					result.setResultState(ResultState.AMENDED);
     					if (isRange) {
     						result.addComment("Added endDayOfYear ["+ newDay +"] from end day of eventDate ["+eventDate+"].");
     					} else {
@@ -2152,7 +2177,8 @@ public class DwCEventDQ {
     				}
 
     				result.setValue(new AmendmentValue(values));
-    				// Time could also be populated, but we probably don't want to.  Here is a minimal implementation,
+    				// Time could also be populated, but it isn't in scope for this issue. 
+    				// Here is a minimal implementation,
     				// which illustrates some issues in implementation (using zulu time or not, dealing with time in ranges...)
     				//if (DateUtils.isEmpty(eventTime)) {
     				//	if (DateUtils.containsTime(eventDate)) {
@@ -2162,13 +2188,19 @@ public class DwCEventDQ {
     				//	    result.addComment("Added eventTime ["+ newTime +"] from eventDate ["+eventDate+"].");
     				//	}
     				//}
-    				if (!result.getResultState().equals(ResultState.FILLED_IN)) {
+    				if (!result.getResultState().equals(ResultState.AMENDED)) {
     					result.setResultState(ResultState.NOT_AMENDED);
     					result.addComment("No changes proposed, all candidate fields to fill in contain values.");
     				}
     			} // end interval extraction
     		} // end format validity check
     	}
+    	
+    	// make sure that an empty value map is returned instead of null.
+    	if (result.getValue() == null) {
+    		result.setValue(new AmendmentValue(new HashMap<String, String>()));
+    	}
+    	
     	return result;
 	}
     

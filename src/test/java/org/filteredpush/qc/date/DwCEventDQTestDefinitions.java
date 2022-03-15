@@ -124,7 +124,83 @@ public class DwCEventDQTestDefinitions {
 	 */
 	@Test
 	public void testAmendmentEventFromEventdate() {
-		fail("Not yet implemented");
+		
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
+        // or does not contain a valid ISO 8601-1:2019 date; AMENDED 
+        // if one or more EMPTY terms of the dwc:Event class (dwc:year, 
+        // dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear) 
+        // have been filled in from a valid unambiguously interpretable 
+        // value in dwc:eventDate and eventDate is wholly within one 
+        // year; otherwise NOT_AMENDED 
+		
+		String eventDate = "";
+		String year = "1832";
+		String month = "";
+		String day = "";
+		String startDayOfYear = "";
+		String endDayOfYear = "";
+		DQResponse<AmendmentValue> response = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(0, response.getValue().getObject().size());
+		logger.debug(response.getComment());
+	
+		eventDate = "Foo";
+		response = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(0, response.getValue().getObject().size());
+		logger.debug(response.getComment());
+		
+		eventDate = "1961-01-28/1961-01-29";
+		year = "";
+		response = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(5, response.getValue().getObject().size());
+		assertEquals("1961", response.getValue().getObject().get("dwc:year"));
+		assertEquals("1", response.getValue().getObject().get("dwc:month"));
+		assertEquals("28", response.getValue().getObject().get("dwc:day"));
+		assertEquals("28", response.getValue().getObject().get("dwc:startDayOfYear"));
+		assertEquals("29", response.getValue().getObject().get("dwc:endDayOfYear"));
+		logger.debug(response.getComment());
+		
+		eventDate = "1961-01-28/1961-01-29";
+		year = "1961";
+		response = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(4, response.getValue().getObject().size());
+		assertEquals("1", response.getValue().getObject().get("dwc:month"));
+		assertEquals("28", response.getValue().getObject().get("dwc:day"));
+		assertEquals("28", response.getValue().getObject().get("dwc:startDayOfYear"));
+		assertEquals("29", response.getValue().getObject().get("dwc:endDayOfYear"));
+		logger.debug(response.getComment());
+		
+		eventDate = "1961-01-28/1962-45-34";
+		year = "1961";
+		response = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(0, response.getValue().getObject().size());
+		logger.debug(response.getComment());
+		
+		eventDate = "1961-01-28/1961-01-29";
+		year = "1961";
+		month = "01";
+		day = "28";
+		startDayOfYear = "28";
+		endDayOfYear = "29";
+		response = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.NOT_AMENDED.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(0, response.getValue().getObject().size());
+		
+		eventDate = "1961-01-28/1962-01-29";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		response = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.NOT_AMENDED.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(0, response.getValue().getObject().size());
+		
 	}
 
 	/**

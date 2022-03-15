@@ -13,35 +13,6 @@ import org.datakurator.ffdq.api.result.*;
 @Mechanism(value="a5fdf476-2e84-4004-bdc1-fc606a5ca2c8",label="Kurator: Date Validator - DwCEventDQ:v2.1.0")
 public class DwCEventDQ_stubs {
 
-    /**
-     * #52 Amendment SingleRecord Completeness: event from eventdate
-     *
-     * Provides: AMENDMENT_EVENT_FROM_EVENTDATE
-     *
-     * @param startDayOfYear the provided dwc:startDayOfYear to evaluate
-     * @param eventDate the provided dwc:eventDate to evaluate
-     * @param year the provided dwc:year to evaluate
-     * @param month the provided dwc:month to evaluate
-     * @param day the provided dwc:day to evaluate
-     * @param endDayOfYear the provided dwc:endDayOfYear to evaluate
-     * @return DQResponse the response of type AmendmentValue to return
-     */
-    @Provides("710fe118-17e1-440f-b428-88ba3f547d6d")
-    public DQResponse<AmendmentValue> amendmentEventFromEventdate(@ActedUpon("dwc:startDayOfYear") String startDayOfYear, @ActedUpon("dwc:eventDate") String eventDate, @ActedUpon("dwc:year") String year, @ActedUpon("dwc:month") String month, @ActedUpon("dwc:day") String day, @ActedUpon("dwc:endDayOfYear") String endDayOfYear) {
-        DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
-
-        //TODO:  Implement specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
-        // or does not contain a valid ISO 8601-1:2019 date; AMENDED 
-        // if one or more EMPTY terms of the dwc:Event class (dwc:year, 
-        // dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear) 
-        // have been filled in from a valid unambiguously interpretable 
-        // value in dwc:eventDate and eventDate is wholly within one 
-        //year; otherwise NOT_AMENDED 
-
-        return result;
-    }
-
 
     /**
      * #67 Validation SingleRecord Consistency: eventdate inconsistent
