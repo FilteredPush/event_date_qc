@@ -376,7 +376,130 @@ public class DwCEventDQTestDefinitions {
 	 */
 	@Test
 	public void testValidationDayOutofrange() {
-		fail("Not yet implemented");
+		
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if (a) dwc:day is EMPTY, 
+        // or (b) dwc:day is not interpretable as an integer, or (c) 
+        // dwc:day is interpretable as an integer between 29 and 31 
+        // inclusive and dwc:month is not interpretable as an integer 
+        // between 1 and 12, or (d) dwc:month is interpretable as the 
+        // integer 2 and dwc:day is interpretable as the integer 29 
+        // and dwc:year is not interpretable as a valid ISO 8601 year; 
+        // COMPLIANT if (a) the value of dwc:day is interpretable as 
+        // an integer between 1 and 28 inclusive, or (b) dwc:day is 
+        // interpretable as an integer between 29 and 30 and dwc:month 
+        // is interpretable as an integer in the set (4,6,9,11), or 
+        // (c) dwc:day is interpretable as an integer between 29 and 
+        // 31 and dwc:month is interpretable as an integer in the set 
+        // (1,3,5,7,8,10,12), or (d) dwc:day is interpretable as the 
+        // integer 29 and dwc:month is interpretable as the integer 
+        // 2 and dwc:year is interpretable as is a valid leap year 
+        // (evenly divisible by 400 or (evenly divisible by 4 but not 
+        // evenly divisible by 100)); otherwise NOT_COMPLIANT.
+		
+		DQResponse<ComplianceValue> response = null;
+		String year = null;
+		String month = null;
+		String day = null;
+		response = DwCEventDQ.validationDayOutofrange(year, month, day);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		assertNull(response.getValue());
+		logger.debug(response.getComment());
+		
+		year = null;
+		month = null;
+		day = "34";
+		response = DwCEventDQ.validationDayOutofrange(year, month, day);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		year = null;
+		month = null;
+		day = "-1";
+		response = DwCEventDQ.validationDayOutofrange(year, month, day);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		for (int d=1; d<29; d++) { 
+			day = Integer.toString(d);
+			response = DwCEventDQ.validationDayOutofrange(year, month, day);
+			assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+			assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
+			logger.debug(response.getComment());
+		}
+		
+		year = null;
+		month = null;
+		day = "29";
+		response = DwCEventDQ.validationDayOutofrange(year, month, day);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		assertNull(response.getValue());
+		
+		year = null;
+		month = "2";
+		day = "29";
+		response = DwCEventDQ.validationDayOutofrange(year, month, day);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
+		assertNull(response.getValue());
+		
+		year = null;
+		month = "1";
+		day = "29";
+		response = DwCEventDQ.validationDayOutofrange(year, month, day);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		year = "1981";
+		month = "2";
+		day = "29";
+		response = DwCEventDQ.validationDayOutofrange(year, month, day);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		year = "1980";
+		month = "2";
+		day = "29";
+		response = DwCEventDQ.validationDayOutofrange(year, month, day);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		year = null;
+		month = "4";
+		day = "30";
+		response = DwCEventDQ.validationDayOutofrange(year, month, day);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		year = null;
+		month = "5";
+		day = "30";
+		response = DwCEventDQ.validationDayOutofrange(year, month, day);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		year = null;
+		month = "4";
+		day = "31";
+		response = DwCEventDQ.validationDayOutofrange(year, month, day);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		year = null;
+		month = "5";
+		day = "30";
+		response = DwCEventDQ.validationDayOutofrange(year, month, day);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
 	}
 
 	/**

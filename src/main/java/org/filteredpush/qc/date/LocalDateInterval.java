@@ -139,7 +139,7 @@ public class LocalDateInterval {
 
 	/**
 	 * Extract a pair of days, representing the start and end of the specified dateBit
-	 * ignoring time, so long the time part it is correctly formatted.
+	 * ignoring time, so long as the time part it is correctly formatted.
 	 * 
 	 * @param dateBit a string representing a date or range of dates, without a / to parse
 	 * @return a date pair containing the start and end days of the range in dateBit, values are the

@@ -2889,6 +2889,17 @@ public class DateUtils {
     		} else if (eventDate.matches("^[0-9]{4}-[0-9]{3}$")) { 
     			java.time.LocalDate localDate = java.time.LocalDate.parse(eventDate,java.time.format.DateTimeFormatter.ISO_ORDINAL_DATE.withResolverStyle(ResolverStyle.STRICT));
     			result = 86400;
+    		} else if (eventDate.contains("T")) { 
+    			logger.debug(eventDate);
+    			LocalDateTimeInterval interval;
+				try {
+					interval = new LocalDateTimeInterval(eventDate);
+					logger.debug(interval);
+					result = interval.toDuration().getSeconds();
+				} catch (DateTimeParseException | EmptyDateException e) {
+					logger.debug(e.getMessage());
+					throw new TimeExtractionException(e.getMessage());
+				}
     		} else { 
     			LocalDateInterval interval;
 				try {
@@ -2898,14 +2909,6 @@ public class DateUtils {
 					logger.debug(e.getMessage());
 					throw new TimeExtractionException(e.getMessage());
 				}
-    			// TODO: implement with times.
-/*    			
-    		Interval eventDateInterval = DateUtils.extractInterval(eventDate);
-    		logger.debug(eventDateInterval.toDuration().getStandardDays());
-    		logger.debug(eventDateInterval);
-    		long mills = eventDateInterval.toDurationMillis();
-    		result = (long)Math.ceil(mills/1000l);
-*/    		
     		} 
     	}
     	return result;

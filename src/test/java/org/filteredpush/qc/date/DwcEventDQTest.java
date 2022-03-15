@@ -18,7 +18,9 @@ package org.filteredpush.qc.date;
 
 import static org.junit.Assert.*;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -99,6 +101,49 @@ public class DwcEventDQTest {
 		
 		measure = DwCEventDQ.measureEventdatePrecisioninseconds("");
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, measure.getResultState());
+		
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("2007-03-01/2008-02-29");
+		seconds = (60l*60l*24l*366); 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
+		
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("2007-03-01/2008-05-11");
+		seconds = (60l*60l*24l*(366+31+30+11)); 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
+		
+		LocalDateTime t1 = LocalDateTime.parse("2007-03-01T13:00:00");
+		LocalDateTime t2 = LocalDateTime.parse("2008-05-11T15:30:00");
+		Duration d1 = Duration.between(t1, t2);
+		logger.debug(d1.getSeconds());  
+		t1 = LocalDateTime.parse("2007-03-01T00:00:00");
+		t2 = LocalDateTime.parse("2008-03-01T00:00:00");
+		d1 = Duration.between(t1, t2);
+		logger.debug(d1.getSeconds());  
+		t1 = LocalDateTime.parse("2006-03-01T00:00:00");
+		t2 = LocalDateTime.parse("2007-03-01T00:00:00");
+		d1 = Duration.between(t1, t2);		
+		logger.debug(d1.getSeconds());  
+		t1 = LocalDateTime.parse("2006-03-01T13:00:00");
+		t2 = LocalDateTime.parse("2007-05-11T15:30:00");
+		d1 = Duration.between(t1, t2);
+		logger.debug(d1.getSeconds()); 
+		
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("2007-03-01T13:00:00Z/2008-05-11T15:30:00Z");
+		seconds = (long) ((60l*60l*24l*(366l+31l+30l+10l)) + (60l*60l*2.5)); 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
+		
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("2007-03-01T13:00:00Z/2008-05-11T15:30:00Z");
+		seconds = 37765800l; 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
+		
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("2006-03-01T13:00:00Z/2007-05-11T15:30:00Z");
+		seconds = (long) ((60l*60l*24l*(365l+31l+30l+10l)) + (60l*60l*2.5)); 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
+		
 	}
 	
 	/**

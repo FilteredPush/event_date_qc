@@ -54,9 +54,7 @@ import java.util.Map;
  * VALIDATION_STARTDAYOFYEAR_OUTOFRANGE 85803c7e-2a5a-42e1-b8d3-299a44cafc46
  * VALIDATION_ENDDAYOFYEAR_OUTOFRANGE 9a39d88c-7eee-46df-b32a-c109f9f81fb8
  * #84 VALIDATION_YEAR_OUTOFRANGE ad0c8855-de69-4843-a80c-a5387d20fbc8
- * 
- * TODO: Update: 
- * VALIDATION_DAY_OUTOFRANGE  8d787cb5-73e2-4c39-9cd1-67c7361dc02e   ** Differs
+ * #125 VALIDATION_DAY_OUTOFRANGE 8d787cb5-73e2-4c39-9cd1-67c7361dc02e
  * 
  * Provides support for the following TDWG DQIG TG2 amendments 
  * 
@@ -864,31 +862,171 @@ public class DwCEventDQ {
     }
 
 
-    // TODO: Handling of invalid year/month differs from current standard description, but proposed that 
-    // as defect of standard description.
+        //TODO:  Implement specification
+        // INTERNAL_PREREQUISITES_NOT_MET if (a) dwc:day is EMPTY, 
+        // or (b) dwc:day is not interpretable as an integer, or (c) 
+        // dwc:day is interpretable as an integer between 29 and 31 
+        // inclusive and dwc:month is not interpretable as an integer 
+        // between 1 and 12, or (d) dwc:month is interpretable as the 
+        // integer 2 and dwc:day is interpretable as the integer 29 
+        // and dwc:year is not interpretable as a valid ISO 8601 year; 
+        // COMPLIANT if (a) the value of dwc:day is interpretable as 
+        // an integer between 1 and 28 inclusive, or (b) dwc:day is 
+        // interpretable as an integer between 29 and 30 and dwc:month 
+        // is interpretable as an integer in the set (4,6,9,11), or 
+        // (c) dwc:day is interpretable as an integer between 29 and 
+        // 31 and dwc:month is interpretable as an integer in the set 
+        // (1,3,5,7,8,10,12), or (d) dwc:day is interpretable as the 
+        // integer 29 and dwc:month is interpretable as the integer 
+        // 2 and dwc:year is interpretable as is a valid leap year 
+        // (evenly divisible by 400 or (evenly divisible by 4 but not 
+        //evenly divisible by 100)); otherwise NOT_COMPLIANT." 
+
+    @Deprecated
+    public static DQResponse<ComplianceValue> isDayPossibleForMonthYear(@Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) {
+        return validationDayOutofrange(year, month, day);
+    }
+    
     /**
      * Check if a value for day is consistent with a provided month and year.
      *
-     * Provides: DAY_POSSIBLE_FOR_MONTH_YEAR  (RECORDED_DATE_MISMATCH)
+     * #125 Validation SingleRecord Conformance: day outofrange
      *
-     * TG2-VALIDATION_DAY_OUTOFRANGE
+     * Provides: VALIDATION_DAY_OUTOFRANGE
+     * (previous draft names include DAY_POSSIBLE_FOR_MONTH_YEAR and RECORDED_DATE_MISMATCH)
      *
-     * @param year for month and day
-     * @param month for day
-     * @param day to check
-     * @return an DQValidationResponse object describing whether day exists in year-month-day.
+     * @param year the provided dwc:year for the month and day
+     * @param month the provided dwc:month for the day
+     * @param day the provided dwc:day to evaluate 
+     * @return DQResponse the response of type ComplianceValue  to return
      */
-    @Provides(value="urn:uuid:8d787cb5-73e2-4c39-9cd1-67c7361dc02e")
-    @Validation( label = "VALIDATION_DAY_OUTOFRANGE", description="The value of dwc:day is a valid day given the month and year.")
-    @Specification(value="INTERNAL_PREREQUISITES_NOT_MET if any of the fields dwc:day, dwc:month and dwc:year are not " +
-            "present or are EMPTY; COMPLIANT if the value of the field dwc:day is a valid day given the month and year; " + 
-    		"otherwise NOT_COMPLIANT")
-    public static DQResponse<ComplianceValue> isDayPossibleForMonthYear(@Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) {
+    @Provides("8d787cb5-73e2-4c39-9cd1-67c7361dc02e")
+    public static DQResponse<ComplianceValue> validationDayOutofrange(@ActedUpon("dwc:year") String year, @ActedUpon("dwc:month") String month, @ActedUpon("dwc:day") String day) {
     	DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if (a) dwc:day is EMPTY, 
+        // or (b) dwc:day is not interpretable as an integer, or (c) 
+        // dwc:day is interpretable as an integer between 29 and 31 
+        // inclusive and dwc:month is not interpretable as an integer 
+        // between 1 and 12, or (d) dwc:month is interpretable as the 
+        // integer 2 and dwc:day is interpretable as the integer 29 
+        // and dwc:year is not interpretable as a valid ISO 8601 year; 
+        // COMPLIANT if (a) the value of dwc:day is interpretable as 
+        // an integer between 1 and 28 inclusive, or (b) dwc:day is 
+        // interpretable as an integer between 29 and 30 and dwc:month 
+        // is interpretable as an integer in the set (4,6,9,11), or 
+        // (c) dwc:day is interpretable as an integer between 29 and 
+        // 31 and dwc:month is interpretable as an integer in the set 
+        // (1,3,5,7,8,10,12), or (d) dwc:day is interpretable as the 
+        // integer 29 and dwc:month is interpretable as the integer 
+        // 2 and dwc:year is interpretable as is a valid leap year 
+        // (evenly divisible by 400 or (evenly divisible by 4 but not 
+        // evenly divisible by 100)); otherwise NOT_COMPLIANT.
+    	
+    	if (DateUtils.isEmpty(day)) { 
+    		//IPNM (a) dwc:day is EMPTY, 
+    		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    	    result.addComment("Provided value for dwc:day [" + day + "] is EMPTY.");;
+    	} else { 
+    		try { 
+    			Integer dayInteger = Integer.parseInt(day.trim());
+    			if (dayInteger>=1 && dayInteger<=28) {
+    				// COMP (a) the value of dwc:day is interpretable as an integer between 1 and 28 inclusive, 
+    				result.setResultState(ResultState.RUN_HAS_RESULT);
+    				result.setValue(ComplianceValue.COMPLIANT);
+    				result.addComment("Provided value for dwc:day [" + day + "] is in the range 1-28 inclusive.");;
+    			} else if (dayInteger < 1) {
+    				// otherwise
+    				result.setResultState(ResultState.RUN_HAS_RESULT);
+    				result.setValue(ComplianceValue.NOT_COMPLIANT);
+    				result.addComment("Provided value for dwc:day [" + day + "] is less than 1.");;
+    			} else if (dayInteger > 31) {
+    				// otherwise 
+    				result.setResultState(ResultState.RUN_HAS_RESULT);
+    				result.setValue(ComplianceValue.NOT_COMPLIANT);
+    				result.addComment("Provided value for dwc:day [" + day + "] is greater than 31.");;
+    			} else { 
+    				try {
+    					if (DateUtils.isEmpty(month)) { 
+    						throw new NumberFormatException();
+    					}
+    					Integer monthInteger = Integer.parseInt(month.trim());
+    					if (dayInteger>=29 && dayInteger<=30 && 
+    							(monthInteger==4 || monthInteger==6 || monthInteger==9 || monthInteger==11))
+    					{ 
+    						// COMP (b) dwc:day is interpretable as an integer between 29 and 30 and dwc:month 
+    						// is interpretable as an integer in the set (4,6,9,11),
+    						result.setResultState(ResultState.RUN_HAS_RESULT);
+    						result.setValue(ComplianceValue.COMPLIANT);
+    						result.addComment("Provided value for dwc:day [" + day + "] is in the range 29-30 and month is in the set (4,6,9,11).");;
+    					} else if (dayInteger>=29 && dayInteger<=31 && 
+    							(monthInteger==1 || monthInteger==3 || monthInteger==5 || monthInteger==7 || monthInteger==8 || monthInteger==10 || monthInteger==12 )) 
+    					{ 
+    						///COMP (c) dwc:day is interpretable as an integer between 29 and 
+    				        // 31 and dwc:month is interpretable as an integer in the set 
+    				        // (1,3,5,7,8,10,12),
+    						result.setResultState(ResultState.RUN_HAS_RESULT);
+    						result.setValue(ComplianceValue.COMPLIANT);
+    						result.addComment("Provided value for dwc:day [" + day + "] is in the range 29-31 and month is in the set (1,3,5,7,8,10,12).");;
+    					} else if (dayInteger==29 && monthInteger==2) { 
+    						// leap day, check if in leap year
+    						try {     					
+    							if (DateUtils.isEmpty(year)) { 
+    								throw new NumberFormatException();
+    							}
+    							Integer yearInteger = Integer.parseInt(year.trim());
+    							if ( ((yearInteger%400)==0) || ((yearInteger % 4)==0 && (yearInteger % 100)!=0)) { 
+    								// COMP (d) dwc:day is interpretable as the 
+    								// integer 29 and dwc:month is interpretable as the integer 
+    								// 2 and dwc:year is interpretable as is a valid leap year 
+    								// (evenly divisible by 400 or (evenly divisible by 4 but not 
+    								// evenly divisible by 100)); 
+    								result.setResultState(ResultState.RUN_HAS_RESULT);
+    								result.setValue(ComplianceValue.COMPLIANT);
+    								result.addComment("Provided value for dwc:day [" + day + "] is 29 and dwc:month ["+month+"] is 2 making it a leap day, and dwc:year ["+year+"] is a leap year.");;
+    							} else { 
+    								// otherwise NOT_COMPLIANT.
+    								result.setResultState(ResultState.RUN_HAS_RESULT);
+    								result.setValue(ComplianceValue.NOT_COMPLIANT);
+    								result.addComment("Provided value for dwc:day [" + day + "] is 29 and dwc:month ["+month+"] is 2 making it a leap day, but dwc:year ["+year+"] is not a leap year.");;
+    							}
+    	    				} catch (NumberFormatException e) { 
+    	    					// IPNM (d) dwc:month is interpretable as the 
+    	    					// integer 2 and dwc:day is interpretable as the integer 29 
+    	    					// and dwc:year is not interpretable as a valid ISO 8601 year; 
+    	    					logger.debug(e.getMessage());
+    	    					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    	    					result.addComment("Provided value for dwc:day [" + day + "] is 29 and dwc:month ["+month+"] is 2 making it a leap day, but dwc:year ["+year+"] could not be interpreted as an integer.");;
+    	    				}
+    					} else {
+    						// otherwise
+    						result.setResultState(ResultState.RUN_HAS_RESULT);
+    						result.setValue(ComplianceValue.NOT_COMPLIANT);
+    	    				result.addComment("Provided values for dwc:day [" + day + "] dwc:month ["+month+"] and dwc:year ["+year+"] didn't match the values for a valid day.");;
+    					}
+    				} catch (NumberFormatException e) { 
+    					// IPNM  (c) dwc:day is interpretable as an integer between 29 and 31 
+    					// inclusive and dwc:month is not interpretable as an integer 
+    					// between 1 and 12, or  
+    					logger.debug(e.getMessage());
+    					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    					result.addComment("Provided value for dwc:day [" + day + "] is between 29 and 31, but dwc:month ["+month+"] could not be interpreted as an integer.");;
+    				}
+    			}
+    		} catch (NumberFormatException e) { 
+    			// IPNM (b) dwc:day is not interpretable as an integer, 
+    			logger.debug(e.getMessage());
+    			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    			result.addComment("Provided value for dwc:day [" + day + "] could not be interpreted as an integer.");;
+    		}
+    		
+    	}
+    	
+    	/*
+    	 * Original construct and validate a date based implementation.
     	DQResponse<ComplianceValue> monthResult =  validationMonthNotstandard(month);
     	DQResponse<ComplianceValue> dayResult =  validationDayNotstandard(day);
-
     	if (monthResult.getResultState().equals(ResultState.RUN_HAS_RESULT)) {
     		if (monthResult.getValue().equals(ComplianceValue.COMPLIANT)) {
     	        if (dayResult.getResultState().equals(ResultState.RUN_HAS_RESULT)) {
@@ -928,6 +1066,7 @@ public class DwCEventDQ {
     		result.setResultState(monthResult.getResultState());
     		result.addComment(monthResult.getComment());
     	}
+    	*/
 
     	return result;
     }
