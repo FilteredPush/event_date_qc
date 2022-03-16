@@ -2184,7 +2184,7 @@ public class DwCEventDQ {
 	}
     
     @Provides("ad0c8855-de69-4843-a80c-a5387d20fbc8")
-    public DQResponse<ComplianceValue> validationYearOutofrange(@ActedUpon("dwc:year") String year) {
+    public static DQResponse<ComplianceValue> validationYearOutofrange(@ActedUpon("dwc:year") String year) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
     	Integer upperBound = LocalDateTime.now().getYear();

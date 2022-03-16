@@ -95,7 +95,7 @@ public class Runner {
 				Boolean showSummaryLines = cmd.hasOption("s");
 				DateUtils.interpretDates(args,showSummaryLines);
 			} else { 
-				List<Method> methods = Arrays.asList(DwCEventTG2DQ.class.getDeclaredMethods());
+				List<Method> methods = Arrays.asList(DwCEventDQ.class.getDeclaredMethods());
 				methods.get(0).isAnnotationPresent(Provides.class);
 				methods.get(0).getAnnotation(Provides.class);
 
@@ -214,7 +214,7 @@ public class Runner {
 						counter.put(name, current);
 
 						method = "VALIDATION_EVENT_EMPTY";
-						response = DwCEventTG2DQ.validationEventEmpty(startDayOfYear,eventDate,year, verbatimEventDate,month,day, endDayOfYear); 
+						response = DwCEventDQ.validationEventTemporalEmpty(startDayOfYear,eventDate,year, verbatimEventDate,month,day, endDayOfYear); 
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -223,7 +223,7 @@ public class Runner {
 						counter.put(name, current);
 						
 						method = "VALIDATION_EVENT_INCONSISTENT";
-						response = DwCEventTG2DQ.validationEventInconsistent(startDayOfYear, eventDate, year,month,day,endDayOfYear);
+						response = DwCEventDQ.validationEventInconsistent(startDayOfYear, eventDate, year,month,day,endDayOfYear);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -241,7 +241,7 @@ public class Runner {
 						counter.put(name, current);
 					              	
 						method = "VALIDATION_EVENTDATE_NOTSTANDARD";
-						response = DwCEventTG2DQ.validationEventdateNotstandard(eventDate);
+						response = DwCEventDQ.validationEventdateNotstandard(eventDate);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -268,7 +268,7 @@ public class Runner {
 						counter.put(name, current);
 						
 						method = "VALIDATION_DAY_OUTOFRANGE"; 
-						response = DwCEventTG2DQ.validationDayOutofrange(year,month,day);
+						response = DwCEventDQ.validationDayOutofrange(year,month,day);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -277,7 +277,7 @@ public class Runner {
 						counter.put(name, current);
 					
 						method = "VALIDATION_MONTH_NOTSTANDARD"; 
-						response = DwCEventTG2DQ.validationMonthNotstandard(month);
+						response = DwCEventDQ.validationMonthNotstandard(month);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -286,7 +286,7 @@ public class Runner {
 						counter.put(name, current);
 					
 						method = "VALIDATION_YEAR_EMPTY"; 
-						response = DwCEventTG2DQ.validationYearEmpty(year);
+						response = DwCEventDQ.validationYearEmpty(year);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -295,7 +295,7 @@ public class Runner {
 						counter.put(name, current);
 					
 						method = "VALIDATION_YEAR_OUTOFRANGE"; 
-						response = DwCEventTG2DQ.validationYearOutofRange(year); 
+						response = DwCEventDQ.validationYearOutofrange(year); 
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -304,7 +304,7 @@ public class Runner {
 						counter.put(name, current);
 						
 						method = "VALIDATION_STARTDAYOFYEAR_OUTOFRANGE"; 
-						response = DwCEventTG2DQ.validationStartdayofyearOutofrange(startDayOfYear, year);
+						response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, year);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -313,7 +313,7 @@ public class Runner {
 						counter.put(name, current);
 					
 						method = "VALIDATION_ENDDAYOFYEAR_OUTOFRANGE";
-						response = DwCEventTG2DQ.validationEnddayofyearOutofrange(year,endDayOfYear);
+						response = DwCEventDQ.validationEnddayofyearOutofrange(year,endDayOfYear);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -336,7 +336,7 @@ public class Runner {
 						}
 					                    
 						method = "AMENDMENT_EVENTDATE_STANDARDIZED";
-						response = DwCEventTG2DQ.amendmentEventdateStandardized(eventDate);
+						response = DwCEventDQ.amendmentEventdateStandardized(eventDate);
 						name = method + " " + response.getResultState().getLabel();
 						current = acounter.get(name);
 						if (current==null) { current = 0; }
@@ -347,7 +347,7 @@ public class Runner {
 						}
 					                   
 						method = "AMENDMENT_DAY_STANDARDIZED";
-						response = DwCEventTG2DQ.amendmentDayStandardized(day);
+						response = DwCEventDQ.amendmentDayStandardized(day);
 						name = method + " " + response.getResultState().getLabel();
 						current = acounter.get(name);
 						if (current==null) { current = 0; }
@@ -358,7 +358,7 @@ public class Runner {
 						}
 					                    
 						method = "AMENDMENT_MONTH_STANDARDIZED";
-						response = DwCEventTG2DQ.amendmentMonthStandardized(month);
+						response = DwCEventDQ.amendmentMonthStandardized(month);
 						name = method + " " + response.getResultState().getLabel();
 						current = acounter.get(name);
 						if (current==null) { current = 0; }
@@ -369,46 +369,46 @@ public class Runner {
 						}
 						
 						method = "AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY";
-						response = DwCEventTG2DQ.amendmentEventdateFromYearmonthday(eventDate,year,month,day);
+						response = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate,year,month,day);
 						name = method + " " + response.getResultState().getLabel();
 						current = acounter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						acounter.put(name, current);
-						if (response.getResultState().equals(ResultState.FILLED_IN)) { 
+						if (response.getResultState().equals(ResultState.AMENDED)) { 
 							eventDate = ((AmendmentValue)response.getValue()).getObject().get("dwc:eventDate");
 						}
 					                    
 						method = "AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR";
-						response = DwCEventTG2DQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate,startDayOfYear,year,endDayOfYear);
+						response = DwCEventDQ.amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate,startDayOfYear,year,endDayOfYear);
 						name = method + " " + response.getResultState().getLabel();
 						current = acounter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						acounter.put(name, current);
-						if (response.getResultState().equals(ResultState.FILLED_IN)) { 
+						if (response.getResultState().equals(ResultState.AMENDED)) { 
 							eventDate = ((AmendmentValue)response.getValue()).getObject().get("dwc:eventDate");
 						}
 					                   
 						method = "AMENDMENT_EVENTDATE_FROM_VERBATIM";
-						response = DwCEventTG2DQ.amendmentEventdateFromVerbatim(eventDate, verbatimEventDate);
+						response = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate, verbatimEventDate);
 						name = method + " " + response.getResultState().getLabel();
 						current = acounter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						acounter.put(name, current);
-						if (response.getResultState().equals(ResultState.FILLED_IN)) { 
+						if (response.getResultState().equals(ResultState.AMENDED)) { 
 							eventDate = ((AmendmentValue)response.getValue()).getObject().get("dwc:eventDate");
 						}
 						
 						method = "AMENDMENT_EVENT_FROM_EVENTDATE"; 
-						response = DwCEventTG2DQ.amendmentEventFromEventdate(eventDate,startDayOfYear,year,month,day,endDayOfYear);
+						response = DwCEventDQ.amendmentEventFromEventdate(eventDate,startDayOfYear,year,month,day,endDayOfYear);
 						name = method + " " + response.getResultState().getLabel();
 						current = acounter.get(name);
 						if (current==null) { current = 0; }
 						current = current + 1;
 						acounter.put(name, current);
-						if (response.getResultState().equals(ResultState.FILLED_IN)) { 
+						if (response.getResultState().equals(ResultState.AMENDED)) { 
 							if (((AmendmentValue)response.getValue()).getObject().get("dwc:day")!=null) { 
 							   day = ((AmendmentValue)response.getValue()).getObject().get("dwc:day");
 							}
@@ -454,7 +454,7 @@ public class Runner {
 						postcounter.put(name, current);
 
 						method = "VALIDATION_EVENT_EMPTY";
-						response = DwCEventTG2DQ.validationEventEmpty(startDayOfYear,eventDate,year, verbatimEventDate,month,day, endDayOfYear); 
+						response = DwCEventDQ.validationEventTemporalEmpty(startDayOfYear,eventDate,year, verbatimEventDate,month,day, endDayOfYear); 
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);
@@ -463,7 +463,7 @@ public class Runner {
 						postcounter.put(name, current);
 						
 						method = "VALIDATION_EVENT_INCONSISTENT";
-						response = DwCEventTG2DQ.validationEventInconsistent(startDayOfYear, eventDate, year,month,day,endDayOfYear);
+						response = DwCEventDQ.validationEventInconsistent(startDayOfYear, eventDate, year,month,day,endDayOfYear);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);
@@ -481,7 +481,7 @@ public class Runner {
 						postcounter.put(name, current);
 					              	
 						method = "VALIDATION_EVENTDATE_NOTSTANDARD";
-						response = DwCEventTG2DQ.validationEventdateNotstandard(eventDate);
+						response = DwCEventDQ.validationEventdateNotstandard(eventDate);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);
@@ -508,7 +508,7 @@ public class Runner {
 						postcounter.put(name, current);
 						
 						method = "VALIDATION_DAY_OUTOFRANGE"; 
-						response = DwCEventTG2DQ.validationDayOutofrange(year,month,day);
+						response = DwCEventDQ.validationDayOutofrange(year,month,day);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);
@@ -517,7 +517,7 @@ public class Runner {
 						postcounter.put(name, current);
 					
 						method = "VALIDATION_MONTH_NOTSTANDARD"; 
-						response = DwCEventTG2DQ.validationMonthNotstandard(month);
+						response = DwCEventDQ.validationMonthNotstandard(month);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);
@@ -526,7 +526,7 @@ public class Runner {
 						postcounter.put(name, current);
 					
 						method = "VALIDATION_YEAR_EMPTY"; 
-						response = DwCEventTG2DQ.validationYearEmpty(year);
+						response = DwCEventDQ.validationYearEmpty(year);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);
@@ -535,7 +535,7 @@ public class Runner {
 						postcounter.put(name, current);
 					
 						method = "VALIDATION_YEAR_OUTOFRANGE"; 
-						response = DwCEventTG2DQ.validationYearOutofRange(year); 
+						response = DwCEventDQ.validationYearOutofrange(year); 
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);
@@ -544,7 +544,7 @@ public class Runner {
 						postcounter.put(name, current);
 						
 						method = "VALIDATION_STARTDAYOFYEAR_OUTOFRANGE"; 
-						response = DwCEventTG2DQ.validationStartdayofyearOutofrange(startDayOfYear, year);
+						response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, year);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);
@@ -553,7 +553,7 @@ public class Runner {
 						postcounter.put(name, current);
 					
 						method = "VALIDATION_ENDDAYOFYEAR_OUTOFRANGE";
-						response = DwCEventTG2DQ.validationEnddayofyearOutofrange(year,endDayOfYear);
+						response = DwCEventDQ.validationEnddayofyearOutofrange(year,endDayOfYear);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);
