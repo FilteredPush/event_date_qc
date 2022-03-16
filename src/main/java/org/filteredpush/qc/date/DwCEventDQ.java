@@ -56,6 +56,7 @@ import java.util.Map;
  * #84 VALIDATION_YEAR_OUTOFRANGE ad0c8855-de69-4843-a80c-a5387d20fbc8
  * #125 VALIDATION_DAY_OUTOFRANGE 8d787cb5-73e2-4c39-9cd1-67c7361dc02e
  * #66 VALIDATION_EVENTDATE_NOTSTANDARD 4f2bf8fd-fc5c-493f-a44c-e7b16153c803
+ * #67 VALIDATION_EVENT_INCONSISTENT 5618f083-d55a-4ac2-92b5-b9fb227b832f
  * 
  * Provides support for the following TDWG DQIG TG2 amendments 
  * 
@@ -67,14 +68,6 @@ import java.util.Map;
  * #61 AMENDMENT_EVENTDATE_STANDARDIZED  	718dfc3c-cb52-4fca-b8e2-0e722f375da7
  * #52 AMENDMENT_EVENT_FROM_EVENTDATE 710fe118-17e1-440f-b428-88ba3f547d6d
  * 
- * Provides support for the following draft TDWG DQIG TG2 validations and amendments.  
- * (Old list, to update)   
- * TG2-VALIDATION_DAY_OUTOFRANGE isDayPossibleForMonthYear(@Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) 
- * TG2-VALIDATION_EVENT_INCONSISTENT isConsistent(String eventDate, String startDayOfYear, String endDayOfYear, String year, String month, String day 
- * An equivalent measure for TG2-VALIDATION_EVENT_EMPTY
- * TG2-AMENDMENT_EVENT_FROM_EVENTDATE  	710fe118-17e1-440f-b428-88ba3f547d6d
- * TG2-VALIDATION_YEAR_OUTOFRANGE 
- * 
  * Also Provides support for the following supplemental, under discussion or other tests: 
  *   DAY_IN_RANGE.  isDayInRange(@ActedUpon(value = "dwc:day") String day)   
  *      Is not the same as TG2-VALIDATION_DAY_OUTOFRANGE which includes year and month 
@@ -82,8 +75,8 @@ import java.util.Map;
  *   EVENTDATE_PRECISON_MONTH_OR_BETTER  TODO: not yet implemented.
  *   EVENTDATE_PRECISON_YEAR_OR_BETTER isEventDateYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) 
  *                                also isEventDateJulianYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) 
- * 
  * MEASURE_EVENT_NOTEMPTY 9dc97514-3b88-4afc-931d-5fc386be21ee (other)
+ * 	An equivalent measure for TG2-VALIDATION_EVENT_EMPTY
  *  
  *  Also provides (intended to prepare upstream data for Darwin Core: 
  *     UPSTREAM_EVENTDATE_FILLED_IN_FROM_START_END  extractDateFromStartEnd(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "startDate") String startDate, @Consulted(value="endDate") String endDate) 
@@ -94,12 +87,6 @@ import java.util.Map;
  *      EVENTDATE_CONSISTENT_WITH_DAY_MONTH_YEAR  
  *      STARTDATE_CONSISTENT_WITH_ENDDATE
  *      YEAR_PROVIDED
- * 
- *  Not implemented: 
- *  TG2-AMENDMENT_YEAR_STANDARDIZED  Unclear how to implement this one.
- *    Provides(value="urn:uuid:baf2a90b-af45-4f1a-839f-47126743a48a")
- *    Amendment( label = "AMENDMENT_YEAR_STANDARDIZED", description="The value of dwc:year was interpreted to be a number between a designated minimum value and the current year, inclusive")
- *
  * 
  * @author mole
  *
@@ -1771,61 +1758,63 @@ public class DwCEventDQ {
     	return result;
     }
 
-
     /**
      * Given a set of Event terms related to date and time, determine if they are consistent or
      * inconsistent.
      *
-     * TG2-VALIDATION_EVENT_INCONSISTENT
+     * #67 Validation SingleRecord Consistency: eventdate inconsistent
      *
-     * @param eventDate to examine
-     * @param verbatimEventDate  to examine
-     * @param year to examine
-     * @param month to examine
-     * @param day to examine
-     * @param startDayOfYear to examine
-     * @param endDayOfYear to examine
-     * @param eventTime to examine (may get removed from test definition)
-     * @return an DQValidationResponse object describing whether the event terms represent one temporal interval or
-     *   whether they are inconsistent with each other.
+     * Provides: VALIDATION_EVENT_INCONSISTENT
+     *
+     * @param eventDate the provided dwc:eventDate to evaluate
+     * @param year the provided dwc:year to evaluate
+     * @param month the provided dwc:month to evaluate
+     * @param day the provided dwc:day to evaluate
+     * @param startDayOfYear the provided dwc:startDayOfYear to evaluate
+     * @param endDayOfYear the provided dwc:endDayOfYear to evaluate
+     * @return DQResponse the response of type ComplianceValue  to return describing 
+     *     whether the event terms represent one temporal interval or
      */
-    @Provides(value="urn:uuid:5618f083-d55a-4ac2-92b5-b9fb227b832f")
-	@Validation(label = "VALIDATION_EVENT_INCONSISTENT", description = "The provided values for year, month, day and start and end days of year (dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayofYear) are within the range of the supplied dwc:eventDate")
-	@Specification("Check that the value for dwc:eventDate is consistent with the values for atomic parts (dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayofYear)")
-	
-	public static DQResponse<ComplianceValue> isEventDateConsistentWithAtomic(
+    @Provides("5618f083-d55a-4ac2-92b5-b9fb227b832f")
+	public static DQResponse<ComplianceValue> validationEventInconsistent(
     		@ActedUpon(value = "dwc:eventDate") String eventDate,
-			@ActedUpon(value = "dwc:verbatimEventDate") String verbatimEventDate,
 			@ActedUpon(value = "dwc:year") String year,
 			@ActedUpon(value = "dwc:month") String month,
 			@ActedUpon(value = "dwc:day") String day,
 			@ActedUpon(value = "dwc:startDayOfYear") String startDayOfYear,
-			@ActedUpon(value = "dwc:endDayOfYear") String endDayOfYear,
-			@ActedUpon(value = "dwc:eventTime") String eventTime )   // TODO: Not in definition of test, needs to be added there.
+			@ActedUpon(value = "dwc:endDayOfYear") String endDayOfYear
+		)  
     {
-
 		DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+		
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY, 
+        // or all of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear 
+        // and dwc:endDayOfYear are EMPTY; COMPLIANT if all of the 
+        // following conditions are met 1) the provided value of year 
+        // matches the start year of the range represented by eventDate 
+        // or year is empty, and 2) the provided value in month matches 
+        // the start month of the range represented by eventDate or 
+        // month is empty, and 3) the provided value in day matches 
+        // the start day of the range represented by eventDate or day 
+        // is empty, and 4) the provided value in startDayOfYear matches 
+        // the start day of the year of the range represented by eventDate 
+        // or startDayOfYear is empty, and 5) the provided value in 
+        // endDayOfYear matches the end day of the year the range represented 
+        // by eventDate or endDayOfYear is empty; otherwise NOT_COMPLIANT. 
+        //
+		
 		boolean inconsistencyFound = false;
 		boolean interpretationProblem = false;
 
 		// Compare eventDate and eventTime
-		if (!DateUtils.isEmpty(eventDate) && !DateUtils.isEmpty(eventTime)) {
-			if (DateUtils.containsTime(eventDate)) {
-				String time1 = DateUtils.extractZuluTime(eventDate);
-				String time2 = DateUtils.extractZuluTime("1900-01-01 "+ eventTime);
-				if (time1!=null && time2!=null) {
-					if (!time1.equals(time2)) {
-						inconsistencyFound = true;
-						result.addComment("Time part of the provided value for eventDate '" + eventDate + "' appears to represents a different time than " +
-								" eventTime '" + eventTime + "'.");
-					}
-				} else {
-					interpretationProblem = true;
-					result.addComment("Unable to interpret the time part of either the provided value for eventDate '" + eventDate + "' or " +
-								" eventTime '" + eventTime + "'.");
-				}
-			}
-		}
+		if (DateUtils.isEmpty(eventDate)) {
+			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+			result.addComment("Provided value for eventDate is empty.  Unable to evaluate consistency.");
+		} else if (DateUtils.isEmpty(year) && DateUtils.isEmpty(month) && DateUtils.isEmpty(day)  && DateUtils.isEmpty(startDayOfYear) && DateUtils.isEmpty(endDayOfYear)) {
+			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+			result.addComment("Provided values for year, month, day, startDayOfYear and endDayOfYear are empty.  Unable to evaluate consistency.");
+		} else { 
 		// compare eventDate and year, month, day
 		if (!DateUtils.isEmpty(eventDate) && !DateUtils.isEmpty(year)) {
 			if (!DateUtils.isEmpty(month)) {
@@ -1885,25 +1874,12 @@ public class DwCEventDQ {
 			}
 		}
 
-		// compare eventDate with verbatimEventDate
-		if (!DateUtils.isEmpty(eventDate) && !DateUtils.isEmpty(verbatimEventDate)) {
-			String testDate = DateUtils.createEventDateFromParts(verbatimEventDate, "", "", "", "", "");
-			if (!DateUtils.isEmpty(testDate)) {
-				if (!DateUtils.eventsAreSameInterval(eventDate, testDate)) {
-					inconsistencyFound = true;
-					result.addComment("Provided value for eventDate '" + eventDate + "' appears to represent a different interval of time from the verbatimEventDate [" + verbatimEventDate +"].");
-				}
-			}
-		}
-
 		if (DateUtils.isEmpty(eventDate) &&
 				DateUtils.isEmpty(year) &&
 				DateUtils.isEmpty(month) &&
 				DateUtils.isEmpty(day) &&
 				DateUtils.isEmpty(startDayOfYear) &&
-				DateUtils.isEmpty(endDayOfYear) &&
-				DateUtils.isEmpty(eventTime) &&
-				DateUtils.isEmpty(verbatimEventDate) )
+				DateUtils.isEmpty(endDayOfYear) )
 		{
 			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
 			result.addComment("All provided event terms are empty, can't assess consistency.");
@@ -1921,6 +1897,7 @@ public class DwCEventDQ {
 					result.setValue(ComplianceValue.COMPLIANT);
 				}
 			}
+		}
 		}
 
 		return result;
