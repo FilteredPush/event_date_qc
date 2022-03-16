@@ -519,7 +519,7 @@ public class DwcEventDQTest {
 		
 		eventDate = "2305345ifo342fd,cofaga";
 		result = DwCEventDQ.amendmentEventdateStandardized(eventDate);
-		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
+		assertEquals(ResultState.NOT_AMENDED, result.getResultState());	
 		
 		eventDate = "02/03/1884";
 		result = DwCEventDQ.amendmentEventdateStandardized(eventDate);

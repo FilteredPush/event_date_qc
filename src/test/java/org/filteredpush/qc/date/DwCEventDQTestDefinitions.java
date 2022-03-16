@@ -296,6 +296,12 @@ public class DwCEventDQTestDefinitions {
 		assertEquals(0, response.getValue().getObject().size());
 		logger.debug(response.getComment());
 		
+		eventDate = "X";
+		response = DwCEventDQ.amendmentEventdateStandardized(eventDate);
+		assertEquals(ResultState.NOT_AMENDED.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(0, response.getValue().getObject().size());
+		logger.debug(response.getComment());
+		
 		eventDate = "1900";
 		response = DwCEventDQ.amendmentEventdateStandardized(eventDate);
 		assertEquals(ResultState.NOT_AMENDED.getLabel(), response.getResultState().getLabel()); 

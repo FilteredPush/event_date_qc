@@ -644,12 +644,14 @@ public class DwCEventDQ {
 				result.addComment("eventDate does not contains a value.");
 			} else {
 				EventResult extractResponse = DateUtils.extractDateFromVerbatimER(eventDate);
-				if (!extractResponse.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
-						(extractResponse.getResultState().equals(EventResult.EventQCResultState.RANGE) ||
-								extractResponse.getResultState().equals(EventResult.EventQCResultState.DATE) ||
-								extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS) ||
-								extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)
-						)
+				logger.debug(extractResponse.getResultState().toString());
+				if (extractResponse.getResultState().equals(EventResult.EventQCResultState.NOT_RUN)) { 
+					result.setResultState(ResultState.NOT_AMENDED);
+					result.addComment("Unable to extract a date from eventDate [" + eventDate + "]");
+				} else if ( extractResponse.getResultState().equals(EventResult.EventQCResultState.RANGE) ||
+							extractResponse.getResultState().equals(EventResult.EventQCResultState.DATE) ||
+							extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS) ||
+							extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)
 						)
 				{
 					if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
@@ -667,7 +669,7 @@ public class DwCEventDQ {
 						result.addComment("Provided eventDate [" + eventDate + "] interpreted as ["+extractResponse.getResult() +"].");
 					}
 				} else {
-					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+					result.setResultState(ResultState.NOT_AMENDED);
 					result.addComment("Unable to extract a date from " + eventDate);
 				}
 			}
