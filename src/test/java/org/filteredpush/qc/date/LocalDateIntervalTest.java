@@ -200,6 +200,20 @@ public class LocalDateIntervalTest {
 		} catch (EmptyDateException e) {
 			assertEquals(e.getClass(), EmptyDateException.class);
 		}	
+		
+		date = "1881-02-03/05"; // allowed abbreviated form in range
+		try {
+			instance = new LocalDateInterval(date);
+			assertEquals(1881, instance.getStartDate().getYear());
+			assertEquals(2, instance.getStartDate().getMonthValue());
+			assertEquals(3, instance.getStartDate().getDayOfMonth());
+			assertEquals(1881, instance.getEndDate().getYear());
+			assertEquals(2, instance.getEndDate().getMonthValue());
+			assertEquals(5, instance.getEndDate().getDayOfMonth());
+		} catch (EmptyDateException e) {
+			fail(e.getMessage());
+		}
+		
 		date = "2000 BCE";
 		try {
 			instance = new LocalDateInterval(date);

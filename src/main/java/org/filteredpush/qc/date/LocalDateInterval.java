@@ -117,6 +117,19 @@ public class LocalDateInterval {
     		if (endBit.matches("^-[0-9]{3,4}")) {
     			endBit = endBit.replace("-", "").concat(" BCE");
     		}
+    		// handle abbreviated range forms
+    		if (startBit.matches("^[0-9]{4}-[0-9]{2}-[0-9]{2}$") && endBit.matches("^[0-9]{2}$")) { 
+    			// yyyy-mm-dd/dd
+    			endBit = startBit.substring(0,8).concat(endBit);
+    		} 
+    		if (startBit.matches("^[0-9]{4}-[0-9]{2}-[0-9]{2}$") && endBit.matches("^[0-9]{2}-[0-9]{2}$")) { 
+    			// yyyy-mm-dd/mm-dd
+    			endBit = startBit.substring(0,5).concat(endBit);
+    		} 
+    		if (startBit.matches("^[0-9]{4}-[0-9]{2}$") && endBit.matches("^[0-9]{2}$")) { 
+    			// yyyy-mm/mm
+    			endBit = startBit.substring(0,5).concat(endBit);
+    		} 
     		DatePair startResult = parseDateBit(startBit);
     		this.startDate = startResult.startOfPair;
     		DatePair endResult = parseDateBit(endBit);

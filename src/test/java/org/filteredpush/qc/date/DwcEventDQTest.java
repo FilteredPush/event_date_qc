@@ -144,6 +144,11 @@ public class DwcEventDQTest {
 		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
 		
+		measure = DwCEventDQ.measureEventdatePrecisioninseconds("2006-03-08/10");
+		seconds = (long) 60l*60l*24l * 3l; //  259200
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
+		assertEquals(seconds, measure.getObject());
+		
 	}
 	
 	/**
