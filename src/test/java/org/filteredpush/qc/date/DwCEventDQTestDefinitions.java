@@ -321,6 +321,13 @@ public class DwCEventDQTestDefinitions {
 		assertEquals("1892-04-20", response.getValue().getObject().get("dwc:eventDate"));
 		logger.debug(response.getComment());
 		
+		eventDate = "2021-28-10";
+		response = DwCEventDQ.amendmentEventdateStandardized(eventDate);
+		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(1, response.getValue().getObject().size());
+		assertEquals("2021-10-28", response.getValue().getObject().get("dwc:eventDate"));
+		logger.debug(response.getComment());
+		
 	}
 
 	/**
@@ -537,6 +544,22 @@ public class DwCEventDQTestDefinitions {
 		assertEquals(0, response.getValue().getObject().size());
 		logger.debug(response.getComment());
 		
+		eventDate = "";
+		verbatimEventDate = "1932.10.6";
+		response = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate, verbatimEventDate);
+		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(1, response.getValue().getObject().size());
+		assertEquals("1932-10-06", response.getValue().getObject().get("dwc:eventDate"));
+		logger.debug(response.getComment());
+		
+		eventDate = "";
+		verbatimEventDate = "Friday 29th Oct. 2021";
+		response = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate, verbatimEventDate);
+		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(1, response.getValue().getObject().size());
+		assertEquals("2021-10-29", response.getValue().getObject().get("dwc:eventDate"));
+		logger.debug(response.getComment());
+		
 	}
 
 	/**
@@ -703,6 +726,14 @@ public class DwCEventDQTestDefinitions {
 		year = null;
 		month = null;
 		day = "34";
+		response = DwCEventDQ.validationDayOutofrange(year, month, day);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), response.getValue().getLabel());
+		logger.debug(response.getComment());
+		
+		year = null;
+		month = null;
+		day = "32";
 		response = DwCEventDQ.validationDayOutofrange(year, month, day);
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), response.getValue().getLabel());
@@ -984,12 +1015,12 @@ public class DwCEventDQTestDefinitions {
 			
 			month = String.format("%02d", m);
 			response = DwCEventDQ.amendmentMonthStandardized(" " + month + " ");
+			logger.debug(response.getComment());
 			assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel());
 			assertEquals(1, response.getValue().getObject().size());
 			value = response.getValue().getObject();
 			assertTrue(value.containsKey("dwc:month"));
 			assertEquals(Integer.valueOf(m), Integer.valueOf(value.get("dwc:month")));
-			logger.debug(response.getComment());
 		}	
 		
 		month = "34";
@@ -1000,12 +1031,9 @@ public class DwCEventDQTestDefinitions {
 		
 		month = "Jan";
 		response = DwCEventDQ.amendmentMonthStandardized(month);
-		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel());
-		assertEquals(1, response.getValue().getObject().size());
-		value = response.getValue().getObject();
-		assertTrue(value.containsKey("dwc:month"));
-		assertEquals(Integer.valueOf(1), Integer.valueOf(value.get("dwc:month")));
 		logger.debug(response.getComment());
+		assertEquals(ResultState.NOT_AMENDED.getLabel(), response.getResultState().getLabel());
+		assertEquals(0, response.getValue().getObject().size());
 		
 		month = "IV";
 		response = DwCEventDQ.amendmentMonthStandardized(month);
@@ -1025,6 +1053,11 @@ public class DwCEventDQTestDefinitions {
 		assertEquals(Integer.valueOf(10), Integer.valueOf(value.get("dwc:month")));
 		logger.debug(response.getComment());
 		
+		month = "October";
+		response = DwCEventDQ.amendmentMonthStandardized(month);
+		assertEquals(ResultState.NOT_AMENDED.getLabel(), response.getResultState().getLabel());
+		assertEquals(0, response.getValue().getObject().size());
+		logger.debug(response.getComment());
 		
 	}
 

@@ -24,6 +24,8 @@ import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.filteredpush.qc.date.DateUtils;
 import org.junit.Test;
 
@@ -32,6 +34,8 @@ import org.junit.Test;
  *
  */
 public class DateUtilsTest {
+	
+	private static final Log logger = LogFactory.getLog(DateUtilsTest.class);
 
 	@Test
 	public void testIsEmpty() { 
@@ -580,9 +584,15 @@ public class DateUtilsTest {
 	     assertEquals(EventResult.EventQCResultState.SUSPECT, result.getResultState());
 	     assertEquals("1901-11", result.getResult());	 	     
 	
+	     result = DateUtils.extractDateFromVerbatimER("1982.02.05", 1900, null);
+	     logger.debug(result.getResultState());
+	     assertEquals(EventResult.EventQCResultState.DATE, result.getResultState());
+	     assertEquals("1982-02-05", result.getResult());
+	     
 	     result = DateUtils.extractDateFromVerbatimER("1982.02.05", 2000, null);
+	     logger.debug(result.getResultState());
 	     assertEquals(EventResult.EventQCResultState.SUSPECT, result.getResultState());
-	     assertEquals("1982-02-05/1982-05-02", result.getResult());
+	     assertEquals("1982-02-05", result.getResult());
 	     
 	     result = DateUtils.extractDateFromVerbatimER("1982.2.5", 2000, null);
 	     assertEquals(EventResult.EventQCResultState.SUSPECT, result.getResultState());

@@ -594,14 +594,69 @@ public class DateUtils {
 				}
 			}
 		}
-		if (verbatimEventDate.matches("^[0-9]{4}[.,][0-9]{1,2}[.,][0-9]{1,2}$")) {
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
+				verbatimEventDate.matches("^[0-9]{4}-([2-3][0-9]|[1][3-9])-([1-9]|[0][0-9]|[1][0-2])$")) 
+		{
+			// Example 1982-22-05
+			// Fits pattern yyyy-dd-mm, translate as such
+			try {
+				DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+						.append(DateTimeFormatter.ofPattern("uuuu'-'dd'-'MM"))
+						.toFormatter().withResolverStyle(ResolverStyle.STRICT);
+	    		LocalDate parseDate = LocalDate.parse(verbatimEventDate, formatter);
+				resultDate = parseDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+				result.setResultState(EventResult.EventQCResultState.DATE);
+				result.setResult(resultDate);
+				logger.debug(result.getResult());
+			} catch (Exception e) { 
+				logger.debug(e.getMessage());
+			}
+		}
+		logger.debug(verbatimEventDate);
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
+				verbatimEventDate.matches("^[0-9]{4}[.,]([2-3][0-9]|[1][3-9])[.,]([0-9]|[0][0-9]|[1][0-2])$")) 
+		{
+			// Example 1982.22.05
+			// Example 1982,22,5
+			// Fits pattern yyyy-dd-mm, translate as such
+			List<DateTimeFormatter> formatters = new ArrayList<DateTimeFormatter>();
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'.'dd'.'MM"))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("uuuu'.'dd'.'M"))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			String commasReplaced =  verbatimEventDate.replace(",", ".");
+			logger.debug(commasReplaced);
+
+			Iterator<DateTimeFormatter> i = formatters.iterator();
+			boolean matched = false;
+			while (i.hasNext() && !matched) {
+				try { 
+					LocalDate startDateBit = LocalDate.parse(commasReplaced, i.next());
+					resultDate = startDateBit.format(DateTimeFormatter.ISO_LOCAL_DATE);
+					result.setResultState(EventResult.EventQCResultState.DATE);
+					result.setResult(resultDate);
+					matched = true;
+					logger.debug(result.getResult());
+				} catch (Exception e) { 
+					logger.debug(e.getMessage());
+				}
+			}
+		}
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
+				verbatimEventDate.matches("^[0-9]{4}[.,][0-9]{1,2}[.,][0-9]{1,2}$")) 
+		{
 			// Example 1982.02.05
 			// Example 1982,02,05
-			// Cases where the 1-2 digit numbers are both smaller than 12 are treated as ambiguous.
+			// Cases where the 1 digit numbers are both smaller than 12 are treated as ambiguous
+			// Cases where the 1 digit numbers are both smaller than 12 are treated as ambiguous
+			// Cases where 1 digit numbers are zero padded and numbers are both smaller than 12 are treated as a date in the form yyyy-mm-dd
 			String resultDateMD = null;
 			String resultDateDM = null;
 			LocalDate parseDate1 = null;
 			LocalDate parseDate2 = null;
+			logger.debug(verbatimEventDate);
 			
 			try {
 				DateTimeFormatter formatter = new DateTimeFormatterBuilder()
@@ -637,13 +692,20 @@ public class DateUtils {
 					result.setResult(resultDateDM);
 					logger.debug(result.getResult());
 				} else { 
-					result.setResultState(EventResult.EventQCResultState.AMBIGUOUS);
-				    LocalDateInterval range = null;
-				    if (parseDate1.isBefore(parseDate2)) { 
-				        result.setResult(resultDateMD + "/" + resultDateDM);
-				    } else { 
-				        result.setResult(resultDateDM + "/" + resultDateMD);
-				    }
+					if (verbatimEventDate.replace(",", ".").matches("^[0-9]{4}\\.[0-9]{2}\\.[0-9]{1,2}$")) {
+						// treat a yyyy-mm-dd
+						result.setResultState(EventResult.EventQCResultState.DATE);
+				        result.setResult(resultDateMD);
+				        logger.debug(result.getResult());
+					} else { 
+						result.setResultState(EventResult.EventQCResultState.AMBIGUOUS);
+						if (parseDate1.isBefore(parseDate2)) { 
+							result.setResult(resultDateMD + "/" + resultDateDM);
+						} else { 
+							result.setResult(resultDateDM + "/" + resultDateMD);
+						}
+				        logger.debug(result.getResult());
+					}
 				    logger.debug(result.getResult());
 				}
 			} 			
@@ -990,6 +1052,92 @@ public class DateUtils {
 				}
 			} 
 		}
+		
+		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
+				verbatimEventDate.matches("^[A-Z][A-Za-z]+ [0-9]{1,2}[stndrh]{2} [A-Za-z]+.{0,1},{0,1} [0-9]{4}$")) { 
+			// Example: Friday 29th Oct. 2021
+			
+			List<DateTimeFormatter> formatters = new ArrayList<DateTimeFormatter>();
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("EEE' 'd'st 'LLLL' 'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("EEE' 'd'nd 'LLLL' 'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("EEE' 'd'rd 'LLLL' 'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("EEE' 'd'th 'LLLL' 'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("EEE' 'd' 'LLL' 'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("EEE' 'd'st 'LLL' 'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("EEE' 'd'nd 'LLL' 'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("EEE' 'd'rd 'LLL' 'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("EEE' 'd'th 'LLL' 'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("EEE' 'd' 'LLL' 'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("EEEE' 'd'st 'LLLL' 'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("EEEE' 'd'nd 'LLLL' 'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("EEEE' 'd'rd 'LLLL' 'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("EEEE' 'd'th 'LLLL' 'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("EEEE' 'd' 'LLL' 'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("EEEE' 'd'st 'LLL' 'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("EEEE' 'd'nd 'LLL' 'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("EEEE' 'd'rd 'LLL' 'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("EEEE' 'd'th 'LLL' 'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			formatters.add(new DateTimeFormatterBuilder()
+					.append(DateTimeFormatter.ofPattern("EEEE' 'd' 'LLL' 'uuuu").withLocale(Locale.ENGLISH))
+					.toFormatter().withResolverStyle(ResolverStyle.STRICT));
+			
+			Iterator<DateTimeFormatter> i = formatters.iterator();
+			boolean matched = false;
+			String cleaned = verbatimEventDate.replace(",","");
+			cleaned = DateUtils.cleanMonth(cleaned).replace(".", "");
+			logger.debug(cleaned);
+			while (i.hasNext() && !matched) {
+				try { 
+					LocalDate parseDate = LocalDate.parse(cleaned, i.next());
+					resultDate = parseDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+					logger.debug(resultDate);
+					result.setResultState(EventResult.EventQCResultState.DATE);
+					result.setResult(resultDate);
+					matched = true;
+				} catch (Exception e) { 
+					logger.debug(e.getMessage());
+				}
+			}
+		}	
+		
 		if (result.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
 				verbatimEventDate.matches("^([0-9]{1,2}|[A-Za-z]+)[-/. ]([0-9]{1,2}|[A-Za-z]+),{0,1}[-/. ][0-9]{4}$")) { 
 			// Example: 03/Jan/1982
@@ -2933,6 +3081,51 @@ public class DateUtils {
     		result = time.toString();
     	}
     	return result;
+    }
+    
+    public static String interpretAsIntegerMonth(String value) { 
+    	String cleaned = value.trim().replace(".", "").replace(",", "");
+    	if (cleaned.toUpperCase().matches("^I$")) { cleaned = "1"; } 
+    	if (cleaned.toUpperCase().matches("^II$")) { cleaned = "2"; } 
+    	if (cleaned.toUpperCase().matches("^III$")) { cleaned = "3"; } 
+    	if (cleaned.toUpperCase().matches("^IV$")) { cleaned = "4"; } 
+    	if (cleaned.toUpperCase().matches("^V$")) { cleaned = "5"; } 
+    	if (cleaned.toUpperCase().matches("^VI$")) { cleaned = "6"; } 
+    	if (cleaned.toUpperCase().matches("^VII$")) { cleaned = "7"; } 
+    	if (cleaned.toUpperCase().matches("^VIII$")) { cleaned = "8"; } 
+    	if (cleaned.toUpperCase().matches("^IX$")) { cleaned = "9"; } 
+    	if (cleaned.toUpperCase().matches("^X$")) { cleaned = "10"; } 
+    	if (cleaned.toUpperCase().matches("^XI$")) { cleaned = "11"; } 
+    	if (cleaned.toUpperCase().matches("^XII$")) { cleaned = "12"; } 
+    	
+    	if (cleaned.toLowerCase().matches("^one$")) { cleaned = "1"; } 
+    	if (cleaned.toLowerCase().matches("^two$")) { cleaned = "2"; } 
+    	if (cleaned.toLowerCase().matches("^three$")) { cleaned = "3"; } 
+    	if (cleaned.toLowerCase().matches("^four$")) { cleaned = "4"; } 
+    	if (cleaned.toLowerCase().matches("^five$")) { cleaned = "5"; } 
+    	if (cleaned.toLowerCase().matches("^six$")) { cleaned = "6"; } 
+    	if (cleaned.toLowerCase().matches("^seven$")) { cleaned = "7"; } 
+    	if (cleaned.toLowerCase().matches("^eight$")) { cleaned = "8"; } 
+    	if (cleaned.toLowerCase().matches("^nine$")) { cleaned = "9"; } 
+    	if (cleaned.toLowerCase().matches("^ten$")) { cleaned = "10"; } 
+    	if (cleaned.toLowerCase().matches("^one$")) { cleaned = "11"; } 
+    	if (cleaned.toLowerCase().matches("^one$")) { cleaned = "12"; } 
+
+		cleaned = cleaned.replace("月", "");
+		cleaned = cleaned.replace("五", "5");
+		cleaned = cleaned.replace("六", "6");
+		cleaned = cleaned.replace("七", "7");
+		cleaned = cleaned.replace("八", "8");
+		cleaned = cleaned.replace("九", "9");
+		cleaned = cleaned.replace("十一", "11");
+		cleaned = cleaned.replace("十二", "12");
+		cleaned = cleaned.replace("十", "10");
+		cleaned = cleaned.replace("一", "1");    		
+		cleaned = cleaned.replace("二", "2");
+		cleaned = cleaned.replace("三", "3");
+		cleaned = cleaned.replace("四", "4");
+		
+		return cleaned;
     }
     
     /**

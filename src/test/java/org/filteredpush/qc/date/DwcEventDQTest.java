@@ -857,61 +857,62 @@ public class DwcEventDQTest {
 		
 		month = "Jan";
 		result = DwCEventDQ.amendmentMonthStandardized(month);
-		assertEquals(ResultState.AMENDED, result.getResultState());
-		assertEquals("1", result.getValue().getObject().get("dwc:month"));
+		assertEquals(ResultState.NOT_AMENDED.getLabel(), result.getResultState().getLabel());
+		assertEquals(0, result.getValue().getObject().size());
 		
 		month = "Jan.";
 		result = DwCEventDQ.amendmentMonthStandardized(month);
-		assertEquals(ResultState.AMENDED, result.getResultState());
-		assertEquals("1", result.getValue().getObject().get("dwc:month"));		
+		assertEquals(ResultState.NOT_AMENDED, result.getResultState());
+		assertEquals(0, result.getValue().getObject().size());
 		
 		month = "January";
 		result = DwCEventDQ.amendmentMonthStandardized(month);
-		assertEquals(ResultState.AMENDED, result.getResultState());
-		assertEquals("1", result.getValue().getObject().get("dwc:month"));	
+		assertEquals(ResultState.NOT_AMENDED, result.getResultState());
+		assertEquals(0, result.getValue().getObject().size());
 		
 		month = "JAn.";
 		result = DwCEventDQ.amendmentMonthStandardized(month);
-		assertEquals(ResultState.AMENDED, result.getResultState());
-		assertEquals("1", result.getValue().getObject().get("dwc:month"));		
+		assertEquals(ResultState.NOT_AMENDED, result.getResultState());
+		assertEquals(0, result.getValue().getObject().size());
 		
 		month = "Feb.";
 		result = DwCEventDQ.amendmentMonthStandardized(month);
-		assertEquals(ResultState.AMENDED, result.getResultState());
-		assertEquals("2", result.getValue().getObject().get("dwc:month"));		
+		assertEquals(ResultState.NOT_AMENDED, result.getResultState());
+		assertEquals(0, result.getValue().getObject().size());
 		
 		month = "Février";
 		result = DwCEventDQ.amendmentMonthStandardized(month);
-		assertEquals(ResultState.AMENDED, result.getResultState());
-		assertEquals("2", result.getValue().getObject().get("dwc:month"));		
+		assertEquals(ResultState.NOT_AMENDED, result.getResultState());
+		assertEquals(0, result.getValue().getObject().size());
 		
 		month = "Fevrier";
 		result = DwCEventDQ.amendmentMonthStandardized(month);
-		assertEquals(ResultState.AMENDED, result.getResultState());
-		assertEquals("2", result.getValue().getObject().get("dwc:month"));		
+		assertEquals(ResultState.NOT_AMENDED, result.getResultState());
+		assertEquals(0, result.getValue().getObject().size());
 		
 		month = "fevrier";
 		result = DwCEventDQ.amendmentMonthStandardized(month);
-		assertEquals(ResultState.AMENDED, result.getResultState());
-		assertEquals("2", result.getValue().getObject().get("dwc:month"));		
+		assertEquals(ResultState.NOT_AMENDED, result.getResultState());
+		assertEquals(0, result.getValue().getObject().size());
 		
 		month = "Febbraio";
 		result = DwCEventDQ.amendmentMonthStandardized(month);
-		assertEquals(ResultState.AMENDED, result.getResultState());
-		assertEquals("2", result.getValue().getObject().get("dwc:month"));		
+		assertEquals(ResultState.NOT_AMENDED, result.getResultState());
+		assertEquals(0, result.getValue().getObject().size());
 		
 		month = "Febrero";
 		result = DwCEventDQ.amendmentMonthStandardized(month);
-		assertEquals(ResultState.AMENDED, result.getResultState());
-		assertEquals("2", result.getValue().getObject().get("dwc:month"));		
+		assertEquals(ResultState.NOT_AMENDED, result.getResultState());
+		assertEquals(0, result.getValue().getObject().size());
 		
 		month = "Februar";
 		result = DwCEventDQ.amendmentMonthStandardized(month);
-		assertEquals(ResultState.AMENDED, result.getResultState());
-		assertEquals("2", result.getValue().getObject().get("dwc:month"));		
+		assertEquals(ResultState.NOT_AMENDED, result.getResultState());
+		assertEquals(0, result.getValue().getObject().size());
 		
 		month = "二";
 		result = DwCEventDQ.amendmentMonthStandardized(month);
+		logger.debug(result.getComment());
 		assertEquals(ResultState.AMENDED, result.getResultState());
 		assertEquals("2", result.getValue().getObject().get("dwc:month"));		
 		

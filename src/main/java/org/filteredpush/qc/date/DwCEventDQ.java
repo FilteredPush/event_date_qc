@@ -425,12 +425,7 @@ public class DwCEventDQ {
 				{
 					result.setResultState(ResultState.NOT_AMENDED);
 					if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
-				        //TODO:  Implement specification
-				        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY 
-				        // or the value of dwc:verbatimEventDate is EMPTY or not unambiguously 
-				        // interpretable as an ISO 8601-1:2019 date; AMENDED if the 
-				        // value of dwc:eventDate was unambiguously interpreted from 
-				        //dwc:verbatimEventDate; otherwise NOT_AMENDED 				result.addComment("Supplied verbatimEventDate [" + verbatimEventDate + "] is ambiguous.");
+						result.addComment("Supplied verbatimEventDate [" + verbatimEventDate + "] is ambiguous.");
 						result.addComment(extractResponse.getComment());
 					} else {
 						if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
@@ -1577,7 +1572,7 @@ public class DwCEventDQ {
     	} else {
 
     		try {
-    			Integer monthNumeric = Integer.parseInt(month);
+    			Integer monthNumeric = Integer.parseInt(month.trim());
     			result.addComment("A value for dwc:month parsable as an integer was provided.");
     			if (monthNumeric >= 1 && monthNumeric <=12) { 
     				result.addComment("Provided value for dwc:month was in the range 1-12.");
@@ -1596,32 +1591,25 @@ public class DwCEventDQ {
     				result.setResultState(ResultState.NOT_AMENDED);
     			}
     		} catch (NumberFormatException e) {
-    			// Convert roman numerals, some problematic forms of abbreviations,
-    			// non-english capitalization variants, absence of exepected accented characters,
-    			// etc to date library (e.g. Joda) recognized month names.
-    			String monthConverted = DateUtils.cleanMonth(month);
+    			// Convert roman numerals 
+    			logger.debug(month);
+    			String monthConverted = DateUtils.interpretAsIntegerMonth(month);
     			// Strip any trailing period off of month name.
     			String monthTrim = monthConverted.replaceFirst("\\.$", "").trim();
     			if (DateUtils.isEmpty(monthTrim)) {
     				result.setResultState(ResultState.NOT_AMENDED);
     				result.addComment("Unable to parse a meaningfull value for month from dwc:month ["+month+"].");
     			} else {
-    				// Add the month string into the first day of that month in 1800, and see if
-    				// a verbatim date can be parsed from that string.
-    				StringBuilder testDate = new StringBuilder().append("1800-").append(monthTrim).append("-01");
-    				EventResult convertedDateResult = DateUtils.extractDateFromVerbatimER(testDate.toString());
-    				if (convertedDateResult.getResultState().equals(EventResult.EventQCResultState.DATE)) {
-    					String convertedDate = convertedDateResult.getResult();
-    					// Date could be parsed, extract the month.
-    					Integer monthNumeric = DateUtils.extractDate(convertedDate).getMonthValue();
+    				logger.debug(monthTrim);
+    				try { 
+    					Integer monthInteger = Integer.parseInt(monthTrim);
     					result.setResultState(ResultState.AMENDED);
-
 						Map<String, String> values = new HashMap<>();
-						values.put("dwc:month", monthNumeric.toString());
-
+						values.put("dwc:month", monthInteger.toString());
 						result.setValue(new AmendmentValue(values));
-    					result.addComment("Interpreted provided value for dwc:month ["+month+"] as ["+monthNumeric.toString()+"].");
-    				} else {
+    					result.addComment("Interpreted provided value for dwc:month ["+month+"] as ["+monthInteger.toString()+"].");
+						logger.debug(result.getComment());
+    				} catch (NumberFormatException ex) { 
     					result.setResultState(ResultState.NOT_AMENDED);
     					result.addComment("Unable to parse a meaningfull value for month from dwc:month ["+month+"].");
     				}
