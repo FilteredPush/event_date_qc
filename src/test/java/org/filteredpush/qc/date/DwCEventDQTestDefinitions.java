@@ -656,21 +656,31 @@ public class DwCEventDQTestDefinitions {
 		month="32";
 		day="15";
 		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
-		assertEquals(ResultState.NOT_AMENDED.getLabel(), result.getResultState().getLabel());
+		assertEquals(ResultState.AMENDED.getLabel(), result.getResultState().getLabel());
+		assertNotNull(result.getValue().getObject());
+		resultValues = result.getValue().getObject();
+		assertTrue(resultValues.containsKey("dwc:eventDate"));
+		assertEquals("1880",resultValues.get("dwc:eventDate"));
+		assertEquals(1,resultValues.size());
 		
 		eventDate="";
 		year="1880";
 		month="Feb";
 		day="15";
 		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
-		assertEquals(ResultState.NOT_AMENDED.getLabel(), result.getResultState().getLabel());
+		assertEquals(ResultState.AMENDED.getLabel(), result.getResultState().getLabel());
+		assertNotNull(result.getValue().getObject());
+		resultValues = result.getValue().getObject();
+		assertTrue(resultValues.containsKey("dwc:eventDate"));
+		assertEquals("1880",resultValues.get("dwc:eventDate"));
+		assertEquals(1,resultValues.size());
 		
 		eventDate="";
 		year="1880";
 		month="";
 		day="150";  // out of range
 		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
-		assertEquals(ResultState.NOT_AMENDED.getLabel(), result.getResultState().getLabel());
+		assertEquals(ResultState.AMENDED.getLabel(), result.getResultState().getLabel());
 		
 		// Notes in issue: "If dwc:year and dwc:day are present, but dwc:month is not supplied, 
 		// then just the year should be given as the proposed amendment."
@@ -685,6 +695,19 @@ public class DwCEventDQTestDefinitions {
 		assertTrue(resultValues.containsKey("dwc:eventDate"));
 		assertEquals("1880",resultValues.get("dwc:eventDate"));
 		assertEquals(1,resultValues.size());
+		
+		eventDate="";
+		year="1880";
+		month="10"; 
+		day="x";  // uninterpretable
+		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(ResultState.AMENDED.getLabel(), result.getResultState().getLabel());
+		assertNotNull(result.getValue().getObject());
+		resultValues = result.getValue().getObject();
+		assertTrue(resultValues.containsKey("dwc:eventDate"));
+		assertEquals("1880-10",resultValues.get("dwc:eventDate"));
+		assertEquals(1,resultValues.size());
+		
 		
 	}
 

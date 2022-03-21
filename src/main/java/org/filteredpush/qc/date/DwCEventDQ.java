@@ -1464,7 +1464,6 @@ public class DwCEventDQ {
         // interpreted from the values in dwc:year, dwc:month and dwc:day; 
         // otherwise NOT_AMENDED 
     	
-    	
     	DQResponse<AmendmentValue> result = new DQResponse<>();
     	if (DateUtils.isEmpty(year)) {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -1474,39 +1473,70 @@ public class DwCEventDQ {
     		result.addComment("A value exists in dwc:eventDate, ammendment not attempted.");
     	} else {
     	    try {
-     	       Integer.parseInt(year);
+     	       Integer.parseInt(year.trim());
      	       try {
      	    	   boolean hasMonth = false;
+     	    	   boolean hasDay = false;
      	    	   if (!DateUtils.isEmpty(month)) {
-     	    		   if (month.matches("^[XIVxiv]+$")) { 
-     	    			   // Roman numeral month values are interpretable as numbers.
-     	    			   logger.debug(month);
-     	    			   if (DateUtils.romanMonthToInteger(month)==null) { 
-     	    				   Integer.parseInt(month);
-     	    				   hasMonth=true;
-     	    			   } else { 
-     	    				   String numericmonth = DateUtils.romanMonthToInteger(month).toString();
-     	    				   result.addComment("Converting month ["+month+"] to ["+ numericmonth +"] .");
-     	    				   month = DateUtils.romanMonthToInteger(month).toString();
-     	    				   if (month!=null && month.length()>0) { 
-     	    					   hasMonth=true;
+     	    		   if (month.matches("^[XIVxiv]+$")) {
+     	    			   try { 
+     	    				   // Roman numeral month values are interpretable as numbers.
+     	    				   logger.debug(month);
+     	    				   if (DateUtils.romanMonthToInteger(month)==null) { 
+     	    					   Integer monthInt = Integer.parseInt(month);
+     	    					   if (DateUtils.isMonthInRange(monthInt)) { 
+     	    						   hasMonth=true;
+     	    					   }
+     	    				   } else { 
+     	    					   String numericmonth = DateUtils.romanMonthToInteger(month).toString();
+     	    					   result.addComment("Converting month ["+month+"] to ["+ numericmonth +"] .");
+     	    					   month = DateUtils.romanMonthToInteger(month).toString();
+     	    					   if (month!=null && month.length()>0) { 
+     	    						   hasMonth=true;
+     	    					   }
      	    				   }
+     	    			   } catch (NumberFormatException e) { 
+     	    				   result.addComment("The provided value for month ["+ month +"] is not interpretable as a month.");
      	    			   }
      	    			   logger.debug(month);
-     	    		   } else { 
-     	    			   Integer.parseInt(month);
-     	    			   hasMonth=true;
+     	    		   } else {
+     	    			   try { 
+     	    				   Integer monthInt = Integer.parseInt(month);
+     	    				   if (DateUtils.isMonthInRange(monthInt)) { 
+     	    					   hasMonth=true;
+     	    				   }
+     	    			   } catch (NumberFormatException e) { 
+     	    				   result.addComment("The provided value for month ["+ month +"] is not interpretable as a month.");
+     	    			   }
      	    		   }
      	    	   }
      	    	   if (!DateUtils.isEmpty(day)) {
-     	    		   Integer numericDay = Integer.parseInt(day);
-     	    		   if (!DateUtils.isDayInRange(numericDay)) {
-     	    			   throw new NumberFormatException("The provided value for Day is out of range for a day");
+     	    		   try { 
+     	    			   Integer numericDay = Integer.parseInt(day.trim());
+     	    			   if (!DateUtils.isDayInRange(numericDay)) {
+     	    				   throw new NumberFormatException("The provided value for Day is out of range for a day");
+     	    			   } else { 
+     	    				   hasDay = true;
+     	    			   }
+     	    		   } catch (NumberFormatException e) { 
+     	    			   result.addComment("The provided value for day ["+ day +"] is not interpretable as an integer.");
      	    		   }
      	    	   }
      	    	   // try, may raise exception
-     	    	   String resultDateString = DateUtils.createEventDateFromParts("", "", "", year, month, day);
-     	    	   if (!hasMonth) { 
+     	    	   String resultDateString = year.trim();
+   	    		   if (hasMonth && hasDay) {
+   	    			   try { 
+     	    			   resultDateString = DateUtils.createEventDateFromParts("", "", "", year, month, day);
+   	    			   } catch (NumberFormatException e) { 
+   	    				   result.addComment("The combination of year ["+ year +"] with ["+month+"], and day ["+ day +"] is not interpretable as a date.");
+   	    			   }
+   	    		   } else if (hasMonth && !hasDay) { 
+   	    			   try { 
+     	    			   resultDateString = DateUtils.createEventDateFromParts("", "", "", year, month, "");
+   	    			   } catch (NumberFormatException e) { 
+   	    				   result.addComment("The combination of year ["+ year +"] with ["+month+"] is not interpretable as a date.");
+     	    		   }
+   	    		   } else if (!hasMonth) { 
      	    		   // From Notes:  If dwc:year and dwc:day are present, 
      	    		   // but dwc:month is not supplied, then just the year should be given as the proposed amendment.
      	    		   resultDateString = DateUtils.createEventDateFromParts("", "", "", year, "", "");

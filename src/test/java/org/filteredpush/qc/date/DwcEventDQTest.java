@@ -21,6 +21,7 @@ import static org.junit.Assert.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -709,7 +710,10 @@ public class DwcEventDQTest {
 		month = "text";
 		day = "6";
 		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
-		assertEquals(ResultState.NOT_AMENDED.getLabel(),result.getResultState().getLabel());
+		assertEquals(ResultState.AMENDED.getLabel(),result.getResultState().getLabel());
+		Map<String, String> retval = result.getValue().getObject();
+		assertEquals(1, retval.size());
+		assertEquals("1980", retval.get("dwc:eventDate"));
 
 		eventDate = ""; 
 		year = "";
@@ -723,7 +727,10 @@ public class DwcEventDQTest {
 		month = "12";
 		day = "text";
 		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
-		assertEquals(ResultState.NOT_AMENDED.getLabel(),result.getResultState().getLabel());
+		assertEquals(ResultState.AMENDED.getLabel(),result.getResultState().getLabel());
+		retval = result.getValue().getObject();
+		assertEquals(1, retval.size());
+		assertEquals("1980-12", retval.get("dwc:eventDate"));
 		
 		eventDate = ""; 
 		year = "1980";
