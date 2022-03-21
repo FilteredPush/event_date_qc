@@ -44,39 +44,38 @@ import java.util.Map;
  * 
  * Provides support for the following TDWG DQIG TG2 validations
  * 
- * #88 VALIDATION_EVENT_TEMPORAL_EMPTY 41267642-60ff-4116-90eb-499fee2cd83f
- * VALIDATION_EVENTDATE_EMPTY f51e15a6-a67d-4729-9c28-3766299d2985
- * #36 VALIDATION_EVENTDATE_OUTOFRANGE 3cff4dc4-72e9-4abe-9bf3-8a30f1618432
- * #49 VALIDATION_YEAR_EMPTY c09ecbf9-34e3-4f3e-b74a-8796af15e59f
- * VALIDATION_DAY_NOTSTANDARD 47ff73ba-0028-4f79-9ce1-ee7008d66498
- * VALIDATION_EVENTDATE_OUTOFRANGE 3cff4dc4-72e9-4abe-9bf3-8a30f1618432
- * VALIDATION_MONTH_NOTSTANDARD 01c6dafa-0886-4b7e-9881-2c3018c98bdc
- * VALIDATION_STARTDAYOFYEAR_OUTOFRANGE 85803c7e-2a5a-42e1-b8d3-299a44cafc46
- * VALIDATION_ENDDAYOFYEAR_OUTOFRANGE 9a39d88c-7eee-46df-b32a-c109f9f81fb8
- * #84 VALIDATION_YEAR_OUTOFRANGE ad0c8855-de69-4843-a80c-a5387d20fbc8
+ * #88  VALIDATION_EVENT_TEMPORAL_EMPTY 41267642-60ff-4116-90eb-499fee2cd83f
+ * #33  VALIDATION_EVENTDATE_EMPTY f51e15a6-a67d-4729-9c28-3766299d2985
+ * #36  VALIDATION_EVENTDATE_OUTOFRANGE 3cff4dc4-72e9-4abe-9bf3-8a30f1618432
+ * #49  VALIDATION_YEAR_EMPTY c09ecbf9-34e3-4f3e-b74a-8796af15e59f
+ * #147 VALIDATION_DAY_NOTSTANDARD 47ff73ba-0028-4f79-9ce1-ee7008d66498
+ * #36  VALIDATION_EVENTDATE_OUTOFRANGE 3cff4dc4-72e9-4abe-9bf3-8a30f1618432
+ * #126 VALIDATION_MONTH_NOTSTANDARD 01c6dafa-0886-4b7e-9881-2c3018c98bdc
+ * #130 VALIDATION_STARTDAYOFYEAR_OUTOFRANGE 85803c7e-2a5a-42e1-b8d3-299a44cafc46
+ * #131 VALIDATION_ENDDAYOFYEAR_OUTOFRANGE 9a39d88c-7eee-46df-b32a-c109f9f81fb8
+ * #84  VALIDATION_YEAR_OUTOFRANGE ad0c8855-de69-4843-a80c-a5387d20fbc8
  * #125 VALIDATION_DAY_OUTOFRANGE 8d787cb5-73e2-4c39-9cd1-67c7361dc02e
- * #66 VALIDATION_EVENTDATE_NOTSTANDARD 4f2bf8fd-fc5c-493f-a44c-e7b16153c803
- * #67 VALIDATION_EVENT_INCONSISTENT 5618f083-d55a-4ac2-92b5-b9fb227b832f
+ * #66  VALIDATION_EVENTDATE_NOTSTANDARD 4f2bf8fd-fc5c-493f-a44c-e7b16153c803
+ * #67  VALIDATION_EVENT_INCONSISTENT 5618f083-d55a-4ac2-92b5-b9fb227b832f
  * 
  * Provides support for the following TDWG DQIG TG2 amendments 
  * 
- * AMENDMENT_DAY_STANDARDIZED b129fa4d-b25b-43f7-9645-5ed4d44b357b
- * AMENDMENT_MONTH_STANDARDIZED 2e371d57-1eb3-4fe3-8a61-dff43ced50cf
- * AMENDMENT_EVENTDATE_FROM_VERBATIM 6d0a0c10-5e4a-4759-b448-88932f399812
- * AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR eb0a44fa-241c-4d64-98df-ad4aa837307b
- * AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY 3892f432-ddd0-4a0a-b713-f2e2ecbd879d
- * #61 AMENDMENT_EVENTDATE_STANDARDIZED  	718dfc3c-cb52-4fca-b8e2-0e722f375da7
- * #52 AMENDMENT_EVENT_FROM_EVENTDATE 710fe118-17e1-440f-b428-88ba3f547d6d
+ * #127 AMENDMENT_DAY_STANDARDIZED b129fa4d-b25b-43f7-9645-5ed4d44b357b
+ * #128 AMENDMENT_MONTH_STANDARDIZED 2e371d57-1eb3-4fe3-8a61-dff43ced50cf
+ * #86 AMENDMENT_EVENTDATE_FROM_VERBATIM 6d0a0c10-5e4a-4759-b448-88932f399812
+ * #132 AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR eb0a44fa-241c-4d64-98df-ad4aa837307b
+ * #93 AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY 3892f432-ddd0-4a0a-b713-f2e2ecbd879d
+ * #61  AMENDMENT_EVENTDATE_STANDARDIZED  	718dfc3c-cb52-4fca-b8e2-0e722f375da7
+ * #52  AMENDMENT_EVENT_FROM_EVENTDATE 710fe118-17e1-440f-b428-88ba3f547d6d
  * 
  * Also Provides support for the following supplemental, under discussion or other tests: 
- *   DAY_IN_RANGE.  isDayInRange(@ActedUpon(value = "dwc:day") String day)   
- *      Is not the same as TG2-VALIDATION_DAY_OUTOFRANGE which includes year and month 
- *   DAY_MONTH_TRANSPOSED  dayMonthTransposition(@ActedUpon(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) 
- *   EVENTDATE_PRECISON_MONTH_OR_BETTER  TODO: not yet implemented.
- *   EVENTDATE_PRECISON_YEAR_OR_BETTER isEventDateYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) 
+ *  
+ *  #37 VALIDATION_DAY_MONTH_SWAPPED  dayMonthTransposition(@ActedUpon(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) 
+ *  EVENTDATE_PRECISON_MONTH_OR_BETTER  TODO: not yet implemented.
+ *  EVENTDATE_PRECISON_YEAR_OR_BETTER isEventDateYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) 
  *                                also isEventDateJulianYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) 
- * MEASURE_EVENT_NOTEMPTY 9dc97514-3b88-4afc-931d-5fc386be21ee (other)
- * 	An equivalent measure for TG2-VALIDATION_EVENT_EMPTY
+ *  MEASURE_EVENT_NOTEMPTY 9dc97514-3b88-4afc-931d-5fc386be21ee (other)
+ * 	     An equivalent measure for TG2-VALIDATION_EVENT_EMPTY
  *  
  *  Also provides (intended to prepare upstream data for Darwin Core: 
  *     UPSTREAM_EVENTDATE_FILLED_IN_FROM_START_END  extractDateFromStartEnd(@ActedUpon(value = "dwc:eventDate") String eventDate, @Consulted(value = "startDate") String startDate, @Consulted(value="endDate") String endDate) 
@@ -95,90 +94,6 @@ import java.util.Map;
 		value = "urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8",
 		label = "Kurator: Date Validator - DwCEventDQ:v2.1.0")
 public class DwCEventDQ {
-	
-/**
- * Current definitions 2022Jan04	
-
-	@Provides(value="urn:uuid:f51e15a6-a67d-4729-9c28-3766299d2985")
-	@Validation( label = "VALIDATION_EVENTDATE_EMPTY", description="#33 Validation SingleRecord Completeness: eventdate empty")
-	@Specification(value="COMPLIANT if dwc:eventDate is not EMPTY; otherwise NOT_COMPLIANT")
-	--
-	@Provides(value="urn:uuid:41267642-60ff-4116-90eb-499fee2cd83f")
-	@Validation( label = "VALIDATION_EVENT_TEMPORAL_EMPTY", description="#88 Validation SingleRecord Completeness: event temporal empty")
-	@Specification(value="COMPLIANT if at least one term needed to determine the event date exists and is not EMPTY; otherwise NOT_COMPLIANT")
-	--
-	@Provides(value="urn:uuid:4f2bf8fd-fc5c-493f-a44c-e7b16153c803")
-	@Validation( label = "VALIDATION_EVENTDATE_NOTSTANDARD", description="#66 Validation SingleRecord Conformance: eventdate notstandard")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; COMPLIANT if the value of dwc:eventDate is a valid ISO 8601-1:2019 date; otherwise NOT_COMPLIANT")
-	--
-	@Provides(value="urn:uuid:3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
-	@Validation( label = "VALIDATION_EVENTDATE_OUTOFRANGE", description="#36 Validation SingleRecord Conformance: eventdate outofrange")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or if the value of dwc:eventDate is not a valid ISO 8601-1:2019 date; COMPLIANT if the range of dwc:eventDate is entirely within the parameter range, otherwise NOT_COMPLIANT")
-	--
-	@Provides(value="urn:uuid:5618f083-d55a-4ac2-92b5-b9fb227b832f")
-	@Validation( label = "VALIDATION_EVENT_INCONSISTENT", description="#67 Validation SingleRecord Consistency: eventdate inconsistent")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY, or all of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear are EMPTY; COMPLIANT if all of the following conditions are met 1) the provided value of year matches the start year of the range represented by eventDate or year is empty, and 2) the provided value in month matches the start month of the range represented by eventDate or month is empty, and 3) the provided value in day matches the start day of the range represented by eventDate or day is empty, and 4) the provided value in startDayOfYear matches the start day of the year of the range represented by eventDate or startDayOfYear is empty, and 5) the provided value in endDayOfYear matches the end day of the year the range represented by eventDate or endDayOfYear is empty; otherwise NOT_COMPLIANT.")
-	--
-	@Provides(value="urn:uuid:c09ecbf9-34e3-4f3e-b74a-8796af15e59f")
-	@Validation( label = "VALIDATION_YEAR_EMPTY", description="#49 Validation SingleRecord Completeness: year empty")
-	@Specification(value="COMPLIANT if dwc:year is not EMPTY; otherwise NOT_COMPLIANT")
-	--
-	@Provides(value="urn:uuid:ad0c8855-de69-4843-a80c-a5387d20fbc8")
-	@Validation( label = "VALIDATION_YEAR_OUTOFRANGE", description="#84 Validation SingleRecord Conformance: year outofrange")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:year is not present, or is EMPTY or cannot be interpreted as an integer; COMPLIANT if the value of dwc:year is within the Parameter range; otherwise NOT_COMPLIANT")
-	--
-	@Provides(value="urn:uuid:01c6dafa-0886-4b7e-9881-2c3018c98bdc")
-	@Validation( label = "VALIDATION_MONTH_NOTSTANDARD", description="#126 Validation SingleRecord Conformance: month notstandard")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:month is EMPTY; COMPLIANT if the value of dwc:month is an integer between 1 and 12 inclusive; otherwise NOT_COMPLIANT")
-	--
-	@Provides(value="urn:uuid:8d787cb5-73e2-4c39-9cd1-67c7361dc02e")
-	@Validation( label = "VALIDATION_DAY_OUTOFRANGE", description="#125 Validation SingleRecord Conformance: day outofrange")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if (a) dwc:day is EMPTY (b) is not an integer, or (c) dwc:day is an integer between 29 and 31 inclusive and dwc:month is not an integer between 1 and 12, or (d) dwc:month is the integer 2 and dwc:day is the integer 29 and dwc:year is not a valid ISO 8601 year; COMPLIANT (a) if the value of the field dwc:day is an integer between 1 and 28 inclusive, or (b) dwc:day is an integer between 29 and 30 and dwc:month is an integer in the set (4,6,9,11), or (c) dwc:day is an integer between 29 and 31 and dwc:month is an integer in the set (1,3,5,7,8,10,12), or (d) dwc:day is the integer 29 and dwc:month is the integer 2 and dwc:year is a valid leap year (evenly divisible by 400 or (evenly divisible by 4 but not evenly divisible by 100)); otherwise NOT_COMPLIANT.")
-	--
-	@Provides(value="urn:uuid:47ff73ba-0028-4f79-9ce1-ee7008d66498")
-	@Validation( label = "VALIDATION_DAY_NOTSTANDARD", description="#147 Validation SingleRecord Conformance: day notstandard")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; COMPLIANT if the value of the field dwc:day is an integer between 1 and 31 inclusive; otherwise NOT_COMPLIANT.")
-	--
-	@Provides(value="urn:uuid:85803c7e-2a5a-42e1-b8d3-299a44cafc46")
-	@Validation( label = "VALIDATION_STARTDAYOFYEAR_OUTOFRANGE", description="#130 Validation SingleRecord Conformance: startdayofyear outofrange")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:startDayOfYear is EMPTY or if the value of dwc:startDayOfYear is equal to 366 and (dwc:eventDate is EMPTY or the value of dwc:eventDate can not be interpreted to find single year or a start year in a range); COMPLIANT if the value of dwc:startDayOfYear is an integer between 1 and 365, inclusive, or if the value of dwc:startDayOfYear is 366 and the start year interpreted from dwc:eventDate is a leap year; otherwise NOT_COMPLIANT")
-	--
-	@Provides(value="urn:uuid:9a39d88c-7eee-46df-b32a-c109f9f81fb8")
-	@Validation( label = "VALIDATION_ENDDAYOFYEAR_OUTOFRANGE", description="#131 Validation SingleRecord Conformance: enddayofyear outofrange")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:endDayOfYear is EMPTY or if the value of dwc:endDayOfYear is equal to 366 and (dwc:eventDate is EMPTY or the value of dwc:eventDate can not be interpreted to find single year or an end year in a range); COMPLIANT if the value of dwc:endDayOfYear is an integer between 1 and 365 inclusive, or if the value of dwc:endDayOfYear is 366 and the end year interpreted from dwc:eventDate is a leap year; otherwise NOT_COMPLIANT")
-	--
-	@Provides(value="urn:uuid:3892f432-ddd0-4a0a-b713-f2e2ecbd879d")
-	@Amendment( label = "AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY", description="#93 Amendment SingleRecord Completeness: eventdate from yearmonthday")
-	@Specification(value="INTERNAL _PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY or dwc:year is EMPTY or is uninterpretable as a valid year; AMENDED if the value of dwc:eventDate was interpreted from the values in dwc:year, dwc:month and dwc:day; otherwise NOT_AMENDED")
-	--
-	@Provides(value="urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812")
-	@Amendment( label = "AMENDMENT_EVENTDATE_FROM_VERBATIM", description="#86 Amendment SingleRecord Completeness: eventdate from verbatim")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY or the value of dwc:verbatimEventDate is EMPTY or not unambiguously interpretable as an ISO 8601-1:2019 date; AMENDED if the value of dwc:eventDate was unambiguously interpreted from dwc:verbatimEventDate; otherwise NOT_AMENDED")
-	--
-	@Provides(value="urn:uuid:b129fa4d-b25b-43f7-9645-5ed4d44b357b")
-	@Amendment( label = "AMENDMENT_DAY_STANDARDIZED", description="#127 Amendment SingleRecord Conformance: day standardized")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; AMENDED if the value of dwc:day was unambiguously interpreted to be an integer between 1 and 31 inclusive; otherwise NOT_AMENDED")
-	--
-	@Provides(value="urn:uuid:2e371d57-1eb3-4fe3-8a61-dff43ced50cf")
-	@Amendment( label = "AMENDMENT_MONTH_STANDARDIZED", description="#128 Amendment SingleRecord Conformance: month standardized")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:month is EMPTY; AMENDED if the value of dwc:month was able to be interpreted as a integer between 1 and 12 inclusive; otherwise NOT_AMENDED")
-	--
-	@Provides(value="urn:uuid:eb0a44fa-241c-4d64-98df-ad4aa837307b")
-	@Amendment( label = "AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR", description="#132 Amendment SingleRecord Completeness: eventdate from yearstartdayofyearenddayofyear")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate was not EMPTY or dwc:year was EMPTY or both dwc:startDayOfYear and dwc:endDayOfYear were EMPTY or the values were not interpretable; AMENDED if the value of dwc:eventDate was FILLED_IN from the values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear; otherwise NOT_AMENDED")
-	--
-	@Provides(value="urn:uuid:39bb2280-1215-447b-9221-fd13bc990641")
-	@Amendment( label = "AMENDMENT_DATEIDENTIFIED_STANDARDIZED", description="#26 Amendment SingleRecord Conformance: dateidentified standardized")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is EMPTY; AMENDED if the value of dwc:dateIdentified was altered to unambiguously conform with the ISO 8601-1:2019 date format; otherwise NOT_AMENDED")
-	--
-	@Provides(value="urn:uuid:710fe118-17e1-440f-b428-88ba3f547d6d")
-	@Amendment( label = "AMENDMENT_EVENT_FROM_EVENTDATE", description="#52 Amendment SingleRecord Completeness: event from eventdate")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or does not contain a valid ISO 8601-1:2019 date; AMENDED if one or more EMPTY terms of the dwc:Event class (dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear) have been filled in from a valid unambiguously interpretable value in dwc:eventDate and eventDate is wholly within one year; otherwise NOT_AMENDED")
-	--
-	@Provides(value="urn:uuid:718dfc3c-cb52-4fca-b8e2-0e722f375da7")
-	@Amendment( label = "AMENDMENT_EVENTDATE_STANDARDIZED", description="#61 Amendment SingleRecord Conformance: eventdate standardized")
-	@Specification(value="INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; AMENDED if the value of dwc:eventDate was changed to unambiguously conform with an ISO 8601-1:2019 date; otherwise NOT_AMENDED")
-*/
 	
 	private static final Log logger = LogFactory.getLog(DwCEventDQ.class);
 	
