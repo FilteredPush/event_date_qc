@@ -149,7 +149,7 @@ public class DwCEventDQ {
 	@Measure(dimension = Dimension.COMPLETENESS, label = "EVENT_DATE_COMPLETENESS", description = "Measure the completeness of an event date.")
 	@Specification(value = "For values of dwc:eventDate, check is not empty.")
 
-	public static DQResponse<CompletenessValue> measureEventCompleteness(@ActedUpon(value = "dwc:eventDate") String eventDate) {
+	public static DQResponse<CompletenessValue> measureEventDateCompleteness(@ActedUpon(value = "dwc:eventDate") String eventDate) {
 		DQResponse<CompletenessValue> result = new DQResponse<>();
 
 		if (DateUtils.isEmpty(eventDate)) {
@@ -2116,14 +2116,7 @@ public class DwCEventDQ {
     	return result;
 	}
     
-    @Provides("ad0c8855-de69-4843-a80c-a5387d20fbc8")
-    public static DQResponse<ComplianceValue> validationYearOutofrange(@ActedUpon("dwc:year") String year) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
-    	Integer upperBound = LocalDateTime.now().getYear();
-
-        return validationYearOutofrange(year, 1600, upperBound);
-    }
 	
 	/**
 	 * Given a year, evaluate whether that year falls in the range between provided upper and lower bounds inclusive.
@@ -2190,32 +2183,7 @@ public class DwCEventDQ {
     	return result;
     }		
 	
-    /**
-     * #36 Validation SingleRecord Conformance: eventdate outofrange
-     * 
-     * Given an eventDate check to see if that event date falls entirely outside a range from a
-     * specified lower bound (1600-01-01 by default) and a specified upper bound (the end of the 
-     * current year by default)   
-     *
-     * Provides: VALIDATION_EVENTDATE_OUTOFRANGE
-     *
-     * @param eventDate the provided dwc:eventDate to evaluate
-     * @return DQResponse the response of type ComplianceValue  to return
-     */
-    @Provides("3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
-    public static DQResponse<ComplianceValue> validationEventdateOutofrange(@ActedUpon("dwc:eventDate") String eventDate) {
-        // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
-        // or if the value of dwc:eventDate is not a valid ISO 8601-1:2019 
-        // date; COMPLIANT if the range of dwc:eventDate is entirely 
-        // within the parameter range, otherwise NOT_COMPLIANT 
 
-        // Parameters. This test is defined as parameterized.
-        // Default values: bdq:earliestValidDate="1600"; bdq:latestValidDate=current year
-    	
-    	String currentYear = String.format("%04d",Calendar.getInstance().get(Calendar.YEAR)) + "-12-31";
-    	return DwCEventDQ.validationEventdateOutofrange(eventDate,"1600-01-01",currentYear);
-    }
     	
         
     /**
