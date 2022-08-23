@@ -23,6 +23,7 @@ import java.util.Calendar;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.datakurator.ffdq.annotations.ActedUpon;
+import org.datakurator.ffdq.annotations.Mechanism;
 import org.datakurator.ffdq.annotations.Provides;
 import org.datakurator.ffdq.api.DQResponse;
 import org.datakurator.ffdq.api.result.ComplianceValue;
@@ -31,6 +32,9 @@ import org.datakurator.ffdq.api.result.ComplianceValue;
  * @author mole
  *
  */
+@Mechanism(
+		value = "urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8",
+		label = "Kurator: Date Validator - DwCEventDQ:v2.1.0")
 public class DwCEventDQDefaults extends DwCEventDQ {
 
 	private static final Log logger = LogFactory.getLog(DwCEventDQDefaults.class);
