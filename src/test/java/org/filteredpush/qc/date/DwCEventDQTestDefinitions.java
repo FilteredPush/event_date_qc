@@ -203,13 +203,11 @@ public class DwCEventDQTestDefinitions {
 	public void testAmendmentEventFromEventdate() {
 		
         // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
-        // or does not contain a valid ISO 8601-1:2019 date; AMENDED 
-        // if one or more EMPTY terms of the dwc:Event class (dwc:year, 
-        // dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear) 
-        // have been filled in from a valid unambiguously interpretable 
-        // value in dwc:eventDate and eventDate is wholly within one 
-        // year; otherwise NOT_AMENDED 
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or contains 
+    	// an invalid value according to bdq:sourceAuthority; FILLED_IN one or 
+    	// more EMPTY terms dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, 
+    	// dwc:endDayOfYear if they can be unambiguously interpreted from values in 
+    	// dwc:eventDate, and dwc:eventDate is wholly within one year; otherwise NOT_AMENDED
 		
 		String eventDate = "";
 		String year = "1832";
@@ -231,7 +229,7 @@ public class DwCEventDQTestDefinitions {
 		eventDate = "1961-01-28/1961-01-29";
 		year = "";
 		response = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(ResultState.FILLED_IN.getLabel(), response.getResultState().getLabel()); 
 		assertEquals(5, response.getValue().getObject().size());
 		assertEquals("1961", response.getValue().getObject().get("dwc:year"));
 		assertEquals("1", response.getValue().getObject().get("dwc:month"));
@@ -243,7 +241,7 @@ public class DwCEventDQTestDefinitions {
 		eventDate = "1961-01-28/1961-01-29";
 		year = "1961";
 		response = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(ResultState.FILLED_IN.getLabel(), response.getResultState().getLabel()); 
 		assertEquals(4, response.getValue().getObject().size());
 		assertEquals("1", response.getValue().getObject().get("dwc:month"));
 		assertEquals("28", response.getValue().getObject().get("dwc:day"));

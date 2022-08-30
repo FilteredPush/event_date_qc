@@ -2001,13 +2001,11 @@ public class DwCEventDQ {
     	DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
     	
         // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
-        // or does not contain a valid ISO 8601-1:2019 date; AMENDED 
-        // if one or more EMPTY terms of the dwc:Event class (dwc:year, 
-        // dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear) 
-        // have been filled in from a valid unambiguously interpretable 
-        // value in dwc:eventDate and eventDate is wholly within one 
-        // year; otherwise NOT_AMENDED 
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or contains 
+    	// an invalid value according to bdq:sourceAuthority; FILLED_IN one or 
+    	// more EMPTY terms dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, 
+    	// dwc:endDayOfYear if they can be unambiguously interpreted from values in 
+    	// dwc:eventDate, and dwc:eventDate is wholly within one year; otherwise NOT_AMENDED
     	
     	if (DateUtils.isEmpty(eventDate)) {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -2035,7 +2033,7 @@ public class DwCEventDQ {
     				if (DateUtils.isEmpty(day)) {
     					String newDay = Integer.toString(interval.getStartDate().getDayOfMonth());
 						values.put("dwc:day", newDay );
-    					result.setResultState(ResultState.AMENDED);
+    					result.setResultState(ResultState.FILLED_IN);
     					if (isRange) {
     						result.addComment("Added day ["+ newDay+"] from start day of range ["+eventDate+"].");
     					} else {
@@ -2045,7 +2043,7 @@ public class DwCEventDQ {
     				if (DateUtils.isEmpty(month)) {
     					String newMonth = Integer.toString(interval.getStartDate().getMonthValue());
     					values.put("dwc:month", newMonth );
-    					result.setResultState(ResultState.AMENDED);
+    					result.setResultState(ResultState.FILLED_IN);
     					if (isRange) {
     						result.addComment("Added month ["+ newMonth +"] from start month of eventDate ["+eventDate+"].");
     					} else {
@@ -2055,7 +2053,7 @@ public class DwCEventDQ {
     				if (DateUtils.isEmpty(month)) {
     					String newMonth = Integer.toString(interval.getStartDate().getMonthValue());
     					values.put("dwc:month", newMonth );
-    					result.setResultState(ResultState.AMENDED);
+    					result.setResultState(ResultState.FILLED_IN);
     					if (isRange) {
     						result.addComment("Added month ["+ newMonth +"] from start month of eventDate ["+eventDate+"].");
     					} else {
@@ -2065,7 +2063,7 @@ public class DwCEventDQ {
     				if (DateUtils.isEmpty(year)) {
     					String newYear = Integer.toString(interval.getStartDate().getYear());
     					values.put("dwc:year", newYear );
-    					result.setResultState(ResultState.AMENDED);
+    					result.setResultState(ResultState.FILLED_IN);
     					if (isRange) {
     						result.addComment("Added year ["+ newYear +"] from start month of eventDate ["+eventDate+"].");
     					} else {
@@ -2076,7 +2074,7 @@ public class DwCEventDQ {
     				if (DateUtils.isEmpty(startDayOfYear)) {
     					String newDay = Integer.toString(interval.getStartDate().getDayOfYear());
     					values.put("dwc:startDayOfYear", newDay );
-    					result.setResultState(ResultState.AMENDED);
+    					result.setResultState(ResultState.FILLED_IN);
     					if (isRange) {
     						result.addComment("Added startDayOfYear ["+ newDay +"] from start day of eventDate ["+eventDate+"].");
     					} else {
@@ -2087,7 +2085,7 @@ public class DwCEventDQ {
     				if (DateUtils.isEmpty(endDayOfYear)) {
     					String newDay = Integer.toString(interval.getEndDate().getDayOfYear());
     					values.put("dwc:endDayOfYear", newDay );
-    					result.setResultState(ResultState.AMENDED);
+    					result.setResultState(ResultState.FILLED_IN);
     					if (isRange) {
     						result.addComment("Added endDayOfYear ["+ newDay +"] from end day of eventDate ["+eventDate+"].");
     					} else {
@@ -2107,7 +2105,7 @@ public class DwCEventDQ {
     				//	    result.addComment("Added eventTime ["+ newTime +"] from eventDate ["+eventDate+"].");
     				//	}
     				//}
-    				if (!result.getResultState().equals(ResultState.AMENDED)) {
+    				if (!result.getResultState().equals(ResultState.FILLED_IN)) {
     					result.setResultState(ResultState.NOT_AMENDED);
     					result.addComment("No changes proposed, all candidate fields to fill in contain values.");
     				}
