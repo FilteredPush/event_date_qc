@@ -1337,7 +1337,7 @@ public class DwcEventDQTest {
 		String startDayOfYear = null;
 		String endDayOfYear = null;
 		
-		DQResponse<ComplianceValue> result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		DQResponse<ComplianceValue> result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
 		
 		eventDate = "";
@@ -1347,7 +1347,7 @@ public class DwcEventDQTest {
 		startDayOfYear = "";
 		endDayOfYear = "";
 		
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
 			
 		eventDate = "1980-02-14";
@@ -1357,7 +1357,7 @@ public class DwcEventDQTest {
 		startDayOfYear = "";
 		endDayOfYear = "";
 		
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
 		
@@ -1368,7 +1368,7 @@ public class DwcEventDQTest {
 		startDayOfYear = Integer.toString(31 + 14);
 		endDayOfYear = "";
 		
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
@@ -1380,7 +1380,7 @@ public class DwcEventDQTest {
 		startDayOfYear = Integer.toString(31 + 14);
 		endDayOfYear = Integer.toString(31 + 14);
 		
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
 		
@@ -1391,7 +1391,7 @@ public class DwcEventDQTest {
 		startDayOfYear = Integer.toString(31 + 14);
 		endDayOfYear = Integer.toString(31 + 14);
 		
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
 		assertNull(result.getValue());			
 		
@@ -1402,7 +1402,7 @@ public class DwcEventDQTest {
 		startDayOfYear = Integer.toString(31 + 12);
 		endDayOfYear = "";
 		
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());		
 		
@@ -1413,7 +1413,7 @@ public class DwcEventDQTest {
 		startDayOfYear = Integer.toString(31 + 12);
 		endDayOfYear = "";
 		
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
 		assertNull(result.getValue());			
 		
@@ -1424,7 +1424,7 @@ public class DwcEventDQTest {
 		startDayOfYear = Integer.toString(31 + 14);
 		endDayOfYear = "";
 		
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());		
 		
@@ -1435,7 +1435,7 @@ public class DwcEventDQTest {
 		startDayOfYear = Integer.toString(31 + 15);
 		endDayOfYear = "";
 		
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		
@@ -1446,7 +1446,7 @@ public class DwcEventDQTest {
 		startDayOfYear = Integer.toString(31 + 14);
 		endDayOfYear = Integer.toString(31 + 25);    // date range not in eventDate
 		
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());		
 		
@@ -1457,7 +1457,7 @@ public class DwcEventDQTest {
 		startDayOfYear = Integer.toString(31 + 14);
 		endDayOfYear = Integer.toString(31 + 25);    // date range in eventDate
 		
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		logger.debug(result.getComment());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
@@ -1469,7 +1469,7 @@ public class DwcEventDQTest {
 		startDayOfYear = Integer.toString(31 + 14);
 		endDayOfYear = Integer.toString(12);    // date range in eventDate, but in previous year
 		
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		logger.debug(result.getComment());
  		assertEquals(ComplianceValue.COMPLIANT, result.getValue());		
@@ -1481,7 +1481,7 @@ public class DwcEventDQTest {
 		startDayOfYear = "";
 		endDayOfYear = "";    
 		
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		logger.debug(result.getComment());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
@@ -1494,7 +1494,7 @@ public class DwcEventDQTest {
 		assertTrue(DateUtils.includesLeapDay(eventDate));
 		endDayOfYear = Integer.toString(31 + 29);    
 		
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		logger.debug(result.getComment());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());				

@@ -362,7 +362,7 @@ public class DwCEventDQTestDefinitions {
 	}
 
 	/**
-	 * Test method for {@link org.filteredpush.qc.date.DwCEventDQs#validationEventInconsistent(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
+	 * Test method for {@link org.filteredpush.qc.date.DwCEventDQs#validationEventConsistent(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
 	 */
 	@Test
 	public void testValidationEventInconsistent() {
@@ -390,7 +390,7 @@ public class DwCEventDQTestDefinitions {
 		String day = "";
 		String startDayOfYear = "";
 		String endDayOfYear = "";
-		DQResponse<ComplianceValue> result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		DQResponse<ComplianceValue> result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
 		assertNull(result.getValue());
@@ -401,7 +401,7 @@ public class DwCEventDQTestDefinitions {
 		day = "";
 		startDayOfYear = "";
 		endDayOfYear = "";
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
 		assertNull(result.getValue());
@@ -412,7 +412,7 @@ public class DwCEventDQTestDefinitions {
 		day = "2";
 		startDayOfYear = "2";
 		endDayOfYear = "2";
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
 		assertNull(result.getValue());
@@ -423,7 +423,7 @@ public class DwCEventDQTestDefinitions {
 		day = "2";
 		startDayOfYear = "2";
 		endDayOfYear = "3";
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
@@ -434,7 +434,7 @@ public class DwCEventDQTestDefinitions {
 		day = "";
 		startDayOfYear = "";
 		endDayOfYear = "";
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
@@ -445,7 +445,7 @@ public class DwCEventDQTestDefinitions {
 		day = "";
 		startDayOfYear = "";
 		endDayOfYear = "";
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());		
@@ -456,7 +456,7 @@ public class DwCEventDQTestDefinitions {
 		day = "";
 		startDayOfYear = "";
 		endDayOfYear = "";
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
@@ -467,7 +467,7 @@ public class DwCEventDQTestDefinitions {
 		day = "2";
 		startDayOfYear = "";
 		endDayOfYear = "";
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
@@ -478,7 +478,7 @@ public class DwCEventDQTestDefinitions {
 		day = "3";
 		startDayOfYear = "";
 		endDayOfYear = "";
-		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
