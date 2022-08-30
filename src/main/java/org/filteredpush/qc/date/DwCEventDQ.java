@@ -318,11 +318,11 @@ public class DwCEventDQ {
     	DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
 		
         // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY 
-        // or the value of dwc:verbatimEventDate is EMPTY or not unambiguously 
-        // interpretable as an ISO 8601-1:2019 date; AMENDED if the 
-        // value of dwc:eventDate was unambiguously interpreted from 
-        // dwc:verbatimEventDate; otherwise NOT_AMENDED 
+    	// INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY
+    	// or the value of dwc:verbatimEventDate is EMPTY or not unambiguously
+    	// interpretable as an ISO 8601-1:2019 date; FILLED_IN the value
+    	// of dwc:eventDate if an unambiguous ISO 8601-1:2019 date was 
+    	// interpreted from dwc:verbatimEventDate; otherwise NOT_AMENDED 
 		
 		if (DateUtils.isEmpty(eventDate)) {
 			if (!DateUtils.isEmpty(verbatimEventDate)) {
@@ -334,7 +334,7 @@ public class DwCEventDQ {
 					Map<String, String> extractedValues = new HashMap<>();
 					extractedValues.put("dwc:eventDate", extractResponse.getResult());
 					result.setValue(new AmendmentValue(extractedValues));
-					result.setResultState(ResultState.AMENDED);
+					result.setResultState(ResultState.FILLED_IN);
 				} else if (!extractResponse.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
 						( extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS) ||
 								extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)))

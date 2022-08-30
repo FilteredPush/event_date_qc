@@ -448,13 +448,13 @@ public class DwcEventDQTest {
 		String eventDate = "";
 		String verbatimEventDate = "Jan 1884";
 		DQResponse<AmendmentValue> result = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate,verbatimEventDate);
-		assertEquals(ResultState.AMENDED, result.getResultState());
+		assertEquals(ResultState.FILLED_IN, result.getResultState());
 		assertEquals("1884-01",result.getValue().getObject().get("dwc:eventDate"));
 		assertEquals(1,result.getValue().getObject().size());
 
 		verbatimEventDate = "1 Mar 1884";
 		result = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate,verbatimEventDate);
-		assertEquals(ResultState.AMENDED, result.getResultState());
+		assertEquals(ResultState.FILLED_IN, result.getResultState());
 		assertEquals("1884-03-01",result.getValue().getObject().get("dwc:eventDate"));
 		assertEquals(1,result.getValue().getObject().size());		
 		

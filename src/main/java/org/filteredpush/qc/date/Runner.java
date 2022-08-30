@@ -397,7 +397,7 @@ public class Runner {
 						if (current==null) { current = 0; }
 						current = current + 1;
 						acounter.put(name, current);
-						if (response.getResultState().equals(ResultState.AMENDED)) { 
+						if (response.getResultState().equals(ResultState.FILLED_IN)) { 
 							eventDate = ((AmendmentValue)response.getValue()).getObject().get("dwc:eventDate");
 						}
 						
@@ -408,7 +408,7 @@ public class Runner {
 						if (current==null) { current = 0; }
 						current = current + 1;
 						acounter.put(name, current);
-						if (response.getResultState().equals(ResultState.AMENDED)) { 
+						if (response.getResultState().equals(ResultState.FILLED_IN)) { 
 							if (((AmendmentValue)response.getValue()).getObject().get("dwc:day")!=null) { 
 							   day = ((AmendmentValue)response.getValue()).getObject().get("dwc:day");
 							}

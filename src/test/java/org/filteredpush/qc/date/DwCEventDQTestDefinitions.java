@@ -564,7 +564,7 @@ public class DwCEventDQTestDefinitions {
 		eventDate = "";
 		verbatimEventDate = "1932/11/23";
 		response = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate, verbatimEventDate);
-		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(ResultState.FILLED_IN.getLabel(), response.getResultState().getLabel()); 
 		assertEquals(1, response.getValue().getObject().size());
 		assertEquals("{dwc:eventDate=1932-11-23}", response.getValue().getObject().toString());
 		logger.debug(response.getComment());
@@ -578,7 +578,7 @@ public class DwCEventDQTestDefinitions {
 		eventDate = "";
 		verbatimEventDate = "1932.10.6";
 		response = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate, verbatimEventDate);
-		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(ResultState.FILLED_IN.getLabel(), response.getResultState().getLabel()); 
 		assertEquals(1, response.getValue().getObject().size());
 		assertEquals("1932-10-06", response.getValue().getObject().get("dwc:eventDate"));
 		logger.debug(response.getComment());
@@ -586,7 +586,7 @@ public class DwCEventDQTestDefinitions {
 		eventDate = "";
 		verbatimEventDate = "Friday 29th Oct. 2021";
 		response = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate, verbatimEventDate);
-		assertEquals(ResultState.AMENDED.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(ResultState.FILLED_IN.getLabel(), response.getResultState().getLabel()); 
 		assertEquals(1, response.getValue().getObject().size());
 		assertEquals("2021-10-29", response.getValue().getObject().get("dwc:eventDate"));
 		logger.debug(response.getComment());
