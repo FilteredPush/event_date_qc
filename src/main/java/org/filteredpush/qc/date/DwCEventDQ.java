@@ -1374,11 +1374,11 @@ public class DwCEventDQ {
     		@Consulted(value="dwc:day") String day ) 
     {
         // Specification
-        // INTERNAL _PREREQUISITES_NOT_MET if dwc:eventDate is not 
-        // EMPTY or dwc:year is EMPTY or is uninterpretable as a valid 
-        // year; AMENDED if the value of dwc:eventDate was unambiguously 
-        // interpreted from the values in dwc:year, dwc:month and dwc:day; 
-        // otherwise NOT_AMENDED 
+    	// INTERNAL _PREREQUISITES_NOT_MET if dwc:eventDate is not 
+    	// EMPTY or dwc:year is EMPTY or is uninterpretable as a valid
+    	// year; FILLED_IN the value of dwc:eventDate if an unambiguous
+    	// ISO 8601-1:2019 date can be interpreted from the values in 
+    	// dwc:year, dwc:month and dwc:day; otherwise NOT_AMENDED
     	
     	DQResponse<AmendmentValue> result = new DQResponse<>();
     	if (DateUtils.isEmpty(year)) {
@@ -1464,7 +1464,7 @@ public class DwCEventDQ {
      	    		   result.setResultState(ResultState.NOT_AMENDED);
      	    		   result.addComment("Failed to construct an unambiguous ISO date from year ["+year+"], month ["+ month +"] and day ["+ day +"].");
      	    	   } else {
-     	    		   result.setResultState(ResultState.AMENDED);
+     	    		   result.setResultState(ResultState.FILLED_IN);
      	    		   Map<String, String> values = new HashMap<>();
      	    		   values.put("dwc:eventDate", resultDateString);
      	    		   result.setValue(new AmendmentValue(values));
