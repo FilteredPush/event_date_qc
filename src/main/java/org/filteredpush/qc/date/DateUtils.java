@@ -2638,9 +2638,9 @@ public class DateUtils {
     		result = true;
     	} else { 
     		LocalDateInterval test = extractInterval(eventDate);
-    		logger.debug(test.toString());
     		if (test!=null) {
     			LocalDate start = test.getStartDate();
+    			logger.debug(start);
     			boolean anyFails = false;
     			Integer dayBit = null;
     			if (!isEmpty(day)) { 
@@ -2659,6 +2659,7 @@ public class DateUtils {
     				}
     			}
     			Integer yearBit = null;
+    			logger.debug(anyFails);
     			if (!isEmpty(year)) { 
     				try { 
     					yearBit = Integer.parseInt(year);
@@ -2666,21 +2667,25 @@ public class DateUtils {
     					anyFails = true;
     				}
     			}
+    			logger.debug(anyFails);
     			if (!DateUtils.isEmpty(year) && yearBit!=null) {
     				if (start.getYear()!=yearBit) { 
     					anyFails = true;
     				}
     			}
+    			logger.debug(anyFails);
     			if (!DateUtils.isEmpty(month) && monthBit!=null) { 
     				if (start.getMonthValue()!=monthBit) { 
     					anyFails = true;
     				}
     			}
+    			logger.debug(anyFails);
     			if (!DateUtils.isEmpty(day) && dayBit!=null) {
     				if (start.getDayOfMonth()!=dayBit) { 
     					anyFails = true;
     				}
     			}
+    			logger.debug(anyFails);
     			if (anyFails) { 
     				result = false;
     			} else { 

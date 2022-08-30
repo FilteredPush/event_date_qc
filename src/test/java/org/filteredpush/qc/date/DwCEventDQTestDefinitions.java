@@ -427,6 +427,39 @@ public class DwCEventDQTestDefinitions {
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+
+		eventDate="1949-09-15T12:34";
+		year = "1949";
+		month = "9";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate="1949-09-15T12:34";
+		year = "1949";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());		
+		
+		eventDate="1949-09-15T12:34";
+		year = "1949";
+		month = "8";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		result = DwCEventDQ.validationEventInconsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		
 		eventDate = "1980-01-02/1980-01-03";
 		year = "1980";

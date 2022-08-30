@@ -28,6 +28,7 @@ import org.datakurator.ffdq.api.result.NumericalValue;
 import org.datakurator.ffdq.model.ResultState;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Calendar;
 import java.util.Date;
@@ -56,7 +57,7 @@ import java.util.Map;
  * #84  VALIDATION_YEAR_OUTOFRANGE ad0c8855-de69-4843-a80c-a5387d20fbc8
  * #125 VALIDATION_DAY_OUTOFRANGE 8d787cb5-73e2-4c39-9cd1-67c7361dc02e
  * #66  VALIDATION_EVENTDATE_NOTSTANDARD 4f2bf8fd-fc5c-493f-a44c-e7b16153c803
- * #67  VALIDATION_EVENT_INCONSISTENT 5618f083-d55a-4ac2-92b5-b9fb227b832f
+ * #67  VALIDATION_EVENT_CONSISTENT 5618f083-d55a-4ac2-92b5-b9fb227b832f
  * 
  * Provides support for the following TDWG DQIG TG2 amendments 
  * 
@@ -1699,7 +1700,7 @@ public class DwCEventDQ {
      *
      * #67 Validation SingleRecord Consistency: eventdate inconsistent
      *
-     * Provides: VALIDATION_EVENT_INCONSISTENT
+     * Provides: VALIDATION_EVENT_CONSISTENT
      *
      * @param eventDate the provided dwc:eventDate to evaluate
      * @param year the provided dwc:year to evaluate
@@ -1711,7 +1712,7 @@ public class DwCEventDQ {
      *     whether the event terms represent one temporal interval or
      */
     @Provides("5618f083-d55a-4ac2-92b5-b9fb227b832f")
-	public static DQResponse<ComplianceValue> validationEventInconsistent(
+	public static DQResponse<ComplianceValue> validationEventConsistent(
     		@ActedUpon(value = "dwc:eventDate") String eventDate,
 			@ActedUpon(value = "dwc:year") String year,
 			@ActedUpon(value = "dwc:month") String month,
@@ -1760,7 +1761,11 @@ public class DwCEventDQ {
 					}
 
 				} else {
-					if (!DateUtils.isConsistent(eventDate, year, month, "1")) {
+					logger.debug(DateUtils.extractDate(eventDate)); 
+					String toTest = DateUtils.extractDate(eventDate).format(DateTimeFormatter.ofPattern("yyyy-MM")) + "-01"; 
+					logger.debug(toTest);
+					logger.debug(DateUtils.isConsistent(toTest, year, month, "1"));
+					if (!DateUtils.isConsistent(toTest, year, month, "1")) {
 						inconsistencyFound = true;
 						result.addComment("Provided value for eventDate '" + eventDate + "' appears to represent a date inconsistent with year-month " + year + "-" + month +" .");
 					}
@@ -1770,7 +1775,9 @@ public class DwCEventDQ {
 					interpretationProblem = true;
 					result.addComment("Provided value for eventDate '" + eventDate + "' can't be tested for consistency with " + year + "- -" + day + " (no month provided).");
 				} else {
-					if (!DateUtils.isConsistent(eventDate, year, "1", "1")) {
+					String toTest = DateUtils.extractDate(eventDate).format(DateTimeFormatter.ofPattern("yyyy")) + "-01-01"; 
+					logger.debug(toTest);
+					if (!DateUtils.isConsistent(toTest, year, "1", "1")) {
 						inconsistencyFound = true;
 						result.addComment("Provided value for eventDate '" + eventDate + "' appears to represent a date inconsistent with year " + year + " .");
 					}
