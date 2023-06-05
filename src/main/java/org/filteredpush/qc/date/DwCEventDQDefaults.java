@@ -23,9 +23,12 @@ import java.util.Calendar;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.datakurator.ffdq.annotations.ActedUpon;
+import org.datakurator.ffdq.annotations.Amendment;
 import org.datakurator.ffdq.annotations.Mechanism;
+import org.datakurator.ffdq.annotations.Parameter;
 import org.datakurator.ffdq.annotations.Provides;
 import org.datakurator.ffdq.api.DQResponse;
+import org.datakurator.ffdq.api.result.AmendmentValue;
 import org.datakurator.ffdq.api.result.ComplianceValue;
 
 /**
@@ -97,5 +100,6 @@ public class DwCEventDQDefaults extends DwCEventDQ {
 
         return validationYearOutofrange(year, 1600, upperBound);
     }
+    
 
 }
