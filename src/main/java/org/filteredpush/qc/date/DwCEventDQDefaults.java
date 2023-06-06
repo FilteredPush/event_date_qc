@@ -27,6 +27,8 @@ import org.datakurator.ffdq.annotations.Amendment;
 import org.datakurator.ffdq.annotations.Mechanism;
 import org.datakurator.ffdq.annotations.Parameter;
 import org.datakurator.ffdq.annotations.Provides;
+import org.datakurator.ffdq.annotations.ProvidesVersion;
+import org.datakurator.ffdq.annotations.Validation;
 import org.datakurator.ffdq.api.DQResponse;
 import org.datakurator.ffdq.api.result.AmendmentValue;
 import org.datakurator.ffdq.api.result.ComplianceValue;
@@ -46,27 +48,30 @@ public class DwCEventDQDefaults extends DwCEventDQ {
      * #36 Validation SingleRecord Conformance: eventdate outofrange
      * 
      * Given an eventDate check to see if that event date falls entirely outside a range from a
-     * specified lower bound (1600-01-01 by default) and a specified upper bound (the end of the 
+     * specified lower bound (1500-01-01 by default) and a specified upper bound (the end of the 
      * current year by default)   
      *
-     * Provides: VALIDATION_EVENTDATE_OUTOFRANGE
+     * Provides: VALIDATION_EVENTDATE_INRANGE
      *
      * @param eventDate the provided dwc:eventDate to evaluate
      * @return DQResponse the response of type ComplianceValue  to return
      */
+    @Validation(label="VALIDATION_EVENTDATE_INRANGE", description="Is the value of dwc:eventDate entirely with the Parameter Range?")
     @Provides("3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
-    public static DQResponse<ComplianceValue> validationEventdateOutofrange(@ActedUpon("dwc:eventDate") String eventDate) {
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-03-29")
+    public static DQResponse<ComplianceValue> validationEventdateInrange(@ActedUpon("dwc:eventDate") String eventDate) {
         // Specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
-        // or if the value of dwc:eventDate is not a valid ISO 8601-1:2019 
+        // or if the value of dwc:eventDate is not a valid ISO 8601-1 
         // date; COMPLIANT if the range of dwc:eventDate is entirely 
-        // within the parameter range, otherwise NOT_COMPLIANT 
+        // within the range bdq:earliestValidDate to bdq:latestValidDate, 
+        // inclusive, otherwise NOT_COMPLIANT 
 
         // Parameters. This test is defined as parameterized.
-        // Default values: bdq:earliestValidDate="1600"; bdq:latestValidDate=current year
+        // Default values: bdq:earliestValidDate="1500"; bdq:latestValidDate=current year    	
     	
     	String currentYear = String.format("%04d",Calendar.getInstance().get(Calendar.YEAR)) + "-12-31";
-    	return DwCEventDQ.validationEventdateOutofrange(eventDate,"1600-01-01",currentYear);
+    	return DwCEventDQ.validationEventdateInrange(eventDate,"1500-01-01",currentYear);
     }
     
 	/**

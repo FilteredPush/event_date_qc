@@ -46,10 +46,10 @@ import java.util.Map;
  * Provides support for the following TDWG DQIG TG2 validations
  * 
  * #88  VALIDATION_EVENT_TEMPORAL_EMPTY 41267642-60ff-4116-90eb-499fee2cd83f
- * #33  VALIDATION_EVENTDATE_EMPTY f51e15a6-a67d-4729-9c28-3766299d2985
- * #36  VALIDATION_EVENTDATE_OUTOFRANGE 3cff4dc4-72e9-4abe-9bf3-8a30f1618432
- * #49  VALIDATION_YEAR_EMPTY c09ecbf9-34e3-4f3e-b74a-8796af15e59f
- * #147 VALIDATION_DAY_NOTSTANDARD 47ff73ba-0028-4f79-9ce1-ee7008d66498
+ * #33  VALIDATION_EVENTDATE_NOTEMPTY f51e15a6-a67d-4729-9c28-3766299d2985
+ * #36  VALIDATION_EVENTDATE_INRANGE 3cff4dc4-72e9-4abe-9bf3-8a30f1618432
+ * #49  VALIDATION_YEAR_NOTEMPTY c09ecbf9-34e3-4f3e-b74a-8796af15e59f
+ * #147 VALIDATION_DAY_STANDARD 47ff73ba-0028-4f79-9ce1-ee7008d66498
  * #36  VALIDATION_EVENTDATE_OUTOFRANGE 3cff4dc4-72e9-4abe-9bf3-8a30f1618432
  * #126 VALIDATION_MONTH_NOTSTANDARD 01c6dafa-0886-4b7e-9881-2c3018c98bdc
  * #130 VALIDATION_STARTDAYOFYEAR_OUTOFRANGE 85803c7e-2a5a-42e1-b8d3-299a44cafc46
@@ -171,13 +171,16 @@ public class DwCEventDQ {
 	 * 
 	 * #33 Validation SingleRecord Completeness: eventdate empty
 	 *
-	 * Provides: VALIDATION_EVENTDATE_EMPTY
+	 * Provides: VALIDATION_EVENTDATE_NOTEMPTY
+     * Version: 2022-11-08
 	 *
 	 * @param eventDate the provided dwc:eventDate to evaluate for emptyness
 	 * @return DQResponse the response of type ComplianceValue  to return
 	 */
+    @Validation(label="VALIDATION_EVENTDATE_NOTEMPTY", description="Is there a value in dwc:eventDate?")
 	@Provides("f51e15a6-a67d-4729-9c28-3766299d2985")
-	public static DQResponse<ComplianceValue> validationEventdateEmpty(@ActedUpon("dwc:eventDate") String eventDate) {
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/f51e15a6-a67d-4729-9c28-3766299d2985/2022-11-08")
+	public static DQResponse<ComplianceValue> validationEventdateNotEmpty(@ActedUpon("dwc:eventDate") String eventDate) {
 		DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
 		// Specification
@@ -197,17 +200,21 @@ public class DwCEventDQ {
 
 	
 	/**
+     * Is there a value in dwc:year?
 	 * Test to see whether or not a dwc:year contains any value.
 	 * 
      * #49 Validation SingleRecord Completeness: year empty
      * 
-     * Provides VALIDATION_YEAR_EMPTY
+     * Provides: VALIDATION_YEAR_NOTEMPTY
+     * Version: 2022-11-08
 	 * 
      * @param year the provided dwc:year to evaluate for the presence of some value
      * @return DQVResponse of type ComplianceValue describing whether any value is present dwc:year.
 	 */
+    @Validation(label="VALIDATION_YEAR_NOTEMPTY", description="Is there a value in dwc:year?")
 	@Provides(value="c09ecbf9-34e3-4f3e-b74a-8796af15e59f")
-	public static DQResponse<ComplianceValue> validationYearEmpty(@ActedUpon(value = "dwc:year") String year) {
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/c09ecbf9-34e3-4f3e-b74a-8796af15e59f/2022-11-08")
+	public static DQResponse<ComplianceValue> validationYearNotEmpty(@ActedUpon(value = "dwc:year") String year) {
 		DQResponse<ComplianceValue> result = new DQResponse<>();
 
         // Specification
@@ -592,28 +599,32 @@ public class DwCEventDQ {
     }
 
     /**
+     * Is the value of dwc:day an integer between 1 and 31 inclusive?
      * 
      * Test to see whether a provided day is an integer in the range of values that can be
      * a day of a month.
      * 
      * #147 Validation SingleRecord Conformance: day notstandard
      *
-     * Provides: VALIDATION_DAY_NOTSTANDARD
+     * Provides: VALIDATION_DAY_STANDARD
+     * Version: 2022-11-10
      *
      * @param day the provided dwc:day to evaluate
      * @return DQResponse the response of type ComplianceValue  to return
      *    COMPLIANT if day is an integer in the range 1 to 31 inclusive, otherwise NOT_COMPLIANT
-     * see DwCEventDQ.validationDayOutofrange(String year, String month, String day) 
-	 *  providing VALIDATION_DAY_OUTOFRANGE
+     * @see DwCEventDQ.validationDayInrange(String year, String month, String day) 
+	 *  providing VALIDATION_DAY_INRANGE
      */
+    @Validation(label="VALIDATION_DAY_STANDARD", description="Is the value of dwc:day an integer between 1 and 31 inclusive?")
     @Provides("47ff73ba-0028-4f79-9ce1-ee7008d66498")
-    public static DQResponse<ComplianceValue> validationDayNotstandard(@ActedUpon("dwc:day") String day) {
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/47ff73ba-0028-4f79-9ce1-ee7008d66498/2022-11-10")
+    public static DQResponse<ComplianceValue> validationDayStandard(@ActedUpon("dwc:day") String day) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
         // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; COMPLIANT
-        // if the value of the field dwc:day is an integer between
-        // 1 and 31 inclusive; otherwise NOT_COMPLIANT.
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; COMPLIANT 
+        // if the value of the field dwc:day is an integer between 
+        // 1 and 31 inclusive; otherwise NOT_COMPLIANT. 
 
 		if (DateUtils.isEmpty(day)) {
 			result.addComment("No value provided for day.");
@@ -1008,7 +1019,7 @@ public class DwCEventDQ {
 			result.addComment("Either month or day was not provided.");
 		} else {
 			DQResponse<ComplianceValue> monthResult =  validationMonthNotstandard(month);
-			DQResponse<ComplianceValue> dayResult =  validationDayNotstandard(day);
+			DQResponse<ComplianceValue> dayResult =  validationDayStandard(day);
 
 			if (monthResult.getResultState().equals(ResultState.RUN_HAS_RESULT)) {
 				if (monthResult.getValue().equals(ComplianceValue.NOT_COMPLIANT)) {
@@ -2190,40 +2201,45 @@ public class DwCEventDQ {
     }		
 	
 
-    	
+
         
     /**
+     * Is the value of dwc:eventDate entirely with the Parameter Range?
      * #36 Validation SingleRecord Conformance: eventdate outofrange
      * 
      * Given an eventDate check to see if that event date falls entirely outside a range from a
-     * specified lower bound (1600-01-01 by default) and a specified upper bound (the end of the 
+     * specified lower bound (1500-01-01 by default) and a specified upper bound (the end of the 
      * current year by default)   
      *
-     * Provides: VALIDATION_EVENTDATE_OUTOFRANGE
+     * Provides: VALIDATION_EVENTDATE_INRANGE
+     * Version: 2023-03-29
      *
      * @param eventDate the provided dwc:eventDate to evaluate
      * @param earlyestValidDate the earlyest date for which eventDate can be valid
      * @param latestValidDate the  latest date for which eventDate can be valid
      * @return DQResponse the response of type ComplianceValue  to return
      */
+    @Validation(label="VALIDATION_EVENTDATE_INRANGE", description="Is the value of dwc:eventDate entirely with the Parameter Range?")
     @Provides("3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
-    public static DQResponse<ComplianceValue> validationEventdateOutofrange(@ActedUpon("dwc:eventDate") String eventDate, @Parameter(name="bdq:earliestValidDate") String earlyestValidDate, @Parameter(name="bdq:latestValidDate") String latestValidDate ) {
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-03-29")
+    public static DQResponse<ComplianceValue> validationEventdateInrange(@ActedUpon("dwc:eventDate") String eventDate, @Parameter(name="bdq:earliestValidDate") String earlyestValidDate, @Parameter(name="bdq:latestValidDate") String latestValidDate ) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
  
         // Specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
-        // or if the value of dwc:eventDate is not a valid ISO 8601-1:2019 
+        // or if the value of dwc:eventDate is not a valid ISO 8601-1 
         // date; COMPLIANT if the range of dwc:eventDate is entirely 
-        // within the parameter range, otherwise NOT_COMPLIANT 
+        // within the range bdq:earliestValidDate to bdq:latestValidDate, 
+        // inclusive, otherwise NOT_COMPLIANT 
 
         // Parameters. This test is defined as parameterized.
-        // Default values: bdq:earliestValidDate="1600"; bdq:latestValidDate=current year
+        // Default values: bdq:earliestValidDate="1500"; bdq:latestValidDate=current year    	
         
         if (DateUtils.isEmpty(latestValidDate)) {
         	latestValidDate = String.format("%04d",Calendar.getInstance().get(Calendar.YEAR)) + "-12-31";
         }
         if (DateUtils.isEmpty(earlyestValidDate)) { 
-        	earlyestValidDate = "1600-01-01";
+        	earlyestValidDate = "1500-01-01";
         }
         
     	if (DateUtils.isEmpty(eventDate)) {

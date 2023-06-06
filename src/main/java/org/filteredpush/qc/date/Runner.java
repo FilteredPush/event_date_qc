@@ -232,7 +232,7 @@ public class Runner {
 						counter.put(name, current);
 						
 						method = "VALIDATION_EVENTDATE_EMPTY";
-						response = DwCEventDQ.validationEventdateEmpty(eventDate);
+						response = DwCEventDQ.validationEventdateNotEmpty(eventDate);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -250,7 +250,7 @@ public class Runner {
 						counter.put(name, current);
 					            	
 						method = "VALIDATION_EVENTDATE_OUTOFRANGE";
-						response = DwCEventDQDefaults.validationEventdateOutofrange(eventDate);
+						response = DwCEventDQDefaults.validationEventdateInrange(eventDate);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -259,7 +259,7 @@ public class Runner {
 						counter.put(name, current);
 					 
 						method = "VALIDATION_DAY_NOTSTANDARD"; 
-						response = DwCEventDQ.validationDayNotstandard(day);
+						response = DwCEventDQ.validationDayStandard(day);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -286,7 +286,7 @@ public class Runner {
 						counter.put(name, current);
 					
 						method = "VALIDATION_YEAR_EMPTY"; 
-						response = DwCEventDQ.validationYearEmpty(year);
+						response = DwCEventDQ.validationYearNotEmpty(year);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -472,7 +472,7 @@ public class Runner {
 						postcounter.put(name, current);
 						
 						method = "VALIDATION_EVENTDATE_EMPTY";
-						response = DwCEventDQ.validationEventdateEmpty(eventDate);
+						response = DwCEventDQ.validationEventdateNotEmpty(eventDate);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);
@@ -490,7 +490,7 @@ public class Runner {
 						postcounter.put(name, current);
 					            	
 						method = "VALIDATION_EVENTDATE_OUTOFRANGE";
-						response = DwCEventDQDefaults.validationEventdateOutofrange(eventDate);
+						response = DwCEventDQDefaults.validationEventdateInrange(eventDate);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);
@@ -499,7 +499,7 @@ public class Runner {
 						postcounter.put(name, current);
 					 
 						method = "VALIDATION_DAY_NOTSTANDARD"; 
-						response = DwCEventDQ.validationDayNotstandard(day);
+						response = DwCEventDQ.validationDayStandard(day);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);
@@ -526,7 +526,7 @@ public class Runner {
 						postcounter.put(name, current);
 					
 						method = "VALIDATION_YEAR_EMPTY"; 
-						response = DwCEventDQ.validationYearEmpty(year);
+						response = DwCEventDQ.validationYearNotEmpty(year);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);

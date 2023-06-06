@@ -10,77 +10,6 @@ import org.datakurator.ffdq.api.result.*;
 @Mechanism(value="a5fdf476-2e84-4004-bdc1-fc606a5ca2c8",label="Kurator: Date Validator - DwCEventDQ:v2.1.0")
 public class DwCEventDQ_stubs {
 
-    /**
-     * Is there a value in dwc:eventDate?
-     *
-     * Provides: VALIDATION_EVENTDATE_NOTEMPTY
-     * Version: 2022-11-08
-     *
-     * @param eventDate the provided dwc:eventDate to evaluate
-     * @return DQResponse the response of type ComplianceValue  to return
-     */
-    @Validation(label="VALIDATION_EVENTDATE_NOTEMPTY", description="Is there a value in dwc:eventDate?")
-    @Provides("f51e15a6-a67d-4729-9c28-3766299d2985")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/f51e15a6-a67d-4729-9c28-3766299d2985/2022-11-08")
-    public DQResponse<ComplianceValue> validationEventdateNotempty(@ActedUpon("dwc:eventDate") String eventDate) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
-
-        //TODO:  Implement specification
-        // COMPLIANT if dwc:eventDate is not EMPTY; otherwise NOT_COMPLIANT 
-        // 
-
-        return result;
-    }
-
-    /**
-     * Is the value of dwc:eventDate entirely with the Parameter Range?
-     *
-     * Provides: VALIDATION_EVENTDATE_INRANGE
-     * Version: 2023-03-29
-     *
-     * @param eventDate the provided dwc:eventDate to evaluate
-     * @return DQResponse the response of type ComplianceValue  to return
-     */
-    @Validation(label="VALIDATION_EVENTDATE_INRANGE", description="Is the value of dwc:eventDate entirely with the Parameter Range?")
-    @Provides("3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-03-29")
-    public DQResponse<ComplianceValue> validationEventdateInrange(@ActedUpon("dwc:eventDate") String eventDate) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
-
-        //TODO:  Implement specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
-        // or if the value of dwc:eventDate is not a valid ISO 8601-1 
-        // date; COMPLIANT if the range of dwc:eventDate is entirely 
-        // within the range bdq:earliestValidDate to bdq:latestValidDate, 
-        // inclusive, otherwise NOT_COMPLIANT 
-
-        //TODO: Parameters. This test is defined as parameterized.
-        // Default values: bdq:earliestValidDate="1500"; bdq:latestValidDate=current year
-
-        return result;
-    }
-
-    /**
-     * Is there a value in dwc:year?
-     *
-     * Provides: VALIDATION_YEAR_NOTEMPTY
-     * Version: 2022-11-08
-     *
-     * @param year the provided dwc:year to evaluate
-     * @return DQResponse the response of type ComplianceValue  to return
-     */
-    @Validation(label="VALIDATION_YEAR_NOTEMPTY", description="Is there a value in dwc:year?")
-    @Provides("c09ecbf9-34e3-4f3e-b74a-8796af15e59f")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/c09ecbf9-34e3-4f3e-b74a-8796af15e59f/2022-11-08")
-    public DQResponse<ComplianceValue> validationYearNotempty(@ActedUpon("dwc:year") String year) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
-
-        //TODO:  Implement specification
-        // COMPLIANT if dwc:year is not EMPTY; otherwise NOT_COMPLIANT 
-        // 
-
-        return result;
-    }
 
     /**
      * Propose amendment to values in any of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear or dwc:endDayOfYear from a the content of dwc:eventDate.
@@ -543,7 +472,7 @@ public class DwCEventDQ_stubs {
      * @param eventDate the provided dwc:eventDate to evaluate
      * @return DQResponse the response of type NumericalValue  to return
      */
-    @Measure(label="MEASURE_EVENTDATE_DURATIONINSECONDS", description="What is the duration of dwc:eventDate in seconds?")
+    @Measure(label="MEASURE_EVENTDATE_DURATIONINSECONDS", description="What is the duration of dwc:eventDate in seconds?", dimension= Dimension.RESOLUTION)
     @Provides("56b6c695-adf1-418e-95d2-da04cad7be53")
     @ProvidesVersion("https://rs.tdwg.org/bdq/terms/56b6c695-adf1-418e-95d2-da04cad7be53/2023-03-29")
     public DQResponse<NumericalValue> measureEventdateDurationinseconds(@ActedUpon("dwc:eventDate") String eventDate) {
@@ -555,29 +484,6 @@ public class DwCEventDQ_stubs {
         // date; otherwise RUN_HAS_RESULT with the result being the 
         // duration (sensu ISO 8601-1) expressed in the dwc:eventDate, 
         // in seconds. 
-
-        return result;
-    }
-
-    /**
-     * Is the value of dwc:day an integer between 1 and 31 inclusive?
-     *
-     * Provides: VALIDATION_DAY_STANDARD
-     * Version: 2022-11-10
-     *
-     * @param day the provided dwc:day to evaluate
-     * @return DQResponse the response of type ComplianceValue  to return
-     */
-    @Validation(label="VALIDATION_DAY_STANDARD", description="Is the value of dwc:day an integer between 1 and 31 inclusive?")
-    @Provides("47ff73ba-0028-4f79-9ce1-ee7008d66498")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/47ff73ba-0028-4f79-9ce1-ee7008d66498/2022-11-10")
-    public DQResponse<ComplianceValue> validationDayStandard(@ActedUpon("dwc:day") String day) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
-
-        //TODO:  Implement specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; COMPLIANT 
-        // if the value of the field dwc:day is an integer between 
-        // 1 and 31 inclusive; otherwise NOT_COMPLIANT. 
 
         return result;
     }
