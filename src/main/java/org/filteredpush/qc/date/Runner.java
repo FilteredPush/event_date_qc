@@ -304,7 +304,7 @@ public class Runner {
 						counter.put(name, current);
 						
 						method = "VALIDATION_STARTDAYOFYEAR_OUTOFRANGE"; 
-						response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, year);
+						response = DwCEventDQ.validationStartdayofyearInrange(startDayOfYear, year);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -544,7 +544,7 @@ public class Runner {
 						postcounter.put(name, current);
 						
 						method = "VALIDATION_STARTDAYOFYEAR_OUTOFRANGE"; 
-						response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, year);
+						response = DwCEventDQ.validationStartdayofyearInrange(startDayOfYear, year);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);

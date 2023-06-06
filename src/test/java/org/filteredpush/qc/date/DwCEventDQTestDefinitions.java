@@ -1116,7 +1116,7 @@ public class DwCEventDQTestDefinitions {
 	}
 
 	/**
-	 * Test method for {@link org.filteredpush.qc.date.DwCEventDQs#validationStartdayofyearOutofrange(java.lang.String, java.lang.String)}.
+	 * Test method for {@link org.filteredpush.qc.date.DwCEventDQs#validationStartdayofyearInrange(java.lang.String, java.lang.String)}.
 	 */
 	@Test
 	public void testValidationStartdayofyearOutofrange() {
@@ -1135,84 +1135,84 @@ public class DwCEventDQTestDefinitions {
 		
 		String startDayOfYear = null;
 		String eventDate = null;
-		DQResponse<ComplianceValue> response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		DQResponse<ComplianceValue> response = DwCEventDQ.validationStartdayofyearInrange(startDayOfYear, eventDate);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
 		assertNull(response.getValue());
 		logger.debug(response.getComment());
 		
 		startDayOfYear = "366";
 		eventDate = null;
-		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		response = DwCEventDQ.validationStartdayofyearInrange(startDayOfYear, eventDate);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
 		assertNull(response.getValue());
 		logger.debug(response.getComment());
 		
 		startDayOfYear = "366";
 		eventDate = "Foo";
-		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		response = DwCEventDQ.validationStartdayofyearInrange(startDayOfYear, eventDate);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel());
 		assertNull(response.getValue());
 		logger.debug(response.getComment());
 		
 		startDayOfYear = "365";
 		eventDate = "Foo";
-		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		response = DwCEventDQ.validationStartdayofyearInrange(startDayOfYear, eventDate);
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
 		logger.debug(response.getComment());
 		
 		startDayOfYear = "365";
 		eventDate = "";
-		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		response = DwCEventDQ.validationStartdayofyearInrange(startDayOfYear, eventDate);
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
 		logger.debug(response.getComment());
 		
 		startDayOfYear = "365";
 		eventDate = "1980";
-		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		response = DwCEventDQ.validationStartdayofyearInrange(startDayOfYear, eventDate);
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
 		logger.debug(response.getComment());
 		
 		startDayOfYear = "365";
 		eventDate = "1981";
-		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		response = DwCEventDQ.validationStartdayofyearInrange(startDayOfYear, eventDate);
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
 		logger.debug(response.getComment());
 		
 		startDayOfYear = "366";
 		eventDate = "1980";
-		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		response = DwCEventDQ.validationStartdayofyearInrange(startDayOfYear, eventDate);
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
 		logger.debug(response.getComment());
 		
 		startDayOfYear = "366";
 		eventDate = "1981";
-		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		response = DwCEventDQ.validationStartdayofyearInrange(startDayOfYear, eventDate);
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), response.getValue().getLabel());
 		logger.debug(response.getComment());
 		
 		startDayOfYear = "366";
 		eventDate = "1979-01-01/1980-01-10";  // only start year is examined, not other parts of date for this test.
-		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		response = DwCEventDQ.validationStartdayofyearInrange(startDayOfYear, eventDate);
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), response.getValue().getLabel());
 		logger.debug(response.getComment());
 		
 		startDayOfYear = "366";
 		eventDate = "1980-12-31/1981-12-31";
-		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		response = DwCEventDQ.validationStartdayofyearInrange(startDayOfYear, eventDate);
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), response.getValue().getLabel());
 		logger.debug(response.getComment());
 		
 		startDayOfYear = "foo";
 		eventDate = "1980-12-31/1981-12-31";
-		response = DwCEventDQ.validationStartdayofyearOutofrange(startDayOfYear, eventDate);
+		response = DwCEventDQ.validationStartdayofyearInrange(startDayOfYear, eventDate);
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), response.getResultState().getLabel());
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), response.getValue().getLabel());
 		logger.debug(response.getComment());

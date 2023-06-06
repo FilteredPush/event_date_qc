@@ -52,8 +52,8 @@ import java.util.Map;
  * #147 VALIDATION_DAY_STANDARD 47ff73ba-0028-4f79-9ce1-ee7008d66498
  * #36  VALIDATION_EVENTDATE_OUTOFRANGE 3cff4dc4-72e9-4abe-9bf3-8a30f1618432
  * #126 VALIDATION_MONTH_NOTSTANDARD 01c6dafa-0886-4b7e-9881-2c3018c98bdc
- * #130 VALIDATION_STARTDAYOFYEAR_OUTOFRANGE 85803c7e-2a5a-42e1-b8d3-299a44cafc46
- * #131 VALIDATION_ENDDAYOFYEAR_OUTOFRANGE 9a39d88c-7eee-46df-b32a-c109f9f81fb8
+ * #130 VALIDATION_STARTDAYOFYEAR_INRANGE 85803c7e-2a5a-42e1-b8d3-299a44cafc46
+ * #131 VALIDATION_ENDDAYOFYEAR_INRANGE 9a39d88c-7eee-46df-b32a-c109f9f81fb8
  * #84  VALIDATION_YEAR_OUTOFRANGE ad0c8855-de69-4843-a80c-a5387d20fbc8
  * #125 VALIDATION_DAY_OUTOFRANGE 8d787cb5-73e2-4c39-9cd1-67c7361dc02e
  * #66  VALIDATION_EVENTDATE_NOTSTANDARD 4f2bf8fd-fc5c-493f-a44c-e7b16153c803
@@ -1060,21 +1060,27 @@ public class DwCEventDQ {
 		return result;
     }
 
+    
     /**
+     * Is the value of dwc:startDayOfYear an integer between 1 and 365 inclusive, or 366 if a leap year?
+     * 
      * #130 Validation SingleRecord Conformance: startdayofyear outofrange
      * 
      * Given an eventDate and an start day of a date range in days of the year, test whether or not
      * the value for startDayOfYear is in range for the days in the end year of the eventDate
      * (day is 1-365, or 366  in leap year).
      *
-     * Provides: VALIDATION_STARTDAYOFYEAR_OUTOFRANGE
+     * Provides: VALIDATION_STARTDAYOFYEAR_INRANGE
+     * Version: 2023-03-01
      *
      * @param startDayOfYear the provided dwc:startDayOfYear to evaluate
      * @param eventDate the provided dwc:eventDate to evaluate
      * @return DQResponse the response of type ComplianceValue  to return
      */
+    @Validation(label="VALIDATION_STARTDAYOFYEAR_INRANGE", description="Is the value of dwc:startDayOfYear an integer between 1 and 365 inclusive, or 366 if a leap year?")
     @Provides("85803c7e-2a5a-42e1-b8d3-299a44cafc46")
-    public static final DQResponse<ComplianceValue> validationStartdayofyearOutofrange(
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/85803c7e-2a5a-42e1-b8d3-299a44cafc46/2023-03-01")
+    public static final DQResponse<ComplianceValue> validationStartdayofyearInrange(
     		@ActedUpon(value="dwc:startDayOfYear") String startDay, 
     		@Consulted(value="dwc:eventDate")String eventDate) {
     	DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
@@ -1083,12 +1089,11 @@ public class DwCEventDQ {
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:startDayOfYear is 
         // EMPTY or if the value of dwc:startDayOfYear is equal to 
         // 366 and (dwc:eventDate is EMPTY or the value of dwc:eventDate 
-        // can not be interpreted to find single year or a start year 
+        // cannot be interpreted to find single year or a start year 
         // in a range); COMPLIANT if the value of dwc:startDayOfYear 
         // is an integer between 1 and 365, inclusive, or if the value 
         // of dwc:startDayOfYear is 366 and the start year interpreted 
         // from dwc:eventDate is a leap year; otherwise NOT_COMPLIANT 
-        //
     	
     	String year = ""; 
     	
@@ -1155,23 +1160,27 @@ public class DwCEventDQ {
     	return result;
     }
 
-    
     /**
+     * Is the value of dwc:endDayOfYear an integer between 1 and 365 inclusive, or 366 if a leap year?
+     * 
      * Given an eventDate and an end day of a date range in days of the year, test whether or not
      * the value for endDayOfYear is in range for the days in the end year of the eventDate 
      * enddayofyear in the range (1-365, or 366 in leap year).
      *
      * #131 Validation SingleRecord Conformance: enddayofyear outofrange
      * 
-     * Provides: VALIDATION_ENDDAYOFYEAR_OUTOFRANGE
+     * Provides: VALIDATION_ENDDAYOFYEAR_INRANGE
+     * Version: 2022-11-13
      *
      * @param endDay the provided dwc:endDayOfYear to evaluate for range 1-365 or 1-366 
      * @param eventDate to check to see if the year or the end year of the range has 
      *   a day 366, in range in in a leap year.
      * @return DQResponse the response of type ComplianceValue  to return
      */
+    @Validation(label="VALIDATION_ENDDAYOFYEAR_INRANGE", description="Is the value of dwc:endDayOfYear an integer between 1 and 365 inclusive, or 366 if a leap year?")
     @Provides("9a39d88c-7eee-46df-b32a-c109f9f81fb8")
-    public static final DQResponse<ComplianceValue> validationEnddayofyearOutofrange(
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/9a39d88c-7eee-46df-b32a-c109f9f81fb8/2022-11-13")
+    public static final DQResponse<ComplianceValue> validationEnddayofyearInrange(
     		@ActedUpon(value="dwc:endDayOfYear") String endDay, 
     		@Consulted(value="dwc:eventDate")String eventDate) {
     	
@@ -1183,8 +1192,7 @@ public class DwCEventDQ {
         // range); COMPLIANT if the value of dwc:endDayOfYear is an 
         // integer between 1 and 365 inclusive, or if the value of 
         // dwc:endDayOfYear is 366 and the end year interpreted from 
-        // dwc:eventDate is a leap year; otherwise NOT_COMPLIANT 
-    	
+        // dwc:eventDate is a leap year; otherwise NOT_COMPLIANT  
     	DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
     	
     	String year = ""; 
