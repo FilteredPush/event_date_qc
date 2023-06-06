@@ -295,7 +295,7 @@ public class Runner {
 						counter.put(name, current);
 					
 						method = "VALIDATION_YEAR_OUTOFRANGE"; 
-						response = DwCEventDQDefaults.validationYearOutofrange(year); 
+						response = DwCEventDQDefaults.validationYearInrange(year); 
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -313,7 +313,7 @@ public class Runner {
 						counter.put(name, current);
 					
 						method = "VALIDATION_ENDDAYOFYEAR_OUTOFRANGE";
-						response = DwCEventDQ.validationEnddayofyearOutofrange(year,endDayOfYear);
+						response = DwCEventDQ.validationEnddayofyearInrange(year,endDayOfYear);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -535,7 +535,7 @@ public class Runner {
 						postcounter.put(name, current);
 					
 						method = "VALIDATION_YEAR_OUTOFRANGE"; 
-						response = DwCEventDQDefaults.validationYearOutofrange(year); 
+						response = DwCEventDQDefaults.validationYearInrange(year); 
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);
@@ -553,7 +553,7 @@ public class Runner {
 						postcounter.put(name, current);
 					
 						method = "VALIDATION_ENDDAYOFYEAR_OUTOFRANGE";
-						response = DwCEventDQ.validationEnddayofyearOutofrange(year,endDayOfYear);
+						response = DwCEventDQ.validationEnddayofyearInrange(year,endDayOfYear);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);

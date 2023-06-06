@@ -773,7 +773,7 @@ public class DwcEventDQTest {
 		for (int year = 1900; year<=1903; year++) { 
 			for (int day= 1; day<=365; day++) { 
 				logger.debug(day + "-" + year);
-				result = DwCEventDQ.validationEnddayofyearOutofrange(Integer.toString(day), Integer.toString(year));
+				result = DwCEventDQ.validationEnddayofyearInrange(Integer.toString(day), Integer.toString(year));
 				assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 				assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 				
@@ -786,7 +786,7 @@ public class DwcEventDQTest {
 		// A leap year
 		int year = 1932;
 		int day = 366;
-		result = DwCEventDQ.validationEnddayofyearOutofrange(Integer.toString(day), Integer.toString(year));
+		result = DwCEventDQ.validationEnddayofyearInrange(Integer.toString(day), Integer.toString(year));
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		result = DwCEventDQ.validationStartdayofyearInrange(Integer.toString(day), Integer.toString(year));
@@ -796,7 +796,7 @@ public class DwcEventDQTest {
 		// not a leap year
 		year = 2001;
 		day = 366;  // out of range
-		result = DwCEventDQ.validationEnddayofyearOutofrange(Integer.toString(day), Integer.toString(year));
+		result = DwCEventDQ.validationEnddayofyearInrange(Integer.toString(day), Integer.toString(year));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		result = DwCEventDQ.validationStartdayofyearInrange(Integer.toString(day), Integer.toString(year));
@@ -805,7 +805,7 @@ public class DwcEventDQTest {
 		
 		year = 2001;
 		day = 0;  // out of range
-		result = DwCEventDQ.validationEnddayofyearOutofrange(Integer.toString(day), Integer.toString(year));
+		result = DwCEventDQ.validationEnddayofyearInrange(Integer.toString(day), Integer.toString(year));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		result = DwCEventDQ.validationStartdayofyearInrange(Integer.toString(day), Integer.toString(year));
@@ -814,7 +814,7 @@ public class DwcEventDQTest {
 		
 		year = 2001;
 		day = 367;  // out of range
-		result = DwCEventDQ.validationEnddayofyearOutofrange(Integer.toString(day), Integer.toString(year));
+		result = DwCEventDQ.validationEnddayofyearInrange(Integer.toString(day), Integer.toString(year));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		result = DwCEventDQ.validationStartdayofyearInrange(Integer.toString(day), Integer.toString(year));
@@ -823,7 +823,7 @@ public class DwcEventDQTest {
 		
 		// test with no year
 		day = 366;  
-		result = DwCEventDQ.validationEnddayofyearOutofrange(Integer.toString(day),"");
+		result = DwCEventDQ.validationEnddayofyearInrange(Integer.toString(day),"");
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
 		
 		day = -1;
@@ -833,13 +833,13 @@ public class DwcEventDQTest {
 		
 		String eventDate = "1980-12-31";
 		day = 366;  
-		result = DwCEventDQ.validationEnddayofyearOutofrange(Integer.toString(day),eventDate);
+		result = DwCEventDQ.validationEnddayofyearInrange(Integer.toString(day),eventDate);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
 		eventDate = "1980-12-01";	// ending year is extracted from event date, not rest of date
 		day = 366;  
-		result = DwCEventDQ.validationEnddayofyearOutofrange(Integer.toString(day),eventDate);
+		result = DwCEventDQ.validationEnddayofyearInrange(Integer.toString(day),eventDate);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());  
 		
@@ -1943,66 +1943,73 @@ public class DwcEventDQTest {
 	public void testYearInRange() {
 		String year = null;
 		
-		DQResponse<ComplianceValue> result = DwCEventDQ.validationYearOutofrange(year, null, null);
+		DQResponse<ComplianceValue> result = DwCEventDQ.validationYearInrange(year, null, null);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
 		
-		result = DwCEventDQ.validationYearOutofrange(year, 1900, null);
+		result = DwCEventDQ.validationYearInrange(year, 1900, null);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());	
 		
 		year = "1700";
-		result = DwCEventDQ.validationYearOutofrange(year, null, null);
+		result = DwCEventDQ.validationYearInrange(year, null, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
 		year = "1699";
-		result = DwCEventDQ.validationYearOutofrange(year, null, null);
+		result = DwCEventDQ.validationYearInrange(year, null, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
 		
 		year = "1600";
-		result = DwCEventDQ.validationYearOutofrange(year, null, null);
+		result = DwCEventDQ.validationYearInrange(year, null, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
-		year = "1599";
-		result = DwCEventDQ.validationYearOutofrange(year, null, null);
+		year = "1499";
+		result = DwCEventDQ.validationYearInrange(year, null, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 		
+		// as of https://rs.tdwg.org/bdq/terms/ad0c8855-de69-4843-a80c-a5387d20fbc8/2022-11-09
+		// start year is 1500, so this is now compliant.
+		year = "1599";
+		result = DwCEventDQ.validationYearInrange(year, null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
 		Integer upperBound = LocalDateTime.now().getYear();
 		for (int i=1601; i<=upperBound; i++) { 
-			result = DwCEventDQ.validationYearOutofrange(Integer.toString(i), 1600, upperBound);
+			result = DwCEventDQ.validationYearInrange(Integer.toString(i), 1600, upperBound);
 			assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 			assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		}
 		
 		year = Integer.toString(upperBound + 1);
-		result = DwCEventDQ.validationYearOutofrange(year, null, null);
+		result = DwCEventDQ.validationYearInrange(year, null, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		
 		year = "1899";
-		result = DwCEventDQ.validationYearOutofrange(year, 1900, null);
+		result = DwCEventDQ.validationYearInrange(year, 1900, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		
 		year = "1900";
-		result = DwCEventDQ.validationYearOutofrange(year, 1900, null);
+		result = DwCEventDQ.validationYearInrange(year, 1900, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());		
 		
 		year = "1901";
-		result = DwCEventDQ.validationYearOutofrange(year, 1900, null);
+		result = DwCEventDQ.validationYearInrange(year, 1900, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
 		
 		year = Integer.toString(LocalDateTime.now().getYear());
-		result = DwCEventDQ.validationYearOutofrange(year, 1900, null);
+		result = DwCEventDQ.validationYearInrange(year, 1900, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
 		
 		year = Integer.toString(LocalDateTime.now().getYear() + 1);
-		result = DwCEventDQ.validationYearOutofrange(year, 1900, null);
+		result = DwCEventDQ.validationYearInrange(year, 1900, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());				
 		
@@ -2047,10 +2054,17 @@ public class DwcEventDQTest {
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
 		
-		eventDate = "1599";
+		eventDate = "1499";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());			
+		
+		// as of https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-03-29
+		// starting range begins at 1500 not 1600, so this is now compliant.
+		eventDate = "1599";
+		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
 		
 		eventDate = "1699";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
@@ -2062,11 +2076,19 @@ public class DwcEventDQTest {
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());		
 		
+		eventDate = "1499";
+		result = DwCEventDQ.validationEventdateInrange(eventDate, null, "1900-01-01");
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		// as of https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-03-29
+		// start date is now 1500, so this is now compliant.
 		eventDate = "1599";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, "1900-01-01");
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "1";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
@@ -2096,20 +2118,41 @@ public class DwcEventDQTest {
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
 	
-		eventDate = "1599-12";
+		eventDate = "1499-12";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());			
 
-		eventDate = "1599-12-31";
+		// as of https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-03-29
+		// start date is now 1500, so this is now compliant.
+		eventDate = "1599-12";
+		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
+
+		eventDate = "1499-12-31";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		
-		eventDate = "1599-365";
+		// as of https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-03-29
+		// start date is now 1500, so this is now compliant.
+		eventDate = "1599-12-31";
+		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+		
+		eventDate = "1499-365";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());			
+	
+		// as of https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-03-29
+		// start date is now 1500, so this is now compliant.
+		eventDate = "1599-365";
+		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
 	
 		eventDate = "1800-01-01";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, "1800", null);
@@ -2126,25 +2169,49 @@ public class DwcEventDQTest {
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());			
 		
-		eventDate = "1599-12-31/1600-01-01";
+		eventDate = "1499-12-31/1500-01-01";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		
-		eventDate = "1599-12-31/1600-12-31";
+		// as of https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-03-29
+		// start date is now 1500, so this is now compliant.
+		eventDate = "1599-12-31/1600-01-01";
+		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+		
+		eventDate = "1499-12-31/1500-12-31";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());		
 		
-		eventDate = "1599-12-31/1800-12-31";
+		// as of https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-03-29
+		// start date is now 1500, so this is now compliant.
+		eventDate = "1599-12-31/1600-12-31";
+		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());		
+		
+		eventDate = "1499-12-31/1800-12-31";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());			
 		
-		eventDate = "1599-01-01/1599-12-31";
+		eventDate = "1499-01-01/1599-12-31";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		
+		eventDate = "1599-12-31/1800-12-31";
+		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
+		
+		eventDate = "1599-01-01/1599-12-31";
+		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
 		
     	Integer upperBound = LocalDateTime.now().getYear();
 		eventDate = "1699-12-31/" + Integer.toString(upperBound + 1).trim();

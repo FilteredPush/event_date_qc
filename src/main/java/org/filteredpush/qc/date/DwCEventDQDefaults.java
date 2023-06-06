@@ -34,6 +34,9 @@ import org.datakurator.ffdq.api.result.AmendmentValue;
 import org.datakurator.ffdq.api.result.ComplianceValue;
 
 /**
+ * Implementation of DwCEventDQ methods that take parameters without the parameters, providing the default 
+ * values for the parameters.   
+ * 
  * @author mole
  *
  */
@@ -75,7 +78,7 @@ public class DwCEventDQDefaults extends DwCEventDQ {
     }
     
 	/**
-	 * Given a year, evaluate whether that year falls in the range between lower bound value of 1600 
+	 * Given a year, evaluate whether that year falls in the range between lower bound value of 1500 
 	 * and the current year as the upper bound. This implementation uses the year from the local date/time 
 	 * as the upper bound, and will give different answers for values of year within 1 of the current year when run 
 	 * in different time zones within one day of a year boundary, thus this test is not suitable for fine grained 
@@ -83,13 +86,16 @@ public class DwCEventDQDefaults extends DwCEventDQ {
 	 * 
      * #84 Validation SingleRecord Conformance: year outofrange
      *
-     * Provides: VALIDATION_YEAR_OUTOFRANGE
+     * Provides: VALIDATION_YEAR_INRANGE
+     * Version: 2022-11-09
      * 
      * @param year the provided dwc:year to evaluate
      * @return DQResponse the response of type ComplianceValue to return
 	 */
+    @Validation(label="VALIDATION_YEAR_INRANGE", description="Is the value of dwc:year within the Parameter range?")
     @Provides("ad0c8855-de69-4843-a80c-a5387d20fbc8")
-    public static DQResponse<ComplianceValue> validationYearOutofrange(@ActedUpon("dwc:year") String year) {
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/ad0c8855-de69-4843-a80c-a5387d20fbc8/2022-11-09")
+    public static DQResponse<ComplianceValue> validationYearInrange(@ActedUpon("dwc:year") String year) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
         // Specification
@@ -99,12 +105,11 @@ public class DwCEventDQDefaults extends DwCEventDQ {
         // otherwise NOT_COMPLIANT 
 
         // This test is defined as parameterized.
-        // bdq:earliestDate="1600"; bdq:latestDate=current year
+        // bdq:earliestDate="1500"; bdq:latestDate=current year
         
     	Integer upperBound = LocalDateTime.now().getYear();
 
-        return validationYearOutofrange(year, 1600, upperBound);
+        return validationYearInrange(year, 1500, upperBound);
     }
     
-
 }
