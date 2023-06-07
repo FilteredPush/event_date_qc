@@ -97,7 +97,19 @@ public class DwCEventDQTestDefinitions {
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
 		
+		eventDate = "1499";
+		result = DwCEventDQDefaults.validationEventdateInrange(eventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
 		eventDate = "1599";
+		result = DwCEventDQDefaults.validationEventdateInrange(eventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1499/1800";
 		result = DwCEventDQDefaults.validationEventdateInrange(eventDate);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
@@ -107,7 +119,7 @@ public class DwCEventDQTestDefinitions {
 		result = DwCEventDQDefaults.validationEventdateInrange(eventDate);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
-		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
 		
 	}
 	
@@ -516,11 +528,17 @@ public class DwCEventDQTestDefinitions {
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
 		
-		year = "1580";
+		year = "1480";
 		result = DwCEventDQ.validationYearInrange(year, null, null);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		year = "1580";
+		result = DwCEventDQ.validationYearInrange(year, null, null);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
 		
 		year = "2000";
 		result = DwCEventDQ.validationYearInrange(year, 1900, 1999);

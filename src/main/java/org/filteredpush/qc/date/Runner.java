@@ -205,7 +205,7 @@ public class Runner {
 						counter.put(name, current);
 						
 						method = "VALIDATION_DATEIDENTIFIED_OUTOFRANGE";
-						response = DwCOtherDateDQ.validationDateidentifiedOutofrange(dateIdentified,eventDate);
+						response = DwCOtherDateDQ.validationDateidentifiedInrange(dateIdentified,eventDate);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -445,7 +445,7 @@ public class Runner {
 						postcounter.put(name, current);
 						
 						method = "VALIDATION_DATEIDENTIFIED_OUTOFRANGE";
-						response = DwCOtherDateDQ.validationDateidentifiedOutofrange(dateIdentified,eventDate);
+						response = DwCOtherDateDQ.validationDateidentifiedInrange(dateIdentified,eventDate);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);
