@@ -196,7 +196,7 @@ public class Runner {
 					}
 					{
 						String method = "VALIDATION_DATEIDENTIFIED_NOTSTANDARD";
-						response = DwCOtherDateDQ.validationDateidentifiedNotstandard(dateIdentified);
+						response = DwCOtherDateDQ.validationDateidentifiedStandard(dateIdentified);
 						String name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						Integer current = counter.get(name);
@@ -436,7 +436,7 @@ public class Runner {
 
 					{
 						String method = "VALIDATION_DATEIDENTIFIED_NOTSTANDARD";
-						response = DwCOtherDateDQ.validationDateidentifiedNotstandard(dateIdentified);
+						response = DwCOtherDateDQ.validationDateidentifiedStandard(dateIdentified);
 						String name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						Integer current = postcounter.get(name);

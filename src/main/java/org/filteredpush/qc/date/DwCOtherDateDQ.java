@@ -27,7 +27,7 @@ import java.util.Map;
  * 
  * Provides Core TG2 tests: 
  *   #76 VALIDATION_DATEIDENTIFIED_INRANGE dc8aae4b-134f-4d75-8a71-c4186239178e
- *   #69 VALIDATION_DATEIDENTIFIED_NOTSTANDARD 66269bdd-9271-4e76-b25c-7ab81eebe1d8
+ *   #69 VALIDATION_DATEIDENTIFIED_STANDARD 66269bdd-9271-4e76-b25c-7ab81eebe1d8
  *   #26 AMENDMENT_DATEIDENTIFIED_STANDARDIZED 39bb2280-1215-447b-9221-fd13bc990641
  *   
  * Also provides: 
@@ -45,21 +45,26 @@ public class DwCOtherDateDQ {
 	private static final Log logger = LogFactory.getLog(DwCOtherDateDQ.class);
 	
     /**
+     * Is the value of dwc:dateIdentified a valid ISO date?
+     * 
      * #69 Validation SingleRecord Conformance: dateidentified notstandard
      *
-     * Provides: VALIDATION_DATEIDENTIFIED_NOTSTANDARD
+     * Provides: VALIDATION_DATEIDENTIFIED_STANDARD
+     * Version: 2023-03-29
      *
      * @param dateIdentified the provided dwc:dateIdentified to evaluate
      * @return DQResponse the response of type ComplianceValue  to return
      */
+    @Validation(label="VALIDATION_DATEIDENTIFIED_STANDARD", description="Is the value of dwc:dateIdentified a valid ISO date?")
     @Provides("66269bdd-9271-4e76-b25c-7ab81eebe1d8")
-    public static DQResponse<ComplianceValue> validationDateidentifiedNotstandard(@ActedUpon("dwc:dateIdentified") String dateIdentified) {
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/66269bdd-9271-4e76-b25c-7ab81eebe1d8/2023-03-29")
+    public static DQResponse<ComplianceValue> validationDateidentifiedStandard(@ActedUpon("dwc:dateIdentified") String dateIdentified) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
         // Specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is 
-        // EMPTY; COMPLIANT if the value of dwc:dateIdentified is a 
-        // valid ISO 8601-1:2019 date; otherwise NOT_COMPLIANT
+        // EMPTY; COMPLIANT if the value of dwc:dateIdentified contains 
+        // a valid ISO 8601-1 date; otherwise NOT_COMPLIANT 
         
     	if (DateUtils.isEmpty(dateIdentified)) {
     		result.addComment("No value provided for dwc:dateIdentified.");
@@ -274,15 +279,22 @@ public class DwCOtherDateDQ {
     	return result;
     }
 	
+        //TODO:  Implement specification
+    
     /**
+     * Propose amendment to the value of dwc:dateIdentified to a valid ISO date.
+     * 
      * #26 Amendment SingleRecord Conformance: dateidentified standardized
      *
      * Provides: AMENDMENT_DATEIDENTIFIED_STANDARDIZED
+     * Version: 2023-03-29
      *
      * @param dateIdentified the provided dwc:dateIdentified to evaluate
      * @return DQResponse the response of type AmendmentValue to return
      */
+    @Amendment(label="AMENDMENT_DATEIDENTIFIED_STANDARDIZED", description="Propose amendment to the value of dwc:dateIdentified to a valid ISO date.")
     @Provides("39bb2280-1215-447b-9221-fd13bc990641")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/39bb2280-1215-447b-9221-fd13bc990641/2023-03-29")
     public static DQResponse<AmendmentValue> amendmentDateidentifiedStandardized(@ActedUpon("dwc:dateIdentified") String dateIdentified) {
         DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
 
@@ -291,6 +303,12 @@ public class DwCOtherDateDQ {
         // EMPTY; AMENDED if the value of dwc:dateIdentified was altered 
         // to unambiguously conform with the ISO 8601-1:2019 date format; 
         // otherwise NOT_AMENDED 
+        
+        // TODO: The current text is ambiguous and needs to be corrected.
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is 
+        // EMPTY; AMENDED the value of dwc:dateIdentified if it was 
+        // unambiguous and formatted as a valid ISO 8601-1 date; otherwise 
+        // NOT_AMENDED 
 
 		if (DateUtils.eventDateValid(dateIdentified)) {
 			result.setResultState(ResultState.NOT_AMENDED);

@@ -50,19 +50,19 @@ public class DwCOtherDateDQTestDefinitions {
         // valid ISO 8601-1:2019 date; otherwise NOT_COMPLIANT
 		
 		String dateIdentified = "";
-		DQResponse<ComplianceValue> result = DwCOtherDateDQ.validationDateidentifiedNotstandard(dateIdentified);
+		DQResponse<ComplianceValue> result = DwCOtherDateDQ.validationDateidentifiedStandard(dateIdentified);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
 		assertNull(result.getValue());
 		
 		dateIdentified = "1883-06-22";
-		result = DwCOtherDateDQ.validationDateidentifiedNotstandard(dateIdentified);
+		result = DwCOtherDateDQ.validationDateidentifiedStandard(dateIdentified);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());	
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		dateIdentified = "1883-13-34";
-		result = DwCOtherDateDQ.validationDateidentifiedNotstandard(dateIdentified);
+		result = DwCOtherDateDQ.validationDateidentifiedStandard(dateIdentified);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());	
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
