@@ -120,6 +120,7 @@ public class DwCOtherDateDQ {
 		return DwCOtherDateDQ.validationDateidentifiedInrange(dateIdentified, eventDate, "1753-01-01", currentDay, "true");
 	} 
 
+    //TODO:  Issue tagged as NEEDS WORK
     /**
      * Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate?
      * 
@@ -155,6 +156,9 @@ public class DwCOtherDateDQ {
         // overlaps or is later than the dwc:eventDate; otherwise NOT_COMPLIANT 
         // bdq:sourceAuthority is "ISO 8601-1:2019" [https://www.iso.org/obp/ui/] 
 
+    	// TODO: NEEDS WORK tag on issue, needs to evaluate invalid eventDate as INTERNAL_PREREQUISITES_NOT_MET, 
+    	// not NOT_COMPLIANT
+    	
         // Parameters. This test is defined as parameterized.
         // Default values: 
         // bdq:earliestValidDate default="1753-01-01"; bdq:latestValidDate default=[current day]; bdq:includeEventDate default=true
@@ -279,7 +283,7 @@ public class DwCOtherDateDQ {
     	return result;
     }
 	
-        //TODO:  Implement specification
+    //TODO:  Issue tagged as NEEDS WORK
     
     /**
      * Propose amendment to the value of dwc:dateIdentified to a valid ISO date.
