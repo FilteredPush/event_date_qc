@@ -48,6 +48,8 @@ public class DwCEventDQDefaults extends DwCEventDQ {
 	private static final Log logger = LogFactory.getLog(DwCEventDQDefaults.class);
 
     /**
+     * Is the value of dwc:eventDate entirely with the Parameter Range?
+     * 
      * #36 Validation SingleRecord Conformance: eventdate outofrange
      * 
      * Given an eventDate check to see if that event date falls entirely outside a range from a
@@ -55,6 +57,7 @@ public class DwCEventDQDefaults extends DwCEventDQ {
      * current year by default)   
      *
      * Provides: VALIDATION_EVENTDATE_INRANGE
+     * Version: 2023-03-29
      *
      * @param eventDate the provided dwc:eventDate to evaluate
      * @return DQResponse the response of type ComplianceValue  to return
