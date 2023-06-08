@@ -241,7 +241,7 @@ public class Runner {
 						counter.put(name, current);
 					              	
 						method = "VALIDATION_EVENTDATE_NOTSTANDARD";
-						response = DwCEventDQ.validationEventdateNotstandard(eventDate);
+						response = DwCEventDQ.validationEventdateStandard(eventDate);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -277,7 +277,7 @@ public class Runner {
 						counter.put(name, current);
 					
 						method = "VALIDATION_MONTH_NOTSTANDARD"; 
-						response = DwCEventDQ.validationMonthNotstandard(month);
+						response = DwCEventDQ.validationMonthStandard(month);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -481,7 +481,7 @@ public class Runner {
 						postcounter.put(name, current);
 					              	
 						method = "VALIDATION_EVENTDATE_NOTSTANDARD";
-						response = DwCEventDQ.validationEventdateNotstandard(eventDate);
+						response = DwCEventDQ.validationEventdateStandard(eventDate);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);
@@ -517,7 +517,7 @@ public class Runner {
 						postcounter.put(name, current);
 					
 						method = "VALIDATION_MONTH_NOTSTANDARD"; 
-						response = DwCEventDQ.validationMonthNotstandard(month);
+						response = DwCEventDQ.validationMonthStandard(month);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);

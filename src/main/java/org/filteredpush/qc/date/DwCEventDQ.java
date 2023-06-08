@@ -51,12 +51,12 @@ import java.util.Map;
  * #49  VALIDATION_YEAR_NOTEMPTY c09ecbf9-34e3-4f3e-b74a-8796af15e59f
  * #147 VALIDATION_DAY_STANDARD 47ff73ba-0028-4f79-9ce1-ee7008d66498
  * #36  VALIDATION_EVENTDATE_OUTOFRANGE 3cff4dc4-72e9-4abe-9bf3-8a30f1618432
- * #126 VALIDATION_MONTH_NOTSTANDARD 01c6dafa-0886-4b7e-9881-2c3018c98bdc
+ * #126 VALIDATION_MONTH_STANDARD 01c6dafa-0886-4b7e-9881-2c3018c98bdc
  * #130 VALIDATION_STARTDAYOFYEAR_INRANGE 85803c7e-2a5a-42e1-b8d3-299a44cafc46
  * #131 VALIDATION_ENDDAYOFYEAR_INRANGE 9a39d88c-7eee-46df-b32a-c109f9f81fb8
  * #84  VALIDATION_YEAR_INRANGE ad0c8855-de69-4843-a80c-a5387d20fbc8
  * #125 VALIDATION_DAY_OUTOFRANGE 8d787cb5-73e2-4c39-9cd1-67c7361dc02e
- * #66  VALIDATION_EVENTDATE_NOTSTANDARD 4f2bf8fd-fc5c-493f-a44c-e7b16153c803
+ * #66  VALIDATION_EVENTDATE_STANDARD 4f2bf8fd-fc5c-493f-a44c-e7b16153c803
  * #67  VALIDATION_EVENT_CONSISTENT 5618f083-d55a-4ac2-92b5-b9fb227b832f
  * 
  * Provides support for the following TDWG DQIG TG2 amendments 
@@ -481,31 +481,30 @@ public class DwCEventDQ {
 		return result;
     }
 
-    /**
-     *
+	
+	/**
+     * Is the value of dwc:eventDate a valid ISO date?
      * 
-     */
-	@Deprecated
-	public static DQResponse<ComplianceValue> isEventDateValid(@ActedUpon(value = "dwc:eventDate") String eventdate) {
-        return validationEventdateNotstandard(eventdate);
-    }
-    /**
      * Test to see whether a provided dwc:eventDate is a validly formated ISO date.
      * 
      * #66 Validation SingleRecord Conformance: eventdate notstandard
      *
      * Provides: VALIDATION_EVENTDATE_NOTSTANDARD
+     * Provides: VALIDATION_EVENTDATE_STANDARD
+     * Version: 2023-03-29
      *
      * @param eventDate the provided dwc:eventDate to evaluate
      * @return DQResponse the response of type ComplianceValue  to return
      */
+    @Validation(label="VALIDATION_EVENTDATE_STANDARD", description="Is the value of dwc:eventDate a valid ISO date?")
     @Provides("4f2bf8fd-fc5c-493f-a44c-e7b16153c803")
-    public static DQResponse<ComplianceValue> validationEventdateNotstandard(
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/4f2bf8fd-fc5c-493f-a44c-e7b16153c803/2023-03-29")
+    public static DQResponse<ComplianceValue> validationEventdateStandard(
     		@ActedUpon(value = "dwc:eventDate") String eventdate) {
 		DQResponse<ComplianceValue> result = new DQResponse<>();
         // Specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; 
-        // COMPLIANT if the value of dwc:eventDate is a valid ISO 8601-1:2019 
+        // COMPLIANT if the value of dwc:eventDate is a valid ISO 8601-1 
         // date; otherwise NOT_COMPLIANT 
 
     	if (DateUtils.isEmpty(eventdate)) {
@@ -656,25 +655,25 @@ public class DwCEventDQ {
 		return result;
     }
 
- 
-	@Deprecated
-    public static DQResponse<ComplianceValue> isMonthInRange(@ActedUpon(value="dwc:month") String month) {
-		return validationMonthNotstandard(month);
-	}
     /**
+     * Is the value of dwc:month interpretable as an integer between 1 and 12 inclusive?
+     * 
      * Test to see whether a provided month is in the range of integer values that form months of the year.
      *
      * #126 Validation SingleRecord Conformance: month notstandard
      *
-     * Provides: VALIDATION_MONTH_NOTSTANDARD
+     * Provides: VALIDATION_MONTH_STANDARD
+     * Version: 2023-03-01
+     *
      *
      * @param month the provided dwc:month string to evaluate
-     * @return COMPLIANT if month is an integer in the range 1 to 12 inclusive, NOT_COMPLIANT if month is
-     *     an integer outside this range, INTERNAL_PREREQUSISITES_NOT_MET if month is empty or an integer
-     *     cannot be parsed from month.
+     * @return INTERNAL_PREREQUSISITES_NOT_MET if month is empty.
+     * 		COMPLIANT if month is an integer in the range 1 to 12 inclusive, otherwise NOT_COMPLIANT
      */
+    @Validation(label="VALIDATION_MONTH_STANDARD", description="Is the value of dwc:month interpretable as an integer between 1 and 12 inclusive?")
     @Provides("01c6dafa-0886-4b7e-9881-2c3018c98bdc")
-    public static DQResponse<ComplianceValue> validationMonthNotstandard(@ActedUpon("dwc:month") String month) {
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/01c6dafa-0886-4b7e-9881-2c3018c98bdc/2023-03-01")
+    public static DQResponse<ComplianceValue> validationMonthStandard(@ActedUpon("dwc:month") String month) {
     	DQResponse<ComplianceValue> result = new DQResponse<>();
 
         // Specification
@@ -1024,7 +1023,7 @@ public class DwCEventDQ {
 			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
 			result.addComment("Either month or day was not provided.");
 		} else {
-			DQResponse<ComplianceValue> monthResult =  validationMonthNotstandard(month);
+			DQResponse<ComplianceValue> monthResult =  validationMonthStandard(month);
 			DQResponse<ComplianceValue> dayResult =  validationDayStandard(day);
 
 			if (monthResult.getResultState().equals(ResultState.RUN_HAS_RESULT)) {
