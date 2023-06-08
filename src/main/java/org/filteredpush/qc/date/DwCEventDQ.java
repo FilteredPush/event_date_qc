@@ -1511,30 +1511,32 @@ public class DwCEventDQ {
     	return result;
     }
     
-    @Deprecated
-    public static final DQResponse<AmendmentValue> standardizeMonth(@ActedUpon(value="dwc:month") String month) {
-    	return amendmentMonthStandardized(month);
-    }
+    
     /**
+     * Propose an amendment to the value of dwc:month as an integer between 1 and 12 inclusive.
+     * 
      * Given a value of dwc:month, check to see if that month is an integer, if not, attempt to
      * propose a suitable integer for the month of the year from the value provided.
      *
      * #128 Amendment SingleRecord Conformance: month standardized
      *
      * Provides: AMENDMENT_MONTH_STANDARDIZED
+     * Version: 2022-11-10
      *
      * @param month the provided dwc:month to evaluate
      * @return DQResponse the response of type AmendmentValue to return
      */
+    @Amendment(label="AMENDMENT_MONTH_STANDARDIZED", description="Propose an amendment to the value of dwc:month as an integer between 1 and 12 inclusive.")
     @Provides("2e371d57-1eb3-4fe3-8a61-dff43ced50cf")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/2e371d57-1eb3-4fe3-8a61-dff43ced50cf/2022-11-10")
     public static final DQResponse<AmendmentValue> amendmentMonthStandardized(@ActedUpon(value="dwc:month") String month) {
     	DQResponse<AmendmentValue> result = new DQResponse<>();
     	
         // Specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:month is EMPTY; AMENDED 
-        // if the value of dwc:month was able to be interpreted as 
-        // a integer between 1 and 12 inclusive; otherwise NOT_AMENDED 
-        //
+        // the value of dwc:month if it was able to be unambiguously 
+        // interpreted as an integer between 1 and 12 inclusive; otherwise 
+        // NOT_AMENDED 
     	
     	if (DateUtils.isEmpty(month)) {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -1594,30 +1596,32 @@ public class DwCEventDQ {
     	return result;
     }
 
-    @Deprecated
-    public static final DQResponse<AmendmentValue> standardizeDay(@ActedUpon(value="dwc:day") String day) {
-    	return amendmentDayStandardized(day);
-    }
+    
     /**
+     * Propose amendment to the value of dwc:day as a integer between 1 and 31 inclusive.
+     * 
      * Given a dwc:day, if the day is not empty and not an integer, attempt to interpret the value
      * as a day of the month.   
      *
      * #127 Amendment SingleRecord Conformance: day standardized
      *
      * Provides: AMENDMENT_DAY_STANDARDIZED
+     * Version: 2022-11-13
      *
      * @param day the provided dwc:day to evaluate
      * @return DQResponse the response of type AmendmentValue to return
      */
+    @Amendment(label="AMENDMENT_DAY_STANDARDIZED", description="Propose amendment to the value of dwc:day as a integer between 1 and 31 inclusive.")
     @Provides("b129fa4d-b25b-43f7-9645-5ed4d44b357b")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/b129fa4d-b25b-43f7-9645-5ed4d44b357b/2022-11-13")
     public static final DQResponse<AmendmentValue> amendmentDayStandardized(@ActedUpon(value="dwc:day") String day) {
     	DQResponse<AmendmentValue> result = new DQResponse<>();
 
     	// Specification
-    	// INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; AMENDED 
-    	// if the value of dwc:day was unambiguously interpreted as 
-    	// an integer between 1 and 31 inclusive; otherwise NOT_AMENDED 
-    	//
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; AMENDED 
+        // the value of dwc:day if the value was unambiguously interpreted 
+        // as an integer between 1 and 31 inclusive; otherwise NOT_AMENDED 
+        // 
 
     	if (DateUtils.isEmpty(day)) {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
