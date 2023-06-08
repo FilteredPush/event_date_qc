@@ -1068,7 +1068,7 @@ public class DwcEventDQTest {
 		String endDayOfYear = null;
 		String eventTime = null;
 		
-		result = DwCEventDQ.validationEventTemporalEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		
@@ -1081,7 +1081,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		eventTime = "";
 		
-		result = DwCEventDQ.validationEventTemporalEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 		
@@ -1094,7 +1094,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "  ";
 		eventTime = "                        ";
 		
-		result = DwCEventDQ.validationEventTemporalEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());		
 		
@@ -1107,7 +1107,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		eventTime = "";
 		
-		result = DwCEventDQ.validationEventTemporalEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());		
 	
@@ -1134,7 +1134,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		eventTime = "";
 		
-		result = DwCEventDQ.validationEventTemporalEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());		
 		
@@ -1161,7 +1161,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		eventTime = "";
 		
-		result = DwCEventDQ.validationEventTemporalEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
 		
@@ -1174,7 +1174,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "365";
 		eventTime = "";
 		
-		result = DwCEventDQ.validationEventTemporalEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
 		
@@ -1187,7 +1187,7 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		eventTime = "";
 		
-		result = DwCEventDQ.validationEventTemporalEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
 	}

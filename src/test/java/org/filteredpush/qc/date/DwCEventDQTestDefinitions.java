@@ -612,7 +612,7 @@ public class DwCEventDQTestDefinitions {
 	}
 
 	/**
-	 * Test method for {@link org.filteredpush.qc.date.DwCEventDQs#validationEventTemporalEmpty(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
+	 * Test method for {@link org.filteredpush.qc.date.DwCEventDQs#validationEventTemporalNotEmpty(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
 	 */
 	@Test
 	public void testValidationEventTemporalEmpty() {
@@ -632,12 +632,12 @@ public class DwCEventDQTestDefinitions {
 		String endDayOfYear = null;
 		String eventTime = null;
 		
-		result = DwCEventDQ.validationEventTemporalEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
 	
 		year = "1852";
-		result = DwCEventDQ.validationEventTemporalEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
+		result = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
 	}

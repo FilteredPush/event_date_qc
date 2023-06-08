@@ -157,35 +157,6 @@ public class DwCEventDQ_stubs {
     }
 
     /**
-     * Is there a value in any of the terms dwc:eventDate, dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear, dwc:verbatimEventDate?
-     *
-     * Provides: VALIDATION_EVENT_TEMPORAL_NOTEMPTY
-     * Version: 2022-11-09
-     *
-     * @param startDayOfYear the provided dwc:startDayOfYear to evaluate
-     * @param eventDate the provided dwc:eventDate to evaluate
-     * @param year the provided dwc:year to evaluate
-     * @param verbatimEventDate the provided dwc:verbatimEventDate to evaluate
-     * @param month the provided dwc:month to evaluate
-     * @param day the provided dwc:day to evaluate
-     * @param endDayOfYear the provided dwc:endDayOfYear to evaluate
-     * @return DQResponse the response of type ComplianceValue  to return
-     */
-    @Validation(label="VALIDATION_EVENT_TEMPORAL_NOTEMPTY", description="Is there a value in any of the terms dwc:eventDate, dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear, dwc:verbatimEventDate?")
-    @Provides("41267642-60ff-4116-90eb-499fee2cd83f")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/41267642-60ff-4116-90eb-499fee2cd83f/2022-11-09")
-    public DQResponse<ComplianceValue> validationEventTemporalNotempty(@ActedUpon("dwc:startDayOfYear") String startDayOfYear, @ActedUpon("dwc:eventDate") String eventDate, @ActedUpon("dwc:year") String year, @ActedUpon("dwc:verbatimEventDate") String verbatimEventDate, @ActedUpon("dwc:month") String month, @ActedUpon("dwc:day") String day, @ActedUpon("dwc:endDayOfYear") String endDayOfYear) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
-
-        //TODO:  Implement specification
-        // COMPLIANT if any of dwc:eventDate, dwc:year, dwc:month, 
-        // dwc:day, dwc:startDayOfYear, dwc:endDayOfYear, dwc:verbatimEventDate 
-        // are NOT EMPTY; otherwise NOT_COMPLIANT. 
-
-        return result;
-    }
-
-    /**
      * Propose amendment to the value of dwc:eventDate from values in dwc:year, dwc:month and dwc:day.
      *
      * Provides: AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY

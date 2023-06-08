@@ -45,7 +45,7 @@ import java.util.Map;
  * 
  * Provides support for the following TDWG DQIG TG2 validations
  * 
- * #88  VALIDATION_EVENT_TEMPORAL_EMPTY 41267642-60ff-4116-90eb-499fee2cd83f
+ * #88  VALIDATION_EVENT_TEMPORAL_NOTEMPTY 41267642-60ff-4116-90eb-499fee2cd83f
  * #33  VALIDATION_EVENTDATE_NOTEMPTY f51e15a6-a67d-4729-9c28-3766299d2985
  * #36  VALIDATION_EVENTDATE_INRANGE 3cff4dc4-72e9-4abe-9bf3-8a30f1618432
  * #49  VALIDATION_YEAR_NOTEMPTY c09ecbf9-34e3-4f3e-b74a-8796af15e59f
@@ -1873,26 +1873,19 @@ public class DwCEventDQ {
 		return result;
 	}
 
-    @Deprecated
-    public static DQResponse<ComplianceValue> isEventEmpty(
-    		@ActedUpon(value = "dwc:eventDate") String eventDate,
-			@ActedUpon(value = "dwc:verbatimEventDate") String verbatimEventDate,
-			@ActedUpon(value = "dwc:year") String year,
-			@ActedUpon(value = "dwc:month") String month,
-			@ActedUpon(value = "dwc:day") String day,
-			@ActedUpon(value = "dwc:startDayOfYear") String startDayOfYear,
-			@ActedUpon(value = "dwc:endDayOfYear") String endDayOfYear )
-    {
-        return validationEventTemporalEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);   
-    }
     /**
-     * Examine each of the date/time related terms in the Event class, and test to see if at least
+     * Is there a value in any of the terms dwc:eventDate, dwc:year, dwc:month, dwc:day, 
+     * dwc:startDayOfYear, dwc:endDayOfYear, dwc:verbatimEventDate?
+     * 
+     * Examine each of the date related terms in the Event class, and test to see if at least
      * one of them contains some value.  This may or may not be a meaningful value, and this may or
      * may not be interpretable to a date or date range.
      *
      * #88 Validation SingleRecord Completeness: event temporal empty
      *
      * Provides: VALIDATION_EVENT_TEMPORAL_EMPTY
+     * Provides: VALIDATION_EVENT_TEMPORAL_NOTEMPTY
+     * Version: 2022-11-09
      *
      * Does not include eventTime (not considered core) in the evaluation of emptyness.
      *
@@ -1905,8 +1898,10 @@ public class DwCEventDQ {
      * @param endDayOfYear to examine
      * @return an DQValidationResponse object describing whether any value is present in any of the temporal terms of the event.
      */
-    @Provides(value="41267642-60ff-4116-90eb-499fee2cd83f")
-    public static DQResponse<ComplianceValue> validationEventTemporalEmpty(
+    @Validation(label="VALIDATION_EVENT_TEMPORAL_NOTEMPTY", description="Is there a value in any of the terms dwc:eventDate, dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear, dwc:verbatimEventDate?")
+    @Provides("41267642-60ff-4116-90eb-499fee2cd83f")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/41267642-60ff-4116-90eb-499fee2cd83f/2022-11-09")
+    public static DQResponse<ComplianceValue> validationEventTemporalNotEmpty(
     		@ActedUpon(value = "dwc:eventDate") String eventDate,
 			@ActedUpon(value = "dwc:verbatimEventDate") String verbatimEventDate,
 			@ActedUpon(value = "dwc:year") String year,
@@ -1973,7 +1968,7 @@ public class DwCEventDQ {
 			@ActedUpon(value = "dwc:endDayOfYear") String endDayOfYear )
 		{
 		DQResponse<CompletenessValue> result = new DQResponse<>();
-		DQResponse<ComplianceValue> validation = DwCEventDQ.validationEventTemporalEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
+		DQResponse<ComplianceValue> validation = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
 		if (validation.getResultState().equals(ResultState.RUN_HAS_RESULT)) {
 			if (validation.getValue().equals(ComplianceValue.COMPLIANT)) {
 				result.setValue(CompletenessValue.COMPLETE);

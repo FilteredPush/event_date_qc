@@ -214,7 +214,7 @@ public class Runner {
 						counter.put(name, current);
 
 						method = "VALIDATION_EVENT_EMPTY";
-						response = DwCEventDQ.validationEventTemporalEmpty(startDayOfYear,eventDate,year, verbatimEventDate,month,day, endDayOfYear); 
+						response = DwCEventDQ.validationEventTemporalNotEmpty(startDayOfYear,eventDate,year, verbatimEventDate,month,day, endDayOfYear); 
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -454,7 +454,7 @@ public class Runner {
 						postcounter.put(name, current);
 
 						method = "VALIDATION_EVENT_EMPTY";
-						response = DwCEventDQ.validationEventTemporalEmpty(startDayOfYear,eventDate,year, verbatimEventDate,month,day, endDayOfYear); 
+						response = DwCEventDQ.validationEventTemporalNotEmpty(startDayOfYear,eventDate,year, verbatimEventDate,month,day, endDayOfYear); 
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);
