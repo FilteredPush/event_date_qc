@@ -41,7 +41,7 @@ import java.util.Map;
  *
  * Provides support for the following TDWG DQIG TG2 measures: 
  *
- * #140 MEASURE_EVENTDATE_PRECISIONINSECONDS 56b6c695-adf1-418e-95d2-da04cad7be53
+ * #140 MEASURE_EVENTDATE_DURATIONINSECONDS 56b6c695-adf1-418e-95d2-da04cad7be53
  * 
  * Provides support for the following TDWG DQIG TG2 validations
  * 
@@ -99,24 +99,30 @@ public class DwCEventDQ {
 	private static final Log logger = LogFactory.getLog(DwCEventDQ.class);
 	
     /**
+     * What is the duration of dwc:eventDate in seconds? 
+     * 
      * #140 Measure SingleRecord Resolution: eventdate precisioninseconds
 	 * Measure the duration of an event date in seconds.
      *
-     * Provides: MEASURE_EVENTDATE_PRECISIONINSECONDS
+     * Provides: MEASURE_EVENTDATE_DURATIONINSECONDS
+     * Version: 2023-03-29
      *
      * @param eventDate the provided dwc:eventDate to measure duration in seconds
      * @return DQResponse the response of type NumericalValue  to return
 	 *   which if state is RUN_HAS_RESULT has a value of type Long.
      */
+    @Measure(label="MEASURE_EVENTDATE_DURATIONINSECONDS", description="What is the duration of dwc:eventDate in seconds?", dimension= Dimension.RESOLUTION)
     @Provides("56b6c695-adf1-418e-95d2-da04cad7be53")
-    public static DQResponse<NumericalValue> measureEventdatePrecisioninseconds(@ActedUpon("dwc:eventDate") String eventDate) {
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/56b6c695-adf1-418e-95d2-da04cad7be53/2023-03-29")
+    public static DQResponse<NumericalValue> measureEventdateDurationinseconds(@ActedUpon("dwc:eventDate") String eventDate) {
         DQResponse<NumericalValue> result = new DQResponse<NumericalValue>();
 
         // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or does not
-        // contain a valid ISO 8601-1:2019 date; otherwise RUN_HAS_RESULT with the
-        // result value being the length of the period expressed in the dwc:eventDate
-        // in seconds 
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
+        // or if the value of dwc:eventDate is not a valid ISO 8601-1 
+        // date; otherwise RUN_HAS_RESULT with the result being the 
+        // duration (sensu ISO 8601-1) expressed in the dwc:eventDate, 
+        // in seconds. 	
         
         // In notes, exclude leap seconds.  
         // The joda and java Time libraries exclude leap seconds.

@@ -1473,7 +1473,7 @@ public class DwCEventDQTestDefinitions {
 	}
 
 	/**
-	 * Test method for {@link org.filteredpush.qc.date.DwCEventDQs#measureEventdatePrecisioninseconds(java.lang.String)}.
+	 * Test method for {@link org.filteredpush.qc.date.DwCEventDQs#measureEventdateDurationinseconds(java.lang.String)}.
 	 */
 	@Test
 	public void testMeasureEventdatePrecisioninseconds() {
@@ -1484,31 +1484,31 @@ public class DwCEventDQTestDefinitions {
         // result value being the length of the period expressed in the dwc:eventDate 
         // in seconds
 		
-		DQResponse<NumericalValue> measure = DwCEventDQ.measureEventdatePrecisioninseconds("1880-05-08");
+		DQResponse<NumericalValue> measure = DwCEventDQ.measureEventdateDurationinseconds("1880-05-08");
 		Long seconds = (60l*60l*24l); 
 		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
 		
-		measure = DwCEventDQ.measureEventdatePrecisioninseconds("");
+		measure = DwCEventDQ.measureEventdateDurationinseconds("");
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, measure.getResultState());
 		
-		measure = DwCEventDQ.measureEventdatePrecisioninseconds("Foo");
+		measure = DwCEventDQ.measureEventdateDurationinseconds("Foo");
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), measure.getResultState().getLabel());
 		
-		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1880-15-35");
+		measure = DwCEventDQ.measureEventdateDurationinseconds("1880-15-35");
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), measure.getResultState().getLabel());
 		
-		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1970");
+		measure = DwCEventDQ.measureEventdateDurationinseconds("1970");
 		seconds = (60l*60l*24l*365); // not leap year, leap seconds ignored.
 		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
 		
-		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1980");
+		measure = DwCEventDQ.measureEventdateDurationinseconds("1980");
 		seconds = (60l*60l*24l*366); // leap year 
 		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
 		
-		measure = DwCEventDQ.measureEventdatePrecisioninseconds("1981");
+		measure = DwCEventDQ.measureEventdateDurationinseconds("1981");
 		seconds = (60l*60l*24l*365); // not leap year 
 		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());

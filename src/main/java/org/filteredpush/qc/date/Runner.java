@@ -190,7 +190,7 @@ public class Runner {
 					DQResponse response = null;
 					DQResponse<NumericalValue> measureResponse = null;
 
-					measureResponse = DwCEventDQ.measureEventdatePrecisioninseconds(eventDate); 
+					measureResponse = DwCEventDQ.measureEventdateDurationinseconds(eventDate); 
 					if (measureResponse.getResultState().equals(ResultState.RUN_HAS_RESULT)) { 
 						totalTimeSecs = totalTimeSecs + measureResponse.getValue().getObject().longValue();
 					}
@@ -429,7 +429,7 @@ public class Runner {
 					}
 					// repeat validations post amendment   ****************************
 
-					measureResponse = DwCEventDQ.measureEventdatePrecisioninseconds(eventDate); 
+					measureResponse = DwCEventDQ.measureEventdateDurationinseconds(eventDate); 
 					if (measureResponse.getResultState().equals(ResultState.RUN_HAS_RESULT)) { 
 						totalTimeSecsPost = totalTimeSecsPost + measureResponse.getValue().getObject().longValue();
 					}

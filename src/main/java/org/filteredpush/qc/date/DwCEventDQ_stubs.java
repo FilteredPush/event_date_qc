@@ -379,29 +379,4 @@ public class DwCEventDQ_stubs {
         return result;
     }
 
-    /**
-     * What is the duration of dwc:eventDate in seconds?
-     *
-     * Provides: MEASURE_EVENTDATE_DURATIONINSECONDS
-     * Version: 2023-03-29
-     *
-     * @param eventDate the provided dwc:eventDate to evaluate
-     * @return DQResponse the response of type NumericalValue  to return
-     */
-    @Measure(label="MEASURE_EVENTDATE_DURATIONINSECONDS", description="What is the duration of dwc:eventDate in seconds?", dimension= Dimension.RESOLUTION)
-    @Provides("56b6c695-adf1-418e-95d2-da04cad7be53")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/56b6c695-adf1-418e-95d2-da04cad7be53/2023-03-29")
-    public DQResponse<NumericalValue> measureEventdateDurationinseconds(@ActedUpon("dwc:eventDate") String eventDate) {
-        DQResponse<NumericalValue> result = new DQResponse<NumericalValue>();
-
-        //TODO:  Implement specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
-        // or if the value of dwc:eventDate is not a valid ISO 8601-1 
-        // date; otherwise RUN_HAS_RESULT with the result being the 
-        // duration (sensu ISO 8601-1) expressed in the dwc:eventDate, 
-        // in seconds. 
-
-        return result;
-    }
-
 }
