@@ -50,7 +50,6 @@ import java.util.Map;
  * #36  VALIDATION_EVENTDATE_INRANGE 3cff4dc4-72e9-4abe-9bf3-8a30f1618432
  * #49  VALIDATION_YEAR_NOTEMPTY c09ecbf9-34e3-4f3e-b74a-8796af15e59f
  * #147 VALIDATION_DAY_STANDARD 47ff73ba-0028-4f79-9ce1-ee7008d66498
- * #36  VALIDATION_EVENTDATE_OUTOFRANGE 3cff4dc4-72e9-4abe-9bf3-8a30f1618432
  * #126 VALIDATION_MONTH_STANDARD 01c6dafa-0886-4b7e-9881-2c3018c98bdc
  * #130 VALIDATION_STARTDAYOFYEAR_INRANGE 85803c7e-2a5a-42e1-b8d3-299a44cafc46
  * #131 VALIDATION_ENDDAYOFYEAR_INRANGE 9a39d88c-7eee-46df-b32a-c109f9f81fb8
@@ -2217,8 +2216,6 @@ public class DwCEventDQ {
     }		
 	
 
-
-        
     /**
      * Is the value of dwc:eventDate entirely with the Parameter Range?
      * #36 Validation SingleRecord Conformance: eventdate outofrange
