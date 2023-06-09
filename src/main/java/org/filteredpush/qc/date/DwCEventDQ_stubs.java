@@ -68,47 +68,6 @@ public class DwCEventDQ_stubs {
     }
 
     /**
-     * Are the values in dwc:eventDate consistent with the values in dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear?
-     *
-     * Provides: VALIDATION_EVENT_CONSISTENT
-     * Version: 2023-01-28
-     *
-     * @param startDayOfYear the provided dwc:startDayOfYear to evaluate
-     * @param eventDate the provided dwc:eventDate to evaluate
-     * @param year the provided dwc:year to evaluate
-     * @param month the provided dwc:month to evaluate
-     * @param day the provided dwc:day to evaluate
-     * @param endDayOfYear the provided dwc:endDayOfYear to evaluate
-     * @return DQResponse the response of type ComplianceValue  to return
-     */
-    @Validation(label="VALIDATION_EVENT_CONSISTENT", description="Are the values in dwc:eventDate consistent with the values in dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear?")
-    @Provides("5618f083-d55a-4ac2-92b5-b9fb227b832f")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/5618f083-d55a-4ac2-92b5-b9fb227b832f/2023-01-28")
-    public DQResponse<ComplianceValue> validationEventConsistent(@ActedUpon("dwc:startDayOfYear") String startDayOfYear, @ActedUpon("dwc:eventDate") String eventDate, @ActedUpon("dwc:year") String year, @ActedUpon("dwc:month") String month, @ActedUpon("dwc:day") String day, @ActedUpon("dwc:endDayOfYear") String endDayOfYear) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
-
-        //TODO:  Implement specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY, 
-        // or all of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear 
-        // and dwc:endDayOfYear are EMPTY; COMPLIANT if all of the 
-        // following conditions are met 1) the provided value of year 
-        // matches the start year of the range represented by dwc:eventDate 
-        // or dwc:year is empty, and 2) the provided value in dwc:month 
-        // matches the start month of the range represented by dwc:eventDate 
-        // or dwc:month is empty, and 3) the provided value in dwc:day 
-        // matches the start day of the range represented by dwc:eventDate 
-        // or dwc:day is empty, and 4) the provided value in dwc:startDayOfYear 
-        // matches the start day of the year of the range represented 
-        // by dwc:eventDate or dwc:startDayOfYear is empty, and 5) 
-        // the provided value in dwc:endDayOfYear matches the end day 
-        // of the year the range represented by dwc:eventDate or dwc:endDayOfYear 
-        // is empty; otherwise NOT_COMPLIANT. 
-
-        return result;
-    }
-
-
-    /**
      * Propose amendment to the value of dwc:eventDate from the content of dwc:verbatimEventDate.
      *
      * Provides: AMENDMENT_EVENTDATE_FROM_VERBATIM

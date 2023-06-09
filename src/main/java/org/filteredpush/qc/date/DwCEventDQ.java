@@ -1701,13 +1701,17 @@ public class DwCEventDQ {
     	return result;
     }
 
+    
     /**
+     * Are the values in dwc:eventDate consistent with the values in dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear?
+     * 
      * Given a set of Event terms related to date and time, determine if they are consistent or
      * inconsistent.
      *
      * #67 Validation SingleRecord Consistency: eventdate inconsistent
      *
      * Provides: VALIDATION_EVENT_CONSISTENT
+     * Version: 2023-01-28
      *
      * @param eventDate the provided dwc:eventDate to evaluate
      * @param year the provided dwc:year to evaluate
@@ -1718,7 +1722,9 @@ public class DwCEventDQ {
      * @return DQResponse the response of type ComplianceValue  to return describing 
      *     whether the event terms represent one temporal interval or
      */
+    @Validation(label="VALIDATION_EVENT_CONSISTENT", description="Are the values in dwc:eventDate consistent with the values in dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear?")
     @Provides("5618f083-d55a-4ac2-92b5-b9fb227b832f")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/5618f083-d55a-4ac2-92b5-b9fb227b832f/2023-01-28")
 	public static DQResponse<ComplianceValue> validationEventConsistent(
     		@ActedUpon(value = "dwc:eventDate") String eventDate,
 			@ActedUpon(value = "dwc:year") String year,
@@ -1734,18 +1740,18 @@ public class DwCEventDQ {
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY, 
         // or all of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear 
         // and dwc:endDayOfYear are EMPTY; COMPLIANT if all of the 
-        // following conditions are met 1) the provided value of year 
-        // matches the start year of the range represented by eventDate 
-        // or year is empty, and 2) the provided value in month matches 
-        // the start month of the range represented by eventDate or 
-        // month is empty, and 3) the provided value in day matches 
-        // the start day of the range represented by eventDate or day 
-        // is empty, and 4) the provided value in startDayOfYear matches 
-        // the start day of the year of the range represented by eventDate 
-        // or startDayOfYear is empty, and 5) the provided value in 
-        // endDayOfYear matches the end day of the year the range represented 
-        // by eventDate or endDayOfYear is empty; otherwise NOT_COMPLIANT. 
-        //
+        // following conditions are met 1) the provided value of dwc:year 
+        // matches the start year of the range represented by dwc:eventDate 
+        // or dwc:year is empty, and 2) the provided value in dwc:month 
+        // matches the start month of the range represented by dwc:eventDate 
+        // or dwc:month is empty, and 3) the provided value in dwc:day 
+        // matches the start day of the range represented by dwc:eventDate 
+        // or dwc:day is empty, and 4) the provided value in dwc:startDayOfYear 
+        // matches the start day of the year of the range represented 
+        // by dwc:eventDate or dwc:startDayOfYear is empty, and 5) 
+        // the provided value in dwc:endDayOfYear matches the end day 
+        // of the year of the range represented by dwc:eventDate or 
+		// dwc:endDayOfYear is empty; otherwise NOT_COMPLIANT. 
 		
 		boolean inconsistencyFound = false;
 		boolean interpretationProblem = false;
