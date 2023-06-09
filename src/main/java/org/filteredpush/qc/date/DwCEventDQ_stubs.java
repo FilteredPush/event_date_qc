@@ -94,34 +94,6 @@ public class DwCEventDQ_stubs {
     }
 
     /**
-     * Propose amendment to the value of dwc:eventDate from values in dwc:year, dwc:month and dwc:day.
-     *
-     * Provides: AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY
-     * Version: 2023-03-29
-     *
-     * @param eventDate the provided dwc:eventDate to evaluate
-     * @param year the provided dwc:year to evaluate
-     * @param month the provided dwc:month to evaluate
-     * @param day the provided dwc:day to evaluate
-     * @return DQResponse the response of type AmendmentValue to return
-     */
-    @Amendment(label="AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY", description="Propose amendment to the value of dwc:eventDate from values in dwc:year, dwc:month and dwc:day.")
-    @Provides("3892f432-ddd0-4a0a-b713-f2e2ecbd879d")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/3892f432-ddd0-4a0a-b713-f2e2ecbd879d/2023-03-29")
-    public DQResponse<AmendmentValue> amendmentEventdateFromYearmonthday(@ActedUpon("dwc:eventDate") String eventDate, @ActedUpon("dwc:year") String year, @ActedUpon("dwc:month") String month, @ActedUpon("dwc:day") String day) {
-        DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
-
-        //TODO:  Implement specification
-        // INTERNAL _PREREQUISITES_NOT_MET if dwc:eventDate is not 
-        // EMPTY or dwc:year is EMPTY or is not interpretable as a 
-        // valid ISO 8601-1 year; FILLED_IN the value of dwc:eventDate 
-        // if an ISO 8601-1 date was interpreted from the values in 
-        // dwc:year, dwc:month and dwc:day; otherwise NOT_AMENDED 
-
-        return result;
-    }
-
-    /**
      * Propose amendment to the value of dwc:eventDate from values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear.
      *
      * Provides: AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR
