@@ -107,28 +107,6 @@ public class DwCEventDQ_stubs {
         return result;
     }
 
-    /**
-     * Is there a value in dwc:dataGeneralizations?
-     *
-     * Provides: ISSUE_DATAGENERALIZATIONS_NOTEMPTY
-     * Version: 2022-11-08
-     *
-     * @param dataGeneralizations the provided dwc:dataGeneralizations to evaluate
-     * @return DQResponse the response of type IssueValue to return
-     */
-    @Issue(label="ISSUE_DATAGENERALIZATIONS_NOTEMPTY", description="Is there a value in dwc:dataGeneralizations?")
-    @Provides("13d5a10e-188e-40fd-a22c-dbaa87b91df2")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/13d5a10e-188e-40fd-a22c-dbaa87b91df2/2022-11-08")
-    public DQResponse<IssueValue> issueDatageneralizationsNotempty(@ActedUpon("dwc:dataGeneralizations") String dataGeneralizations) {
-        DQResponse<IssueValue> result = new DQResponse<IssueValue>();
-
-        //TODO:  Implement specification
-        // POTENTIAL_ISSUE if dwc:dataGeneralizations is not EMPTY; 
-        // otherwise NOT_ISSUE 
-
-        return result;
-    }
-
 
     /**
      * Propose amendment to the value of dwc:eventDate from the content of dwc:verbatimEventDate.
