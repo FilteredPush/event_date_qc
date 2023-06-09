@@ -54,7 +54,7 @@ import java.util.Map;
  * #130 VALIDATION_STARTDAYOFYEAR_INRANGE 85803c7e-2a5a-42e1-b8d3-299a44cafc46
  * #131 VALIDATION_ENDDAYOFYEAR_INRANGE 9a39d88c-7eee-46df-b32a-c109f9f81fb8
  * #84  VALIDATION_YEAR_INRANGE ad0c8855-de69-4843-a80c-a5387d20fbc8
- * #125 VALIDATION_DAY_OUTOFRANGE 8d787cb5-73e2-4c39-9cd1-67c7361dc02e
+ * #125 VALIDATION_DAY_INRANGE 8d787cb5-73e2-4c39-9cd1-67c7361dc02e
  * #66  VALIDATION_EVENTDATE_STANDARD 4f2bf8fd-fc5c-493f-a44c-e7b16153c803
  * #67  VALIDATION_EVENT_CONSISTENT 5618f083-d55a-4ac2-92b5-b9fb227b832f
  * 
@@ -790,38 +790,15 @@ public class DwCEventDQ {
     	return result;
     }
 
-
-        //TODO:  Implement specification
-        // INTERNAL_PREREQUISITES_NOT_MET if (a) dwc:day is EMPTY, 
-        // or (b) dwc:day is not interpretable as an integer, or (c) 
-        // dwc:day is interpretable as an integer between 29 and 31 
-        // inclusive and dwc:month is not interpretable as an integer 
-        // between 1 and 12, or (d) dwc:month is interpretable as the 
-        // integer 2 and dwc:day is interpretable as the integer 29 
-        // and dwc:year is not interpretable as a valid ISO 8601 year; 
-        // COMPLIANT if (a) the value of dwc:day is interpretable as 
-        // an integer between 1 and 28 inclusive, or (b) dwc:day is 
-        // interpretable as an integer between 29 and 30 and dwc:month 
-        // is interpretable as an integer in the set (4,6,9,11), or 
-        // (c) dwc:day is interpretable as an integer between 29 and 
-        // 31 and dwc:month is interpretable as an integer in the set 
-        // (1,3,5,7,8,10,12), or (d) dwc:day is interpretable as the 
-        // integer 29 and dwc:month is interpretable as the integer 
-        // 2 and dwc:year is interpretable as is a valid leap year 
-        // (evenly divisible by 400 or (evenly divisible by 4 but not 
-        //evenly divisible by 100)); otherwise NOT_COMPLIANT." 
-
-    @Deprecated
-    public static DQResponse<ComplianceValue> isDayPossibleForMonthYear(@Consulted(value="dwc:year") String year, @Consulted(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) {
-        return validationDayOutofrange(year, month, day);
-    }
-    
     /**
+     * Is the value of dwc:day interpretable as a valid integer between 1 and 28 inclusive or 29, 30 or 31 given the relative month and year?
+     * 
      * Check if a value for day is consistent with a provided month and year.
      *
      * #125 Validation SingleRecord Conformance: day outofrange
      *
-     * Provides: VALIDATION_DAY_OUTOFRANGE
+     * Provides: VALIDATION_DAY_INRANGE
+     * Version: 2023-03-29
      * (previous draft names include DAY_POSSIBLE_FOR_MONTH_YEAR and RECORDED_DATE_MISMATCH)
      *
      * @param year the provided dwc:year for the month and day
@@ -829,8 +806,10 @@ public class DwCEventDQ {
      * @param day the provided dwc:day to evaluate 
      * @return DQResponse the response of type ComplianceValue  to return
      */
+    @Validation(label="VALIDATION_DAY_INRANGE", description="Is the value of dwc:day interpretable as a valid integer between 1 and 28 inclusive or 29, 30 or 31 given the relative month and year?")
     @Provides("8d787cb5-73e2-4c39-9cd1-67c7361dc02e")
-    public static DQResponse<ComplianceValue> validationDayOutofrange(@ActedUpon("dwc:year") String year, @ActedUpon("dwc:month") String month, @ActedUpon("dwc:day") String day) {
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/8d787cb5-73e2-4c39-9cd1-67c7361dc02e/2023-03-29")
+    public static DQResponse<ComplianceValue> validationDayInrange(@ActedUpon("dwc:year") String year, @ActedUpon("dwc:month") String month, @ActedUpon("dwc:day") String day) {
     	DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
         // Specification
@@ -840,10 +819,10 @@ public class DwCEventDQ {
         // inclusive and dwc:month is not interpretable as an integer 
         // between 1 and 12, or (d) dwc:month is interpretable as the 
         // integer 2 and dwc:day is interpretable as the integer 29 
-        // and dwc:year is not interpretable as a valid ISO 8601 year; 
-        // COMPLIANT if (a) the value of dwc:day is interpretable as 
-        // an integer between 1 and 28 inclusive, or (b) dwc:day is 
-        // interpretable as an integer between 29 and 30 and dwc:month 
+        // and dwc:year is not interpretable as a valid ISO 8601-1 
+        // year; COMPLIANT if (a) the value of dwc:day is interpretable 
+        // as an integer between 1 and 28 inclusive, or (b) dwc:day 
+        // is interpretable as an integer between 29 and 30 and dwc:month 
         // is interpretable as an integer in the set (4,6,9,11), or 
         // (c) dwc:day is interpretable as an integer between 29 and 
         // 31 and dwc:month is interpretable as an integer in the set 
@@ -851,8 +830,8 @@ public class DwCEventDQ {
         // integer 29 and dwc:month is interpretable as the integer 
         // 2 and dwc:year is interpretable as is a valid leap year 
         // (evenly divisible by 400 or (evenly divisible by 4 but not 
-        // evenly divisible by 100)); otherwise NOT_COMPLIANT.
-    	
+        // evenly divisible by 100)); otherwise NOT_COMPLIANT." 
+    
     	if (DateUtils.isEmpty(day)) { 
     		//IPNM (a) dwc:day is EMPTY, 
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);

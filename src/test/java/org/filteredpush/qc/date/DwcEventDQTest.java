@@ -325,7 +325,7 @@ public class DwcEventDQTest {
 	
 	
 	/**
-	 * Test method for {@link org.filteredpush.qc.date.DwCEventDQ#isDayPossibleForMonthYear(java.lang.String, java.lang.String, java.lang.String)}.
+	 * Test method for {@link org.filteredpush.qc.date.DwCEventDQ#validationDayInrange(java.lang.String, java.lang.String, java.lang.String)}.
 	 */
 	@Test
 	public void testIsDayPossibleForMonthYear() {
@@ -333,7 +333,7 @@ public class DwcEventDQTest {
 		for (int year = 1900; year<=1903; year++) { 
 			for (int month = 1; month<=12; month++) { 
 				for (int day= 1; day<=27; day++) { 
-					result = DwCEventDQ.isDayPossibleForMonthYear(Integer.toString(year), Integer.toString(month), Integer.toString(day));
+					result = DwCEventDQ.validationDayInrange(Integer.toString(year), Integer.toString(month), Integer.toString(day));
 					logger.debug(year + " " + month + " " + day);
 					assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 					assertEquals(ComplianceValue.COMPLIANT, result.getValue());
@@ -345,21 +345,21 @@ public class DwcEventDQTest {
 		int year = 2001;
 		int month = 2;
 		int day = 28;
-		result = DwCEventDQ.isDayPossibleForMonthYear(Integer.toString(year), Integer.toString(month), Integer.toString(day));
+		result = DwCEventDQ.validationDayInrange(Integer.toString(year), Integer.toString(month), Integer.toString(day));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
 		year = 2001;
 		month = 2;
 		day = 29;  
-		result = DwCEventDQ.isDayPossibleForMonthYear(Integer.toString(year), Integer.toString(month), Integer.toString(day));
+		result = DwCEventDQ.validationDayInrange(Integer.toString(year), Integer.toString(month), Integer.toString(day));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 		
 		year = 2001;
 		month = 2;
 		day = 30;  
-		result = DwCEventDQ.isDayPossibleForMonthYear(Integer.toString(year), Integer.toString(month), Integer.toString(day));
+		result = DwCEventDQ.validationDayInrange(Integer.toString(year), Integer.toString(month), Integer.toString(day));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 		
@@ -367,21 +367,21 @@ public class DwcEventDQTest {
 		year = 2000;
 		month = 2;
 		day = 29;  
-		result = DwCEventDQ.isDayPossibleForMonthYear(Integer.toString(year), Integer.toString(month), Integer.toString(day));
+		result = DwCEventDQ.validationDayInrange(Integer.toString(year), Integer.toString(month), Integer.toString(day));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
 		year = 2000;
 		month = 2;
 		day = 30;
-		result = DwCEventDQ.isDayPossibleForMonthYear(Integer.toString(year), Integer.toString(month), Integer.toString(day));
+		result = DwCEventDQ.validationDayInrange(Integer.toString(year), Integer.toString(month), Integer.toString(day));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 		
 		year = 2000;
 		month = 2;
 		day = 31;
-		result = DwCEventDQ.isDayPossibleForMonthYear(Integer.toString(year), Integer.toString(month), Integer.toString(day));
+		result = DwCEventDQ.validationDayInrange(Integer.toString(year), Integer.toString(month), Integer.toString(day));
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
 

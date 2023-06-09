@@ -268,7 +268,7 @@ public class Runner {
 						counter.put(name, current);
 						
 						method = "VALIDATION_DAY_OUTOFRANGE"; 
-						response = DwCEventDQ.validationDayOutofrange(year,month,day);
+						response = DwCEventDQ.validationDayInrange(year,month,day);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = counter.get(name);
@@ -508,7 +508,7 @@ public class Runner {
 						postcounter.put(name, current);
 						
 						method = "VALIDATION_DAY_OUTOFRANGE"; 
-						response = DwCEventDQ.validationDayOutofrange(year,month,day);
+						response = DwCEventDQ.validationDayInrange(year,month,day);
 						name = method + " " + response.getResultState().getLabel() + " ";
 						if (response.getValue()!=null) { name = name + response.getValue().getObject().toString(); }
 						current = postcounter.get(name);
