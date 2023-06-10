@@ -1240,18 +1240,17 @@ public class DwCEventDQ {
     	return result;
     }
 
-    @Deprecated
-    public static final DQResponse<AmendmentValue> eventDateFromYearStartEndDay(@ActedUpon(value="dwc:eventDate") String eventDate, @Consulted(value="dwc:year") String year, @Consulted(value="dwc:startDayOfYear") String startDay, @Consulted(value="dwc:endDayOfYear") String endDay ) {
-    	return amendmentEventdateFromYearstartdayofyearenddayofyear(eventDate,year,startDay,endDay);
-    }
 
     /**
+     * Propose amendment to the value of dwc:eventDate from values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear.
+     * 
      * Given a year and a start and end day, propose a value to fill in an eventDate if it is not empty and if
      * both year and start day are not empty.
      *
      * #132 Amendment SingleRecord Completeness: eventdate from yearstartdayofyearenddayofyear
      *
      * Provides: AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR
+     * Version: 2023-03-01
      *
      * Run in order: extractDateFromVerbatim, then eventDateFromYearStartEndDay, then eventDateFromYearMonthDay
      *
@@ -1264,7 +1263,9 @@ public class DwCEventDQ {
      * @param endDay from which to construct an event date
      * @return DQResponse the response of type AmendmentValue to return
      */
-    @Provides(value="eb0a44fa-241c-4d64-98df-ad4aa837307b")
+    @Amendment(label="AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR", description="Propose amendment to the value of dwc:eventDate from values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear.")
+    @Provides("eb0a44fa-241c-4d64-98df-ad4aa837307b")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/eb0a44fa-241c-4d64-98df-ad4aa837307b/2023-03-01")
     public static final DQResponse<AmendmentValue> amendmentEventdateFromYearstartdayofyearenddayofyear(
     		@ActedUpon(value="dwc:eventDate") String eventDate, 
     		@Consulted(value="dwc:year") String year, 
@@ -1274,14 +1275,15 @@ public class DwCEventDQ {
     	DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
     	
     	// Specification
-    	// INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate was not EMPTY or 
-    	// any of dwc:year, dwc:startDayOfYear, or dwc:endDayOfYear were EMPTY 
-    	// or any of the values in dwc:year, dwc:startDayOfYear, or 
-    	// dwc:endDayOfYear were not independently interpretable; 
-    	// FILLED_IN the value of dwc:eventDate from values in dwc:year, 
-    	// dwc:startDayOfYear and dwc:endDayOfYear if the value of 
-    	// dwc:startDayOfYear is less than the value of dwc:endDayOfYear; 
-    	// otherwise NOT_AMENDED
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate was not 
+        // EMPTY or any of dwc:year, dwc:startDayOfYear, or dwc:endDayOfYear 
+        // were EMPTY or any of the values in dwc:year, dwc:startDayOfYear, 
+        // or dwc:endDayOfYear were not independently interpretable; 
+        // FILLED_IN the value of dwc:eventDate from values in dwc:year, 
+        // dwc:startDayOfYear and dwc:endDayOfYear if the value of 
+        // dwc:startDayOfYear is less than the value of dwc:endDayOfYear; 
+        // otherwise NOT_AMENDED 
+
     	
     	if (DateUtils.isEmpty(year) || DateUtils.isEmpty(startDay) || DateUtils.isEmpty(endDay)) {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);

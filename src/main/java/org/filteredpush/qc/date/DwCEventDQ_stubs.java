@@ -67,35 +67,4 @@ public class DwCEventDQ_stubs {
         return result;
     }
 
-    /**
-     * Propose amendment to the value of dwc:eventDate from values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear.
-     *
-     * Provides: AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR
-     * Version: 2023-03-01
-     *
-     * @param startDayOfYear the provided dwc:startDayOfYear to evaluate
-     * @param eventDate the provided dwc:eventDate to evaluate
-     * @param year the provided dwc:year to evaluate
-     * @param endDayOfYear the provided dwc:endDayOfYear to evaluate
-     * @return DQResponse the response of type AmendmentValue to return
-     */
-    @Amendment(label="AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR", description="Propose amendment to the value of dwc:eventDate from values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear.")
-    @Provides("eb0a44fa-241c-4d64-98df-ad4aa837307b")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/eb0a44fa-241c-4d64-98df-ad4aa837307b/2023-03-01")
-    public DQResponse<AmendmentValue> amendmentEventdateFromYearstartdayofyearenddayofyear(@ActedUpon("dwc:startDayOfYear") String startDayOfYear, @ActedUpon("dwc:eventDate") String eventDate, @ActedUpon("dwc:year") String year, @ActedUpon("dwc:endDayOfYear") String endDayOfYear) {
-        DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
-
-        //TODO:  Implement specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate was not 
-        // EMPTY or any of dwc:year, dwc:startDayOfYear, or dwc:endDayOfYear 
-        // were EMPTY or any of the values in dwc:year, dwc:startDayOfYear, 
-        // or dwc:endDayOfYear were not independently interpretable; 
-        // FILLED_IN the value of dwc:eventDate from values in dwc:year, 
-        // dwc:startDayOfYear and dwc:endDayOfYear if the value of 
-        // dwc:startDayOfYear is less than the value of dwc:endDayOfYear; 
-        // otherwise NOT_AMENDED 
-
-        return result;
-    }
-
 }
