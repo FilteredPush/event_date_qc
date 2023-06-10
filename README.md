@@ -96,43 +96,62 @@ Verbatim event dates in a variety of forms typical of natural science collection
 * 29 vi-13 vii-2001 -> 2001-06-29/2001-07-13
 * 5.4.1927 -> 1927-04-05/1927-05-04 (ambiguous)
 
-## DwCEventQC - for Fit4U Framework
+## DwCEventQC - implementations of standard tests in the fittnes for use framework
 
 This library provides the class org.filteredpush.qc.date.DwCEventDQ
 
 DwCEventDQ provides a set of static methods for working with dwc:Event terms wrapping the static methods in DateUtils and returning objects that implement the API provided by ffdq-api for reporting data quality assertions in terms of the Fit4U Framework. 
 
-As of 2018 Feb 08, the current set of dwc:Event class related tests in the core test suite under consideration by the TDWG BDQIG TG2 tests and assertions task group have implementations in DwCEventDQ, and other date/time related tests have implementations in DwCOtherDateDQ.  These methods are annotated with @Provides, @Validation/Amendment/Measure, and @Specification annotations in the form:  
+As of 2023-06-09, the current set of dwc:Event class related tests in the core test suite under consideration by the TDWG BDQIG TG2 tests and assertions task group have implementations in DwCEventDQ, and other date/time related tests have implementations in DwCOtherDateDQ.  These methods are annotated with @Provides, @Validation/Amendment/Measure, and @ProvidesVersion annotations in the form:  
 
-    @Provides(value="urn:uuid:f51e15a6-a67d-4729-9c28-3766299d2985")
-    @Validation( label = "VALIDATION_EVENTDATE_EMPTY", description="The field dwc:eventDate is not EMPTY")
-    @Specification(value="The field dwc:eventDate is not EMPTY The field dwc:eventDate exists in the record.")
-    public static EventDQValidation isEventDateEmpty(@ActedUpon(value = "dwc:eventDate") String eventDate) {
+    @Provides("f51e15a6-a67d-4729-9c28-3766299d2985")
+    @Validation(label="VALIDATION_EVENTDATE_NOTEMPTY", description="Is there a value in dwc:eventDate")
+	@ProvidesVersion("https://rs.tdwg.org/bdq/terms/f51e15a6-a67d-4729-9c28-3766299d2985/2022-11-08")
+    public static  DQResponse<ComplianceValue> validationEventdateNotEmpty(@ActedUpon(value = "dwc:eventDate") String eventDate) {
        ...
     } 
 
-These tests are subject to change as the TDWG BDQIG TG2 specifications change.
+These tests are subject to change as the TDWG BDQIG TG2 specifications change.   The current test specifications can be found [in a csv file](https://github.com/tdwg/bdq/blob/master/tg2/core/TG2_tests.csv) with rationalle management in [issues in the tdwg/bdq issue tracker](https://github.com/tdwg/bdq/labels/TIME).  The TDWG BDQ TG2 is preparing a draft standard for biodiversity data quality including these tests.
 
-The unit test below shows an example of a call on DwCEventDQ.measureDurationSeconds to perform a measurement of the duration of a dwc:eventDate in seconds, and invocations of getResultState(), getValue(), and getComment() on the returned implementation of the DQMeasurementResult interface.
+These test implementations can be validated against the TDWG BDQ TG2 [test validation data] (https://github.com/tdwg/bdq/blob/master/tg2/core/TG2_test_validation_data.csv) using [bdqtestrunner](https://github.com/FilteredPush/bdqtestrunner).  As of 2023-06-10, 353 test cases run, 10 are pending the rename of a test getting carried into the validation data, and of the 353 test case run, 7 are failing, with the reasons under discussion in the task group.
 
-    @Test
-    public void testMeasureDuration() { 
-        EventDQMeasurement<Long> measure = DwCEventDQ.measureDurationSeconds("1880-05-08");
-        Long seconds = (60l*60l*24l)-1l; 
-        assertEquals(seconds, measure.getValue());
-        assertEquals(EnumDQResultState.RUN_HAS_RESULT, measure.getResultState());
-        
-        measure = DwCEventDQ.measureDurationSeconds("1880-05");
-        seconds = (60l*60l*24l*31)-1l; 
-        assertEquals(seconds, measure.getValue());      
-        assertEquals(EnumDQResultState.RUN_HAS_RESULT, measure.getResultState());
-        
-        measure = DwCEventDQ.measureDurationSeconds("");
-        assertEquals(EnumDQResultState.INTERNAL_PREREQUISITES_NOT_MET, measure.getResultState());
-        System.out.println(measure.getComment());
-    }
+    $ java -jar bdqtestrunner-0.0.1-SNAPSHOT-dc382e1-executable.jar -c DwCOtherDateDQ,DwCEventDQDefaults,DwCMetadataDQ -g 26,69,76,84,130,131,33,36,49,147,126,66,140,76,128,127,88,72,125,67,93,86,132,52,61 > output.log
+
+The unit test below shows an example of a call on DwCEventDQ.measureEventdateDurationinseconds to perform a measurement of the duration of a dwc:eventDate in seconds, and invocations of getResultState(), getValue(), and getComment() on the returned implementation of the DQMeasurementResult interface.
+
+	@Test
+	public void testMeasureDuration() { 
+		DQResponse<NumericalValue> measure = DwCEventDQ.measureEventdateDurationinseconds("1880-05-08");
+		Long seconds = (60l*60l*24l); 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
+		assertNotNull(measure.getComment());
+
+		
+		measure = DwCEventDQ.measureEventdateDurationinseconds("1880-05");
+		seconds = (60l*60l*24l*31); 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
+		
+		measure = DwCEventDQ.measureEventdateDurationinseconds("1881");
+		seconds = (60l*60l*24l*365); 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
+		
+		measure = DwCEventDQ.measureEventdateDurationinseconds("1880"); // leap year
+		seconds = (60l*60l*24l*366); 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
+		
+		measure = DwCEventDQ.measureEventdateDurationinseconds("1880-02");  // Feb in leap year
+		seconds = (60l*60l*24l*29); 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());		
+		
+		// ...
+	}
     
-The APIs for both the java annotations for the framework and the result objects for the framework are expected to change.    
+The APIs for both the java annotations for the framework and the result objects for the framework are not expected to change.    
 
 # Developer deployment: 
 

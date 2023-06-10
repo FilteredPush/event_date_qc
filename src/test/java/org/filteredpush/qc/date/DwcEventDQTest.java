@@ -46,6 +46,7 @@ public class DwcEventDQTest {
 		Long seconds = (60l*60l*24l); 
 		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
+		assertNotNull(measure.getComment());  // the content of the comment is not standardized, but one must be present.
 		
 		measure = DwCEventDQ.measureEventdateDurationinseconds("1880-05");
 		seconds = (60l*60l*24l*31); 
