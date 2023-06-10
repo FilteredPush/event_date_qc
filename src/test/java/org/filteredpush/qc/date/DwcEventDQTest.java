@@ -1759,6 +1759,7 @@ public class DwcEventDQTest {
 		result = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
 		
+		// Note change in 2023-03-29 specification, event spanning a year boundary is internal prerequsities not met.
 		eventDate = "1955-12-31/1956-01-03";
 		year = "";
 		month = "";
@@ -1766,7 +1767,7 @@ public class DwcEventDQTest {
 		startDayOfYear = "";
 		endDayOfYear = "";		
 		result = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.NOT_AMENDED.getLabel(), result.getResultState().getLabel());
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
 		assertEquals(0,result.getValue().getObject().size());	
 		
 		eventDate = "1955-02";

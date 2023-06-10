@@ -278,6 +278,7 @@ public class DwCEventDQTestDefinitions {
 		assertEquals(ResultState.NOT_AMENDED.getLabel(), response.getResultState().getLabel()); 
 		assertEquals(0, response.getValue().getObject().size());
 		
+		// Note change in 2023-03-29 specification, event date spanning a year boundary is now internal prerequisites not met.
 		eventDate = "1961-01-28/1962-01-29";
 		year = "";
 		month = "";
@@ -285,7 +286,7 @@ public class DwCEventDQTestDefinitions {
 		startDayOfYear = "";
 		endDayOfYear = "";
 		response = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.NOT_AMENDED.getLabel(), response.getResultState().getLabel()); 
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel()); 
 		assertEquals(0, response.getValue().getObject().size());
 		
 	}
@@ -699,6 +700,27 @@ public class DwCEventDQTestDefinitions {
 		assertTrue(resultValues.containsKey("dwc:eventDate"));
 		assertEquals("1880-12-15",resultValues.get("dwc:eventDate"));
 		assertEquals(1,resultValues.size());
+		
+		// validation data dataID 766
+		eventDate="";
+		year="2021";
+		month="X";
+		day="29";
+		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(ResultState.FILLED_IN.getLabel(), result.getResultState().getLabel());
+		assertNotNull(result.getValue().getObject());
+		resultValues = result.getValue().getObject();
+		assertTrue(resultValues.containsKey("dwc:eventDate"));
+		assertEquals("2021-10-29",resultValues.get("dwc:eventDate"));
+		assertEquals(1,resultValues.size());	
+		
+		// validation data dataID 767
+		eventDate="";
+		year="x";
+		month="10";
+		day="";
+		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
 		
 		eventDate="";
 		year="1880";
