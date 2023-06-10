@@ -526,25 +526,25 @@ public class DwCEventDQ {
     	return result;
     }
 
-    @Deprecated
-    public DQResponse<AmendmentValue> correctEventDateFormat(@ActedUpon("dwc:eventDate") String eventDate) {
-        return amendmentEventdateStandardized(eventDate);
-    }
-    
     /**
+     * Propose amendment of the value of dwc:eventDate to a valid ISO date.
+     * 
      * Given an event date, check to see if it is empty or contains a valid date value.  If it contains
      * a value that is not a valid date, propose a properly formatted eventDate as an amendment.
      *
      * #61 Amendment SingleRecord Conformance: eventdate standardized
      *
      * Provides: AMENDMENT_EVENTDATE_STANDARDIZED
+     * Version: 2023-03-29
      *
      * @param eventDate the provided dwc:eventDate to evaluate
      * @return DQResponse the response of type AmendmentValue to return
      *    with a value containing a key for dwc:eventDate and a
      *    resultState is AMENDED if a new value is proposed.
      */
+    @Amendment(label="AMENDMENT_EVENTDATE_STANDARDIZED", description="Propose amendment of the value of dwc:eventDate to a valid ISO date.")
     @Provides("718dfc3c-cb52-4fca-b8e2-0e722f375da7")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/718dfc3c-cb52-4fca-b8e2-0e722f375da7/2023-03-29")
     public static DQResponse<AmendmentValue> amendmentEventdateStandardized(
     		@ActedUpon(value = "dwc:eventDate") String eventDate) {
 		DQResponse<AmendmentValue> result = new DQResponse<>();
@@ -553,6 +553,15 @@ public class DwCEventDQ {
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; 
         // AMENDED if the value of dwc:eventDate was changed to unambiguously 
         // conform with an ISO 8601-1:2019 date; otherwise NOT_AMENDED 
+		
+        //TODO:  New specification needs work.  Related to #26  AMENDMENT_DATEIDENTIFIED_STANDARDIZED
+		// language implies that value was already formatted, not changed to conform. 
+		
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; 
+        // AMENDED the value of dwc:eventDate if it was unambiguous 
+        // and formatted as a valid ISO 8601-1 date; otherwise NOT_AMENDED 
+        // 
+    
         
 		if (DateUtils.eventDateValid(eventDate)) {
 			result.setResultState(ResultState.NOT_AMENDED);
