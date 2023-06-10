@@ -301,19 +301,14 @@ public class DwCEventDQ {
 		return result;
 	}
 
+
     /**
-     * Deprecated, use: amendmentEventdateFromVerbatim
-     */
-	@Deprecated 
-    public static DQResponse<AmendmentValue>  extractDateFromVerbatim(
-    		@ActedUpon(value = "dwc:eventDate") String eventDate, 
-    		@Consulted(value = "dwc:verbatimEventDate") String verbatimEventDate) {
-		return amendmentEventdateFromVerbatim(eventDate, verbatimEventDate);
-    }
-    /**
+     * Propose amendment to the value of dwc:eventDate from the content of dwc:verbatimEventDate.
+     * 
      * #86 Amendment SingleRecord Completeness: eventdate from verbatim
      *
      * Provides: AMENDMENT_EVENTDATE_FROM_VERBATIM
+     * Version: 2023-03-29
      * 
      * If a dwc:eventDate is empty and the verbatimEventDate is not empty, try to populate the 
      * eventDate from the verbatim value.
@@ -323,18 +318,20 @@ public class DwCEventDQ {
      * @return DQResponse the response of type AmendmentValue to return, with a value containing
      *  a key for dwc:eventDate and a resultState is AMENDED if a new value is proposed.
      */
+    @Amendment(label="AMENDMENT_EVENTDATE_FROM_VERBATIM", description="Propose amendment to the value of dwc:eventDate from the content of dwc:verbatimEventDate.")
     @Provides("6d0a0c10-5e4a-4759-b448-88932f399812")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/6d0a0c10-5e4a-4759-b448-88932f399812/2023-03-29")
     public static DQResponse<AmendmentValue> amendmentEventdateFromVerbatim(
     		@ActedUpon("dwc:eventDate") String eventDate, 
     		@Consulted("dwc:verbatimEventDate") String verbatimEventDate) {
     	DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
 		
         // Specification
-    	// INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY
-    	// or the value of dwc:verbatimEventDate is EMPTY or not unambiguously
-    	// interpretable as an ISO 8601-1:2019 date; FILLED_IN the value
-    	// of dwc:eventDate if an unambiguous ISO 8601-1:2019 date was 
-    	// interpreted from dwc:verbatimEventDate; otherwise NOT_AMENDED 
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY 
+        // or the value of dwc:verbatimEventDate is EMPTY or not unambiguously 
+        // interpretable as an ISO 8601-1 date; FILLED_IN the value 
+        // of dwc:eventDate if an unambiguous ISO 8601-1 date was interpreted 
+        // from dwc:verbatimEventDate; otherwise NOT_AMENDED 
 		
 		if (DateUtils.isEmpty(eventDate)) {
 			if (!DateUtils.isEmpty(verbatimEventDate)) {
