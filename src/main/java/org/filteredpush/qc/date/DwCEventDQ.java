@@ -1358,7 +1358,7 @@ public class DwCEventDQ {
      * #93 Amendment SingleRecord Completeness: eventdate from yearmonthday
      *
      * Provides: AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY
-     * Version: 2023-03-29
+     * Version: 2023-06-10
      *
      * Run in order: extractDateFromVerbatim, then eventDateFromYearStartEndDay, then eventDateFromYearMonthDay
      *
@@ -1373,7 +1373,7 @@ public class DwCEventDQ {
      */
     @Amendment(label="AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY", description="Propose amendment to the value of dwc:eventDate from values in dwc:year, dwc:month and dwc:day.")
     @Provides("3892f432-ddd0-4a0a-b713-f2e2ecbd879d")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/3892f432-ddd0-4a0a-b713-f2e2ecbd879d/2023-03-29")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/3892f432-ddd0-4a0a-b713-f2e2ecbd879d/2023-06-10")
     public static final DQResponse<AmendmentValue> amendmentEventDateFromYearMonthDay(
     		@ActedUpon(value="dwc:eventDate") String eventDate, 
     		@Consulted(value="dwc:year") String year, 
@@ -1390,12 +1390,12 @@ public class DwCEventDQ {
     	// TODO: Specification needs examination, inclusion of ISO 8601-1 reference in year 
     	// raises problems if dates are pre-gregorian. 
     	// 
-        // Specification (2023-03-29)
-        // INTERNAL _PREREQUISITES_NOT_MET if dwc:eventDate is not 
-        // EMPTY or dwc:year is EMPTY or is not interpretable as a 
-        // valid ISO 8601-1 year; FILLED_IN the value of dwc:eventDate 
-        // if an ISO 8601-1 date was interpreted from the values in 
-        // dwc:year, dwc:month and dwc:day; otherwise NOT_AMENDED 
+        // Specification (2023-06-10)
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is not 
+    	// EMPTY or dwc:year is EMPTY or is not interpretable as a valid 
+    	// ISO 8601-1 year; FILLED_IN the value of dwc:eventDate 
+    	// if an ISO 8601-1 date was interpreted from the values 
+    	// in dwc:year, dwc:month and dwc:day; otherwise NOT_AMENDED
     	
     	DQResponse<AmendmentValue> result = new DQResponse<>();
     	if (DateUtils.isEmpty(year)) {
@@ -1725,7 +1725,7 @@ public class DwCEventDQ {
      * #67 Validation SingleRecord Consistency: eventdate inconsistent
      *
      * Provides: VALIDATION_EVENT_CONSISTENT
-     * Version: 2023-01-28
+     * Version: 2023-06-09
      *
      * @param eventDate the provided dwc:eventDate to evaluate
      * @param year the provided dwc:year to evaluate
@@ -1738,7 +1738,7 @@ public class DwCEventDQ {
      */
     @Validation(label="VALIDATION_EVENT_CONSISTENT", description="Are the values in dwc:eventDate consistent with the values in dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear?")
     @Provides("5618f083-d55a-4ac2-92b5-b9fb227b832f")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/5618f083-d55a-4ac2-92b5-b9fb227b832f/2023-01-28")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/5618f083-d55a-4ac2-92b5-b9fb227b832f/2023-06-09")
 	public static DQResponse<ComplianceValue> validationEventConsistent(
     		@ActedUpon(value = "dwc:eventDate") String eventDate,
 			@ActedUpon(value = "dwc:year") String year,
