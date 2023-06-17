@@ -2151,18 +2151,18 @@ public class DwCEventDQ {
      * #84 Validation SingleRecord Conformance: year outofrange
      *
      * Provides: VALIDATION_YEAR_INRANGE
-     * Version: 2022-03-22
+     * Version: 2022-06-17
      * 
-     * Parameters: bdq:earliestDate="1500"; bdq:latestDate=current year
+     * Parameters: bdq:earliestDate="1582"; bdq:latestDate=current year
      * 
      * @param year the provided dwc:year to evaluate
-	 * @param bdq:earliestDate integer for lower bound of range of in range years, if null 1600 will be used.
+	 * @param bdq:earliestDate integer for lower bound of range of in range years, if null 1582 will be used.
 	 * @param bdq:latestDate integer for upper bound of range of in range years, if null current year will be used.
      * @return DQResponse the response of type ComplianceValue to return
 	 */
     @Validation(label="VALIDATION_YEAR_INRANGE", description="Is the value of dwc:year within the Parameter range?")
     @Provides("ad0c8855-de69-4843-a80c-a5387d20fbc8")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/ad0c8855-de69-4843-a80c-a5387d20fbc8/2022-03-22")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/ad0c8855-de69-4843-a80c-a5387d20fbc8/2022-06-17")
     public static DQResponse<ComplianceValue> validationYearInrange(
     		@ActedUpon(value = "dwc:year") String year,  
     		@Parameter(name = "bdq:earliestDate") Integer lowerBound,
@@ -2171,16 +2171,16 @@ public class DwCEventDQ {
     	DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
     	
         // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:year is not present, 
-        // or is EMPTY or cannot be interpreted as an integer; COMPLIANT 
-        // if the value of dwc:year is within the Parameter range; 
-        // otherwise NOT_COMPLIANT 
+    	// INTERNAL_PREREQUISITES_NOT_MET if dwc:year is not present, 
+    	// or is EMPTY or cannot be interpreted as an integer; COMPLIANT
+    	// if the value of dwc:year is within the Parameter range; 
+    	// otherwise NOT_COMPLIANT
 
         // This test is defined as parameterized.
-        // bdq:earliestDate="1500"; bdq:latestDate=current year
+        // bdq:earliestDate="1582"; bdq:latestDate=current year
     	
     	if (lowerBound==null) { 
-    		lowerBound = 1500;
+    		lowerBound = 1582;
     	}
     	if (upperBound==null) { 
     		upperBound = LocalDateTime.now().getYear();

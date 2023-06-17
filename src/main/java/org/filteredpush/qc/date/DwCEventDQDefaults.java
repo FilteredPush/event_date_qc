@@ -90,14 +90,14 @@ public class DwCEventDQDefaults extends DwCEventDQ {
      * #84 Validation SingleRecord Conformance: year outofrange
      *
      * Provides: VALIDATION_YEAR_INRANGE
-     * Version: 2022-11-09
+     * Version: 2023-06-17
      * 
      * @param year the provided dwc:year to evaluate
      * @return DQResponse the response of type ComplianceValue to return
 	 */
     @Validation(label="VALIDATION_YEAR_INRANGE", description="Is the value of dwc:year within the Parameter range?")
     @Provides("ad0c8855-de69-4843-a80c-a5387d20fbc8")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/ad0c8855-de69-4843-a80c-a5387d20fbc8/2022-11-09")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/ad0c8855-de69-4843-a80c-a5387d20fbc8/2023-06-17")
     public static DQResponse<ComplianceValue> validationYearInrange(@ActedUpon("dwc:year") String year) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
@@ -108,11 +108,11 @@ public class DwCEventDQDefaults extends DwCEventDQ {
         // otherwise NOT_COMPLIANT 
 
         // This test is defined as parameterized.
-        // bdq:earliestDate="1500"; bdq:latestDate=current year
+        // bdq:earliestDate="1582"; bdq:latestDate=current year
         
     	Integer upperBound = LocalDateTime.now().getYear();
 
-        return validationYearInrange(year, 1500, upperBound);
+        return validationYearInrange(year, 1582, upperBound);
     }
     
 }

@@ -1966,6 +1966,16 @@ public class DwcEventDQTest {
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
+		year = "1582";
+		result = DwCEventDQ.validationYearInrange(year, null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		year = "1581";
+		result = DwCEventDQ.validationYearInrange(year, null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());		
+		
 		year = "1499";
 		result = DwCEventDQ.validationYearInrange(year, null, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
