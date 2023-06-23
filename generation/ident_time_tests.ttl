@@ -13,10 +13,10 @@
 <http://rs.tdwg.org/bdq/ffdq/Specification> rdfbeans:bindingClass "org.datakurator.ffdq.model.Specification" .
 
 <urn:uuid:39bb2280-1215-447b-9221-fd13bc990641> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is EMPTY; AMENDED the value of dwc:dateIdentified if it was unambiguous and formatted as a valid ISO 8601-1 date; otherwise NOT_AMENDED " ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is EMPTY; AMENDED if the value of dwc:dateIdentified was not a properly formatted ISO 8601-1 date but was unambiguous and was altered to be a valid ISO 8601-1 date; otherwise NOT_AMENDED. " ;
 	rdfs:label "AMENDMENT_DATEIDENTIFIED_STANDARDIZED" .
 
-<urn:uuid:54ac2a2c-5d65-4843-a9b3-c787b0dca9c9> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:39bb2280-1215-447b-9221-fd13bc990641> ;
+<urn:uuid:97025374-4740-405b-9d4b-4394b887318b> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:39bb2280-1215-447b-9221-fd13bc990641> ;
 	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:bf5b7706-d0a6-4c65-9644-c750e7188ee0> ;
 	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
 
@@ -36,30 +36,30 @@
 <rt:SingleRecord> a <http://rs.tdwg.org/bdq/ffdq/ResourceType> ;
 	rdfs:label "SingleRecord" .
 
-<urn:uuid:229eb9ed-03db-454b-8c87-d90e76ca75e6> a <http://rs.tdwg.org/bdq/ffdq/Enhancement> ;
-	rdfs:label "Conformance: standardized" .
-
-<urn:uuid:9b098bae-085e-4c13-a329-320f4bf3b4ee> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:cd4d285f-ba9c-400d-ba7f-9bf6c056f7c2> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:39bb2280-1215-447b-9221-fd13bc990641> ;
-	a <http://rs.tdwg.org/bdq/ffdq/AmendmentMethod> .
-
-<urn:uuid:ba8acda5-ee73-46f6-a2ce-8db073c56122> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/dateIdentified> ;
+<urn:uuid:2d4f216f-49f9-4670-b95a-f60024fc7128> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/dateIdentified> ;
 	a <http://rs.tdwg.org/bdq/ffdq/InformationElement> .
 
-<urn:uuid:cd4d285f-ba9c-400d-ba7f-9bf6c056f7c2> <http://rs.tdwg.org/bdq/ffdq/hasEnhancement> <urn:uuid:229eb9ed-03db-454b-8c87-d90e76ca75e6> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasInformationElement> <urn:uuid:ba8acda5-ee73-46f6-a2ce-8db073c56122> ;
+<urn:uuid:8f1007c0-907f-47ba-b6b1-166fe2efecfc> <http://rs.tdwg.org/bdq/ffdq/hasEnhancement> <urn:uuid:f817a7bc-dce1-4337-b9e2-dd973e0c2c44> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasInformationElement> <urn:uuid:2d4f216f-49f9-4670-b95a-f60024fc7128> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedEnhancement> ;
 	rdfs:comment "Propose amendment to the value of dwc:dateIdentified to a valid ISO date." ;
 	rdfs:label "Propose amendment to the value of dwc:dateIdentified to a valid ISO date.Amedment for SingleRecord" .
 
-<urn:uuid:62bfb8df-853a-4afa-be94-75286a066ada> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:66269bdd-9271-4e76-b25c-7ab81eebe1d8> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:bf5b7706-d0a6-4c65-9644-c750e7188ee0> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
+<urn:uuid:b3675cca-c075-444a-8af1-fe5ec0cfac41> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:8f1007c0-907f-47ba-b6b1-166fe2efecfc> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:39bb2280-1215-447b-9221-fd13bc990641> ;
+	a <http://rs.tdwg.org/bdq/ffdq/AmendmentMethod> .
+
+<urn:uuid:f817a7bc-dce1-4337-b9e2-dd973e0c2c44> a <http://rs.tdwg.org/bdq/ffdq/Enhancement> ;
+	rdfs:label "Conformance: standardized" .
 
 <urn:uuid:66269bdd-9271-4e76-b25c-7ab81eebe1d8> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
 	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is EMPTY; COMPLIANT if the value of dwc:dateIdentified contains a valid ISO 8601-1 date; otherwise NOT_COMPLIANT " ;
 	rdfs:label "VALIDATION_DATEIDENTIFIED_STANDARD" .
+
+<urn:uuid:ac724eac-2cb0-4933-8135-fea85419940f> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:66269bdd-9271-4e76-b25c-7ab81eebe1d8> ;
+	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:bf5b7706-d0a6-4c65-9644-c750e7188ee0> ;
+	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
 
 <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> rdfbeans:bindingClass "org.datakurator.ffdq.model.context.ContextualizedCriterion" .
 
@@ -67,44 +67,44 @@
 
 <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> rdfbeans:bindingClass "org.datakurator.ffdq.model.solutions.ValidationMethod" .
 
-<urn:uuid:3819ff0e-8038-468f-b423-301c36a30737> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/dateIdentified> ;
-	a <http://rs.tdwg.org/bdq/ffdq/InformationElement> .
-
-<urn:uuid:65d873ae-d04d-4562-a5d3-029a582974b6> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:c8535684-98ff-4e96-bf25-25f84ba676e7> ;
+<urn:uuid:1a08459f-dbf8-4aed-bb70-f2558150aba8> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:7c925390-e787-47d6-b8b9-02e16a5d245d> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:66269bdd-9271-4e76-b25c-7ab81eebe1d8> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> .
 
-<urn:uuid:bf4264b9-49f7-4638-a17f-2bda8f3df435> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
-	rdfs:label "Conformance: standard" .
-
-<urn:uuid:c8535684-98ff-4e96-bf25-25f84ba676e7> <http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:bf4264b9-49f7-4638-a17f-2bda8f3df435> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasInformationElement> <urn:uuid:3819ff0e-8038-468f-b423-301c36a30737> ;
+<urn:uuid:7c925390-e787-47d6-b8b9-02e16a5d245d> <http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:9dead636-9b59-4d41-b683-37e12af520fd> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasInformationElement> <urn:uuid:a531807f-48f3-45b0-a1fa-49937012ae4e> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
 	rdfs:comment "Is the value of dwc:dateIdentified a valid ISO date?" ;
 	rdfs:label "Is the value of dwc:dateIdentified a valid ISO date? Validation for SingleRecord" .
 
-<urn:uuid:b2cde436-fd76-4a28-9d5c-352d54bb3e17> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:dc8aae4b-134f-4d75-8a71-c4186239178e> ;
+<urn:uuid:9dead636-9b59-4d41-b683-37e12af520fd> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
+	rdfs:label "Conformance: standard" .
+
+<urn:uuid:a531807f-48f3-45b0-a1fa-49937012ae4e> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/dateIdentified> ;
+	a <http://rs.tdwg.org/bdq/ffdq/InformationElement> .
+
+<urn:uuid:dc8aae4b-134f-4d75-8a71-c4186239178e> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if (1) dwc:dateIdentified is EMPTY, or (2) dwc:dateIdentified contains an invalid value according to ISO 8601-1, or (3) bdq:includeEventDate=true and dwc:eventDate is not a valid ISO 8601-1 date; COMPLIANT if the value of dwc:dateIdentified is between bdq:earliestValidDate and bdq:latestValidDate inclusive and either (1) dwc:eventDate is EMPTY or bdq:includeEventDate=false, or (2) if dwc:eventDate is a valid ISO 8601-1 date and dwc:dateIdentified overlaps or is later than the dwc:eventDate; otherwise NOT_COMPLIANT bdq:sourceAuthority is \"ISO 8601-1:2019\" [https://www.iso.org/obp/ui/],bdq:earliestValidDate default=\"1753-01-01\",bdq:latestValidDate default=[current day],bdq:includeEventDate default=true" ;
+	rdfs:label "VALIDATION_DATEIDENTIFIED_INRANGE" .
+
+<urn:uuid:e129905e-ecfd-4ee3-bcb1-a61ab8052ecf> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:dc8aae4b-134f-4d75-8a71-c4186239178e> ;
 	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:bf5b7706-d0a6-4c65-9644-c750e7188ee0> ;
 	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
 
-<urn:uuid:dc8aae4b-134f-4d75-8a71-c4186239178e> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is EMPTY or contains and invalid value according to ISO 8601-1; COMPLIANT if the value of dwc:dateIdentified is between bdq:earliestValidDate and bdq:latestValidDate inclusive and either (1) dwc:eventDate is EMPTY or bdq:includeEventDate=false or (2) if dwc:eventDate is a valid ISO 8601-1 date and dwc:dateIdentified overlaps or is later than the dwc:eventDate; otherwise NOT_COMPLIANT bdq:sourceAuthority is \"ISO 8601-1:2019\" [https://www.iso.org/obp/ui/]" ;
-	rdfs:label "VALIDATION_DATEIDENTIFIED_INRANGE" .
+<urn:uuid:664c41a8-4153-4dbf-b99f-665ee11e4a8e> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
+	rdfs:label "Likeliness: inrange" .
 
-<urn:uuid:2b987e7c-d6fe-4917-a516-3e4694946236> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/dateIdentified> , <http://rs.tdwg.org/dwc/terms/eventDate> ;
-	a <http://rs.tdwg.org/bdq/ffdq/InformationElement> .
-
-<urn:uuid:2d8e4096-fe3c-45b0-bc48-d21ddb755c87> <http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:f01449bb-98b3-45ec-8324-2f7c4b0c7106> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasInformationElement> <urn:uuid:2b987e7c-d6fe-4917-a516-3e4694946236> ;
+<urn:uuid:ac6ea603-5a3f-4932-a0ab-97183f66419c> <http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:664c41a8-4153-4dbf-b99f-665ee11e4a8e> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasInformationElement> <urn:uuid:c6c00c10-44fc-402f-b15d-b47c50f4e8b0> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
 	rdfs:comment "Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate?" ;
 	rdfs:label "Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate? Validation for SingleRecord" .
 
-<urn:uuid:b260f784-31ac-4798-811d-576aaa4f64fd> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:2d8e4096-fe3c-45b0-bc48-d21ddb755c87> ;
+<urn:uuid:c6c00c10-44fc-402f-b15d-b47c50f4e8b0> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/dateIdentified> , <http://rs.tdwg.org/dwc/terms/eventDate> ;
+	a <http://rs.tdwg.org/bdq/ffdq/InformationElement> .
+
+<urn:uuid:e090fe82-ac7f-40f4-84f7-e8a56f9ece0e> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:ac6ea603-5a3f-4932-a0ab-97183f66419c> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:dc8aae4b-134f-4d75-8a71-c4186239178e> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> .
-
-<urn:uuid:f01449bb-98b3-45ec-8324-2f7c4b0c7106> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
-	rdfs:label "Likeliness: inrange" .

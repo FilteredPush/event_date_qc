@@ -2282,4 +2282,9 @@ public class DwCEventDQ {
     	return result;
     }	    
 
+// TODO: Implementation of AMENDMENT_EVENT_FROM_EVENTDATE is not up to date with current version: https://rs.tdwg.org/bdq/terms/710fe118-17e1-440f-b428-88ba3f547d6d/2023-06-20 see line: 2005
+// TODO: Implementation of AMENDMENT_EVENTDATE_STANDARDIZED is not up to date with current version: https://rs.tdwg.org/bdq/terms/718dfc3c-cb52-4fca-b8e2-0e722f375da7/2023-06-13 see line: 546
+// TODO: Implementation of VALIDATION_EVENT_CONSISTENT is not up to date with current version: https://rs.tdwg.org/bdq/terms/5618f083-d55a-4ac2-92b5-b9fb227b832f/2023-06-21 see line: 1740
+// TODO: Implementation of AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY is not up to date with current version: https://rs.tdwg.org/bdq/terms/3892f432-ddd0-4a0a-b713-f2e2ecbd879d/2023-06-15 see line: 1375
+// TODO: Implementation of VALIDATION_DAY_INRANGE is not up to date with current version: https://rs.tdwg.org/bdq/terms/8d787cb5-73e2-4c39-9cd1-67c7361dc02e/2022-06-19 see line: 816
 }
