@@ -127,14 +127,14 @@ public class DwCEventDQTestDefinitions {
 	 * Test method for {@link org.filteredpush.qc.date.DwCEventDQs#validationEventdateInrange(java.lang.String, java.lang.String, java.lang.String)}.
 	 */
 	@Test
-	public void testValidationEventdateOutofrangeParameterized() {
+	public void testValidationEventdateInrangeParameterized() {
 		// INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
 		// or if the value of dwc:eventDate is not a valid ISO 8601-1:2019 
 		// date; COMPLIANT if the range of dwc:eventDate is entirely 
 		// within the parameter range, otherwise NOT_COMPLIANT 
 		
 		// Parameters. This test is defined as parameterized.
-		// Default values: bdq:earliestValidDate="1600"; bdq:latestValidDate=current year
+		// Default values: bdq:earliestValidDate="1582-11-15"; bdq:latestValidDate=current year
 		
 		String eventDate = "";
 		DQResponse<ComplianceValue> result = DwCEventDQ.validationEventdateInrange(eventDate, "1800-01-01", "1899-12-31");
@@ -167,6 +167,12 @@ public class DwCEventDQTestDefinitions {
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		
 		eventDate = "1599";
+		result = DwCEventDQ.validationEventdateInrange(eventDate, "1800-01-01", "1899-12-31");
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1582-11-15";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, "1800-01-01", "1899-12-31");
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());

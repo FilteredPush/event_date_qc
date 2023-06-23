@@ -2078,6 +2078,34 @@ public class DwcEventDQTest {
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
 		
+		// as of https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-06-12
+		// starting range begins at 1582-11-15 not 1500, test this bound.
+		eventDate = "1582-11-15";
+		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+		
+		eventDate = "1582-11-14";
+		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		
+		eventDate = "1582-01-01";
+		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		
+		// reduced precision but spanning boundary.
+		eventDate = "1582";
+		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		
+		eventDate = "1582-11-01/1582-11-30";
+		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		
 		eventDate = "1699";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		

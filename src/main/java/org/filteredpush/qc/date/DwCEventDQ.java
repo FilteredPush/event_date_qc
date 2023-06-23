@@ -2215,11 +2215,11 @@ public class DwCEventDQ {
      * #36 Validation SingleRecord Conformance: eventdate outofrange
      * 
      * Given an eventDate check to see if that event date falls entirely outside a range from a
-     * specified lower bound (1500-01-01 by default) and a specified upper bound (the end of the 
+     * specified lower bound (1582-11-15 by default) and a specified upper bound (the end of the 
      * current year by default)   
      *
      * Provides: VALIDATION_EVENTDATE_INRANGE
-     * Version: 2023-03-30
+     * Version: 2023-06-12
      *
      * @param eventDate the provided dwc:eventDate to evaluate
      * @param earlyestValidDate the earlyest date for which eventDate can be valid
@@ -2228,7 +2228,7 @@ public class DwCEventDQ {
      */
     @Validation(label="VALIDATION_EVENTDATE_INRANGE", description="Is the value of dwc:eventDate entirely with the Parameter Range?")
     @Provides("3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-03-30")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-06-12")
     public static DQResponse<ComplianceValue> validationEventdateInrange(@ActedUpon("dwc:eventDate") String eventDate, @Parameter(name="bdq:earliestValidDate") String earlyestValidDate, @Parameter(name="bdq:latestValidDate") String latestValidDate ) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
  
@@ -2240,13 +2240,13 @@ public class DwCEventDQ {
         // inclusive, otherwise NOT_COMPLIANT 
 
         // Parameters. This test is defined as parameterized.
-        // Default values: bdq:earliestValidDate="1500"; bdq:latestValidDate=current year    	
+        // Default values: bdq:earliestValidDate="1582-11-15"; bdq:latestValidDate=current year    	
         
         if (DateUtils.isEmpty(latestValidDate)) {
         	latestValidDate = String.format("%04d",Calendar.getInstance().get(Calendar.YEAR)) + "-12-31";
         }
         if (DateUtils.isEmpty(earlyestValidDate)) { 
-        	earlyestValidDate = "1500-01-01";
+        	earlyestValidDate = "1582-11-15";
         }
         
     	if (DateUtils.isEmpty(eventDate)) {
