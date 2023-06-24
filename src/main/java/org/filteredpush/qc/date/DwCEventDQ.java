@@ -1365,7 +1365,6 @@ public class DwCEventDQ {
      * @param day from which to construct the event date
      * @return DQResponse the response of type AmendmentValue to return
      */
- // TODO: Implementation of AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY is not up to date with current version: https://rs.tdwg.org/bdq/terms/3892f432-ddd0-4a0a-b713-f2e2ecbd879d/2023-06-15 see line: 1375
     @Amendment(label="AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY", description="Propose amendment to the value of dwc:eventDate from values in dwc:year, dwc:month and dwc:day.")
     @Provides("3892f432-ddd0-4a0a-b713-f2e2ecbd879d")
     @ProvidesVersion("https://rs.tdwg.org/bdq/terms/3892f432-ddd0-4a0a-b713-f2e2ecbd879d/2023-06-15")
