@@ -782,6 +782,9 @@ public class DwCEventDQTestDefinitions {
 		day="150";  // out of range
 		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
 		assertEquals(ResultState.FILLED_IN.getLabel(), result.getResultState().getLabel());
+		assertTrue(resultValues.containsKey("dwc:eventDate"));
+		assertEquals("1880",resultValues.get("dwc:eventDate"));
+		assertEquals(1,resultValues.size());
 		
 		// Notes in issue: "If dwc:year and dwc:day are present, but dwc:month is not supplied, 
 		// then just the year should be given as the proposed amendment."

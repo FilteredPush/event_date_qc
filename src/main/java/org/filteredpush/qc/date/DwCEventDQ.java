@@ -1352,7 +1352,7 @@ public class DwCEventDQ {
      * #93 Amendment SingleRecord Completeness: eventdate from yearmonthday
      *
      * Provides: AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY
-     * Version: 2023-06-10
+     * Version: 2023-06-15
      *
      * Run in order: extractDateFromVerbatim, then eventDateFromYearStartEndDay, then eventDateFromYearMonthDay
      *
@@ -1368,29 +1368,20 @@ public class DwCEventDQ {
  // TODO: Implementation of AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY is not up to date with current version: https://rs.tdwg.org/bdq/terms/3892f432-ddd0-4a0a-b713-f2e2ecbd879d/2023-06-15 see line: 1375
     @Amendment(label="AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY", description="Propose amendment to the value of dwc:eventDate from values in dwc:year, dwc:month and dwc:day.")
     @Provides("3892f432-ddd0-4a0a-b713-f2e2ecbd879d")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/3892f432-ddd0-4a0a-b713-f2e2ecbd879d/2023-06-10")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/3892f432-ddd0-4a0a-b713-f2e2ecbd879d/2023-06-15")
+    @Specification("INTERNAL _PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY or dwc:year is EMPTY or is not interpretable as a valid year; FILLED_IN the value of dwc:eventDate if an ISO 8601-1 date was interpreted from the values in dwc:year, dwc:month and dwc:day; otherwise NOT_AMENDED. ")
     public static final DQResponse<AmendmentValue> amendmentEventDateFromYearMonthDay(
     		@ActedUpon(value="dwc:eventDate") String eventDate, 
     		@Consulted(value="dwc:year") String year, 
     		@Consulted(value="dwc:month") String month, 
     		@Consulted(value="dwc:day") String day ) 
     {
-        // Specification (previous)
-    	// INTERNAL _PREREQUISITES_NOT_MET if dwc:eventDate is not 
-    	// EMPTY or dwc:year is EMPTY or is uninterpretable as a valid
-    	// year; FILLED_IN the value of dwc:eventDate if an unambiguous
-    	// ISO 8601-1:2019 date can be interpreted from the values in 
-    	// dwc:year, dwc:month and dwc:day; otherwise NOT_AMENDED
-    	
-    	// TODO: Specification needs examination, inclusion of ISO 8601-1 reference in year 
-    	// raises problems if dates are pre-gregorian. 
-    	// 
-        // Specification (2023-06-10)
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is not 
-    	// EMPTY or dwc:year is EMPTY or is not interpretable as a valid 
-    	// ISO 8601-1 year; FILLED_IN the value of dwc:eventDate 
-    	// if an ISO 8601-1 date was interpreted from the values 
-    	// in dwc:year, dwc:month and dwc:day; otherwise NOT_AMENDED
+        // Specification
+        // INTERNAL _PREREQUISITES_NOT_MET if dwc:eventDate is not 
+        // EMPTY or dwc:year is EMPTY or is not interpretable as a 
+        // valid year; FILLED_IN the value of dwc:eventDate if an ISO 
+        // 8601-1 date was interpreted from the values in dwc:year, 
+        // dwc:month and dwc:day; otherwise NOT_AMENDED. 
     	
     	DQResponse<AmendmentValue> result = new DQResponse<>();
     	if (DateUtils.isEmpty(year)) {
