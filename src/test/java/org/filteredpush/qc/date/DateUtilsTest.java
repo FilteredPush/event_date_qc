@@ -2234,4 +2234,18 @@ public class DateUtilsTest {
     	assertEquals(Integer.valueOf(11),DateUtils.romanMonthToInteger("xI"));
     }
     
+    @Test
+    public void hasResolutionDayOrFinerTest() {
+    	assertEquals(false, DateUtils.hasResolutionDayOrFiner(""));
+    	assertEquals(false, DateUtils.hasResolutionDayOrFiner("1800"));
+    	assertEquals(false, DateUtils.hasResolutionDayOrFiner("1801-01"));
+    	assertEquals(false, DateUtils.hasResolutionDayOrFiner("1802/1803"));
+    	assertEquals(false, DateUtils.hasResolutionDayOrFiner("1804-01/1805-01"));
+    	assertEquals(true, DateUtils.hasResolutionDayOrFiner("1806-01-01"));
+    	assertEquals(true, DateUtils.hasResolutionDayOrFiner("1807-01-01/1808-01-10"));
+    	assertEquals(true, DateUtils.hasResolutionDayOrFiner("1809-001"));
+    	assertEquals(true, DateUtils.hasResolutionDayOrFiner("1810-01-01T213342Z"));
+    	assertEquals(true, DateUtils.hasResolutionDayOrFiner("1811-01-01T213342Z/1812-01-10T213342Z"));
+    	assertEquals(true, DateUtils.hasResolutionDayOrFiner("1813-001T213342Z"));
+    }
 }

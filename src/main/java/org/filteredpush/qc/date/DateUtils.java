@@ -2412,6 +2412,7 @@ public class DateUtils {
     }	
 	
     
+    
     /**
      * Given a string that may be a date or a date range, extract a interval of
      * dates from that date range (ignoring time (thus the duration for the 
@@ -3966,6 +3967,54 @@ public class DateUtils {
 		result.put("thirtyfirst",31);
 		result.put("thirtytwo",32);
 		result.put("thirtysecond",32);
+		return result;
+	}
+	
+	/**
+	 * Test to see if a date in ISO date form has a precision of one day or better (distinct from 
+	 * a range of more than one day, 1842 has a precision of one year, 1842-01-01/1842-12-31 has 
+	 * a precision of one day, though it represents a range of one year).
+	 * 
+	 * @param eventDate to test
+	 * @return true if precision is one day or better, false otherwise.
+	 */
+	public static boolean hasResolutionDayOrFiner(String eventDate) { 
+		boolean result = false;
+		if (!DateUtils.isEmpty(eventDate)) { 
+			if (eventDate.contains("/")) { 
+				String[] bits = eventDate.split("/");
+				boolean anyFail = false;
+				for (int i=0; i<bits.length; i++) { 
+					logger.debug(bits[i]);
+					if (!hasResolutionDayOrFiner(bits[i])) {
+						if (!anyFail) { anyFail = true; }
+					}
+				}
+				if (anyFail) { 
+					result = false;
+				} else { 
+					result = true;
+				}
+			} else { 
+				if (eventDate.contains("T")) { 
+					// strip off any time
+					eventDate = eventDate.replaceAll("T.*$", "").trim();
+				}
+				if (eventDate.matches("^[0-9]{4}-[0-9]{2}-[0-9]{2}$")) { 
+					result = true;
+				} else if (eventDate.matches("^[0-9]{4}$")) {
+					result = false;
+				} else if (eventDate.matches("^[0-9]{4}-[0-9]{2}$")) {
+					result = false;
+				} else if (eventDate.matches("^[0-9]{4}-[0-9]{3}$")) {
+					result = true;
+				} else if (eventDate.matches("^[0-9]{4}-[0-9]{2}-[0-9]{2}T.*")) { 
+					result = true;
+				} else if (eventDate.matches("^[0-9]{4}-[0-9]{3}T.*")) {
+					result = true;
+				}
+			}
+		}
 		return result;
 	}
     

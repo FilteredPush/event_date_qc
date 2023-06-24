@@ -1997,7 +1997,7 @@ public class DwCEventDQ {
      * #52 Amendment SingleRecord Completeness: event from eventdate
      *
      * Provides: AMENDMENT_EVENT_FROM_EVENTDATE
-     * Version: 2023-03-27
+     * Version: 2023-06-23
 	 *
      * @param eventDate the provided dwc:eventDate to evaluate
      * @param year the provided dwc:year to evaluate for emptyness and fill in 
@@ -2007,10 +2007,10 @@ public class DwCEventDQ {
      * @param endDayOfYear the provided dwc:endDayOfYear to evaluate for emptyness and fill in 
      * @return DQResponse the response of type AmendmentValue to return 
 	 */
- // TODO: Implementation of AMENDMENT_EVENT_FROM_EVENTDATE is not up to date with current version: https://rs.tdwg.org/bdq/terms/710fe118-17e1-440f-b428-88ba3f547d6d/2023-06-20 see line: 2005
     @Amendment(label="AMENDMENT_EVENT_FROM_EVENTDATE", description="Propose amendment to values in any of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear or dwc:endDayOfYear from a the content of dwc:eventDate.")
     @Provides("710fe118-17e1-440f-b428-88ba3f547d6d")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/710fe118-17e1-440f-b428-88ba3f547d6d/2023-03-27")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/710fe118-17e1-440f-b428-88ba3f547d6d/2023-06-23")
+    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or contains an invalid value according to ISO 8601-1; FILLED_IN (1) dwc:day from dwc:eventDate if dwc:day is EMPTY and dwc:eventDate has a precision of a day or finer, (2) dwc:month from dwc:eventDate if dwc:month is EMPTY and dwc:eventDate has a precision of a single month or finer, (3) dwc:year from dwc:eventDate if dwc:year is EMPTY and dwc:eventDate has a precision of a single year or finer and is within a single year, (4) dwc:startDayOfYear and dwc:endDayOfYear if they are EMPTY and dwc:eventDate has a precision of a day or better; otherwise NOT_AMENDED. ")
 	public static DQResponse<AmendmentValue> amendmentEventFromEventdate(
     		@Consulted(value = "dwc:eventDate") String eventDate,
 			@ActedUpon(value = "dwc:year") String year,
@@ -2024,12 +2024,15 @@ public class DwCEventDQ {
     	
         // Specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
-        // or contains an invalid value according to ISO 8601-1 or 
-        // dwc:eventDate is not wholly within one year; FILLED_IN one 
-        // or more EMPTY terms dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, 
-        // dwc:endDayOfYear if any were unambiguously interpreted from 
-        // values in dwc:eventDate, and dwc:eventDate is wholly within 
-        // one year; otherwise NOT_AMENDED 
+        // or contains an invalid value according to ISO 8601-1; FILLED_IN 
+        // (1) dwc:day from dwc:eventDate if dwc:day is EMPTY and dwc:eventDate 
+        // has a precision of a day or finer, (2) dwc:month from dwc:eventDate 
+        // if dwc:month is EMPTY and dwc:eventDate has a precision 
+        // of a single month or finer, (3) dwc:year from dwc:eventDate if dwc:year 
+        // is EMPTY and dwc:eventDate has a precision of a single year 
+        // or finer and is within a single year, (4) dwc:startDayOfYear 
+        // and dwc:endDayOfYear if they are EMPTY and dwc:eventDate 
+        // has a precision of a day or better; otherwise NOT_AMENDED. 
     	
     	if (DateUtils.isEmpty(eventDate)) {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -2056,46 +2059,49 @@ public class DwCEventDQ {
 
     				if (DateUtils.isEmpty(day)) {
     					String newDay = Integer.toString(interval.getStartDate().getDayOfMonth());
-						values.put("dwc:day", newDay );
-    					result.setResultState(ResultState.FILLED_IN);
     					if (isRange) {
-    						result.addComment("Added day ["+ newDay+"] from start day of range ["+eventDate+"].");
+    						result.addComment("Provided dwc:eventDate ["+eventDate+"] represents a range or has precision coarser than a day, can't fill in day.");
     					} else {
     						result.addComment("Added day ["+ newDay+"] from eventDate ["+eventDate+"].");
+    						values.put("dwc:day", newDay );
+    						result.setResultState(ResultState.FILLED_IN);
     					}
     				}
     				if (DateUtils.isEmpty(month)) {
     					String newMonth = Integer.toString(interval.getStartDate().getMonthValue());
-    					values.put("dwc:month", newMonth );
-    					result.setResultState(ResultState.FILLED_IN);
     					if (isRange) {
-    						result.addComment("Added month ["+ newMonth +"] from start month of eventDate ["+eventDate+"].");
+    						if (interval.getStartDate().getMonthValue()==interval.getEndDate().getMonthValue() && DateUtils.specificToMonthScale(eventDate)) { 
+    							values.put("dwc:month", newMonth );
+    							result.setResultState(ResultState.FILLED_IN);
+    							result.addComment("Added month ["+ newMonth +"] from eventDate ["+eventDate+"].");
+    						} else { 
+    							result.addComment("Provided dwc:eventDate ["+eventDate+"] spans more than one month, can't fill in dwc:month.");
+    						} 
     					} else {
-    						result.addComment("Added month ["+ newMonth +"] from eventDate ["+eventDate+"].");
-    					}
-    				}
-    				if (DateUtils.isEmpty(month)) {
-    					String newMonth = Integer.toString(interval.getStartDate().getMonthValue());
-    					values.put("dwc:month", newMonth );
-    					result.setResultState(ResultState.FILLED_IN);
-    					if (isRange) {
-    						result.addComment("Added month ["+ newMonth +"] from start month of eventDate ["+eventDate+"].");
-    					} else {
+    						values.put("dwc:month", newMonth );
+    						result.setResultState(ResultState.FILLED_IN);
     						result.addComment("Added month ["+ newMonth +"] from eventDate ["+eventDate+"].");
     					}
     				}
     				if (DateUtils.isEmpty(year)) {
     					String newYear = Integer.toString(interval.getStartDate().getYear());
-    					values.put("dwc:year", newYear );
-    					result.setResultState(ResultState.FILLED_IN);
     					if (isRange) {
-    						result.addComment("Added year ["+ newYear +"] from start month of eventDate ["+eventDate+"].");
+    						if (DateUtils.specificToYearScale(eventDate)) { 
+    							result.addComment("Added year ["+ newYear +"] from start month of eventDate ["+eventDate+"].");
+    							values.put("dwc:year", newYear );
+    							result.setResultState(ResultState.FILLED_IN);
+    						} else { 
+    							result.addComment("Provided dwc:eventDate ["+eventDate+"] spans more than one year, can't fill in dwc:year.");
+    						}
     					} else {
     						result.addComment("Added year ["+ newYear +"] from eventDate ["+eventDate+"].");
+    						values.put("dwc:year", newYear );
+    						result.setResultState(ResultState.FILLED_IN);
     					}
     				}
-
-    				if (DateUtils.isEmpty(startDayOfYear)) {
+    				
+    				boolean precisionDay = DateUtils.hasResolutionDayOrFiner(eventDate);
+    				if (DateUtils.isEmpty(startDayOfYear) && precisionDay) {
     					String newDay = Integer.toString(interval.getStartDate().getDayOfYear());
     					values.put("dwc:startDayOfYear", newDay );
     					result.setResultState(ResultState.FILLED_IN);
@@ -2106,7 +2112,7 @@ public class DwCEventDQ {
     					}
     				}
 
-    				if (DateUtils.isEmpty(endDayOfYear)) {
+    				if (DateUtils.isEmpty(endDayOfYear) && precisionDay) {
     					String newDay = Integer.toString(interval.getEndDate().getDayOfYear());
     					values.put("dwc:endDayOfYear", newDay );
     					result.setResultState(ResultState.FILLED_IN);

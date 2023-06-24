@@ -221,11 +221,16 @@ public class DwCEventDQTestDefinitions {
 	public void testAmendmentEventFromEventdate() {
 		
         // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or contains 
-    	// an invalid value according to bdq:sourceAuthority; FILLED_IN one or 
-    	// more EMPTY terms dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, 
-    	// dwc:endDayOfYear if they can be unambiguously interpreted from values in 
-    	// dwc:eventDate, and dwc:eventDate is wholly within one year; otherwise NOT_AMENDED
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
+        // or contains an invalid value according to ISO 8601-1; FILLED_IN 
+        // (1) dwc:day from dwc:eventDate if dwc:day is EMPTY and dwc:eventDate 
+        // has a precision of a day or finer, (2) dwc:month from dwc:eventDate 
+        // if dwc:month is EMPTY and dwc:eventDate has a precision 
+        // of a single month or finer, (3) dwc:year from dwc:eventDate if dwc:year 
+        // is EMPTY and dwc:eventDate has a precision of a single year 
+        // or finer and is within a single year, (4) dwc:startDayOfYear 
+        // and dwc:endDayOfYear if they are EMPTY and dwc:eventDate 
+        // has a precision of a day or better; otherwise NOT_AMENDED. 
 		
 		String eventDate = "";
 		String year = "1832";
@@ -248,10 +253,10 @@ public class DwCEventDQTestDefinitions {
 		year = "";
 		response = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.FILLED_IN.getLabel(), response.getResultState().getLabel()); 
-		assertEquals(5, response.getValue().getObject().size());
+		assertEquals(4, response.getValue().getObject().size());
 		assertEquals("1961", response.getValue().getObject().get("dwc:year"));
 		assertEquals("1", response.getValue().getObject().get("dwc:month"));
-		assertEquals("28", response.getValue().getObject().get("dwc:day"));
+		assertNull(response.getValue().getObject().get("dwc:day"));
 		assertEquals("28", response.getValue().getObject().get("dwc:startDayOfYear"));
 		assertEquals("29", response.getValue().getObject().get("dwc:endDayOfYear"));
 		logger.debug(response.getComment());
@@ -260,9 +265,9 @@ public class DwCEventDQTestDefinitions {
 		year = "1961";
 		response = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.FILLED_IN.getLabel(), response.getResultState().getLabel()); 
-		assertEquals(4, response.getValue().getObject().size());
+		assertEquals(3, response.getValue().getObject().size());
 		assertEquals("1", response.getValue().getObject().get("dwc:month"));
-		assertEquals("28", response.getValue().getObject().get("dwc:day"));
+		assertNull(response.getValue().getObject().get("dwc:day"));
 		assertEquals("28", response.getValue().getObject().get("dwc:startDayOfYear"));
 		assertEquals("29", response.getValue().getObject().get("dwc:endDayOfYear"));
 		logger.debug(response.getComment());
