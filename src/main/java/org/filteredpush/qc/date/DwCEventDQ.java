@@ -1726,7 +1726,8 @@ public class DwCEventDQ {
  // TODO: Implementation of VALIDATION_EVENT_CONSISTENT is not up to date with current version: https://rs.tdwg.org/bdq/terms/5618f083-d55a-4ac2-92b5-b9fb227b832f/2023-06-21 see line: 1740
     @Validation(label="VALIDATION_EVENT_CONSISTENT", description="Are the values in dwc:eventDate consistent with the values in dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear?")
     @Provides("5618f083-d55a-4ac2-92b5-b9fb227b832f")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/5618f083-d55a-4ac2-92b5-b9fb227b832f/2023-06-09")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/5618f083-d55a-4ac2-92b5-b9fb227b832f/2023-06-21")
+    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY, or all of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear are EMPTY; COMPLIANT if all of the following conditions are met (1) dwc:year is EMPTY or dwc:eventDate has a precision of one year or finer and the provided value of dwc:year matches the year expressed in dwc:eventDate, and (2) dwc:month is EMPTY or dwc:eventDate has a precision of one month or finer and the provided value in dwc:month matches the month represented by dwc:eventDate, and (3) dwc:day is EMPTY or dwc:eventDate has a precision of a day or less and the provided value in dwc:day matches the day represented by dwc:eventDate, and (4) dwc:startDayOfYear is empty or dwc:eventDate has a precision of one day or finer and the provided value in dwc:startDayOfYear matches the start day of the year of the range represented by dwc:eventDate, and (5) dwc:endDayOfYear is empty or dwc:eventDate has a precision of one day or finer and the provided value in dwc:endDayOfYear matches the end day of the year of the range represented by dwc:eventDate; otherwise NOT_COMPLIANT. ")
 	public static DQResponse<ComplianceValue> validationEventConsistent(
     		@ActedUpon(value = "dwc:eventDate") String eventDate,
 			@ActedUpon(value = "dwc:year") String year,
@@ -1742,119 +1743,125 @@ public class DwCEventDQ {
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY, 
         // or all of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear 
         // and dwc:endDayOfYear are EMPTY; COMPLIANT if all of the 
-        // following conditions are met 1) the provided value of dwc:year 
-        // matches the start year of the range represented by dwc:eventDate 
-        // or dwc:year is empty, and 2) the provided value in dwc:month 
-        // matches the start month of the range represented by dwc:eventDate 
-        // or dwc:month is empty, and 3) the provided value in dwc:day 
-        // matches the start day of the range represented by dwc:eventDate 
-        // or dwc:day is empty, and 4) the provided value in dwc:startDayOfYear 
-        // matches the start day of the year of the range represented 
-        // by dwc:eventDate or dwc:startDayOfYear is empty, and 5) 
-        // the provided value in dwc:endDayOfYear matches the end day 
-        // of the year of the range represented by dwc:eventDate or 
-		// dwc:endDayOfYear is empty; otherwise NOT_COMPLIANT. 
+        // following conditions are met (1) dwc:year is EMPTY or dwc:eventDate 
+        // has a precision of one year or finer and the provided value 
+        // of dwc:year matches the year expressed in dwc:eventDate, 
+        // and (2) dwc:month is EMPTY or dwc:eventDate has a precision 
+        // of one month or finer and the provided value in dwc:month 
+        // matches the month represented by dwc:eventDate, and (3) 
+        // dwc:day is EMPTY or dwc:eventDate has a precision of a day 
+        // or less and the provided value in dwc:day matches the day 
+        // represented by dwc:eventDate, and (4) dwc:startDayOfYear 
+        // is empty or dwc:eventDate has a precision of one day or 
+        // finer and the provided value in dwc:startDayOfYear matches 
+        // the start day of the year of the range represented by dwc:eventDate, 
+        // and (5) dwc:endDayOfYear is empty or dwc:eventDate has a 
+        // precision of one day or finer and the provided value in 
+        // dwc:endDayOfYear matches the end day of the year of the 
+        // range represented by dwc:eventDate; otherwise NOT_COMPLIANT.
 		
 		boolean inconsistencyFound = false;
 		boolean interpretationProblem = false;
-
-		// Compare eventDate and eventTime
+		
 		if (DateUtils.isEmpty(eventDate)) {
 			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
 			result.addComment("Provided value for eventDate is empty.  Unable to evaluate consistency.");
 		} else if (DateUtils.isEmpty(year) && DateUtils.isEmpty(month) && DateUtils.isEmpty(day)  && DateUtils.isEmpty(startDayOfYear) && DateUtils.isEmpty(endDayOfYear)) {
 			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
 			result.addComment("Provided values for year, month, day, startDayOfYear and endDayOfYear are empty.  Unable to evaluate consistency.");
-		} else { 
-		// compare eventDate and year, month, day
-		if (!DateUtils.isEmpty(eventDate) && !DateUtils.isEmpty(year)) {
-			if (!DateUtils.isEmpty(month)) {
-				if (!DateUtils.isEmpty(day)) {
-					if (!DateUtils.isConsistent(eventDate, year, month, day)) {
-						inconsistencyFound = true;
-						result.addComment("Provided value for eventDate '" + eventDate + "' appears to represent a date inconsistent with year-month-day " + year + "-" + month +"-" + day + ".");
-					}
-
-				} else {
-					logger.debug(DateUtils.extractDate(eventDate)); 
-					String toTest = DateUtils.extractDate(eventDate).format(DateTimeFormatter.ofPattern("yyyy-MM")) + "-01"; 
-					logger.debug(toTest);
-					logger.debug(DateUtils.isConsistent(toTest, year, month, "1"));
-					if (!DateUtils.isConsistent(toTest, year, month, "1")) {
-						inconsistencyFound = true;
-						result.addComment("Provided value for eventDate '" + eventDate + "' appears to represent a date inconsistent with year-month " + year + "-" + month +" .");
-					}
-				}
-			} else {
-				if (!DateUtils.isEmpty(day)) {
-					interpretationProblem = true;
-					result.addComment("Provided value for eventDate '" + eventDate + "' can't be tested for consistency with " + year + "- -" + day + " (no month provided).");
-				} else {
-					String toTest = DateUtils.extractDate(eventDate).format(DateTimeFormatter.ofPattern("yyyy")) + "-01-01"; 
-					logger.debug(toTest);
-					if (!DateUtils.isConsistent(toTest, year, "1", "1")) {
-						inconsistencyFound = true;
-						result.addComment("Provided value for eventDate '" + eventDate + "' appears to represent a date inconsistent with year " + year + " .");
-					}
-				}
-			}
-		}
-
-
-		// compare eventDate and start/end day of year
-		if (!DateUtils.isEmpty(eventDate) && !DateUtils.isEmpty(startDayOfYear)) {
-			if (!DateUtils.isConsistent(eventDate, startDayOfYear, endDayOfYear, "", "", "")) {
-				inconsistencyFound = true;
-				result.addComment("Provided value for eventDate '" + eventDate + "' appears to represent a date inconsistent with startDayOfYear [" + startDayOfYear + "] or endDayOfYear [" + endDayOfYear +"].");
-			}
-
-		}
-
-		// compare eventDate and month day (if year is empty)
-		if (!DateUtils.isEmpty(eventDate) && DateUtils.isEmpty(year) && (!DateUtils.isEmpty(month) || !DateUtils.isEmpty(day))) {
-			if (!DateUtils.isConsistent(eventDate, "", month, day)) {
-				inconsistencyFound = true;
-				result.addComment("Provided value for eventDate '" + eventDate + "' appears to represent a date inconsistent with  the month ["+ month +" or day [" + day + "], no year provided.");
-			}
-		}
-
-		// compare year month day with start day of year
-		if (!DateUtils.isEmpty(year) && !DateUtils.isEmpty(month) && !DateUtils.isEmpty(day) && !DateUtils.isEmpty(startDayOfYear)) {
-			if (!DateUtils.isEmpty(year)) { year = StringUtils.leftPad(year,4,"0"); } 
-			if (!DateUtils.isEmpty(month)) { month = StringUtils.leftPad(month,2,"0"); } 
-			if (!DateUtils.isEmpty(day)) { day = StringUtils.leftPad(day,2,"0"); } 
-			StringBuilder tempDate = new StringBuilder().append(year)
-					.append("-").append(month).append("-").append(day);
-			if (!DateUtils.isConsistent(tempDate.toString(), startDayOfYear, "", year, month, day)) {
-				inconsistencyFound = true;
-				result.addComment("Provided value for year month and day'" + tempDate + "' appear to represent a date inconsistent with startDayOfYear [" + startDayOfYear + "] .");
-			}
-		}
-
-		if (DateUtils.isEmpty(eventDate) &&
-				DateUtils.isEmpty(year) &&
-				DateUtils.isEmpty(month) &&
-				DateUtils.isEmpty(day) &&
-				DateUtils.isEmpty(startDayOfYear) &&
-				DateUtils.isEmpty(endDayOfYear) )
-		{
-			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-			result.addComment("All provided event terms are empty, can't assess consistency.");
-			logger.debug("All terms empty.");
 		} else {
-			if (inconsistencyFound) {
-				// inconsistency trumps interpretation problem, return result as NOT COMPLIANT
-				result.setResultState(ResultState.RUN_HAS_RESULT);
-				result.setValue(ComplianceValue.NOT_COMPLIANT);
-			} else {
-				if (interpretationProblem) {
-					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-				} else {
-					result.setResultState(ResultState.RUN_HAS_RESULT);
-					result.setValue(ComplianceValue.COMPLIANT);
+			// (1) dwc:year is EMPTY or dwc:eventDate 
+			// has a precision of one year or finer and the provided value 
+			// of dwc:year matches the year expressed in dwc:eventDate, 
+			// and 
+			if (!DateUtils.isEmpty(year)) { 
+				if (DateUtils.specificToYearScale(eventDate)) { 
+					
+				} else { 
+					result.addComment("Provided value for dwc:eventDate ["+eventDate+"] represents more than a year, but dwc:year contains a value ["+year+"] it should not.");
+					inconsistencyFound = true;
 				}
 			}
-		}
+			// (2) dwc:month is EMPTY or dwc:eventDate has a precision 
+			// of one month or finer and the provided value in dwc:month 
+			// matches the month represented by dwc:eventDate, and 
+			if (!DateUtils.isEmpty(month)) { 
+				
+			}
+			// (3) 
+			// dwc:day is EMPTY or dwc:eventDate has a precision of a day 
+			// or less and the provided value in dwc:day matches the day 
+			// represented by dwc:eventDate, and 
+			if (!DateUtils.isEmpty(day)) { 
+				if (DateUtils.hasResolutionDayOrFiner(eventDate)) { 
+					if (DateUtils.extractDate(eventDate).getDayOfMonth()!=Integer.parseInt(day)) {
+						result.addComment("Provided value for dwc:eventDate ["+eventDate+"] is not consistent with the provided value of  dwc:day ["+day+"].");
+						inconsistencyFound = true;
+					}
+				} else { 
+					result.addComment("Provided value for dwc:eventDate ["+eventDate+"] has precision of coarser than a day, but dwc:day contains a value ["+day+"] it should not.");
+					inconsistencyFound = true;
+				}
+			}
+			// (4) dwc:startDayOfYear 
+			// is empty or dwc:eventDate has a precision of one day or 
+			// finer and the provided value in dwc:startDayOfYear matches 
+			// the start day of the year of the range represented by dwc:eventDate, 
+			// and 
+			if (!DateUtils.isEmpty(startDayOfYear)) { 
+				if (DateUtils.hasResolutionDayOrFiner(eventDate)) { 
+					if (DateUtils.extractDate(eventDate).getDayOfYear()!=Integer.parseInt(startDayOfYear)) {
+						result.addComment("Provided value for dwc:eventDate ["+eventDate+"] is not consistent with the provided value of  dwc:day ["+day+"].");
+						inconsistencyFound = true;
+					}
+				} else { 
+					result.addComment("Provided value for dwc:eventDate ["+eventDate+"] has precision of coarser than a day, but dwc:startDayOfYear contains a value ["+startDayOfYear+"] it should not.");
+					inconsistencyFound = true;
+				}
+				
+			}
+			
+			// (5) dwc:endDayOfYear is empty or dwc:eventDate has a 
+			// precision of one day or finer and the provided value in 
+			// dwc:endDayOfYear matches the end day of the year of the 
+			// range represented by dwc:eventDate;
+			if (!DateUtils.isEmpty(endDayOfYear)) { 
+				if (DateUtils.hasResolutionDayOrFiner(eventDate)) { 
+					if (DateUtils.extractDateInterval(eventDate).getEnd().getDayOfYear()!=Integer.parseInt(endDayOfYear)) {
+						result.addComment("Provided value for dwc:eventDate ["+eventDate+"] is not consistent with the provided value of  dwc:day ["+day+"].");
+						inconsistencyFound = true;
+					}
+				} else { 
+					result.addComment("Provided value for dwc:eventDate ["+eventDate+"] has precision of coarser than a day, but dwc:startDayOfYear contains a value ["+endDayOfYear+"] it should not.");
+					inconsistencyFound = true;
+				}
+				
+			}
+
+			if (DateUtils.isEmpty(eventDate) &&
+					DateUtils.isEmpty(year) &&
+					DateUtils.isEmpty(month) &&
+					DateUtils.isEmpty(day) &&
+					DateUtils.isEmpty(startDayOfYear) &&
+					DateUtils.isEmpty(endDayOfYear) )
+			{
+				result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+				result.addComment("All provided event terms are empty, can't assess consistency.");
+				logger.debug("All terms empty.");
+			} else {
+				if (inconsistencyFound) {
+					// inconsistency trumps interpretation problem, return result as NOT COMPLIANT
+					result.setResultState(ResultState.RUN_HAS_RESULT);
+					result.setValue(ComplianceValue.NOT_COMPLIANT);
+				} else {
+					if (interpretationProblem) {
+						result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+					} else {
+						result.setResultState(ResultState.RUN_HAS_RESULT);
+						result.setValue(ComplianceValue.COMPLIANT);
+					}
+				}
+			}
 		}
 
 		return result;
@@ -2032,53 +2039,61 @@ public class DwCEventDQ {
     			if (interval==null) {
     				result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     				result.addComment("Provided value for dwc:eventDate ["+ eventDate +"] appears to be correctly formatted, but could not be interpreted as a valid date.");
-
-    			} else if (isRange && interval.getStart().getYear() != interval.getEnd().getYear() ) {
-    				result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
-    				result.addComment("Provided value for dwc:eventDate ["+ eventDate +"] represents a range of more than one year, not amending.");
     			} else {
+    				boolean rangeSpansMoreThanYear = false;
+    				if (isRange && interval.getStart().getYear() != interval.getEnd().getYear() ) {
+    					// result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+    					result.addComment("Provided value for dwc:eventDate ["+ eventDate +"] represents a range of more than one year.");
+    					rangeSpansMoreThanYear = true;
+    				}
     				Map<String, String> values = new HashMap<>();
 
     				if (DateUtils.isEmpty(day)) {
-    					String newDay = Integer.toString(interval.getStartDate().getDayOfMonth());
-    					if (isRange) {
-    						result.addComment("Provided dwc:eventDate ["+eventDate+"] represents a range or has precision coarser than a day, can't fill in day.");
-    					} else {
-    						result.addComment("Added day ["+ newDay+"] from eventDate ["+eventDate+"].");
-    						values.put("dwc:day", newDay );
-    						result.setResultState(ResultState.FILLED_IN);
+    					if (!rangeSpansMoreThanYear) { 
+    						String newDay = Integer.toString(interval.getStartDate().getDayOfMonth());
+    						if (isRange) {
+    							result.addComment("Provided dwc:eventDate ["+eventDate+"] represents a range or has precision coarser than a day, can't fill in day.");
+    						} else {
+    							result.addComment("Added day ["+ newDay+"] from eventDate ["+eventDate+"].");
+    							values.put("dwc:day", newDay );
+    							result.setResultState(ResultState.FILLED_IN);
+    						}
     					}
     				}
     				if (DateUtils.isEmpty(month)) {
-    					String newMonth = Integer.toString(interval.getStartDate().getMonthValue());
-    					if (isRange) {
-    						if (interval.getStartDate().getMonthValue()==interval.getEndDate().getMonthValue() && DateUtils.specificToMonthScale(eventDate)) { 
+    					if (!rangeSpansMoreThanYear) { 
+    						String newMonth = Integer.toString(interval.getStartDate().getMonthValue());
+    						if (isRange) {
+    							if (interval.getStartDate().getMonthValue()==interval.getEndDate().getMonthValue() && DateUtils.specificToMonthScale(eventDate)) { 
+    								values.put("dwc:month", newMonth );
+    								result.setResultState(ResultState.FILLED_IN);
+    								result.addComment("Added month ["+ newMonth +"] from eventDate ["+eventDate+"].");
+    							} else { 
+    								result.addComment("Provided dwc:eventDate ["+eventDate+"] spans more than one month, can't fill in dwc:month.");
+    							} 
+    						} else {
     							values.put("dwc:month", newMonth );
     							result.setResultState(ResultState.FILLED_IN);
     							result.addComment("Added month ["+ newMonth +"] from eventDate ["+eventDate+"].");
-    						} else { 
-    							result.addComment("Provided dwc:eventDate ["+eventDate+"] spans more than one month, can't fill in dwc:month.");
-    						} 
-    					} else {
-    						values.put("dwc:month", newMonth );
-    						result.setResultState(ResultState.FILLED_IN);
-    						result.addComment("Added month ["+ newMonth +"] from eventDate ["+eventDate+"].");
+    						}
     					}
     				}
     				if (DateUtils.isEmpty(year)) {
-    					String newYear = Integer.toString(interval.getStartDate().getYear());
-    					if (isRange) {
-    						if (DateUtils.specificToYearScale(eventDate)) { 
-    							result.addComment("Added year ["+ newYear +"] from start month of eventDate ["+eventDate+"].");
+    					if (!rangeSpansMoreThanYear) { 
+    						String newYear = Integer.toString(interval.getStartDate().getYear());
+    						if (isRange) {
+    							if (DateUtils.specificToYearScale(eventDate)) { 
+    								result.addComment("Added year ["+ newYear +"] from start month of eventDate ["+eventDate+"].");
+    								values.put("dwc:year", newYear );
+    								result.setResultState(ResultState.FILLED_IN);
+    							} else { 
+    								result.addComment("Provided dwc:eventDate ["+eventDate+"] spans more than one year, can't fill in dwc:year.");
+    							}
+    						} else {
+    							result.addComment("Added year ["+ newYear +"] from eventDate ["+eventDate+"].");
     							values.put("dwc:year", newYear );
     							result.setResultState(ResultState.FILLED_IN);
-    						} else { 
-    							result.addComment("Provided dwc:eventDate ["+eventDate+"] spans more than one year, can't fill in dwc:year.");
     						}
-    					} else {
-    						result.addComment("Added year ["+ newYear +"] from eventDate ["+eventDate+"].");
-    						values.put("dwc:year", newYear );
-    						result.setResultState(ResultState.FILLED_IN);
     					}
     				}
     				

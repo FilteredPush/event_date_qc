@@ -2421,6 +2421,7 @@ public class DwcEventDQTest {
 		startDayOfYear = "";
 		endDayOfYear = "";		
 		result = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
 		assertEquals(ResultState.FILLED_IN.getLabel(), result.getResultState().getLabel());
 		year = result.getValue().getObject().get("dwc:year");
 		month = result.getValue().getObject().get("dwc:month");
