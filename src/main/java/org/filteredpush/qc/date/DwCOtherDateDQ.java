@@ -109,6 +109,7 @@ public class DwCOtherDateDQ {
     @Validation(label="VALIDATION_DATEIDENTIFIED_INRANGE", description="Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate?")
     @Provides("dc8aae4b-134f-4d75-8a71-c4186239178e")
     @ProvidesVersion("https://rs.tdwg.org/bdq/terms/dc8aae4b-134f-4d75-8a71-c4186239178e/2023-03-27")
+// TODO: out of date of the current specification.
     public static DQResponse<ComplianceValue> validationDateidentifiedInrange(
 		@ActedUpon("dwc:dateIdentified") String dateIdentified,
 		@Consulted("dwc:eventDate") String eventDate
@@ -291,28 +292,22 @@ public class DwCOtherDateDQ {
      * #26 Amendment SingleRecord Conformance: dateidentified standardized
      *
      * Provides: AMENDMENT_DATEIDENTIFIED_STANDARDIZED
-     * Version: 2023-03-30
+     * Version: 2023-06-13
      *
      * @param dateIdentified the provided dwc:dateIdentified to evaluate
      * @return DQResponse the response of type AmendmentValue to return
      */
     @Amendment(label="AMENDMENT_DATEIDENTIFIED_STANDARDIZED", description="Propose amendment to the value of dwc:dateIdentified to a valid ISO date.")
     @Provides("39bb2280-1215-447b-9221-fd13bc990641")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/39bb2280-1215-447b-9221-fd13bc990641/2023-03-30")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/39bb2280-1215-447b-9221-fd13bc990641/2023-06-13")
     public static DQResponse<AmendmentValue> amendmentDateidentifiedStandardized(@ActedUpon("dwc:dateIdentified") String dateIdentified) {
         DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
 
         // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is 
-        // EMPTY; AMENDED if the value of dwc:dateIdentified was altered 
-        // to unambiguously conform with the ISO 8601-1:2019 date format; 
-        // otherwise NOT_AMENDED 
-        
-        // TODO: The current text is ambiguous and needs to be corrected.
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is 
-        // EMPTY; AMENDED the value of dwc:dateIdentified if it was 
-        // unambiguous and formatted as a valid ISO 8601-1 date; otherwise 
-        // NOT_AMENDED 
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is EMPTY; 
+        // AMENDED if the value of dwc:dateIdentified was not a properly 
+        // formatted ISO 8601-1 date but was unambiguous and was altered 
+        // to be a valid ISO 8601-1 date; otherwise NOT_AMENDED.
 
 		if (DateUtils.eventDateValid(dateIdentified)) {
 			result.setResultState(ResultState.NOT_AMENDED);
