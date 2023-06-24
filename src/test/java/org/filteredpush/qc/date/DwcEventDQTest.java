@@ -2384,5 +2384,39 @@ public class DwcEventDQTest {
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), vresult.getResultState().getLabel());
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), vresult.getValue().getLabel());
 		
+		
+		String verbatimEventDate = "1990";
+		eventDate = "";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";		
+		result = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate, verbatimEventDate);
+		assertEquals(ResultState.FILLED_IN.getLabel(), result.getResultState().getLabel());
+		assertEquals(1,result.getValue().getObject().size());
+		assertNotNull(result.getComment());
+		eventDate = result.getValue().getObject().get("dwc:eventDate");
+		logger.debug(eventDate);
+		vresult = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), vresult.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), vresult.getValue().getLabel());
+		assertNotNull(vresult.getComment());
+		vresult = DwCEventDQ.validationEventdateStandard(eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), vresult.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), vresult.getValue().getLabel());
+		assertNotNull(vresult.getComment());
+		result = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.FILLED_IN.getLabel(), result.getResultState().getLabel());
+		year = result.getValue().getObject().get("dwc:year");
+		assertEquals("1990",year);
+		assertEquals(1,result.getValue().getObject().size());	
+		vresult = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), vresult.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), vresult.getValue().getLabel());
+		assertNotNull(vresult.getComment());
+		
+		
+		
 	} 
 }
