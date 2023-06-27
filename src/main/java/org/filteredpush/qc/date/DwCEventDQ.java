@@ -1701,8 +1701,6 @@ public class DwCEventDQ {
     }
 
     
-
-    
     /**
      * Are the values in dwc:eventDate consistent with the values in dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear?
      * 
@@ -1712,7 +1710,7 @@ public class DwCEventDQ {
      * #67 Validation SingleRecord Consistency: eventdate inconsistent
      *
      * Provides: VALIDATION_EVENT_CONSISTENT
-     * Version: 2023-06-09
+     * Version: 2023-06-27
      *
      * @param eventDate the provided dwc:eventDate to evaluate
      * @param year the provided dwc:year to evaluate
@@ -1723,11 +1721,11 @@ public class DwCEventDQ {
      * @return DQResponse the response of type ComplianceValue  to return describing 
      *     whether the event terms represent one temporal interval or
      */
- // TODO: Implementation of VALIDATION_EVENT_CONSISTENT is not up to date with current version: https://rs.tdwg.org/bdq/terms/5618f083-d55a-4ac2-92b5-b9fb227b832f/2023-06-21 see line: 1740
+// TODO: Implementation of VALIDATION_EVENT_CONSISTENT is not up to date with current version: https://rs.tdwg.org/bdq/terms/5618f083-d55a-4ac2-92b5-b9fb227b832f/2023-06-27 see line: 1728
     @Validation(label="VALIDATION_EVENT_CONSISTENT", description="Are the values in dwc:eventDate consistent with the values in dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear?")
     @Provides("5618f083-d55a-4ac2-92b5-b9fb227b832f")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/5618f083-d55a-4ac2-92b5-b9fb227b832f/2023-06-21")
-    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY, or all of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear are EMPTY; COMPLIANT if all of the following conditions are met (1) dwc:year is EMPTY or dwc:eventDate has a precision of one year or finer and the provided value of dwc:year matches the year expressed in dwc:eventDate, and (2) dwc:month is EMPTY or dwc:eventDate has a precision of one month or finer and the provided value in dwc:month matches the month represented by dwc:eventDate, and (3) dwc:day is EMPTY or dwc:eventDate has a precision of a day or less and the provided value in dwc:day matches the day represented by dwc:eventDate, and (4) dwc:startDayOfYear is empty or dwc:eventDate has a precision of one day or finer and the provided value in dwc:startDayOfYear matches the start day of the year of the range represented by dwc:eventDate, and (5) dwc:endDayOfYear is empty or dwc:eventDate has a precision of one day or finer and the provided value in dwc:endDayOfYear matches the end day of the year of the range represented by dwc:eventDate; otherwise NOT_COMPLIANT. ")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/5618f083-d55a-4ac2-92b5-b9fb227b832f/2023-06-27")
+    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY, or all of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear are EMPTY; COMPLIANT if all of the following conditions are met (1) dwc:year is EMPTY or dwc:eventDate has a precision of one year or finer and and is within a single year and the provided value of dwc:year matches the year expressed in dwc:eventDate, and (2) dwc:month is EMPTY or dwc:eventDate has a precision of one month or finer and is within a single month and the provided value in dwc:month matches the month represented by dwc:eventDate, and (3) dwc:day is EMPTY or dwc:eventDate has a precision of a day or less and is within a single day and the provided value in dwc:day matches the day represented by dwc:eventDate, and (4) dwc:startDayOfYear is empty or dwc:eventDate has a precision of one day or finer and the provided value in dwc:startDayOfYear matches the start day of the year of the range represented by dwc:eventDate, and (5) dwc:endDayOfYear is empty or dwc:eventDate has a precision of one day or finer and the provided value in dwc:endDayOfYear matches the end day of the year of the range represented by dwc:eventDate; otherwise NOT_COMPLIANT. ")
 	public static DQResponse<ComplianceValue> validationEventConsistent(
     		@ActedUpon(value = "dwc:eventDate") String eventDate,
 			@ActedUpon(value = "dwc:year") String year,
@@ -1744,22 +1742,23 @@ public class DwCEventDQ {
         // or all of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear 
         // and dwc:endDayOfYear are EMPTY; COMPLIANT if all of the 
         // following conditions are met (1) dwc:year is EMPTY or dwc:eventDate 
-        // has a precision of one year or finer and the provided value 
-        // of dwc:year matches the year expressed in dwc:eventDate, 
-        // and (2) dwc:month is EMPTY or dwc:eventDate has a precision 
-        // of one month or finer and the provided value in dwc:month 
+        // has a precision of one year or finer and and is within a 
+        // single year and the provided value of dwc:year matches the 
+        // year expressed in dwc:eventDate, and (2) dwc:month is EMPTY 
+        // or dwc:eventDate has a precision of one month or finer and 
+        // is within a single month and the provided value in dwc:month 
         // matches the month represented by dwc:eventDate, and (3) 
         // dwc:day is EMPTY or dwc:eventDate has a precision of a day 
-        // or less and the provided value in dwc:day matches the day 
-        // represented by dwc:eventDate, and (4) dwc:startDayOfYear 
+        // or less and is within a single day and the provided value 
+        // in dwc:day matches the day represented by dwc:eventDate, 
+        // and (4) dwc:startDayOfYear is empty or dwc:eventDate has 
+        // a precision of one day or finer and the provided value in 
+        // dwc:startDayOfYear matches the start day of the year of 
+        // the range represented by dwc:eventDate, and (5) dwc:endDayOfYear 
         // is empty or dwc:eventDate has a precision of one day or 
-        // finer and the provided value in dwc:startDayOfYear matches 
-        // the start day of the year of the range represented by dwc:eventDate, 
-        // and (5) dwc:endDayOfYear is empty or dwc:eventDate has a 
-        // precision of one day or finer and the provided value in 
-        // dwc:endDayOfYear matches the end day of the year of the 
-        // range represented by dwc:eventDate; otherwise NOT_COMPLIANT.
-		
+        // finer and the provided value in dwc:endDayOfYear matches 
+        // the end day of the year of the range represented by dwc:eventDate; 
+        // otherwise NOT_COMPLIANT. 
 		boolean inconsistencyFound = false;
 		boolean interpretationProblem = false;
 		
@@ -1770,30 +1769,64 @@ public class DwCEventDQ {
 			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
 			result.addComment("Provided values for year, month, day, startDayOfYear and endDayOfYear are empty.  Unable to evaluate consistency.");
 		} else {
+			LocalDateInterval interval = DateUtils.extractDateInterval(eventDate);
 			// (1) dwc:year is EMPTY or dwc:eventDate 
-			// has a precision of one year or finer and the provided value 
-			// of dwc:year matches the year expressed in dwc:eventDate, 
-			// and 
+			// has a precision of one year or finer and and is within a 
+			// single year and the provided value of dwc:year matches the 
+			// year expressed in dwc:eventDate, 
 			if (!DateUtils.isEmpty(year)) { 
-				if (DateUtils.specificToYearScale(eventDate)) { 
-					
+				if (interval!=null && interval.getStartDate().getYear()==interval.getEndDate().getYear() && DateUtils.specificToYearScale(eventDate)) {
+					if (!year.trim().equals(Integer.toString(interval.getStartDate().getYear()))) { 
+						result.addComment("Provided value for dwc:eventDate ["+eventDate+"] spans a year boundary, but dwc:year contains a value ["+year+"] it should not.");
+						inconsistencyFound = true;
+					}
 				} else { 
 					result.addComment("Provided value for dwc:eventDate ["+eventDate+"] represents more than a year, but dwc:year contains a value ["+year+"] it should not.");
 					inconsistencyFound = true;
 				}
 			}
-			// (2) dwc:month is EMPTY or dwc:eventDate has a precision 
-			// of one month or finer and the provided value in dwc:month 
-			// matches the month represented by dwc:eventDate, and 
-			if (!DateUtils.isEmpty(month)) { 
-				
+			// (2) dwc:month is EMPTY 
+			// or dwc:eventDate has a precision of one month or finer and 
+			// is within a single month and the provided value in dwc:month 
+			// matches the month represented by dwc:eventDate, and (3) 
+			if (!DateUtils.isEmpty(month)) {
+				if (!DateUtils.specificToMonthScale(eventDate)) { 
+					result.addComment("Provided value for dwc:eventDate ["+eventDate+"] represents more than a month, but dwc:month contains a value ["+month+"] it should not.");
+					inconsistencyFound = true;
+				} else {
+					if (interval!=null && interval.getStart().getMonthValue()!=interval.getEnd().getMonthValue()) { 
+						result.addComment("Provided value for dwc:eventDate ["+eventDate+"] spans a month boundary, but dwc:month contains a value ["+month+"] it should not.");
+						inconsistencyFound = true;
+					} else {
+						if (interval==null) { 
+							result.addComment("Unable to obtain month from dwc:eventDate ["+eventDate+"] to compare with month ");
+							interpretationProblem = true;
+						} else if (!month.trim().equals(Integer.toString(interval.getStart().getMonthValue()))) {
+							result.addComment("Provided value for dwc:eventDate ["+eventDate+"] contains a month that is not consistent with the provided value for dwc:month ["+month+"].");
+							inconsistencyFound = true;
+						}
+					}
+				}
 			}
 			// (3) 
 			// dwc:day is EMPTY or dwc:eventDate has a precision of a day 
-			// or less and the provided value in dwc:day matches the day 
-			// represented by dwc:eventDate, and 
+			// or less and is within a single day and the provided value 
+			// in dwc:day matches the day represented by dwc:eventDate, 
 			if (!DateUtils.isEmpty(day)) { 
 				if (DateUtils.hasResolutionDayOrFiner(eventDate)) { 
+					try {
+						if (DateUtils.measureDurationSeconds(eventDate) > 86400) { 
+							result.addComment("The provided dwc:eventDate ["+eventDate+"] spans more than one day, and dwc:day contains a value ["+day+"] when it should not. ");
+							inconsistencyFound = true;
+						}
+					} catch (TimeExtractionException e) {
+						result.addComment("Unable to determine duration of provided dwc:eventDate ["+eventDate+"].");
+						interpretationProblem = true;
+					}
+					if (interval!=null && interval.getStartDate().getDayOfYear()!=interval.getStartDate().getDayOfYear()) { 
+						result.addComment("The provided dwc:eventDate ["+eventDate+"] represents an interval of more than one day, and dwc:day contains a value ["+day+"] when it should not. ");
+						inconsistencyFound = true;
+					}
 					if (DateUtils.extractDate(eventDate).getDayOfMonth()!=Integer.parseInt(day)) {
 						result.addComment("Provided value for dwc:eventDate ["+eventDate+"] is not consistent with the provided value of  dwc:day ["+day+"].");
 						inconsistencyFound = true;
@@ -1807,7 +1840,6 @@ public class DwCEventDQ {
 			// is empty or dwc:eventDate has a precision of one day or 
 			// finer and the provided value in dwc:startDayOfYear matches 
 			// the start day of the year of the range represented by dwc:eventDate, 
-			// and 
 			if (!DateUtils.isEmpty(startDayOfYear)) { 
 				if (DateUtils.hasResolutionDayOrFiner(eventDate)) { 
 					if (DateUtils.extractDate(eventDate).getDayOfYear()!=Integer.parseInt(startDayOfYear)) {
@@ -1820,7 +1852,6 @@ public class DwCEventDQ {
 				}
 				
 			}
-			
 			// (5) dwc:endDayOfYear is empty or dwc:eventDate has a 
 			// precision of one day or finer and the provided value in 
 			// dwc:endDayOfYear matches the end day of the year of the 
@@ -1975,7 +2006,6 @@ public class DwCEventDQ {
 		return result;
 	}
 
-
 	/**
      * Propose amendment to values in any of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear or dwc:endDayOfYear from a the content of dwc:eventDate.
      * 
@@ -1986,7 +2016,7 @@ public class DwCEventDQ {
      * #52 Amendment SingleRecord Completeness: event from eventdate
      *
      * Provides: AMENDMENT_EVENT_FROM_EVENTDATE
-     * Version: 2023-06-23
+     * Version: 2023-06-27
 	 *
      * @param eventDate the provided dwc:eventDate to evaluate
      * @param year the provided dwc:year to evaluate for emptyness and fill in 
@@ -1996,10 +2026,11 @@ public class DwCEventDQ {
      * @param endDayOfYear the provided dwc:endDayOfYear to evaluate for emptyness and fill in 
      * @return DQResponse the response of type AmendmentValue to return 
 	 */
-    @Amendment(label="AMENDMENT_EVENT_FROM_EVENTDATE", description="Propose amendment to values in any of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear or dwc:endDayOfYear from a the content of dwc:eventDate.")
+// TODO: Implementation of AMENDMENT_EVENT_FROM_EVENTDATE is not up to date with current version: https://rs.tdwg.org/bdq/terms/710fe118-17e1-440f-b428-88ba3f547d6d/2023-06-27 see line: 2000
+    @Amendment(label="AMENDMENT_EVENT_FROM_EVENTDATE", description="Propose amendment to values in any of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear or dwc:endDayOfYear from the content of dwc:eventDate.")
     @Provides("710fe118-17e1-440f-b428-88ba3f547d6d")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/710fe118-17e1-440f-b428-88ba3f547d6d/2023-06-23")
-    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or contains an invalid value according to ISO 8601-1; FILLED_IN (1) dwc:day from dwc:eventDate if dwc:day is EMPTY and dwc:eventDate has a precision of a day or finer, (2) dwc:month from dwc:eventDate if dwc:month is EMPTY and dwc:eventDate has a precision of a single month or finer, (3) dwc:year from dwc:eventDate if dwc:year is EMPTY and dwc:eventDate has a precision of a single year or finer and is within a single year, (4) dwc:startDayOfYear and dwc:endDayOfYear if they are EMPTY and dwc:eventDate has a precision of a day or better; otherwise NOT_AMENDED. ")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/710fe118-17e1-440f-b428-88ba3f547d6d/2023-06-27")
+    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or contains an invalid value according to ISO 8601-1; FILLED_IN (1) dwc:day from dwc:eventDate if dwc:day is EMPTY and dwc:eventDate has a precision of a day or finer and is within a single day, (2) dwc:month from dwc:eventDate if dwc:month is EMPTY and dwc:eventDate has a precision of a single month or finer and is within a single month, (3) dwc:year from dwc:eventDate if dwc:year is EMPTY and dwc:eventDate has a precision of a single year or finer and is within a single year, (4) dwc:startDayOfYear and dwc:endDayOfYear if they are EMPTY and dwc:eventDate has a precision of a day or better; otherwise NOT_AMENDED. ")
 	public static DQResponse<AmendmentValue> amendmentEventFromEventdate(
     		@Consulted(value = "dwc:eventDate") String eventDate,
 			@ActedUpon(value = "dwc:year") String year,
@@ -2022,7 +2053,20 @@ public class DwCEventDQ {
         // or finer and is within a single year, (4) dwc:startDayOfYear 
         // and dwc:endDayOfYear if they are EMPTY and dwc:eventDate 
         // has a precision of a day or better; otherwise NOT_AMENDED. 
-    	
+ 
+    	// TODO: Updated Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
+        // or contains an invalid value according to ISO 8601-1; FILLED_IN 
+        // (1) dwc:day from dwc:eventDate if dwc:day is EMPTY and dwc:eventDate 
+        // has a precision of a day or finer and is within a single 
+        // day, (2) dwc:month from dwc:eventDate if dwc:month is EMPTY 
+        // and dwc:eventDate has a precision of a single month or finer 
+        // and is within a single month, (3) dwc:year from dwc:eventDate 
+        // if dwc:year is EMPTY and dwc:eventDate has a precision of 
+        // a single year or finer and is within a single year, (4) 
+        // dwc:startDayOfYear and dwc:endDayOfYear if they are EMPTY 
+        // and dwc:eventDate has a precision of a day or better; otherwise 
+        // NOT_AMENDED. 
     	if (DateUtils.isEmpty(eventDate)) {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		result.addComment("No value for dwc:eventDate was provided, no data to fill in from.");
@@ -2051,8 +2095,10 @@ public class DwCEventDQ {
     				if (DateUtils.isEmpty(day)) {
     					if (!rangeSpansMoreThanYear) { 
     						String newDay = Integer.toString(interval.getStartDate().getDayOfMonth());
-    						if (isRange) {
-    							result.addComment("Provided dwc:eventDate ["+eventDate+"] represents a range or has precision coarser than a day, can't fill in day.");
+    						if (isRange && !DateUtils.specificToDay(eventDate)) {
+    							result.addComment("Provided dwc:eventDate ["+eventDate+"] represents a range of more thatn one day or has precision coarser than a day, can't fill in day.");
+    						} else if (!isRange && !DateUtils.specificToDay(eventDate)) {
+    							result.addComment("Provided dwc:eventDate ["+eventDate+"] has a precision coarser than a day, can't fill in day.");
     						} else {
     							result.addComment("Added day ["+ newDay+"] from eventDate ["+eventDate+"].");
     							values.put("dwc:day", newDay );
@@ -2087,17 +2133,20 @@ public class DwCEventDQ {
     								values.put("dwc:year", newYear );
     								result.setResultState(ResultState.FILLED_IN);
     							} else { 
-    								result.addComment("Provided dwc:eventDate ["+eventDate+"] spans more than one year, can't fill in dwc:year.");
+    								result.addComment("Provided dwc:eventDate ["+eventDate+"] represents more than one year, can't fill in dwc:year.");
     							}
     						} else {
     							result.addComment("Added year ["+ newYear +"] from eventDate ["+eventDate+"].");
     							values.put("dwc:year", newYear );
     							result.setResultState(ResultState.FILLED_IN);
     						}
+    					} else { 
+    						result.addComment("Provided dwc:eventDate ["+eventDate+"] spans more than one year, can't fill in dwc:year.");
     					}
     				}
     				
     				boolean precisionDay = DateUtils.hasResolutionDayOrFiner(eventDate);
+    				logger.debug(precisionDay);
     				if (DateUtils.isEmpty(startDayOfYear) && precisionDay) {
     					String newDay = Integer.toString(interval.getStartDate().getDayOfYear());
     					values.put("dwc:startDayOfYear", newDay );
@@ -2127,7 +2176,7 @@ public class DwCEventDQ {
     				//if (DateUtils.isEmpty(eventTime)) {
     				//	if (DateUtils.containsTime(eventDate)) {
     				//		String newTime = DateUtils.extractZuluTime(eventDate);
-    				//		result.addResult("dwc:endDayOfYear", newTime );
+    				//		result.addResult("dwc:eventTimer", newTime );
     				//      result.setResultState(ResultState.FILLED_IN);
     				//	    result.addComment("Added eventTime ["+ newTime +"] from eventDate ["+eventDate+"].");
     				//	}

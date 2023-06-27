@@ -161,45 +161,45 @@ public class DwcEventDQTest {
 		DQResponse<ComplianceValue> result = null;
 		for (int i = 1; i<=31; i++) { 
 			result = DwCEventDQ.validationDayStandard(Integer.toString(i));
-			assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+			assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 			assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		}
 		for (int i = 33; i<=40; i++) { 
 			result = DwCEventDQ.validationDayStandard(Integer.toString(i));
-			assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-			assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+			assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+			assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		}
 		result = DwCEventDQ.validationDayStandard(" 1 ");
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		result = DwCEventDQ.validationDayStandard("01");
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 
 		int i=0;
 		result = DwCEventDQ.validationDayStandard(Integer.toString(i));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 
 		i=32;
 		result = DwCEventDQ.validationDayStandard(Integer.toString(i));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 
 		i=-1;
 		result = DwCEventDQ.validationDayStandard(Integer.toString(i));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 
 		i=Integer.MAX_VALUE;
 		result = DwCEventDQ.validationDayStandard(Integer.toString(i));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 
 		i=Integer.MIN_VALUE;
 		result = DwCEventDQ.validationDayStandard(Integer.toString(i));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 
 		result = DwCEventDQ.validationDayStandard(null);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
@@ -214,24 +214,24 @@ public class DwcEventDQTest {
 		assertNull(result.getValue());
 		
 		result = DwCEventDQ.validationDayStandard("A");
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		
 		result = DwCEventDQ.validationDayStandard("1.5");
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		
 		result = DwCEventDQ.validationDayStandard("**");
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		
 		result = DwCEventDQ.validationDayStandard("1st");
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		
 		result = DwCEventDQ.validationDayStandard("2nd");
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		
 	}
 
@@ -243,40 +243,40 @@ public class DwcEventDQTest {
 		DQResponse<ComplianceValue> result = null;
 		for (int i = 1; i<=12; i++) { 
 			result = DwCEventDQ.validationMonthStandard(Integer.toString(i));
-			assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+			assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 			assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		}
 		result = DwCEventDQ.validationMonthStandard(" 1 ");
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		result = DwCEventDQ.validationMonthStandard("01");
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 
 		int i=0;
 		result = DwCEventDQ.validationMonthStandard(Integer.toString(i));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 
 		i=13;
 		result = DwCEventDQ.validationMonthStandard(Integer.toString(i));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 
 		i=-1;
 		result = DwCEventDQ.validationMonthStandard(Integer.toString(i));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 
 		i=Integer.MAX_VALUE;
 		result = DwCEventDQ.validationMonthStandard(Integer.toString(i));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 
 		i=Integer.MIN_VALUE;
 		result = DwCEventDQ.validationMonthStandard(Integer.toString(i));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 
 		result = DwCEventDQ.validationMonthStandard(null);
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
@@ -286,21 +286,21 @@ public class DwcEventDQTest {
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
 		
 		result = DwCEventDQ.validationMonthStandard("A");
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		result = DwCEventDQ.validationMonthStandard("1.5");
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		result = DwCEventDQ.validationMonthStandard("**");
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		result = DwCEventDQ.validationMonthStandard("Jan");
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		result = DwCEventDQ.validationMonthStandard("January");
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 	}
 
 	@Test
@@ -309,19 +309,19 @@ public class DwcEventDQTest {
 		for (int i = 1981; i<=1983; i++) {
 			// not leap years
 			result = DwCEventDQ.isEventDateJulianYearOrLess(Integer.toString(i));
-			assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+			assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 			assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 			result = DwCEventDQ.isEventDateYearOrLess(Integer.toString(i));
-			assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-			assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
+			assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+			assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());			
 		}
 		// Leap year
 		result = DwCEventDQ.isEventDateJulianYearOrLess("1980");
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		result = DwCEventDQ.isEventDateYearOrLess("1980");
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());			
 	}
 	
 	
@@ -336,7 +336,7 @@ public class DwcEventDQTest {
 				for (int day= 1; day<=27; day++) { 
 					result = DwCEventDQ.validationDayInrange(Integer.toString(year), Integer.toString(month), Integer.toString(day));
 					logger.debug(year + " " + month + " " + day);
-					assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+					assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 					assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 				}
 			}
@@ -347,44 +347,44 @@ public class DwcEventDQTest {
 		int month = 2;
 		int day = 28;
 		result = DwCEventDQ.validationDayInrange(Integer.toString(year), Integer.toString(month), Integer.toString(day));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
 		year = 2001;
 		month = 2;
 		day = 29;  
 		result = DwCEventDQ.validationDayInrange(Integer.toString(year), Integer.toString(month), Integer.toString(day));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		
 		year = 2001;
 		month = 2;
 		day = 30;  
 		result = DwCEventDQ.validationDayInrange(Integer.toString(year), Integer.toString(month), Integer.toString(day));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		
 		// Leap year
 		year = 2000;
 		month = 2;
 		day = 29;  
 		result = DwCEventDQ.validationDayInrange(Integer.toString(year), Integer.toString(month), Integer.toString(day));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
 		year = 2000;
 		month = 2;
 		day = 30;
 		result = DwCEventDQ.validationDayInrange(Integer.toString(year), Integer.toString(month), Integer.toString(day));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		
 		year = 2000;
 		month = 2;
 		day = 31;
 		result = DwCEventDQ.validationDayInrange(Integer.toString(year), Integer.toString(month), Integer.toString(day));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 
 	}
 
@@ -775,11 +775,11 @@ public class DwcEventDQTest {
 			for (int day= 1; day<=365; day++) { 
 				logger.debug(day + "-" + year);
 				result = DwCEventDQ.validationEnddayofyearInrange(Integer.toString(day), Integer.toString(year));
-				assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+				assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 				assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 				
 				result = DwCEventDQ.validationStartdayofyearInrange(Integer.toString(day), Integer.toString(year));
-				assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+				assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 				assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 			}
 		}
@@ -791,36 +791,36 @@ public class DwcEventDQTest {
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		result = DwCEventDQ.validationStartdayofyearInrange(Integer.toString(day), Integer.toString(year));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
 		// not a leap year
 		year = 2001;
 		day = 366;  // out of range
 		result = DwCEventDQ.validationEnddayofyearInrange(Integer.toString(day), Integer.toString(year));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		result = DwCEventDQ.validationStartdayofyearInrange(Integer.toString(day), Integer.toString(year));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());		
 		
 		year = 2001;
 		day = 0;  // out of range
 		result = DwCEventDQ.validationEnddayofyearInrange(Integer.toString(day), Integer.toString(year));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		result = DwCEventDQ.validationStartdayofyearInrange(Integer.toString(day), Integer.toString(year));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		
 		year = 2001;
 		day = 367;  // out of range
 		result = DwCEventDQ.validationEnddayofyearInrange(Integer.toString(day), Integer.toString(year));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		result = DwCEventDQ.validationStartdayofyearInrange(Integer.toString(day), Integer.toString(year));
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());		
 		
 		// test with no year
 		day = 366;  
@@ -835,13 +835,13 @@ public class DwcEventDQTest {
 		String eventDate = "1980-12-31";
 		day = 366;  
 		result = DwCEventDQ.validationEnddayofyearInrange(Integer.toString(day),eventDate);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
 		eventDate = "1980-12-01";	// ending year is extracted from event date, not rest of date
 		day = 366;  
 		result = DwCEventDQ.validationEnddayofyearInrange(Integer.toString(day),eventDate);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());  
 		
 	}
@@ -1070,8 +1070,8 @@ public class DwcEventDQTest {
 		String eventTime = null;
 		
 		result = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "";
 		verbatimEventDate = "";
@@ -1083,8 +1083,8 @@ public class DwcEventDQTest {
 		eventTime = "";
 		
 		result = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "";
 		verbatimEventDate = " ";
@@ -1096,8 +1096,8 @@ public class DwcEventDQTest {
 		eventTime = "                        ";
 		
 		result = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());		
 		
 		eventDate = "text";
 		verbatimEventDate = "";
@@ -1109,8 +1109,8 @@ public class DwcEventDQTest {
 		eventTime = "";
 		
 		result = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());		
 	
 		// Removing, eventTime removed from the test.
 //		eventDate = "";
@@ -1123,8 +1123,8 @@ public class DwcEventDQTest {
 //		eventTime = "text";
 //		
 //		result = DwCEventDQ.isEventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
-//		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-//		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+//		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+//		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "1880-02-03";
 		verbatimEventDate = "";
@@ -1136,8 +1136,8 @@ public class DwcEventDQTest {
 		eventTime = "";
 		
 		result = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());		
 		
 		// removing, eventTime removed from the method.
 //		eventDate = "";
@@ -1150,8 +1150,8 @@ public class DwcEventDQTest {
 //		eventTime = "14:50";
 //		
 //		result = DwCEventDQ.isEventEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
-//		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-//		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+//		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+//		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "";
 		verbatimEventDate = "";
@@ -1163,8 +1163,8 @@ public class DwcEventDQTest {
 		eventTime = "";
 		
 		result = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "";
 		verbatimEventDate = "";
@@ -1176,8 +1176,8 @@ public class DwcEventDQTest {
 		eventTime = "";
 		
 		result = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());			
 		
 		eventDate = "";
 		verbatimEventDate = "Summer";
@@ -1189,8 +1189,8 @@ public class DwcEventDQTest {
 		eventTime = "";
 		
 		result = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());			
 	}
 	
 	@Test
@@ -1206,7 +1206,7 @@ public class DwcEventDQTest {
 		String eventTime = null;
 		
 		result = DwCEventDQ.measureEventCompleteness(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(CompletenessValue.NOT_COMPLETE, result.getValue());	
 		
 		eventDate = "";
@@ -1219,7 +1219,7 @@ public class DwcEventDQTest {
 		eventTime = "";
 		
 		result = DwCEventDQ.measureEventCompleteness(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(CompletenessValue.NOT_COMPLETE, result.getValue());	
 		
 		eventDate = "";
@@ -1232,7 +1232,7 @@ public class DwcEventDQTest {
 		eventTime = "                        ";
 		
 		result = DwCEventDQ.measureEventCompleteness(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(CompletenessValue.COMPLETE, result.getValue());	
 		
 		eventDate = "text";
@@ -1245,7 +1245,7 @@ public class DwcEventDQTest {
 		eventTime = "";
 		
 		result = DwCEventDQ.measureEventCompleteness(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(CompletenessValue.COMPLETE, result.getValue());	
 		
 		// Removing, eventTime removed from the method.
@@ -1259,7 +1259,7 @@ public class DwcEventDQTest {
 //		eventTime = "text";
 //		
 //		result = DwCEventDQ.measureEventCompleteness(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
-//		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+//		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 //		assertEquals(CompletenessValue.COMPLETE, result.getValue());	
 		
 		eventDate = "1880-02-03";
@@ -1272,7 +1272,7 @@ public class DwcEventDQTest {
 		eventTime = "";
 		
 		result = DwCEventDQ.measureEventCompleteness(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(CompletenessValue.COMPLETE, result.getValue());	
 		
 		// Removing, eventTime removed from the method.
@@ -1286,7 +1286,7 @@ public class DwcEventDQTest {
 //		eventTime = "14:50";
 //		
 //		result = DwCEventDQ.measureEventCompleteness(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
-//		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+//		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 //		assertEquals(CompletenessValue.COMPLETE, result.getValue());	
 		
 		eventDate = "";
@@ -1299,7 +1299,7 @@ public class DwcEventDQTest {
 		eventTime = "";
 		
 		result = DwCEventDQ.measureEventCompleteness(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(CompletenessValue.COMPLETE, result.getValue());	
 		
 		eventDate = "";
@@ -1312,7 +1312,7 @@ public class DwcEventDQTest {
 		eventTime = "";
 		
 		result = DwCEventDQ.measureEventCompleteness(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(CompletenessValue.COMPLETE, result.getValue());	
 		
 		eventDate = "";
@@ -1325,7 +1325,7 @@ public class DwcEventDQTest {
 		eventTime = "";
 		
 		result = DwCEventDQ.measureEventCompleteness(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(CompletenessValue.COMPLETE, result.getValue());	
 	}	
 	
@@ -1359,8 +1359,8 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		
 		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());			
 		
 		eventDate = "1980-02-14";
 		year = "1980";
@@ -1371,19 +1371,312 @@ public class DwcEventDQTest {
 		
 		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		logger.debug(result.getComment());
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());			
 		
+		/** 
+		//Issue 67 confirmed expecations table.
+		Here are some data that should be Compliant:
+			eventDate 	startDayOfYear 	endDayOfYear 	year 	month 	day
+			1981-01-03 	3 	3 	1981 	1 	3
+			1981-01 			1981 	1 	
+			1981 			1981 		
+			1981-01/1981-12 			1981 		
+			1981-01-01/1981-12-31 	1 	365 	1981 		
+			1980/1981 					
+			1980-01-10/1980-01-15 	10 	15 	1980 	1 	
+			1981-12-30/1982-01-03 	364 	3 			
+			*/
+		
+		eventDate = "1980-01-03";
+		year = "1980";
+		month = "1";
+		day = "3";
+		startDayOfYear = "3";
+		endDayOfYear = "3";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());		
+		
+		eventDate = "1980-01";
+		year = "1980";
+		month = "1";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+	
+		eventDate = "1981";
+		year = "1981";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "1981-01/1981-12";
+		year = "1981";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "1981-01-01/1981-12-31";
+		year = "1981";
+		month = "";
+		day = "";
+		startDayOfYear = "1";
+		endDayOfYear = "365";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "1980/1981";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		assertNull(result.getValue());
+		
+		eventDate = "1980-01-10/1980-01-15";
+		year = "1980";
+		month = "1";
+		day = "";
+		startDayOfYear = "10";
+		endDayOfYear = "15";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		eventDate = "1981-12-30/1982-01-03";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "364";
+		endDayOfYear = "3";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
+		
+		/*
+
+			And some that should not (should return NOT_COMPLIANT), with non-compliant values in bold, and inconsistent values in italics.
+			eventDate 	startDayOfYear 	endDayOfYear 	year 	month 	day
+			1981-01 	1 	31 	1981 	1 	
+			1981-01 			1981 	2 	
+			1981 	1 	365 	1981 	1 	1
+			1981-01/1981-12 			1981 		
+			1981-01-01/1981-12-31 	1 	365 	1981 	1 	1
+			1981-01-01/1981-12-31 	1 	366 	1981 		
+			1980-01-10/1980-01-15 	10 	15 	1980 	1 	10
+			1981-12-30/1982-01-03 	364 	3 	1981 		
+			1981-12-30/1982-01-03 	3 	364 
+*/		
+		
+		eventDate = "1981-01";
+		year = "1981";
+		month = "1";
+		day = "";
+		startDayOfYear = "1";
+		endDayOfYear = "31";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+	
+		eventDate = "1981-01";
+		year = "1981";
+		month = "2";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1981";
+		year = "1981";
+		month = "1";
+		day = "1";
+		startDayOfYear = "1";
+		endDayOfYear = "365";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1981";
+		year = "1981";
+		month = "1";
+		day = "";
+		startDayOfYear = "1";
+		endDayOfYear = "365";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1981";
+		year = "1981";
+		month = "1";
+		day = "1";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1981";
+		year = "1981";
+		month = "";
+		day = "";
+		startDayOfYear = "1";
+		endDayOfYear = "365";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1981";
+		year = "1981";
+		month = "1";
+		day = "1";
+		startDayOfYear = "1";
+		endDayOfYear = "365";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1981-01/1981-12";
+		year = "1981";
+		month = "1";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1981-01-01/1981-12-31";
+		year = "1981";
+		month = "1";
+		day = "1";
+		startDayOfYear = "1";
+		endDayOfYear = "365";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1981-01-01/1981-12-31";
+		year = "1981";
+		month = "";
+		day = "";
+		startDayOfYear = "1";
+		endDayOfYear = "366";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1980/1981";
+		year = "1980";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1980-01-10/1980-01-15";
+		year = "1980";
+		month = "1";
+		day = "10";
+		startDayOfYear = "10";
+		endDayOfYear = "15";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1981-12-30/1982-01-03";
+		year = "1981";
+		month = "";
+		day = "";
+		startDayOfYear = "364";
+		endDayOfYear = "3";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1981-12-30/1982-01-03";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "3";
+		endDayOfYear = "364";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		// Other tests
 		eventDate = "1980-02-14";
 		year = "1980";
 		month = "2";
 		day = "14";
 		startDayOfYear = Integer.toString(31 + 14);
 		endDayOfYear = Integer.toString(31 + 14);
-		
 		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());			
 		
 		eventDate = "";
 		year = "1980";
@@ -1404,8 +1697,8 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		
 		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());		
 		
 		eventDate = "";
 		year = "1980";
@@ -1426,8 +1719,8 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		
 		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());		
 		
 		eventDate = "1980-02-14";
 		year = "1980";
@@ -1437,8 +1730,8 @@ public class DwcEventDQTest {
 		endDayOfYear = "";
 		
 		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "1980-02-14";
 		year = "1980";
@@ -1448,32 +1741,30 @@ public class DwcEventDQTest {
 		endDayOfYear = Integer.toString(31 + 25);    // date range not in eventDate
 		
 		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());		
 		
 		eventDate = "1980-02-14/1980-02-25";
 		year = "1980";
 		month = "2";
-		day = "14";
+		day = "";
 		startDayOfYear = Integer.toString(31 + 14);
 		endDayOfYear = Integer.toString(31 + 25);    // date range in eventDate
-		
 		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		logger.debug(result.getComment());
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "1980-02-14/1981-01-12";
-		year = "1980";
-		month = "2";
-		day = "14";
+		year = "";
+		month = "";
+		day = "";
 		startDayOfYear = Integer.toString(31 + 14);
 		endDayOfYear = Integer.toString(12);    // date range in eventDate, but in previous year
-		
 		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		logger.debug(result.getComment());
- 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());		
+ 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());		
 		
 		eventDate = "1980-02";
 		year = "1980";
@@ -1483,22 +1774,45 @@ public class DwcEventDQTest {
 		endDayOfYear = "";    
 		
 		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		logger.debug(result.getComment());
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "1980-02";
 		year = "1980";
 		month = "2";
 		day = "";
-		startDayOfYear = "32";
+		startDayOfYear = "";
+		endDayOfYear = "";
 		assertTrue(DateUtils.includesLeapDay(eventDate));
-		endDayOfYear = Integer.toString(31 + 29);    
-		
 		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		logger.debug(result.getComment());
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());				
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
+		
+		eventDate = "1980-02-29";
+		year = "1980";
+		month = "2";
+		day = "29";
+		assertTrue(DateUtils.includesLeapDay(eventDate));
+		startDayOfYear = Integer.toString(31 + 29);    
+		endDayOfYear = Integer.toString(31 + 29);    
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		logger.debug(result.getComment());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
+		
+		eventDate = "1980-01-01/1980-12-31";
+		year = "1980";
+		month = "";
+		day = "";
+		assertTrue(DateUtils.includesLeapDay(eventDate));
+		startDayOfYear = "1";    
+		endDayOfYear = "366";    
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		logger.debug(result.getComment());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
 		
 	}
 	
@@ -1506,35 +1820,35 @@ public class DwcEventDQTest {
 	public void testEventDateEmpty() {
 		String eventDate = null;
 		DQResponse<ComplianceValue> result = DwCEventDQ.validationEventdateNotEmpty(eventDate);
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "";
 		result = DwCEventDQ.validationEventdateNotEmpty(eventDate);
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "\n";
 		result = DwCEventDQ.validationEventdateNotEmpty(eventDate);
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = " ";
 		result = DwCEventDQ.validationEventdateNotEmpty(eventDate);
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "NULL";
 		result = DwCEventDQ.validationEventdateNotEmpty(eventDate);
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "1840-01-05";
 		result = DwCEventDQ.validationEventdateNotEmpty(eventDate);
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "-1";
 		result = DwCEventDQ.validationEventdateNotEmpty(eventDate);
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "text";
 		result = DwCEventDQ.validationEventdateNotEmpty(eventDate);
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 	}
 	
@@ -1542,27 +1856,27 @@ public class DwcEventDQTest {
 	public void testYearEmpty() {
 		String year = null;
 		DQResponse<ComplianceValue> result = DwCEventDQ.validationYearNotEmpty(year);
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		year="";
 		result = DwCEventDQ.validationYearNotEmpty(year);
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		year="NULL";
 		result = DwCEventDQ.validationYearNotEmpty(year);
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		year="1880";
 		result = DwCEventDQ.validationYearNotEmpty(year);
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());				
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());				
 
 	    year = "-1";
 		result = DwCEventDQ.validationYearNotEmpty(year);
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());				
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());				
 				
 		year = "text";
 		result = DwCEventDQ.validationYearNotEmpty(year);
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());				
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());				
 	}
 	
 	@Test
@@ -1650,6 +1964,152 @@ public class DwcEventDQTest {
 		logger.debug(result.getResultState().getLabel());
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());    	
 		
+		//Issue 67 confirmed expecations table.
+		/*
+		Here are some data that should be Compliant:
+			eventDate 	startDayOfYear 	endDayOfYear 	year 	month 	day
+			1981-01-03 	3 	3 	1981 	1 	3
+			1981-01 			1981 	1 	
+			1981 			1981 		
+			1981-01/1981-12 			1981 		
+			1981-01-01/1981-12-31 	1 	365 	1981 		
+			1980/1981 					
+			1980-01-10/1980-01-15 	10 	15 	1980 	1 	
+			1981-12-30/1982-01-03 	364 	3 			
+		*/
+	
+		eventDate = "1981-01-03"; 
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";		
+		result = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.FILLED_IN.getLabel(), result.getResultState().getLabel());
+		assertEquals("1981",result.getValue().getObject().get("dwc:year"));
+		assertEquals("1",result.getValue().getObject().get("dwc:month"));
+		assertEquals("3",result.getValue().getObject().get("dwc:day"));
+		assertEquals("3",result.getValue().getObject().get("dwc:startDayOfYear"));
+		assertEquals("3",result.getValue().getObject().get("dwc:endDayOfYear"));
+		assertEquals(5,result.getValue().getObject().size());
+		
+		eventDate = "1981-01"; 
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";		
+		result = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.FILLED_IN.getLabel(), result.getResultState().getLabel());
+		assertEquals("1981",result.getValue().getObject().get("dwc:year"));
+		assertEquals("1",result.getValue().getObject().get("dwc:month"));
+		assertNull(result.getValue().getObject().get("dwc:day"));
+		assertNull(result.getValue().getObject().get("dwc:startDayOfYear"));
+		assertNull(result.getValue().getObject().get("dwc:endDayOfYear"));
+		assertEquals(2,result.getValue().getObject().size());
+		
+		eventDate = "1981"; 
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";		
+		result = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.FILLED_IN.getLabel(), result.getResultState().getLabel());
+		assertEquals("1981",result.getValue().getObject().get("dwc:year"));
+		assertNull(result.getValue().getObject().get("dwc:month"));
+		assertNull(result.getValue().getObject().get("dwc:day"));
+		assertNull(result.getValue().getObject().get("dwc:startDayOfYear"));
+		assertNull(result.getValue().getObject().get("dwc:endDayOfYear"));
+		assertEquals(1,result.getValue().getObject().size());
+		
+		eventDate = "1981-01/1981-12"; 
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";		
+		result = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.FILLED_IN.getLabel(), result.getResultState().getLabel());
+		assertEquals("1981",result.getValue().getObject().get("dwc:year"));
+		assertNull(result.getValue().getObject().get("dwc:month"));
+		assertNull(result.getValue().getObject().get("dwc:day"));
+		assertNull(result.getValue().getObject().get("dwc:startDayOfYear"));
+		assertNull(result.getValue().getObject().get("dwc:endDayOfYear"));
+		assertEquals(1,result.getValue().getObject().size());
+		
+		eventDate = "1981-01-01/1981-12-31"; 
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";		
+		result = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.FILLED_IN.getLabel(), result.getResultState().getLabel());
+		assertEquals("1981",result.getValue().getObject().get("dwc:year"));
+		assertNull(result.getValue().getObject().get("dwc:month"));
+		assertNull(result.getValue().getObject().get("dwc:day"));
+		assertEquals("1",result.getValue().getObject().get("dwc:startDayOfYear"));
+		assertEquals("365",result.getValue().getObject().get("dwc:endDayOfYear"));
+		assertEquals(3,result.getValue().getObject().size());
+		
+		eventDate = "1980/1981"; 
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";		
+		result = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.NOT_AMENDED.getLabel(), result.getResultState().getLabel());
+		assertEquals(0,result.getValue().getObject().size());
+		
+		eventDate = "1980-01-10/1980-01-15"; 
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";		
+		result = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.FILLED_IN.getLabel(), result.getResultState().getLabel());
+		assertEquals("1980",result.getValue().getObject().get("dwc:year"));
+		assertEquals("1",result.getValue().getObject().get("dwc:month"));
+		assertNull(result.getValue().getObject().get("dwc:day"));
+		assertEquals("10",result.getValue().getObject().get("dwc:startDayOfYear"));
+		assertEquals("15",result.getValue().getObject().get("dwc:endDayOfYear"));
+		assertEquals(4,result.getValue().getObject().size());
+		
+		eventDate = "1981-12-30/1982-01-03"; 
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";		
+		result = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
+		assertEquals(ResultState.FILLED_IN.getLabel(), result.getResultState().getLabel());
+		assertNull(result.getValue().getObject().get("dwc:year"));
+		assertNull(result.getValue().getObject().get("dwc:month"));
+		assertNull(result.getValue().getObject().get("dwc:day"));
+		assertEquals("364",result.getValue().getObject().get("dwc:startDayOfYear"));
+		assertEquals("3",result.getValue().getObject().get("dwc:endDayOfYear"));
+		assertEquals(2,result.getValue().getObject().size());
+		
+		// Other Cases: 
 		eventDate = "1884-01-15";
 		year = "";
 		month = "1";
@@ -1765,6 +2225,7 @@ public class DwcEventDQTest {
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET, result.getResultState());
 		
 		// Note change in 2023-03-29 specification, event spanning a year boundary is internal prerequsities not met.
+		// Note change in 2023-06-27 specification, event date spanning a year boundary fills in start/end day of year.
 		eventDate = "1955-12-31/1956-01-03";
 		year = "";
 		month = "";
@@ -1772,8 +2233,10 @@ public class DwcEventDQTest {
 		startDayOfYear = "";
 		endDayOfYear = "";		
 		result = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
-		assertEquals(0,result.getValue().getObject().size());	
+		assertEquals(ResultState.FILLED_IN.getLabel(), result.getResultState().getLabel()); 
+		assertEquals("365", result.getValue().getObject().get("dwc:startDayOfYear"));
+		assertEquals("3", result.getValue().getObject().get("dwc:endDayOfYear"));
+		assertEquals(2, result.getValue().getObject().size());
 		
 		eventDate = "1955-02";
 		year = "";
@@ -1787,7 +2250,7 @@ public class DwcEventDQTest {
 		assertEquals("2",result.getValue().getObject().get("dwc:month"));
 		assertNull(result.getValue().getObject().get("dwc:day"));
 		assertNull(result.getValue().getObject().get("dwc:startDayOfYear"));
-		assertNull(Integer.toString(31+28),result.getValue().getObject().get("dwc:endDayOfYear"));
+		assertNull(result.getValue().getObject().get("dwc:endDayOfYear"));
 		assertEquals(2,result.getValue().getObject().size());			
 		
 		eventDate = "1955";
@@ -1949,6 +2412,9 @@ public class DwcEventDQTest {
 		assertEquals("366",result.getValue().getObject().get("dwc:endDayOfYear"));
 		assertEquals(3,result.getValue().getObject().size());			
 		
+		
+		
+		
 	}
 	
 	@Test
@@ -1963,77 +2429,77 @@ public class DwcEventDQTest {
 		
 		year = "1700";
 		result = DwCEventDQ.validationYearInrange(year, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
 		year = "1699";
 		result = DwCEventDQ.validationYearInrange(year, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		year = "1600";
 		result = DwCEventDQ.validationYearInrange(year, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
 		year = "1582";
 		result = DwCEventDQ.validationYearInrange(year, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
 		year = "1581";
 		result = DwCEventDQ.validationYearInrange(year, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());		
 		
 		year = "1499";
 		result = DwCEventDQ.validationYearInrange(year, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		
 		// as of https://rs.tdwg.org/bdq/terms/ad0c8855-de69-4843-a80c-a5387d20fbc8/2022-11-09
 		// start year is 1500, so this is now compliant.
 		year = "1599";
 		result = DwCEventDQ.validationYearInrange(year, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		
 		Integer upperBound = LocalDateTime.now().getYear();
 		for (int i=1601; i<=upperBound; i++) { 
 			result = DwCEventDQ.validationYearInrange(Integer.toString(i), 1600, upperBound);
-			assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+			assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
 			assertEquals(ComplianceValue.COMPLIANT, result.getValue());
 		}
 		
 		year = Integer.toString(upperBound + 1);
 		result = DwCEventDQ.validationYearInrange(year, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		year = "1899";
 		result = DwCEventDQ.validationYearInrange(year, 1900, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		year = "1900";
 		result = DwCEventDQ.validationYearInrange(year, 1900, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());		
 		
 		year = "1901";
 		result = DwCEventDQ.validationYearInrange(year, 1900, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		year = Integer.toString(LocalDateTime.now().getYear());
 		result = DwCEventDQ.validationYearInrange(year, 1900, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());			
 		
 		year = Integer.toString(LocalDateTime.now().getYear() + 1);
 		result = DwCEventDQ.validationYearInrange(year, 1900, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());				
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());				
 		
 	}
 	
@@ -2053,83 +2519,83 @@ public class DwcEventDQTest {
 		
 		eventDate = "1700";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 
 		eventDate = "1700-01";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());			
 		
 		eventDate = "1700-01-01";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());			
 		
 		eventDate = "1880-06-15";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());		
 		
 		eventDate = "1954/1955";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());			
 		
 		eventDate = "1499";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());			
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());			
 		
 		// as of https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-03-29
 		// starting range begins at 1500 not 1600, so this is now compliant.
 		eventDate = "1599";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());			
 		
 		// as of https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-06-12
 		// starting range begins at 1582-11-15 not 1500, test this bound.
 		eventDate = "1582-11-15";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "1582-11-14";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		
 		eventDate = "1582-01-01";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		
 		// reduced precision but spanning boundary.
 		eventDate = "1582";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		
 		eventDate = "1582-11-01/1582-11-30";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		
 		eventDate = "1699";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "1699-01-01";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());		
 		
 		eventDate = "1499";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, "1900-01-01");
 		logger.debug(result.getComment());
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		
 		// as of https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-03-29
@@ -2137,7 +2603,7 @@ public class DwcEventDQTest {
 		eventDate = "1599";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, "1900-01-01");
 		logger.debug(result.getComment());
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "1";
@@ -2155,131 +2621,131 @@ public class DwcEventDQTest {
 		eventDate = "0001-01-02";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, "0001-01-01", null);
 		logger.debug(result.getComment());
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "-2000";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());			
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());			
 		
 		eventDate = "-2000";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, "-4000", null);
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());			
 	
 		eventDate = "1499-12";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());			
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());			
 
 		// as of https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-03-29
 		// start date is now 1500, so this is now compliant.
 		eventDate = "1599-12";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());			
 
 		eventDate = "1499-12-31";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		// as of https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-03-29
 		// start date is now 1500, so this is now compliant.
 		eventDate = "1599-12-31";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "1499-365";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());			
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());			
 	
 		// as of https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-03-29
 		// start date is now 1500, so this is now compliant.
 		eventDate = "1599-365";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());			
 	
 		eventDate = "1800-01-01";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, "1800", null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());				
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());				
 			
 		eventDate = "1900-01-01";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, "1800", "2000");
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());			
 		
 		eventDate = "1799-12-31";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, "1800", "2000");
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());			
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());			
 		
 		eventDate = "1499-12-31/1500-01-01";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		// as of https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-03-29
 		// start date is now 1500, so this is now compliant.
 		eventDate = "1599-12-31/1600-01-01";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "1499-12-31/1500-12-31";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());		
 		
 		// as of https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-03-29
 		// start date is now 1500, so this is now compliant.
 		eventDate = "1599-12-31/1600-12-31";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());		
 		
 		eventDate = "1499-12-31/1800-12-31";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());			
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());			
 		
 		eventDate = "1499-01-01/1599-12-31";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		eventDate = "1599-12-31/1800-12-31";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());			
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());			
 		
 		eventDate = "1599-01-01/1599-12-31";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
     	Integer upperBound = LocalDateTime.now().getYear();
 		eventDate = "1699-12-31/" + Integer.toString(upperBound + 1).trim();
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
 		
 		// beginning of next year.
 		eventDate = Integer.toString(upperBound + 1).trim() + "-01-01";
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());		
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());		
 		
 		// next year.
 		eventDate = Integer.toString(upperBound + 1).trim();
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
-		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());			
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());			
 	}	
 	
 	@Test
@@ -2455,8 +2921,7 @@ public class DwcEventDQTest {
 		eventDate = result.getValue().getObject().get("dwc:eventDate");
 		logger.debug(eventDate);
 		vresult = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), vresult.getResultState().getLabel());
-		assertEquals(ComplianceValue.COMPLIANT.getLabel(), vresult.getValue().getLabel());
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), vresult.getResultState().getLabel());
 		assertNotNull(vresult.getComment());
 		vresult = DwCEventDQ.validationEventdateStandard(eventDate);
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), vresult.getResultState().getLabel());
@@ -2472,7 +2937,118 @@ public class DwcEventDQTest {
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), vresult.getValue().getLabel());
 		assertNotNull(vresult.getComment());
 		
+		verbatimEventDate = "August 10, 1991";
+		eventDate = "";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";		
+		result = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate, verbatimEventDate);
+		assertEquals(ResultState.FILLED_IN.getLabel(), result.getResultState().getLabel());
+		assertEquals(1,result.getValue().getObject().size());
+		assertNotNull(result.getComment());
+		eventDate = result.getValue().getObject().get("dwc:eventDate");
+		logger.debug(eventDate);
+		vresult = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), vresult.getResultState().getLabel());
+		assertNotNull(vresult.getComment());
+		vresult = DwCEventDQ.validationEventdateStandard(eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), vresult.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), vresult.getValue().getLabel());
+		assertNotNull(vresult.getComment());
+		result = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.FILLED_IN.getLabel(), result.getResultState().getLabel());
+		year = result.getValue().getObject().get("dwc:year");
+		assertEquals("1991",year);
+		month = result.getValue().getObject().get("dwc:month");
+		assertEquals("8",month);
+		day = result.getValue().getObject().get("dwc:day");
+		assertEquals("10",day);
+		startDayOfYear = result.getValue().getObject().get("dwc:startDayOfYear");
+		assertEquals("222",startDayOfYear);
+		endDayOfYear = result.getValue().getObject().get("dwc:endDayOfYear");
+		assertEquals("222",endDayOfYear);
+		assertEquals(5,result.getValue().getObject().size());	
+		vresult = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), vresult.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), vresult.getValue().getLabel());
+		assertNotNull(vresult.getComment());
 		
+		verbatimEventDate = "August 10, 1980";
+		eventDate = "";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";		
+		result = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate, verbatimEventDate);
+		assertEquals(ResultState.FILLED_IN.getLabel(), result.getResultState().getLabel());
+		assertEquals(1,result.getValue().getObject().size());
+		assertNotNull(result.getComment());
+		eventDate = result.getValue().getObject().get("dwc:eventDate");
+		logger.debug(eventDate);
+		vresult = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), vresult.getResultState().getLabel());
+		assertNotNull(vresult.getComment());
+		vresult = DwCEventDQ.validationEventdateStandard(eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), vresult.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), vresult.getValue().getLabel());
+		assertNotNull(vresult.getComment());
+		result = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.FILLED_IN.getLabel(), result.getResultState().getLabel());
+		year = result.getValue().getObject().get("dwc:year");
+		assertEquals("1980",year);
+		month = result.getValue().getObject().get("dwc:month");
+		assertEquals("8",month);
+		day = result.getValue().getObject().get("dwc:day");
+		assertEquals("10",day);
+		startDayOfYear = result.getValue().getObject().get("dwc:startDayOfYear");
+		assertEquals("223",startDayOfYear);
+		endDayOfYear = result.getValue().getObject().get("dwc:endDayOfYear");
+		assertEquals("223",endDayOfYear);
+		assertEquals(5,result.getValue().getObject().size());	
+		vresult = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), vresult.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), vresult.getValue().getLabel());
+		assertNotNull(vresult.getComment());
+		
+		verbatimEventDate = "July 1 to August 10, 1981";
+		eventDate = "";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";		
+		result = DwCEventDQ.amendmentEventdateFromVerbatim(eventDate, verbatimEventDate);
+		assertEquals(ResultState.FILLED_IN.getLabel(), result.getResultState().getLabel());
+		assertEquals(1,result.getValue().getObject().size());
+		assertNotNull(result.getComment());
+		eventDate = result.getValue().getObject().get("dwc:eventDate");
+		logger.debug(eventDate);
+		vresult = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), vresult.getResultState().getLabel());
+		assertNotNull(vresult.getComment());
+		vresult = DwCEventDQ.validationEventdateStandard(eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), vresult.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), vresult.getValue().getLabel());
+		assertNotNull(vresult.getComment());
+		result = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.FILLED_IN.getLabel(), result.getResultState().getLabel());
+		year = result.getValue().getObject().get("dwc:year");
+		assertEquals("1981",year);
+		assertNull(result.getValue().getObject().get("dwc:month"));
+		assertNull(result.getValue().getObject().get("dwc:day"));
+		assertEquals("",day);
+		startDayOfYear = result.getValue().getObject().get("dwc:startDayOfYear");
+		assertEquals("182",startDayOfYear);
+		endDayOfYear = result.getValue().getObject().get("dwc:endDayOfYear");
+		assertEquals("222",endDayOfYear);
+		assertEquals(3,result.getValue().getObject().size());	
+		vresult = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), vresult.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), vresult.getValue().getLabel());
+		assertNotNull(vresult.getComment());
 		
 	} 
 }

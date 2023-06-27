@@ -290,6 +290,7 @@ public class DwCEventDQTestDefinitions {
 		assertEquals(0, response.getValue().getObject().size());
 		
 		// Note change in 2023-03-29 specification, event date spanning a year boundary is now internal prerequisites not met.
+		// Note change in 2023-06-27 specification, event date spanning a year boundary fills in start/end day of year.
 		eventDate = "1961-01-28/1962-01-29";
 		year = "";
 		month = "";
@@ -297,8 +298,23 @@ public class DwCEventDQTestDefinitions {
 		startDayOfYear = "";
 		endDayOfYear = "";
 		response = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
-		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), response.getResultState().getLabel()); 
-		assertEquals(0, response.getValue().getObject().size());
+		assertEquals(ResultState.FILLED_IN.getLabel(), response.getResultState().getLabel()); 
+		assertEquals("28", response.getValue().getObject().get("dwc:startDayOfYear"));
+		assertEquals("29", response.getValue().getObject().get("dwc:endDayOfYear"));
+		assertEquals(2, response.getValue().getObject().size());
+		
+		// start day of year may be greater that end day of year (as opposed to Amendment_eventdate_fromsyearstartdayofyearenddayofyear.
+		eventDate = "1961-01-28/1962-01-27";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		response = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.FILLED_IN.getLabel(), response.getResultState().getLabel()); 
+		assertEquals("28", response.getValue().getObject().get("dwc:startDayOfYear"));
+		assertEquals("27", response.getValue().getObject().get("dwc:endDayOfYear"));
+		assertEquals(2, response.getValue().getObject().size());
 		
 	}
 
@@ -393,18 +409,24 @@ public class DwCEventDQTestDefinitions {
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY, 
         // or all of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear 
         // and dwc:endDayOfYear are EMPTY; COMPLIANT if all of the 
-        // following conditions are met 1) the provided value of year 
-        // matches the start year of the range represented by eventDate 
-        // or year is empty, and 2) the provided value in month matches 
-        // the start month of the range represented by eventDate or 
-        // month is empty, and 3) the provided value in day matches 
-        // the start day of the range represented by eventDate or day 
-        // is empty, and 4) the provided value in startDayOfYear matches 
-        // the start day of the year of the range represented by eventDate 
-        // or startDayOfYear is empty, and 5) the provided value in 
-        // endDayOfYear matches the end day of the year the range represented 
-        // by eventDate or endDayOfYear is empty; otherwise NOT_COMPLIANT. 
-        //
+        // following conditions are met (1) dwc:year is EMPTY or dwc:eventDate 
+        // has a precision of one year or finer and and is within a 
+        // single year and the provided value of dwc:year matches the 
+        // year expressed in dwc:eventDate, and (2) dwc:month is EMPTY 
+        // or dwc:eventDate has a precision of one month or finer and 
+        // is within a single month and the provided value in dwc:month 
+        // matches the month represented by dwc:eventDate, and (3) 
+        // dwc:day is EMPTY or dwc:eventDate has a precision of a day 
+        // or less and is within a single day and the provided value 
+        // in dwc:day matches the day represented by dwc:eventDate, 
+        // and (4) dwc:startDayOfYear is empty or dwc:eventDate has 
+        // a precision of one day or finer and the provided value in 
+        // dwc:startDayOfYear matches the start day of the year of 
+        // the range represented by dwc:eventDate, and (5) dwc:endDayOfYear 
+        // is empty or dwc:eventDate has a precision of one day or 
+        // finer and the provided value in dwc:endDayOfYear matches 
+        // the end day of the year of the range represented by dwc:eventDate; 
+        // otherwise NOT_COMPLIANT. 
 		
 		String eventDate = "";
 		String year = "";
@@ -442,7 +464,7 @@ public class DwCEventDQTestDefinitions {
 		eventDate = "1980-01-02/1980-01-03";
 		year = "1980";
 		month = "1";
-		day = "2";
+		day = "";
 		startDayOfYear = "2";
 		endDayOfYear = "3";
 		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
@@ -486,9 +508,20 @@ public class DwCEventDQTestDefinitions {
 		eventDate = "1980-01-02/1980-01-03";
 		year = "1980";
 		month = "1";
-		day = "2";
+		day = "";
 		startDayOfYear = "";
 		endDayOfYear = "";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventDate = "1980-01-02/1980-01-03";
+		year = "1980";
+		month = "1";
+		day = "";
+		startDayOfYear = "2";
+		endDayOfYear = "3";
 		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
