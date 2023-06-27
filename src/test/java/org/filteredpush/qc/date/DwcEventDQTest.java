@@ -685,6 +685,14 @@ public class DwcEventDQTest {
 		assertEquals("1640-02-05", result.getValue().getObject().get("dwc:eventDate")); 			
 		
 		eventDate = ""; 
+		year = "1582";
+		month = "11";
+		day = "15";
+		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(ResultState.FILLED_IN.getLabel(),result.getResultState().getLabel());
+		assertEquals("1582-11-15", result.getValue().getObject().get("dwc:eventDate")); 	
+		
+		eventDate = ""; 
 		year = "1931";
 		month = "2";
 		day = "31";   // no such day
@@ -733,6 +741,7 @@ public class DwcEventDQTest {
 		assertEquals(1, retval.size());
 		assertEquals("1980-12", retval.get("dwc:eventDate"));
 		
+		// Special case, support interpretation of roman numerais as month number.
 		eventDate = ""; 
 		year = "1980";
 		month = "IV";

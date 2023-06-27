@@ -28,6 +28,7 @@ import org.datakurator.ffdq.annotations.Mechanism;
 import org.datakurator.ffdq.annotations.Parameter;
 import org.datakurator.ffdq.annotations.Provides;
 import org.datakurator.ffdq.annotations.ProvidesVersion;
+import org.datakurator.ffdq.annotations.Specification;
 import org.datakurator.ffdq.annotations.Validation;
 import org.datakurator.ffdq.api.DQResponse;
 import org.datakurator.ffdq.api.result.AmendmentValue;
@@ -65,6 +66,7 @@ public class DwCEventDQDefaults extends DwCEventDQ {
     @Validation(label="VALIDATION_EVENTDATE_INRANGE", description="Is the value of dwc:eventDate entirely with the Parameter Range?")
     @Provides("3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
     @ProvidesVersion("https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-06-12")
+    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or if the value of dwc:eventDate is not a valid ISO 8601-1 date; COMPLIANT if the range of dwc:eventDate is entirely within the range bdq:earliestValidDate to bdq:latestValidDate, inclusive, otherwise NOT_COMPLIANT bdq:earliestValidDate default ='1582-11-15',bdq:latestValidDate default = current year")
     public static DQResponse<ComplianceValue> validationEventdateInrange(@ActedUpon("dwc:eventDate") String eventDate) {
         // Specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
@@ -81,11 +83,11 @@ public class DwCEventDQDefaults extends DwCEventDQ {
     }
     
 	/**
-	 * Given a year, evaluate whether that year falls in the range between lower bound value of 1500 
-	 * and the current year as the upper bound. This implementation uses the year from the local date/time 
+	 * Given a year, evaluate whether that year falls in the range between the default lower bound value of 1582 
+	 * and the default current year as the upper bound. This implementation uses the year from the local date/time 
 	 * as the upper bound, and will give different answers for values of year within 1 of the current year when run 
 	 * in different time zones within one day of a year boundary, thus this test is not suitable for fine grained 
-	 * evaluations of time.
+	 * evaluations of time.  
 	 * 
      * #84 Validation SingleRecord Conformance: year outofrange
      *
@@ -98,6 +100,7 @@ public class DwCEventDQDefaults extends DwCEventDQ {
     @Validation(label="VALIDATION_YEAR_INRANGE", description="Is the value of dwc:year within the Parameter range?")
     @Provides("ad0c8855-de69-4843-a80c-a5387d20fbc8")
     @ProvidesVersion("https://rs.tdwg.org/bdq/terms/ad0c8855-de69-4843-a80c-a5387d20fbc8/2023-06-17")
+    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:year is not present, or is EMPTY or cannot be interpreted as an integer; COMPLIANT if the value of dwc:year is within the Parameter range; otherwise NOT_COMPLIANT bdq:earliestValidDate='1582',bdq:latestValidDate=current year")
     public static DQResponse<ComplianceValue> validationYearInrange(@ActedUpon("dwc:year") String year) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
