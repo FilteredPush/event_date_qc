@@ -537,7 +537,18 @@ public class DwCEventDQTestDefinitions {
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
-		
+	
+		// DataID: 1177 (year mismatched)
+		eventDate = "1981-01-10/1981-01-15";
+		year = "1980";
+		month = "1";
+		day = "";
+		startDayOfYear = "10";
+		endDayOfYear = "15";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 	}
 
 	/**
@@ -695,7 +706,6 @@ public class DwCEventDQTestDefinitions {
 		String startDayOfYear = null;
 		String endDayOfYear = null;
 		String eventTime = null;
-		
 		result = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.NOT_COMPLIANT, result.getValue());	
@@ -704,6 +714,8 @@ public class DwCEventDQTestDefinitions {
 		result = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
 		assertEquals(ResultState.RUN_HAS_RESULT, result.getResultState());
 		assertEquals(ComplianceValue.COMPLIANT, result.getValue());	
+		
+		
 	}
 
 	/**

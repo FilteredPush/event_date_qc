@@ -1783,11 +1783,12 @@ public class DwCEventDQ {
 			// year expressed in dwc:eventDate, 
 			if (!DateUtils.isEmpty(year)) { 
 				if (interval!=null && interval.getStartDate().getYear()==interval.getEndDate().getYear() && DateUtils.specificToYearScale(eventDate)) {
+					// dwc:eventDate has a precision of one year or finer and and is within a single year
 					if (!year.trim().equals(Integer.toString(interval.getStartDate().getYear()))) { 
-						result.addComment("Provided value for dwc:eventDate ["+eventDate+"] spans a year boundary, but dwc:year contains a value ["+year+"] it should not.");
+						result.addComment("Provided value for dwc:eventDate ["+eventDate+"] is inconsistent with dwc:year ["+year+"].");
 						inconsistencyFound = true;
 					}
-				} else { 
+				} else if (interval!=null && interval.getStartDate().getYear()!=interval.getEndDate().getYear()) {
 					result.addComment("Provided value for dwc:eventDate ["+eventDate+"] represents more than a year, but dwc:year contains a value ["+year+"] it should not.");
 					inconsistencyFound = true;
 				}
