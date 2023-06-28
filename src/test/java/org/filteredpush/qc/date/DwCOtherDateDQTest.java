@@ -235,8 +235,8 @@ public class DwCOtherDateDQTest {
 		logger.debug(result.getComment());
 		logger.debug(result.getResultState().getLabel());
 		// Note change in error case handling for eventDate in version as of 2023-03-29
-		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
-		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		// Note change in error case handling for eventDate in version as of 2023-06-20
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
 		
 		dateIdentified = "1700-1-3";
 		eventDate = "1700-01-03";
@@ -253,8 +253,8 @@ public class DwCOtherDateDQTest {
 		logger.debug(result.getResultState().getLabel());
 		logger.debug(result.getComment());
 		// Note change in error case handling for eventDate in version as of 2023-03-29
-		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
-		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		// Note change in error case handling for eventDate in version as of 2023-06-20
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
 		
 		dateIdentified = "Jan 1, 1835";
 		dateIdentified = "";

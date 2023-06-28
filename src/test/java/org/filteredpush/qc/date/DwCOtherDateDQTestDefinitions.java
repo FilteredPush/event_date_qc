@@ -99,12 +99,11 @@ public class DwCOtherDateDQTestDefinitions {
 		
 		dateIdentified = "1882-03-04"; 
 		eventDate = "2022-23-32"; // eventDate not empty and not valid
-		
 		result = DwCOtherDateDQ.validationDateidentifiedInrange(dateIdentified, eventDate);
 		logger.debug(result.getComment());
 		// Note change in error case for eventDate handling as of version 2023-03-29
-		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
-		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		// Note change in error case for eventDate handling as of version 2023-06-20
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
 		
 		dateIdentified = "2022-01-04";  // dateIdentified follows the event date
 		eventDate = "2000-12-10"; 
@@ -156,14 +155,18 @@ public class DwCOtherDateDQTestDefinitions {
 	 */
 	public void testValidationDateidentifiedOutofrangeStringStringStringString() {
         // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if any of these three conditions 
-        // are met (1) dwc:dateIdentified is EMPTY, (2) dwc:dateIdentified 
-        // is not a valid ISO 8601-1:2019 date, (3) dwc:eventDate is 
-        // not EMPTY and is not a valid ISO 8601-1:2019 date; COMPLIANT 
-        // if the value of dwc:dateIdentified is within the parameter 
-        // ranges and either (1) dwc:eventDate is EMPTY or (2) if dwc:eventDate 
-        // is a valid ISO 8601-1:2019 date and dwc:dateIdentified overlaps 
-        // or follows the dwc:eventDate; otherwise NOT_COMPLIANT
+        // INTERNAL_PREREQUISITES_NOT_MET if (1) dwc:dateIdentified 
+        // is EMPTY, or (2) dwc:dateIdentified contains an invalid 
+        // value according to ISO 8601-1, or (3) bdq:includeEventDate=true 
+        // and dwc:eventDate is not a valid ISO 8601-1 date; COMPLIANT 
+        // if the value of dwc:dateIdentified is between bdq:earliestValidDate 
+        // and bdq:latestValidDate inclusive and either (1) dwc:eventDate 
+        // is EMPTY or bdq:includeEventDate=false, or (2) if dwc:eventDate 
+        // is a valid ISO 8601-1 date and dwc:dateIdentified overlaps 
+        // or is later than the dwc:eventDate; otherwise NOT_COMPLIANT 
+        // bdq:sourceAuthority is "ISO 8601-1:2019" [https://www.iso.org/obp/ui/],bdq:earliestValidDate 
+        // default="1753-01-01",bdq:latestValidDate default=[current 
+        // day],bdq:includeEventDate default=true 
 		
         // Parameters. This test is defined as parameterized.
         // Default values: bdq:earliestVaidDate="1753-01-01"; bdq:latestValidDate=current day
@@ -175,22 +178,139 @@ public class DwCOtherDateDQTestDefinitions {
 		String includeEventDate = "true";
 		DQResponse<ComplianceValue> result = DwCOtherDateDQ.validationDateidentifiedInrange(dateIdentified, eventDate, earlyestValidDate, latestValidDate, includeEventDate);
 		logger.debug(result.getComment());
+		assertNotNull(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());		
 		
+		dateIdentified = ""; 
+		eventDate = "1950-01-12";
+		result = DwCOtherDateDQ.validationDateidentifiedInrange(dateIdentified, eventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		
+		dateIdentified = "12-1-15"; 
+		eventDate = "1950-01-12";
+		result = DwCOtherDateDQ.validationDateidentifiedInrange(dateIdentified, eventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		
+		dateIdentified = "1950-05-06"; 
+		eventDate = "12-1-15"; 
+		includeEventDate = "true";
+		earlyestValidDate = null;
+		latestValidDate = null;
+		result = DwCOtherDateDQ.validationDateidentifiedInrange(dateIdentified, eventDate, earlyestValidDate, latestValidDate, includeEventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		
+		
+        // COMPLIANT 
+        // if the value of dwc:dateIdentified is between bdq:earliestValidDate 
+        // and bdq:latestValidDate inclusive and either (1) dwc:eventDate 
+        // is EMPTY or bdq:includeEventDate=false, or (2) if dwc:eventDate 
+        // is a valid ISO 8601-1 date and dwc:dateIdentified overlaps 
+        // or is later than the dwc:eventDate; otherwise NOT_COMPLIANT 
+		
+		dateIdentified = "1950-05-06"; 
+		eventDate = ""; 
+		earlyestValidDate = "1900-01-01";
+		latestValidDate = "1999-12-31";
+		includeEventDate = "true";
+		result = DwCOtherDateDQ.validationDateidentifiedInrange(dateIdentified, eventDate, earlyestValidDate, latestValidDate, includeEventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());		
+		
+		dateIdentified = "1950-05-06"; 
+		eventDate = "1990-01-01"; 
+		earlyestValidDate = "1900-01-01";
+		latestValidDate = "1999-12-31";
+		includeEventDate = "false";
+		result = DwCOtherDateDQ.validationDateidentifiedInrange(dateIdentified, eventDate, earlyestValidDate, latestValidDate, includeEventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
+		
+		dateIdentified = "1950-05-06"; 
+		eventDate = "1945-01-10"; 
+		earlyestValidDate = "1900-01-01";
+		latestValidDate = "1999-12-31";
+		includeEventDate = "true";
+		result = DwCOtherDateDQ.validationDateidentifiedInrange(dateIdentified, eventDate, earlyestValidDate, latestValidDate, includeEventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
+		
+		dateIdentified = "1950-05-06"; 
+		eventDate = "1945-01-10/1955-01-01"; 
+		earlyestValidDate = "1900-01-01";
+		latestValidDate = "1999-12-31";
+		includeEventDate = "true";
+		result = DwCOtherDateDQ.validationDateidentifiedInrange(dateIdentified, eventDate, earlyestValidDate, latestValidDate, includeEventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
+		
+		dateIdentified = "1950-05-06"; 
+		eventDate = "1951-01-10/1955-01-01"; 
+		earlyestValidDate = "1900-01-01";
+		latestValidDate = "1999-12-31";
+		includeEventDate = "true";
+		result = DwCOtherDateDQ.validationDateidentifiedInrange(dateIdentified, eventDate, earlyestValidDate, latestValidDate, includeEventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
+		
+		dateIdentified = "1950-05-06"; 
+		eventDate = "1955-01-01"; 
+		earlyestValidDate = "1900-01-01";
+		latestValidDate = "1999-12-31";
+		includeEventDate = "true";
+		result = DwCOtherDateDQ.validationDateidentifiedInrange(dateIdentified, eventDate, earlyestValidDate, latestValidDate, includeEventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
+		
+		dateIdentified = "1950-05-06"; 
+		eventDate = ""; 
+		includeEventDate = "false";
 		earlyestValidDate = "1960-01-01";  // dateIdentified outside specified range
+		latestValidDate = "2000-01-01";
+		includeEventDate = "true";
 		result = DwCOtherDateDQ.validationDateidentifiedInrange(dateIdentified, eventDate, earlyestValidDate, latestValidDate, includeEventDate);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());		
-
-		dateIdentified = "1950-01-01/1961-01-02";  // dateIdentified extends beyond specified range
+		
+		dateIdentified = "1950-01-01/1955-01-02";  // dateIdentified outside of specified range
+		eventDate = ""; 
+		includeEventDate = "false";
 		earlyestValidDate = "1960-01-01";
 		latestValidDate = "1962-01-01";
 		result = DwCOtherDateDQ.validationDateidentifiedInrange(dateIdentified, eventDate, earlyestValidDate, latestValidDate, includeEventDate);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());		
+		
+		dateIdentified = "1950-01-01/1965-01-02";  // dateIdentified overlaps specified range
+		eventDate = ""; 
+		includeEventDate = "false";
+		earlyestValidDate = "1960-01-01";
+		latestValidDate = "1962-01-01";
+		result = DwCOtherDateDQ.validationDateidentifiedInrange(dateIdentified, eventDate, earlyestValidDate, latestValidDate, includeEventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());			
+		
+		dateIdentified = "1950-01-01/1961-01-02";  // dateIdentified overlaps event date
+		eventDate = "1945-01-01/1955-01-01"; 
+		includeEventDate = "true";
+		earlyestValidDate = "1900-01-01";
+		latestValidDate = "1999-12-31";
+		result = DwCOtherDateDQ.validationDateidentifiedInrange(dateIdentified, eventDate, earlyestValidDate, latestValidDate, includeEventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
 	}
 
 	@Test
