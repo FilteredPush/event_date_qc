@@ -316,6 +316,19 @@ public class DwCEventDQTestDefinitions {
 		assertEquals("27", response.getValue().getObject().get("dwc:endDayOfYear"));
 		assertEquals(2, response.getValue().getObject().size());
 		
+		// date range with time, DataID 320:
+		eventDate = "2007-03-01T13:00:00Z/2008-05-11T15:30:00Z";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		response = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.FILLED_IN.getLabel(), response.getResultState().getLabel()); 
+		assertEquals("60", response.getValue().getObject().get("dwc:startDayOfYear"));
+		assertEquals("132", response.getValue().getObject().get("dwc:endDayOfYear"));
+		assertEquals(2, response.getValue().getObject().size());
+		
 	}
 
 	/**
@@ -549,6 +562,7 @@ public class DwCEventDQTestDefinitions {
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		
 	}
 
 	/**
