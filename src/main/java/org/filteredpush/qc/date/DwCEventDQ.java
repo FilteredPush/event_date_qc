@@ -2092,7 +2092,7 @@ public class DwCEventDQ {
     					if (!rangeSpansMoreThanYear) { 
     						String newDay = Integer.toString(interval.getStartDate().getDayOfMonth());
     						if (isRange && !DateUtils.specificToDay(eventDate)) {
-    							result.addComment("Provided dwc:eventDate ["+eventDate+"] represents a range of more thatn one day or has precision coarser than a day, can't fill in day.");
+    							result.addComment("Provided dwc:eventDate ["+eventDate+"] represents a range of more than one day or has precision coarser than a day, can't fill in day.");
     						} else if (!isRange && !DateUtils.specificToDay(eventDate)) {
     							result.addComment("Provided dwc:eventDate ["+eventDate+"] has a precision coarser than a day, can't fill in day.");
     						} else {
