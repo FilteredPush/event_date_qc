@@ -1835,7 +1835,7 @@ public class DwCEventDQ {
 						inconsistencyFound = true;
 					}
 					if (DateUtils.extractDate(eventDate).getDayOfMonth()!=Integer.parseInt(day)) {
-						result.addComment("Provided value for dwc:eventDate ["+eventDate+"] is not consistent with the provided value of  dwc:day ["+day+"].");
+						result.addComment("Provided value for dwc:eventDate ["+eventDate+"] is not consistent with the provided value of dwc:day ["+day+"].");
 						inconsistencyFound = true;
 					}
 				} else { 
@@ -1850,7 +1850,7 @@ public class DwCEventDQ {
 			if (!DateUtils.isEmpty(startDayOfYear)) { 
 				if (DateUtils.hasResolutionDayOrFiner(eventDate)) { 
 					if (DateUtils.extractDate(eventDate).getDayOfYear()!=Integer.parseInt(startDayOfYear)) {
-						result.addComment("Provided value for dwc:eventDate ["+eventDate+"] is not consistent with the provided value of  dwc:day ["+day+"].");
+						result.addComment("Provided value for dwc:eventDate ["+eventDate+"] is not consistent with the provided value of dwc:startDayOfYear["+startDayOfYear+"].");
 						inconsistencyFound = true;
 					}
 				} else { 
@@ -1866,7 +1866,7 @@ public class DwCEventDQ {
 			if (!DateUtils.isEmpty(endDayOfYear)) { 
 				if (DateUtils.hasResolutionDayOrFiner(eventDate)) { 
 					if (DateUtils.extractDateInterval(eventDate).getEnd().getDayOfYear()!=Integer.parseInt(endDayOfYear)) {
-						result.addComment("Provided value for dwc:eventDate ["+eventDate+"] is not consistent with the provided value of  dwc:day ["+day+"].");
+						result.addComment("Provided value for dwc:eventDate ["+eventDate+"] is not consistent with the provided value of dwc:endDayIfYear ["+endDayOfYear+"].");
 						inconsistencyFound = true;
 					}
 				} else { 
