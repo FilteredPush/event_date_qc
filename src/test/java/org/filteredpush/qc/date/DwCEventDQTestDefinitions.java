@@ -574,8 +574,8 @@ public class DwCEventDQTestDefinitions {
         // Specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:year is not present, 
         // or is EMPTY or cannot be interpreted as an integer; COMPLIANT 
-        // if the value of dwc:year is within the Parameter range; 
-        //otherwise NOT_COMPLIANT 
+        // if the value of dwc:year is within the range bdq:earliestValidDate 
+        // to bdq:latestValidDate inclusive; otherwise NOT_COMPLIANT 
 
         // This test is defined as parameterized.
         // bdq:earliestDate="1582"; bdq:latestDate=current year

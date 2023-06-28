@@ -92,25 +92,19 @@ public class DwCEventDQDefaults extends DwCEventDQ {
      * #84 Validation SingleRecord Conformance: year outofrange
      *
      * Provides: VALIDATION_YEAR_INRANGE
-     * Version: 2023-06-17
+     * Version: 2023-06-28
      * 
      * @param year the provided dwc:year to evaluate
      * @return DQResponse the response of type ComplianceValue to return
 	 */
     @Validation(label="VALIDATION_YEAR_INRANGE", description="Is the value of dwc:year within the Parameter range?")
     @Provides("ad0c8855-de69-4843-a80c-a5387d20fbc8")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/ad0c8855-de69-4843-a80c-a5387d20fbc8/2023-06-17")
-    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:year is not present, or is EMPTY or cannot be interpreted as an integer; COMPLIANT if the value of dwc:year is within the Parameter range; otherwise NOT_COMPLIANT bdq:earliestValidDate='1582',bdq:latestValidDate=current year")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/ad0c8855-de69-4843-a80c-a5387d20fbc8/2023-06-28")
+    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:year is not present, or is EMPTY or cannot be interpreted as an integer; COMPLIANT if the value of dwc:year is within the range bdq:earliestValidDate to bdq:latestValidDate inclusive; otherwise NOT_COMPLIANT bdq:earliestValidDate='1582',bdq:latestValidDate=current year")
     public static DQResponse<ComplianceValue> validationYearInrange(@ActedUpon("dwc:year") String year) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
-
-        // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:year is not present, 
-        // or is EMPTY or cannot be interpreted as an integer; COMPLIANT 
-        // if the value of dwc:year is within the Parameter range; 
-        // otherwise NOT_COMPLIANT 
-
         // This test is defined as parameterized.
+        // Default values: 
         // bdq:earliestDate="1582"; bdq:latestDate=current year
         
     	Integer upperBound = LocalDateTime.now().getYear();
