@@ -9,6 +9,8 @@ DOI: 10.5281/zenodo.166329
 
 This library provides two classes each with a set of static methods which provide functions to support data quality control of date data in the context of biodiversity.  DateUtils provides a set of primitive methods for working with event date data, and DwCEventQC provides a wrapper set of annotated methods for making assertions about event date data in terms of the Fittness for Use Framework.  
 
+This library provides implementations for the Time related tests in the TDWG BDQ TG2 test suite.
+
 # Include using maven
 
 Available in Maven Central.
@@ -16,7 +18,7 @@ Available in Maven Central.
     <dependency>
         <groupId>org.filteredpush</groupId>
         <artifactId>event_date_qc</artifactId>
-        <version>2.0.0</version>
+        <version>3.0.0</version>
     </dependency>
 
 # Building
@@ -28,7 +30,7 @@ Library jar will be produced in /target/event_date_qc-{version}.jar
 An executable jar will be produced in /event_date_qc-{version}-{gitcommit}-executable.jar.  This jar is not installed in the local maven repository or deployed to maven central with maven install or maven deploy.
 
 
-# Quick Start: Find verbatim dates that can't be parsed.
+# Quick Start for local: Find verbatim dates that can't be parsed.
 
 Checkout and run mvn package, then execute jar file, e.g. with: 
 
@@ -199,7 +201,5 @@ To deploy a new release to maven central, set the version in pom.xml to a non-sn
 
     mvn clean deploy -P release
 
-After this, you will need to login to the sonatype oss repository hosting nexus instance (https://oss.sonatype.org/index.html#welcome), find the staged release in the staging repositories, and perform the release.  It should be possible (haven't verified this yet) to perform the release from the command line instead by running: 
-
-    mvn nexus-staging:release -P release
+After this, can confirm release by loging to the sonatype oss repository hosting nexus instance (https://oss.sonatype.org/index.html#welcome), and searching for the artifact, or checking the staging repositories if it is held up in staging.
 
