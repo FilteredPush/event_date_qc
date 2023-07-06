@@ -1808,7 +1808,7 @@ public class DwCEventDQ {
 						if (interval==null) { 
 							result.addComment("Unable to obtain month from dwc:eventDate ["+eventDate+"] to compare with month ");
 							interpretationProblem = true;
-						} else if (!month.trim().equals(Integer.toString(interval.getStart().getMonthValue()))) {
+						} else if (!month.trim().replaceAll("^0", "").equals(Integer.toString(interval.getStart().getMonthValue()))) {
 							result.addComment("Provided value for dwc:eventDate ["+eventDate+"] contains a month that is not consistent with the provided value for dwc:month ["+month+"].");
 							inconsistencyFound = true;
 						}

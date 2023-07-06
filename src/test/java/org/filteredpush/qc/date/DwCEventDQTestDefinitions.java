@@ -428,7 +428,7 @@ public class DwCEventDQTestDefinitions {
 	 * Test method for {@link org.filteredpush.qc.date.DwCEventDQs#validationEventConsistent(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
 	 */
 	@Test
-	public void testValidationEventInconsistent() {
+	public void testValidationEventConsistent() {
 		
         // Specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY, 
@@ -575,6 +575,17 @@ public class DwCEventDQTestDefinitions {
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		
+		// check handling of leading zeroes
+		eventDate="1861-08-01/1861-08-31";
+		year = "1861";
+		month = "08";
+		day = "";
+		startDayOfYear = "";
+		endDayOfYear = "";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
 	}
 
 	/**
