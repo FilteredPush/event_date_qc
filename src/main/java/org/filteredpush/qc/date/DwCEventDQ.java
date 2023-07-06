@@ -484,7 +484,6 @@ public class DwCEventDQ {
      * 
      * #66 Validation SingleRecord Conformance: eventdate notstandard
      *
-     * Provides: VALIDATION_EVENTDATE_NOTSTANDARD
      * Provides: VALIDATION_EVENTDATE_STANDARD
      * Version: 2023-03-27
      *
@@ -1916,7 +1915,6 @@ public class DwCEventDQ {
      *
      * #88 Validation SingleRecord Completeness: event temporal empty
      *
-     * Provides: VALIDATION_EVENT_TEMPORAL_EMPTY
      * Provides: VALIDATION_EVENT_TEMPORAL_NOTEMPTY
      * Version: 2022-03-22
      *

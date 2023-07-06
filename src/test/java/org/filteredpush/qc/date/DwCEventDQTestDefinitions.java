@@ -410,6 +410,18 @@ public class DwCEventDQTestDefinitions {
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 
+		//This test should also pick up issues such as 29 Feb in a non leap year.
+		eventDate = "1979-02-29";
+		result = DwCEventDQ.validationEventdateStandard(eventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		eventDate = "1980-02-29";
+		result = DwCEventDQ.validationEventdateStandard(eventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
 	}
 
 	/**
