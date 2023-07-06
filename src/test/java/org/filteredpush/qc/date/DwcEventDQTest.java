@@ -2754,7 +2754,29 @@ public class DwcEventDQTest {
 		eventDate = Integer.toString(upperBound + 1).trim();
 		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
-		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());			
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
+		
+		if (upperBound < 2026) { 
+			// Error in MCZbase record
+			eventDate = "1926-06-01/2026-09-30";
+			result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
+			assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+			assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
+			eventDate = "1926-06-01/2026-09-30";
+			result = DwCEventDQDefaults.validationEventdateInrange(eventDate);
+			assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+			assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		}
+		
+		eventDate = "1926-06-01/1926-09-30";
+		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
+		eventDate = "1926-06-01/1926-09-30";
+		result = DwCEventDQDefaults.validationEventdateInrange(eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());		
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
 	}	
 	
 	@Test
