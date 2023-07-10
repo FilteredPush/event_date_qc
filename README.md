@@ -197,7 +197,7 @@ To deploy a snapshot to the snapshotRepository:
 
     mvn clean deploy
 
-To deploy a new release to maven central, set the version in pom.xml to a non-snapshot version, then deploy with the release profile (which adds package signing and deployment to release staging:
+To deploy a new release to maven central, set the version in pom.xml to a non-snapshot version, update the @Mechanism metadata (in the classes, generation configuration, and rdf), then deploy with the release profile (which adds package signing and deployment to release staging:
 
     mvn clean deploy -P release
 
