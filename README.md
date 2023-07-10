@@ -197,9 +197,25 @@ To deploy a snapshot to the snapshotRepository:
 
     mvn clean deploy
 
-To deploy a new release to maven central, set the version in pom.xml to a non-snapshot version, update the @Mechanism metadata (in the classes, generation configuration, and rdf), then deploy with the release profile (which adds package signing and deployment to release staging:
+To deploy a new release to maven central, set the version in pom.xml to a non-snapshot version, update the @Mechanism metadata (in the classes, generation configuration, and rdf), then deploy with the release profile (which adds package signing and deployment to release staging), then confirm release.
+
+1. Set version in pom.xml to a non-snapshot version
+
+2. Update @Mechanism metadata in: 
+
+	generation/ident_time_tests.ttl
+	generation/time_tests.ttl
+	generation/event_date_qc_DwCEventDQ_stubs_kurator_ffdq.config
+	generation/event_date_qc_DwCOtherDQ_stubs_kurator_ffdq.config
+	generation/event_date_qc_DwCEventDQ_kurator_ffdq.config
+	generation/event_date_qc_DwCOtherDQ_kurator_ffdq.config
+	src/main/java/org/filteredpush/qc/date/DwCOtherDateDQ.java
+	src/main/java/org/filteredpush/qc/date/DwCEventDQDefaults.java
+	src/main/java/org/filteredpush/qc/date/DwCEventDQ.java
+
+3. Deploy using the release profile.
 
     mvn clean deploy -P release
 
-After this, can confirm release by loging to the sonatype oss repository hosting nexus instance (https://oss.sonatype.org/index.html#welcome), and searching for the artifact, or checking the staging repositories if it is held up in staging.
+4. Confirm release by loging to the sonatype oss repository hosting nexus instance (https://oss.sonatype.org/index.html#welcome), and searching for the artifact, or checking the staging repositories if it is held up in staging.
 
