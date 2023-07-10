@@ -26,6 +26,7 @@ import org.datakurator.ffdq.api.result.ComplianceValue;
 import org.datakurator.ffdq.api.result.NumericalValue;
 import org.datakurator.ffdq.model.ResultState;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.Calendar;
@@ -1849,9 +1850,20 @@ public class DwCEventDQ {
 			// the start day of the year of the range represented by dwc:eventDate, 
 			if (!DateUtils.isEmpty(startDayOfYear)) { 
 				if (DateUtils.hasResolutionDayOrFiner(eventDate)) { 
-					if (DateUtils.extractDate(eventDate).getDayOfYear()!=Integer.parseInt(startDayOfYear)) {
-						result.addComment("Provided value for dwc:eventDate ["+eventDate+"] is not consistent with the provided value of dwc:startDayOfYear["+startDayOfYear+"].");
-						inconsistencyFound = true;
+					LocalDate extractedDate;
+					if (DateUtils.isRange(eventDate)) { 
+						extractedDate = DateUtils.extractDateInterval(eventDate).getStartDate();
+					} else {
+						extractedDate = DateUtils.extractDate(eventDate);
+					}
+					if (extractedDate==null) { 
+						result.addComment("Unable to extract startDayOfYear from dwc:eventDate ["+eventDate+"] for comparision with provided dwc:startDayOfYear ["+startDayOfYear+"].");
+						interpretationProblem = true;
+					} else {
+						if (extractedDate.getDayOfYear()!=Integer.parseInt(startDayOfYear)) {
+							result.addComment("Provided value for dwc:eventDate ["+eventDate+"] is not consistent with the provided value of dwc:startDayOfYear["+startDayOfYear+"].");
+							inconsistencyFound = true;
+						}
 					}
 				} else { 
 					result.addComment("Provided value for dwc:eventDate ["+eventDate+"] has precision of coarser than a day, but dwc:startDayOfYear contains a value ["+startDayOfYear+"] it should not.");

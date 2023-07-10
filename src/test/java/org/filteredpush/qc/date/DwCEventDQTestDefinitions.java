@@ -586,6 +586,19 @@ public class DwCEventDQTestDefinitions {
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		// dataID 475
+		eventDate="1949-01-15T12:34/1949-01-20T17:00";
+		year = "";
+		month = "";
+		day = "";
+		startDayOfYear = "15";
+		endDayOfYear = "20";
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
 	}
 
 	/**

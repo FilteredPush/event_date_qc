@@ -2506,11 +2506,11 @@ public class DateUtils {
     		DateTimeFormatter formatter2 = new DateTimeFormatterBuilder()
         			.append(DateTimeFormatter.ISO_DATE_TIME)
         			.toFormatter().withResolverStyle(ResolverStyle.STRICT);
-        		formatters.add(formatter2);
+        	formatters.add(formatter2);
     		DateTimeFormatter formatter3 = new DateTimeFormatterBuilder()
         			.append(DateTimeFormatter.ISO_DATE)
         			.toFormatter().withResolverStyle(ResolverStyle.STRICT);
-        		formatters.add(formatter3);
+        	formatters.add(formatter3);
     		
     		Iterator<DateTimeFormatter> i = formatters.iterator();
     		while (i.hasNext()) { 
