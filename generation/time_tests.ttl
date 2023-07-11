@@ -13,7 +13,7 @@
 <http://rs.tdwg.org/bdq/ffdq/Specification> rdfbeans:bindingClass "org.datakurator.ffdq.model.Specification" .
 
 <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> a <http://rs.tdwg.org/bdq/ffdq/Mechanism> ;
-	rdfs:label "Kurator: Date Validator - DwCEventDQ:v3.0.2" .
+	rdfs:label "Kurator: Date Validator - DwCEventDQ:v3.0.3-SNAPSHOT" .
 
 <urn:uuid:bf5d4161-326f-4140-960a-05cbb75bdba0> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:f51e15a6-a67d-4729-9c28-3766299d2985> ;
 	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
