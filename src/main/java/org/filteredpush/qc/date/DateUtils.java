@@ -310,7 +310,7 @@ public class DateUtils {
 	 * @param verbatimEventDate a string containing a verbatim event date.
 	 * @return a map with result and resultState as keys
 	 * 
-	 * @deprecated
+	 * @deprecated to be removed
 	 * @see #extractDateFromVerbatimER(String) replacement method.
 	 */
 	public static Map<String,String> extractDateFromVerbatim(String verbatimEventDate) {
@@ -351,7 +351,7 @@ public class DateUtils {
 	 * @param yearsBeforeSuspect the value for a year before which parsed years should be considered suspect.
 	 * @return  a map with result and resultState as keys
 	 * 
-	 * @deprecated
+	 * @deprecated to be removed, does not handle enough cases.
 	 * @see DateUtils#extractDateToDayFromVerbatimER(String, int) replacement method
 	 */
 	public static Map<String,String> extractDateToDayFromVerbatim(String verbatimEventDate, int yearsBeforeSuspect) {
@@ -380,7 +380,7 @@ public class DateUtils {
 	 * 
 	 * @return a map with keys resultState for the nature of the match and result for the resulting date. 
 	 * 
-	 * @deprecated
+	 * @deprecated to be removed
 	 * @see DateUtils#extractDateFromVerbatimER(String, int, Boolean) replacement method.
 	 */
 	public static Map<String,String> extractDateFromVerbatim(String verbatimEventDate, int yearsBeforeSuspect) {		

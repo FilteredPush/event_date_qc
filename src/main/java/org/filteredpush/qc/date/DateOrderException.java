@@ -17,43 +17,42 @@ public class DateOrderException extends Exception {
 	private static final Log logger = LogFactory.getLog(DateOrderException.class);
 
 	/**
-	 * 
+	 *  Exception for describing that begin date comes after end date.
 	 */
 	public DateOrderException() {
 		super("begin/end dates in wrong order");
 	}
 
 	/**
-	 * @param message
+	 * @param message the message for the exception
 	 */
 	public DateOrderException(String message) {
 		super(message);
 	}
 
 	/**
-	 * @param cause
+	 * @param cause the cause of the exception (A null value is permitted, and indicates that the cause is nonexistent or unknown.)
 	 */
 	public DateOrderException(Throwable cause) {
 		super(cause);
 	}
 
 	/**
-	 * @param message
-	 * @param cause
+	 * @param message the message for the exception
+	 * @param cause the cause of the exception (A null value is permitted, and indicates that the cause is nonexistent or unknown.)
 	 */
 	public DateOrderException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
-	 * @param message
-	 * @param cause
-	 * @param enableSuppression
-	 * @param writableStackTrace
+	 * @param message  the message for the exception
+	 * @param cause he cause of the exception, (A null value is permitted, and indicates that the cause is nonexistent or unknown.)
+	 * @param enableSuppression whether or not suppression is enabled or disabled
+	 * @param writableStackTrace whether or not the stack trace should be writable
 	 */
 	public DateOrderException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
-		// TODO Auto-generated constructor stub
 	}
 
 }

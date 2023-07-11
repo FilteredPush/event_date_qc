@@ -489,36 +489,36 @@ public class DwCEventDQ {
      * Version: 2023-03-27
      *
      * @param eventDate the provided dwc:eventDate to evaluate
-     * @return DQResponse the response of type ComplianceValue  to return
+     * @return DQResponse the response of type ComplianceValue to return
      */
     @Validation(label="VALIDATION_EVENTDATE_STANDARD", description="Is the value of dwc:eventDate a valid ISO date?")
     @Provides("4f2bf8fd-fc5c-493f-a44c-e7b16153c803")
     @ProvidesVersion("https://rs.tdwg.org/bdq/terms/4f2bf8fd-fc5c-493f-a44c-e7b16153c803/2023-03-27")
     @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; COMPLIANT if the value of dwc:eventDate is a valid ISO 8601-1 date; otherwise NOT_COMPLIANT ")
     public static DQResponse<ComplianceValue> validationEventdateStandard(
-    		@ActedUpon(value = "dwc:eventDate") String eventdate) {
+    		@ActedUpon(value = "dwc:eventDate") String eventDate) {
 		DQResponse<ComplianceValue> result = new DQResponse<>();
         // Specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; 
         // COMPLIANT if the value of dwc:eventDate is a valid ISO 8601-1 
         // date; otherwise NOT_COMPLIANT 
 
-    	if (DateUtils.isEmpty(eventdate)) {
+    	if (DateUtils.isEmpty(eventDate)) {
     		result.addComment("No value provided for dwc:eventDate.");
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     	} else {
     		try {
-    	        if (DateUtils.eventDateValid(eventdate)) {
+    	        if (DateUtils.eventDateValid(eventDate)) {
     				result.setValue(ComplianceValue.COMPLIANT);
-    				result.addComment("Provided value for dwc:eventDate '" + eventdate + "' is formated as an ISO date. ");
+    				result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is formated as an ISO date. ");
     			} else {
     				result.setValue(ComplianceValue.NOT_COMPLIANT);
-    				result.addComment("Provided value for dwc:eventDate '" + eventdate + "' is not a validly formatted ISO date .");
+    				result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is not a validly formatted ISO date .");
     			}
     			result.setResultState(ResultState.RUN_HAS_RESULT);
     		} catch (Exception e) {
     			result.setValue(ComplianceValue.NOT_COMPLIANT);
-    			result.addComment("Provided value for dwc:eventDate '" + eventdate + "' is unable to be interpreted as an ISO date .");
+    			result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is unable to be interpreted as an ISO date .");
     			logger.debug(e.getMessage());
     			result.addComment(e.getMessage());
     		}
@@ -616,7 +616,7 @@ public class DwCEventDQ {
      * @param day the provided dwc:day to evaluate
      * @return DQResponse the response of type ComplianceValue  to return
      *    COMPLIANT if day is an integer in the range 1 to 31 inclusive, otherwise NOT_COMPLIANT
-     * @see DwCEventDQ.validationDayInrange(String year, String month, String day) 
+     * @see #DwCEventDQ.validationDayInrange(String year, String month, String day) 
 	 *  providing VALIDATION_DAY_INRANGE
      */
     @Validation(label="VALIDATION_DAY_STANDARD", description="Is the value of dwc:day an integer between 1 and 31 inclusive?")
@@ -1068,7 +1068,7 @@ public class DwCEventDQ {
     @ProvidesVersion("https://rs.tdwg.org/bdq/terms/85803c7e-2a5a-42e1-b8d3-299a44cafc46/2022-03-22")
     @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:startDayOfYear is EMPTY or if the value of dwc:startDayOfYear is equal to 366 and (dwc:eventDate is EMPTY or the value of dwc:eventDate cannot be interpreted to find single year or a start year in a range); COMPLIANT if the value of dwc:startDayOfYear is an integer between 1 and 365, inclusive, or if the value of dwc:startDayOfYear is 366 and the start year interpreted from dwc:eventDate is a leap year; otherwise NOT_COMPLIANT ")
     public static final DQResponse<ComplianceValue> validationStartdayofyearInrange(
-    		@ActedUpon(value="dwc:startDayOfYear") String startDay, 
+    		@ActedUpon(value="dwc:startDayOfYear") String startDayOfYear, 
     		@Consulted(value="dwc:eventDate")String eventDate) {
     	DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
     	
@@ -1095,20 +1095,20 @@ public class DwCEventDQ {
     		}
     	}
     	
-    	logger.debug(startDay);
+    	logger.debug(startDayOfYear);
     	logger.debug(eventDate);
     	logger.debug(year);
     	
-    	if (DateUtils.isEmpty(startDay)) {
+    	if (DateUtils.isEmpty(startDayOfYear)) {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		result.addComment("startDayOfYear was not provided.");
     	} else {
     	    try {
-    	       Integer numericStartDay = Integer.parseInt(startDay);
+    	       Integer numericStartDay = Integer.parseInt(startDayOfYear);
     	       if (numericStartDay>0 && numericStartDay<366) {
     	    	   result.setValue(ComplianceValue.COMPLIANT);
     	    	   result.setResultState(ResultState.RUN_HAS_RESULT);
-    		       result.addComment("startDayOfYear [" + startDay + "] is in range for days of the year.");
+    		       result.addComment("startDayOfYear [" + startDayOfYear + "] is in range for days of the year.");
     	       } else if (numericStartDay==366) {
     	           if (DateUtils.isEmpty(year)) {
     		            result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -1118,30 +1118,30 @@ public class DwCEventDQ {
     		            	result.addComment("year was not provided and day is 366, could be valid in a leap year.");
     		            }
     	           } else {
-    	        	   String potentialDay = DateUtils.createEventDateFromParts("", startDay, "", year, "", "");
+    	        	   String potentialDay = DateUtils.createEventDateFromParts("", startDayOfYear, "", year, "", "");
     	        	   if (DateUtils.isEmpty(potentialDay)) {
     		               result.setValue(ComplianceValue.NOT_COMPLIANT);
     	    	           result.setResultState(ResultState.RUN_HAS_RESULT);
-    		               result.addComment("startDayOfYear [" + startDay + "] is out of range for year ["+ year +"].");
+    		               result.addComment("startDayOfYear [" + startDayOfYear + "] is out of range for year ["+ year +"].");
     	        	   } else if (DateUtils.eventDateValid(potentialDay)) {
     	    	           result.setValue(ComplianceValue.COMPLIANT);
     	    	           result.setResultState(ResultState.RUN_HAS_RESULT);
-    		               result.addComment("startDayOfYear [" + startDay + "] is in range for days of the year ["+year+"].");
+    		               result.addComment("startDayOfYear [" + startDayOfYear + "] is in range for days of the year ["+year+"].");
     	        	   } else {
     		               result.setValue(ComplianceValue.NOT_COMPLIANT);
     	    	           result.setResultState(ResultState.RUN_HAS_RESULT);
-    		               result.addComment("startDayOfYear [" + startDay + "] is out of range for year ["+ year +"].");
+    		               result.addComment("startDayOfYear [" + startDayOfYear + "] is out of range for year ["+ year +"].");
     	        	   }
     	           }
     	       } else {
     		       result.setValue(ComplianceValue.NOT_COMPLIANT);
     	    	   result.setResultState(ResultState.RUN_HAS_RESULT);
-    		       result.addComment("startDayOfYear [" + startDay + "] is out of range for days in the year.");
+    		       result.addComment("startDayOfYear [" + startDayOfYear + "] is out of range for days in the year.");
     	       }
     	    } catch (NumberFormatException e) {
     		   result.setResultState(ResultState.RUN_HAS_RESULT);
     		   result.setValue(ComplianceValue.NOT_COMPLIANT);
-    		   result.addComment("startDayOfYear [" + startDay + "] is not a number.");
+    		   result.addComment("startDayOfYear [" + startDayOfYear + "] is not a number.");
     	    }
     	}
     	return result;
@@ -1262,8 +1262,8 @@ public class DwCEventDQ {
      *
      * Run in order: extractDateFromVerbatim, then eventDateFromYearStartEndDay, then eventDateFromYearMonthDay
      *
-     * @see extractDateFromVerbatim
-     * @see eventDateFromYearMonthDay
+     * @see #DwCEventDQ.extractDateFromVerbatim
+     * @see #DwCEventDQ.eventDateFromYearMonthDay
      *
      * @param eventDate to propose a value for if not empty
      * @param year from which to construct an event date
@@ -1362,8 +1362,8 @@ public class DwCEventDQ {
      *
      * Run in order: extractDateFromVerbatim, then eventDateFromYearStartEndDay, then eventDateFromYearMonthDay
      *
-     * @see eventDateFromYearStartEndDay
-     * @see extractDateFromVerbatim
+     * @see #DwCEventDQ.eventDateFromYearStartEndDay
+     * @see #DwCEventDQ.extractDateFromVerbatim
      *
      * @param eventDate to fill in if not empty
      * @param year from which to construct the event date
@@ -2224,8 +2224,8 @@ public class DwCEventDQ {
      * Parameters: bdq:earliestDate="1582"; bdq:latestDate=current year
      * 
      * @param year the provided dwc:year to evaluate
-	 * @param bdq:earliestDate integer for lower bound of range of in range years, if null 1582 will be used.
-	 * @param bdq:latestDate integer for upper bound of range of in range years, if null current year will be used.
+	 * @param lowerBound bdq:earliestDate integer for lower bound of range of in range years, if null 1582 will be used.
+	 * @param upperBound bdq:latestDate integer for upper bound of range of in range years, if null current year will be used.
      * @return DQResponse the response of type ComplianceValue to return
 	 */
     @Validation(label="VALIDATION_YEAR_INRANGE", description="Is the value of dwc:year within the Parameter range?")
