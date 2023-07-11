@@ -63,6 +63,8 @@ public class LocalDateInterval {
 	 * 
 	 * @param startDate the beginning date of the interval
 	 * @param endDate the end date of the interval
+	 * @throws EmptyDateException if one of the dates is null
+	 * @throws DateOrderException if start date is after end date
 	 */
 	public LocalDateInterval(LocalDate startDate, LocalDate endDate) throws EmptyDateException,DateOrderException {
 		if (startDate==null || endDate==null) { 
@@ -80,6 +82,7 @@ public class LocalDateInterval {
 	 * 
 	 * @param singleDay the day which is to be the startDate and endDate of the 
 	 * LocalDateInterval
+	 * @throws EmptyDateException if singleDay is null
 	 */
 	public LocalDateInterval(LocalDate singleDay) throws EmptyDateException {
 		if (singleDay==null) { 
@@ -157,6 +160,8 @@ public class LocalDateInterval {
 	 * @param dateBit a string representing a date or range of dates, without a / to parse
 	 * @return a date pair containing the start and end days of the range in dateBit, values are the
 	 * same if dateBit represents a single day or less.  
+	 * @throws EmptyDateException if dateBit is null
+	 * @throws DateTimeParseException if unable to parse dateBit
 	 */
 	protected DatePair parseDateBit(String dateBit)  throws EmptyDateException, DateTimeParseException { 
 		DatePair result = null;
@@ -482,6 +487,12 @@ public class LocalDateInterval {
 		return result;
 	}
 
+	/**
+	 * Obtain the duration of time represented by the LocalDateInterval from the start of
+	 * the start day to the end of the end day.
+	 * 
+	 * @return a Duration object holding the duration of the local date interval instance.
+	 */
 	public Duration toDuration() {
 		Duration result = null;
 		
