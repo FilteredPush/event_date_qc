@@ -63,10 +63,11 @@ public class LocalDateInterval {
 	 * 
 	 * @param startDate the beginning date of the interval
 	 * @param endDate the end date of the interval
+	 * 
 	 * @throws EmptyDateException if one of the dates is null
 	 * @throws DateOrderException if start date is after end date
 	 */
-	public LocalDateInterval(LocalDate startDate, LocalDate endDate) throws EmptyDateException,DateOrderException {
+	public LocalDateInterval(LocalDate startDate, LocalDate endDate) throws EmptyDateException, DateOrderException {
 		if (startDate==null || endDate==null) { 
 			throw new EmptyDateException("provided startDate and/or endDate was null");
 		}
@@ -369,6 +370,9 @@ public class LocalDateInterval {
 		return result;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() { 
 		String result = null;
@@ -401,6 +405,9 @@ public class LocalDateInterval {
 		return result;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		boolean result = false;

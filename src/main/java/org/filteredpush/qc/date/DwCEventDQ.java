@@ -620,7 +620,7 @@ public class DwCEventDQ {
      * @param day the provided dwc:day to evaluate
      * @return DQResponse the response of type ComplianceValue  to return
      *    COMPLIANT if day is an integer in the range 1 to 31 inclusive, otherwise NOT_COMPLIANT
-     * @see #DwCEventDQ.validationDayInrange()   
+     * @see "validationDayInrange() validating day with respect to month and year."   
      */
     @Validation(label="VALIDATION_DAY_STANDARD", description="Is the value of dwc:day an integer between 1 and 31 inclusive?")
     @Provides("47ff73ba-0028-4f79-9ce1-ee7008d66498")
@@ -1263,10 +1263,10 @@ public class DwCEventDQ {
      * Provides: AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR
      * Version: 2022-03-30
      *
-     * Run in order: extractDateFromVerbatim, then eventDateFromYearStartEndDay, then eventDateFromYearMonthDay
+     * Run in order: amendmentDateFromVerbatim, then amendmentEventDateFromYearStartEndDay, then ammendmentEventDateFromYearMonthDay
      *
-     * @see #DwCEventDQ.extractDateFromVerbatim
-     * @see #DwCEventDQ.eventDateFromYearMonthDay
+     * @see "amendmentEventdateFromVerbatim() extract date from verbatim"
+     * @see "amendmentDateFromYearMonthDay() construct date from year month day"
      *
      * @param eventDate to propose a value for if not empty
      * @param year from which to construct an event date
@@ -1365,8 +1365,8 @@ public class DwCEventDQ {
      *
      * Run in order: extractDateFromVerbatim, then eventDateFromYearStartEndDay, then eventDateFromYearMonthDay
      *
-     * @see #DwCEventDQ.eventDateFromYearStartEndDay
-     * @see #DwCEventDQ.extractDateFromVerbatim
+     * @see "amendmentEventdateFromYearStartEndDay()"
+     * @see "amendmentEventdateFromVerbatim()"
      *
      * @param eventDate to fill in if not empty
      * @param year from which to construct the event date

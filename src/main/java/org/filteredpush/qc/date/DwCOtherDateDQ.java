@@ -131,6 +131,8 @@ public class DwCOtherDateDQ {
      * @param eventDate the provided dwc:eventDate to evaluate as preceding dateIdentified
      * @param earliestValidDate the earliest dateIdentified considered to be within range
 	 * @param latestValidDate the most recent dateIdentified considered to be within range
+	 * @param includeEventDate if equal to "true" then also assess the dateIdentified against
+	 *   the eventDate.
      * @return DQResponse the response of type ComplianceValue  to return
      */
     @Validation(label="VALIDATION_DATEIDENTIFIED_INRANGE", description="Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate?")
