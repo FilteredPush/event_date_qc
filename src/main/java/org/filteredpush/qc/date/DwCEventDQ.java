@@ -608,6 +608,10 @@ public class DwCEventDQ {
      * Test to see whether a provided day is an integer in the range of values that can be
      * a day of a month.
      * 
+     * Compare with DwCEventDQ.validationDayInrange(String year, String month, String day) 
+	 * which provides VALIDATION_DAY_INRANGE testing for validity of day when combined with 
+	 * month and year.
+     * 
      * #147 Validation SingleRecord Conformance: day notstandard
      *
      * Provides: VALIDATION_DAY_STANDARD
@@ -616,8 +620,7 @@ public class DwCEventDQ {
      * @param day the provided dwc:day to evaluate
      * @return DQResponse the response of type ComplianceValue  to return
      *    COMPLIANT if day is an integer in the range 1 to 31 inclusive, otherwise NOT_COMPLIANT
-     * @see #DwCEventDQ.validationDayInrange(String year, String month, String day) 
-	 *  providing VALIDATION_DAY_INRANGE
+     * @see #DwCEventDQ.validationDayInrange()   
      */
     @Validation(label="VALIDATION_DAY_STANDARD", description="Is the value of dwc:day an integer between 1 and 31 inclusive?")
     @Provides("47ff73ba-0028-4f79-9ce1-ee7008d66498")

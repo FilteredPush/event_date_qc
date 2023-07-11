@@ -3025,7 +3025,9 @@ public class DateUtils {
      * specified, from the date midnight at the beginning of a date 
      * range to the end of the last second of the day at the end of the 
      * range.  This will return 86400 seconds for the duration of 
-     * a day specified as 1980-01-01.  Excludes leap seconds.
+     * a day specified as 1980-01-01.  Excludes leap seconds.  Treats 
+     * date ranges and dates of reduced precision in the same way, that is
+     * 1832 and 1832-01-01/1832-12-31 both return the same duration in seconds.
      * 
      * Provides: EVENT_DATE_DURATION_SECONDS
      * 
@@ -3033,6 +3035,8 @@ public class DateUtils {
      * 
      * @param eventDate to test.
      * @return the duration of eventDate in seconds.
+     * @throws TimeExtractionException if unable to obtain duration in seconds from the provided 
+     *   eventDate string.
      */    
     public static long measureDurationSeconds(String eventDate) throws TimeExtractionException { 
     	long result = 0l;
@@ -3089,6 +3093,13 @@ public class DateUtils {
     	return result;
     }
     
+    /**
+     * Interpret non-numeric month values as numbers in the range 1-12.
+     * 
+     * @param value string representation of a month to interpret.
+     * @return input value with text, roman numeral, and some other forms
+     *   replaced with a string containing a number in the range 1-12.
+     */
     public static String interpretAsIntegerMonth(String value) { 
     	String cleaned = value.trim().replace(".", "").replace(",", "");
     	if (cleaned.toUpperCase().matches("^I$")) { cleaned = "1"; } 
@@ -3766,13 +3777,25 @@ public class DateUtils {
      *    -a to show all lines, matched or not with their interpretations.
      */
 	public static void main(String[] args) { 
-		DateUtils.interpretDates(args,true);
+		DateUtils.interpretDates(args);
 	} 
 	
+	/**
+	 * Invokes internals for the command line execution, 
+	 * @param args arguments arguments -f to specify a file, -m to show matches. 
+	 */
 	public static void interpretDates(String[] args) {
 		DateUtils.interpretDates(args,true);
 	}
 
+	/**
+	 * Internals for the command line execution.  Attempts to interpret verbatim dates found in
+	 * a file and writes output to the console.
+	 * 
+	 * @param args arguments -f to specify a file, resource example_dates.csv is used
+	 *   if null, -m to show matches. 
+	 * @param showSummaryLines true to show count of matches and unmatched lines at end of output
+	 */
 	public static void interpretDates(String[] args,Boolean showSummaryLines) {
 		if (showSummaryLines == null) { showSummaryLines=true; } 
  		try {
@@ -3900,7 +3923,12 @@ public class DateUtils {
 		} 
 		return result;
 	}
-	
+
+	/**
+	 * Get a map of english words for numbers in the range 1-31 to integers,
+	 * for example one:1, first:1, two:2 
+	 * @return a map of day_as_string, day_as_integer,
+	 */
 	public static Map<String, Integer> getDayStringMap(){ 
 		Map<String, Integer> result = new HashMap<String,Integer>();
 		result.put("one",1);

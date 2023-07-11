@@ -3,34 +3,51 @@ package org.filteredpush.qc.date;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * Exception identifying problems extracting a time from a string.
+ * 
+ * @author mole
+ *
+ */
 public class TimeExtractionException extends Exception {
 
 	private static final long serialVersionUID = -4492137609405770867L;
 	private static final Log logger = LogFactory.getLog(TimeExtractionException.class);
 
+	/**
+	 *  default constructor
+	 */
 	public TimeExtractionException() {
-		// TODO Auto-generated constructor stub
+		super("Error extracting time");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public TimeExtractionException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public TimeExtractionException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public TimeExtractionException(String message, Throwable cause) {
 		super(message, cause);
-		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public TimeExtractionException(String message, Throwable cause, boolean enableSuppression,
 			boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
-		// TODO Auto-generated constructor stub
 	}
 
 }
