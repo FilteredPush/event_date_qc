@@ -17,7 +17,7 @@
 	rdfs:label "AMENDMENT_DATEIDENTIFIED_STANDARDIZED" .
 
 <urn:uuid:bf5b7706-d0a6-4c65-9644-c750e7188ee0> a <http://rs.tdwg.org/bdq/ffdq/Mechanism> ;
-	rdfs:label "Kurator: Date Validator - DwCOtherDateDQ:v3.0.1-SNAPSHOT" .
+	rdfs:label "Kurator: Date Validator - DwCOtherDateDQ:v3.0.1" .
 
 <urn:uuid:ff5cf37b-169a-40b5-931a-1a30ed288d76> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:39bb2280-1215-447b-9221-fd13bc990641> ;
 	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:bf5b7706-d0a6-4c65-9644-c750e7188ee0> ;

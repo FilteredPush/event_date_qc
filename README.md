@@ -34,13 +34,13 @@ An executable jar will be produced in /event_date_qc-{version}-{gitcommit}-execu
 
 Checkout and run mvn package, then execute jar file, e.g. with: 
 
-    java -jar event_date_qc-2.1.0-SNAPSHOT-97344b4-executable.jar -f src/test/resources/example_dates.csv
+    java -jar event_date_qc-3.0.1-1fcc854-executable.jar -f src/test/resources/example_dates.csv
 
 Dates from the corpus of example dates that aren't yet recognized will be printed.  To show only matched dates add -m as an option, to show both matched and un-matched dates, use -a as an option.
 
 Example output from 
 
-    java -jar event_date_qc-2.1.0-SNAPSHOT-97344b4-executable.jar -f src/test/resources/example_dates_for_readme.csv -a -e verbatimDates
+    java -jar event_date_qc-3.0.1-1fcc854-executable.jar -f src/test/resources/example_dates_for_readme.csv -a -e verbatimDates
 
 consists of tab separated lines listing the original value, a result code, and the interpreted date, with the last two lines summarizing the results:
 
