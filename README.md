@@ -34,13 +34,13 @@ An executable jar will be produced in /event_date_qc-{version}-{gitcommit}-execu
 
 Checkout and run mvn package, then execute jar file, e.g. with: 
 
-    java -jar event_date_qc-3.0.1-1fcc854-executable.jar -f src/test/resources/example_dates.csv
+    java -jar event_date_qc-3.0.1-2fee2b5-executable.jar -f src/test/resources/example_dates.csv
 
 Dates from the corpus of example dates that aren't yet recognized will be printed.  To show only matched dates add -m as an option, to show both matched and un-matched dates, use -a as an option.
 
 Example output from 
 
-    java -jar event_date_qc-3.0.1-1fcc854-executable.jar -f src/test/resources/example_dates_for_readme.csv -a -e verbatimDates
+    java -jar event_date_qc-3.0.1-2fee2b5-executable.jar -f src/test/resources/example_dates_for_readme.csv -a -e verbatimDates
 
 consists of tab separated lines listing the original value, a result code, and the interpreted date, with the last two lines summarizing the results:
 
@@ -155,12 +155,11 @@ The unit test below shows an example of a call on DwCEventDQ.measureEventdateDur
     
 The APIs for both the java annotations for the framework and the result objects for the framework are not expected to change.    
 
-These implementations of the TDWG BDQ TG2 test specifications are passing against all related validation data with the 2023-07-04 [test validation data](https://github.com/tdwg/bdq/blob/48dd3240d6250692db461d9a6cfe15e947b1ad7d/tg2/core/TG2_test_validation_data.csv).   
+These implementations of the TDWG BDQ TG2 test specifications are passing against all related validation data with the 2023-07-09 [test validation data](https://github.com/tdwg/bdq/blob/8b7078bf748112cbd0e9c76c415d2b0085caf5f7/tg2/core/TG2_test_validation_data.csv) including [non-printing characters](https://github.com/tdwg/bdq/blob/8b7078bf748112cbd0e9c76c415d2b0085caf5f7/tg2/core/TG2_test_validation_data_nonprintingchars.csv)). 
 
-    $ java -jar bdqtestrunner-0.0.1-SNAPSHOT-dc382e1-executable.jar -c DwCOtherDateDQ,DwCEventDQDefaults
+    $ java -jar bdqtestrunner-0.0.1-SNAPSHOT-6145d0c-executable.jar -c DwCOtherDateDQ,DwCEventDQDefaults
 
-	Validation Test Data From: https://raw.githubusercontent.com/tdwg/bdq/master/tg2/core/TG2_test_validation_data.csv
-	2023-07-04T07:57:58.09266
+	2023-07-11T08:30:32.961049508
 	Validating Test Implementations In:
 	org.filteredpush.qc.date.DwCEventDQDefaults
 	org.filteredpush.qc.date.DwCOtherDateDQ
@@ -172,7 +171,7 @@ These implementations of the TDWG BDQ TG2 test specifications are passing agains
 	c09ecbf9-34e3-4f3e-b74a-8796af15e59f 12 P:12 F: 0 VALIDATION_YEAR_NOTEMPTY tdwg/bdq#49
 	2e371d57-1eb3-4fe3-8a61-dff43ced50cf  7 P: 7 F: 0 AMENDMENT_MONTH_STANDARDIZED tdwg/bdq#128
 	9a39d88c-7eee-46df-b32a-c109f9f81fb8 10 P:10 F: 0 VALIDATION_ENDDAYOFYEAR_INRANGE tdwg/bdq#131
-	5618f083-d55a-4ac2-92b5-b9fb227b832f 31 P:31 F: 0 VALIDATION_EVENTDATE_CONSISTENT tdwg/bdq#67
+	5618f083-d55a-4ac2-92b5-b9fb227b832f 33 P:33 F: 0 VALIDATION_EVENTDATE_CONSISTENT tdwg/bdq#67
 	56b6c695-adf1-418e-95d2-da04cad7be53 10 P:10 F: 0 MEASURE_EVENTDATE_PRECISIONINSECONDS tdwg/bdq#140
 	f51e15a6-a67d-4729-9c28-3766299d2985 26 P:26 F: 0 VALIDATION_EVENTDATE_NOTEMPTY tdwg/bdq#33
 	3892f432-ddd0-4a0a-b713-f2e2ecbd879d 12 P:12 F: 0 AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY tdwg/bdq#93
@@ -189,7 +188,8 @@ These implementations of the TDWG BDQ TG2 test specifications are passing agains
 	4f2bf8fd-fc5c-493f-a44c-e7b16153c803 18 P:18 F: 0 VALIDATION_EVENTDATE_STANDARD tdwg/bdq#66
 	8d787cb5-73e2-4c39-9cd1-67c7361dc02e 23 P:23 F: 0 VALIDATION_DAY_INRANGE tdwg/bdq#125
 	85803c7e-2a5a-42e1-b8d3-299a44cafc46 11 P:11 F: 0 VALIDATION_STARTDAYOFYEAR_INRANGE tdwg/bdq#130
-	Test cases: 358
+	Test cases: 360
+
 
 # Developer deployment: 
 
