@@ -1480,6 +1480,7 @@ public class DwCEventDQ {
      	    		   Map<String, String> values = new HashMap<>();
      	    		   values.put("dwc:eventDate", resultDateString);
      	    		   result.setValue(new AmendmentValue(values));
+     	    		   result.addComment("Proposed value to fill in empty dwc:eventDate ["+resultDateString+"] from the provided values of dwc:year, dwc:month, and dwc:day.");
      	    	   }
      	       } catch (NumberFormatException e) {
      	    	   result.setResultState(ResultState.NOT_AMENDED);
@@ -2021,6 +2022,7 @@ public class DwCEventDQ {
 		if (validation.getResultState().equals(ResultState.RUN_HAS_RESULT)) {
 			if (validation.getValue().equals(ComplianceValue.COMPLIANT)) {
 				result.setValue(CompletenessValue.COMPLETE);
+				result.addComment("At least one of the terms dwc:eventDate, year, month, day, startDayOfYear, endDayOfYear, verbatimEventDate contains a value.");
 			} else {
 				result.addComment("No value provided for eventDate.");
 				result.setValue(CompletenessValue.NOT_COMPLETE);
