@@ -39,6 +39,161 @@ import org.junit.Test;
  */
 public class DwcEventDQTest {
 	private static final Log logger = LogFactory.getLog(DwcEventDQTest.class);
+	
+	/**
+	 * Tests for https://github.com/tdwg/bdq/issues/210 
+	 */
+	@Test
+	public void testIssue210() { 
+		
+		// cover a range of relevant tests for these data values, with a pre-amendment, amendment, and post-amendment phase
+		// Not strictly a unit test as this covers a fixed set of data values for the invocation of a number of methods 
+		// for the purposes of illustrating the test behaviors.
+		
+		String eventDate = "2020-01-15";
+		String year = "";
+		String month = "1";
+		String day = "15";
+		String verbatimEventDate = "";
+		String startDayOfYear = "";
+		String endDayOfYear = "";
+		
+		DQResponse<NumericalValue> measure = DwCEventDQ.measureEventdateDurationinseconds(eventDate);
+		Long seconds = (60l*60l*24l); 
+		assertEquals(seconds, measure.getObject());
+		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
+		assertFalse(DateUtils.isEmpty(measure.getComment()));
+		logger.debug("MEASURE_EVENTDATE_DURATIONINSECONDS");
+		logger.debug(measure.getResultState().getLabel());
+		logger.debug(measure.getValue().getObject().toString());
+		logger.debug(measure.getComment());
+		logger.debug("");
+		
+		DQResponse<ComplianceValue> result = DwCEventDQ.validationEventTemporalNotEmpty(eventDate, verbatimEventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		logger.debug("VALIDATION_EVENT_TEMPORAL_NOTEMPTY");
+		logger.debug(result.getResultState().getLabel());
+		logger.debug(result.getValue().getLabel());
+		logger.debug(result.getComment());
+		logger.debug("");
+		
+		result = DwCEventDQ.validationEventdateNotEmpty(eventDate);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		logger.debug("VALIDATION_EVENTDATE_NOTEMPTY");
+		logger.debug(result.getResultState().getLabel());
+		logger.debug(result.getValue().getLabel());
+		logger.debug(result.getComment());
+		logger.debug("");
+		
+		result = DwCEventDQ.validationEventdateInrange(eventDate, null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		logger.debug("VALIDATION_EVENTDATE_INRANGE");
+		logger.debug(result.getResultState().getLabel());
+		logger.debug(result.getValue().getLabel());
+		logger.debug(result.getComment());
+		logger.debug("");
+		
+		result = DwCEventDQ.validationDayInrange(year, month, day);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		logger.debug("VALIDATION_DAY_INRANGE");
+		logger.debug(result.getResultState().getLabel());
+		logger.debug(result.getValue().getLabel());
+		logger.debug(result.getComment());
+		logger.debug("");
+	
+		result = DwCEventDQ.validationDayStandard(day);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		logger.debug("VALIDATION_DAY_STANDARD");
+		logger.debug(result.getResultState().getLabel());
+		logger.debug(result.getValue().getLabel());
+		logger.debug(result.getComment());
+		logger.debug("");
+		
+		result = DwCEventDQ.validationMonthStandard(month);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		logger.debug("VALIDATION_MONTH_STANDARD");
+		logger.debug(result.getResultState().getLabel());
+		logger.debug(result.getValue().getLabel());
+		logger.debug(result.getComment());
+		logger.debug("");
+		
+		result = DwCEventDQ.validationYearNotEmpty(year);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());	
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		logger.debug("VALIDATION_YEAR_NOTEMPTY");
+		logger.debug(result.getResultState().getLabel());
+		logger.debug(result.getValue().getLabel());
+		logger.debug(result.getComment());
+		logger.debug("");
+		
+		result = DwCEventDQ.validationYearInrange(year, null, null);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		assertNull(result.getValue());	
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		logger.debug("VALIDATION_YEAR_INRANGE");
+		logger.debug(result.getResultState().getLabel());
+		logger.debug(result.getValue());
+		logger.debug(result.getComment());
+		logger.debug("");
+		
+		result = DwCEventDQ.validationEventConsistent(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		logger.debug("VALIDATION_EVENT_CONSISTENT");
+		logger.debug(result.getResultState().getLabel());
+		logger.debug(result.getValue().getLabel());
+		logger.debug(result.getComment());
+		logger.debug("");
+		
+		DQResponse<AmendmentValue> amendment = DwCEventDQ.amendmentEventFromEventdate(eventDate, year, month, day, startDayOfYear, endDayOfYear);
+		assertEquals(ResultState.FILLED_IN.getLabel(), amendment.getResultState().getLabel());
+		assertEquals(3,amendment.getValue().getObject().size());
+		assertEquals("2020", amendment.getValue().getObject().get("dwc:year"));
+		assertFalse(DateUtils.isEmpty(amendment.getComment()));
+		logger.debug("AMENDMENT_EVENT_FROM_EVENTDATE");
+		logger.debug(amendment.getResultState().getLabel());;
+		logger.debug(amendment.getValue().getObject().toString());
+		logger.debug(amendment.getComment());
+		logger.debug("");
+		
+		// Accept amendment:
+		year = amendment.getValue().getObject().get("dwc:year");
+		
+		result = DwCEventDQ.validationYearNotEmpty(year);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		logger.debug("VALIDATION_YEAR_NOTEMPTY (with amendment accepted)");
+		logger.debug(result.getResultState().getLabel());
+		logger.debug(result.getValue().getLabel());
+		logger.debug(result.getComment());
+		logger.debug("");
+		
+		result = DwCEventDQ.validationYearInrange(year, null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());	
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		logger.debug("VALIDATION_YEAR_INRANGE (with amendment accepted)");
+		logger.debug(result.getResultState().getLabel());
+		logger.debug(result.getValue().getLabel());
+		logger.debug(result.getComment());
+		logger.debug("");
+		
+	}
 
 	@Test
 	public void testMeasureDuration() { 
@@ -47,6 +202,7 @@ public class DwcEventDQTest {
 		assertEquals(seconds, measure.getObject());
 		assertEquals(ResultState.RUN_HAS_RESULT, measure.getResultState());
 		assertNotNull(measure.getComment());  // the content of the comment is not standardized, but one must be present.
+		assertFalse(DateUtils.isEmpty(measure.getComment()));
 		
 		measure = DwCEventDQ.measureEventdateDurationinseconds("1880-05");
 		seconds = (60l*60l*24l*31); 

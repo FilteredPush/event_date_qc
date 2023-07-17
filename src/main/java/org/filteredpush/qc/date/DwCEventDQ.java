@@ -132,6 +132,7 @@ public class DwCEventDQ {
     			long seconds = DateUtils.measureDurationSeconds(eventDate);
     			result.setValue(new NumericalValue(seconds));
     			result.setResultState(ResultState.RUN_HAS_RESULT);
+    			result.addComment("Provided dwc:eventDate ["+eventDate+"] represents a period of time with a duration of "+seconds+" seconds");
     		} catch (Exception e) { 
     			logger.debug(e.getMessage());
     			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -1910,6 +1911,7 @@ public class DwCEventDQ {
 					if (interpretationProblem) {
 						result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
 					} else {
+						result.addComment("Values for provided event terms are consistent with each other.");
 						result.setResultState(ResultState.RUN_HAS_RESULT);
 						result.setValue(ComplianceValue.COMPLIANT);
 					}
