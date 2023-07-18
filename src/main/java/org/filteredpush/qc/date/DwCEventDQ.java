@@ -346,6 +346,7 @@ public class DwCEventDQ {
 					extractedValues.put("dwc:eventDate", extractResponse.getResult());
 					result.setValue(new AmendmentValue(extractedValues));
 					result.setResultState(ResultState.FILLED_IN);
+					result.addComment("Proposed value to fill in in empty dwc:eventDate with value interpreted ["+extractResponse.getResult()+"] from dwc:verbatimEventDate ["+verbatimEventDate+"]");
 				} else if (!extractResponse.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
 						( extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS) ||
 								extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)))
