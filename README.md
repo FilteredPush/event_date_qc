@@ -210,6 +210,7 @@ To deploy a new release to maven central, set the version in pom.xml to a non-sn
 	generation/event_date_qc_DwCOtherDQ_stubs_kurator_ffdq.config
 	generation/event_date_qc_DwCEventDQ_kurator_ffdq.config
 	generation/event_date_qc_DwCOtherDQ_kurator_ffdq.config
+	src/main/java/org/filteredpush/qc/date/DwCOtherDateDQDefaults.java
 	src/main/java/org/filteredpush/qc/date/DwCOtherDateDQ.java
 	src/main/java/org/filteredpush/qc/date/DwCEventDQDefaults.java
 	src/main/java/org/filteredpush/qc/date/DwCEventDQ.java

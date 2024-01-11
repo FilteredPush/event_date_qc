@@ -89,7 +89,7 @@ import java.util.Map;
  */
 @Mechanism(
 		value = "urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8",
-		label = "Kurator: Date Validator - DwCEventDQ:v3.0.3-SNAPSHOT")
+		label = "Kurator: Date Validator - DwCEventDQ:v3.0.3")
 public class DwCEventDQ {
 	
 	private static final Log logger = LogFactory.getLog(DwCEventDQ.class);
@@ -2366,5 +2366,4 @@ public class DwCEventDQ {
     	return result;
     }	    
 
-// TODO: Implementation of VALIDATION_DAY_STANDARD is not up to date with current version: https://rs.tdwg.org/bdq/terms/47ff73ba-0028-4f79-9ce1-ee7008d66498/2023-09-18 see line: 628
 }
