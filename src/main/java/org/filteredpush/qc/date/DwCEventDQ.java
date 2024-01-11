@@ -674,7 +674,7 @@ public class DwCEventDQ {
      *
      *
      * @param month the provided dwc:month string to evaluate
-     * @return a DQResponse<ComplianceValue> asserting INTERNAL_PREREQUSISITES_NOT_MET if month is empty,
+     * @return a DQResponse of type ComplianceValue asserting INTERNAL_PREREQUSISITES_NOT_MET if month is empty,
      * 		COMPLIANT if month is an integer in the range 1 to 12 inclusive, otherwise NOT_COMPLIANT.
      */
     @Validation(label="VALIDATION_MONTH_STANDARD", description="Is the value of dwc:month interpretable as an integer between 1 and 12 inclusive?")
