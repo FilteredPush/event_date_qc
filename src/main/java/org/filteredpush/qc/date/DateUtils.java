@@ -3028,6 +3028,9 @@ public class DateUtils {
      * a day specified as 1980-01-01.  Excludes leap seconds.  Treats 
      * date ranges and dates of reduced precision in the same way, that is
      * 1832 and 1832-01-01/1832-12-31 both return the same duration in seconds.
+     * Consumers should be cautioned that the resulting value is makes 
+     * simplifying assumptions, and should be treated as an approximation, 
+     * see: https://xkcd.com/2867/
      * 
      * Provides: EVENT_DATE_DURATION_SECONDS
      * 
