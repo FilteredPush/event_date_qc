@@ -17,7 +17,7 @@
 	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
 
 <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> a <http://rs.tdwg.org/bdq/ffdq/Mechanism> ;
-	rdfs:label "Kurator: Date Validator - DwCEventDQ:v3.0.3" .
+	rdfs:label "Kurator: Date Validator - DwCEventDQ:v3.0.4-SNAPSHOT" .
 
 <urn:uuid:f51e15a6-a67d-4729-9c28-3766299d2985> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
 	rdfs:comment "COMPLIANT if dwc:eventDate is not EMPTY; otherwise NOT_COMPLIANT " ;
