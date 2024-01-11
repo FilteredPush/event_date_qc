@@ -155,41 +155,42 @@ The unit test below shows an example of a call on DwCEventDQ.measureEventdateDur
     
 The APIs for both the java annotations for the framework and the result objects for the framework are not expected to change.    
 
-These implementations of the TDWG BDQ TG2 test specifications are passing against all related validation data with the 2023-07-09 [test validation data](https://github.com/tdwg/bdq/blob/8b7078bf748112cbd0e9c76c415d2b0085caf5f7/tg2/core/TG2_test_validation_data.csv) including [non-printing characters](https://github.com/tdwg/bdq/blob/8b7078bf748112cbd0e9c76c415d2b0085caf5f7/tg2/core/TG2_test_validation_data_nonprintingchars.csv)). 
+These implementations of the TDWG BDQ TG2 test specifications are passing against all related validation data with the 2023-12-15 [test validation data](https://github.com/tdwg/bdq/blob/8b7078bf748112cbd0e9c76c415d2b0085caf5f7/tg2/core/TG2_test_validation_data.csv) including [non-printing characters](https://github.com/tdwg/bdq/blob/8b7078bf748112cbd0e9c76c415d2b0085caf5f7/tg2/core/TG2_test_validation_data_nonprintingchars.csv)). 
 
-    $ java -jar bdqtestrunner-0.0.1-SNAPSHOT-6145d0c-executable.jar -c DwCOtherDateDQ,DwCEventDQDefaults
+    $ java -jar bdqtestrunner-0.0.1-SNAPSHOT-35f8cf2-executable.jar -c DwCOtherDateDQDefaults,DwCEventDQDefaults
 
-	2023-07-11T08:30:32.961049508
-	Validating Test Implementations In:
-	org.filteredpush.qc.date.DwCEventDQDefaults
-	org.filteredpush.qc.date.DwCOtherDateDQ
-	Ran 23 tests against the validation data.
-	[test guid, total tests, P=passed, F=failed, test label, issue number]
-	718dfc3c-cb52-4fca-b8e2-0e722f375da7  9 P: 9 F: 0 AMENDMENT_EVENTDATE_STANDARDIZED tdwg/bdq#61
-	dc8aae4b-134f-4d75-8a71-c4186239178e 25 P:25 F: 0 VALIDATION_DATEIDENTIFIED_INRANGE tdwg/bdq#76
-	710fe118-17e1-440f-b428-88ba3f547d6d 10 P:10 F: 0 AMENDMENT_EVENT_FROM_EVENTDATE tdwg/bdq#52
-	c09ecbf9-34e3-4f3e-b74a-8796af15e59f 12 P:12 F: 0 VALIDATION_YEAR_NOTEMPTY tdwg/bdq#49
-	2e371d57-1eb3-4fe3-8a61-dff43ced50cf  7 P: 7 F: 0 AMENDMENT_MONTH_STANDARDIZED tdwg/bdq#128
-	9a39d88c-7eee-46df-b32a-c109f9f81fb8 10 P:10 F: 0 VALIDATION_ENDDAYOFYEAR_INRANGE tdwg/bdq#131
-	5618f083-d55a-4ac2-92b5-b9fb227b832f 33 P:33 F: 0 VALIDATION_EVENTDATE_CONSISTENT tdwg/bdq#67
-	56b6c695-adf1-418e-95d2-da04cad7be53 10 P:10 F: 0 MEASURE_EVENTDATE_PRECISIONINSECONDS tdwg/bdq#140
-	f51e15a6-a67d-4729-9c28-3766299d2985 26 P:26 F: 0 VALIDATION_EVENTDATE_NOTEMPTY tdwg/bdq#33
-	3892f432-ddd0-4a0a-b713-f2e2ecbd879d 12 P:12 F: 0 AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY tdwg/bdq#93
-	47ff73ba-0028-4f79-9ce1-ee7008d66498 11 P:11 F: 0 VALIDATION_DAY_STANDARD tdwg/bdq#147
-	b129fa4d-b25b-43f7-9645-5ed4d44b357b  8 P: 8 F: 0 AMENDMENT_DAY_STANDARDIZED tdwg/bdq#127
-	ad0c8855-de69-4843-a80c-a5387d20fbc8 13 P:13 F: 0 VALIDATION_YEAR_INRANGE tdwg/bdq#84
-	3cff4dc4-72e9-4abe-9bf3-8a30f1618432 24 P:24 F: 0 VALIDATION_EVENTDATE_INRANGE tdwg/bdq#36
-	eb0a44fa-241c-4d64-98df-ad4aa837307b  9 P: 9 F: 0 AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR tdwg/bdq#132
-	66269bdd-9271-4e76-b25c-7ab81eebe1d8 17 P:17 F: 0 VALIDATION_DATEIDENTIFIED_STANDARD tdwg/bdq#69
-	6d0a0c10-5e4a-4759-b448-88932f399812 22 P:22 F: 0 AMENDMENT_EVENTDATE_FROM_VERBATIM tdwg/bdq#86
-	41267642-60ff-4116-90eb-499fee2cd83f 30 P:30 F: 0 VALIDATION_EVENT_TEMPORAL_NOTEMPTY tdwg/bdq#88
-	39bb2280-1215-447b-9221-fd13bc990641 10 P:10 F: 0 AMENDMENT_DATEIDENTIFIED_STANDARDIZED  tdwg/bdq#26
-	01c6dafa-0886-4b7e-9881-2c3018c98bdc 10 P:10 F: 0 VALIDATION_MONTH_STANDARD tdwg/bdq#126
-	4f2bf8fd-fc5c-493f-a44c-e7b16153c803 18 P:18 F: 0 VALIDATION_EVENTDATE_STANDARD tdwg/bdq#66
-	8d787cb5-73e2-4c39-9cd1-67c7361dc02e 23 P:23 F: 0 VALIDATION_DAY_INRANGE tdwg/bdq#125
-	85803c7e-2a5a-42e1-b8d3-299a44cafc46 11 P:11 F: 0 VALIDATION_STARTDAYOFYEAR_INRANGE tdwg/bdq#130
-	Test cases: 360
-
+    Validation Test Data From: https://raw.githubusercontent.com/tdwg/bdq/master/tg2/core/TG2_test_validation_data.csv
+    2024-01-11T14:42:53.613743137
+    Validating Test Implementations In:
+    org.filteredpush.qc.date.DwCEventDQDefaults
+    org.filteredpush.qc.date.DwCOtherDateDQDefaults
+    Ran 23 tests against the validation data.
+    718dfc3c-cb52-4fca-b8e2-0e722f375da7  9 P: 9 F: 0 AMENDMENT_EVENTDATE_STANDARDIZED #61
+    dc8aae4b-134f-4d75-8a71-c4186239178e 25 P:25 F: 0 VALIDATION_DATEIDENTIFIED_INRANGE #76
+    710fe118-17e1-440f-b428-88ba3f547d6d 10 P:10 F: 0 AMENDMENT_EVENT_FROM_EVENTDATE #52
+    c09ecbf9-34e3-4f3e-b74a-8796af15e59f 12 P:12 F: 0 VALIDATION_YEAR_NOTEMPTY #49
+    2e371d57-1eb3-4fe3-8a61-dff43ced50cf  7 P: 7 F: 0 AMENDMENT_MONTH_STANDARDIZED #128
+    9a39d88c-7eee-46df-b32a-c109f9f81fb8 10 P:10 F: 0 VALIDATION_ENDDAYOFYEAR_INRANGE #131
+    5618f083-d55a-4ac2-92b5-b9fb227b832f 33 P:33 F: 0 VALIDATION_EVENTDATE_CONSISTENT #67
+    56b6c695-adf1-418e-95d2-da04cad7be53 10 P:10 F: 0 MEASURE_EVENTDATE_PRECISIONINSECONDS #140
+    f51e15a6-a67d-4729-9c28-3766299d2985 26 P:26 F: 0 VALIDATION_EVENTDATE_NOTEMPTY #33
+    3892f432-ddd0-4a0a-b713-f2e2ecbd879d 12 P:12 F: 0 AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY #93
+    47ff73ba-0028-4f79-9ce1-ee7008d66498 11 P:11 F: 0 VALIDATION_DAY_STANDARD #147
+    b129fa4d-b25b-43f7-9645-5ed4d44b357b  8 P: 8 F: 0 AMENDMENT_DAY_STANDARDIZED #127
+    ad0c8855-de69-4843-a80c-a5387d20fbc8 13 P:13 F: 0 VALIDATION_YEAR_INRANGE #84
+    3cff4dc4-72e9-4abe-9bf3-8a30f1618432 24 P:24 F: 0 VALIDATION_EVENTDATE_INRANGE #36
+    eb0a44fa-241c-4d64-98df-ad4aa837307b  9 P: 9 F: 0 AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR #132
+    66269bdd-9271-4e76-b25c-7ab81eebe1d8 17 P:17 F: 0 VALIDATION_DATEIDENTIFIED_STANDARD #69
+    6d0a0c10-5e4a-4759-b448-88932f399812 22 P:22 F: 0 AMENDMENT_EVENTDATE_FROM_VERBATIM #86
+    41267642-60ff-4116-90eb-499fee2cd83f 30 P:30 F: 0 VALIDATION_EVENT_TEMPORAL_NOTEMPTY #88
+    39bb2280-1215-447b-9221-fd13bc990641 10 P:10 F: 0 AMENDMENT_DATEIDENTIFIED_STANDARDIZED  #26
+    01c6dafa-0886-4b7e-9881-2c3018c98bdc 10 P:10 F: 0 VALIDATION_MONTH_STANDARD #126
+    4f2bf8fd-fc5c-493f-a44c-e7b16153c803 18 P:18 F: 0 VALIDATION_EVENTDATE_STANDARD #66
+    8d787cb5-73e2-4c39-9cd1-67c7361dc02e 23 P:23 F: 0 VALIDATION_DAY_INRANGE #125
+    85803c7e-2a5a-42e1-b8d3-299a44cafc46 11 P:11 F: 0 VALIDATION_STARTDAYOFYEAR_INRANGE #130
+    Test cases: 360
+    Total cases with no implementation: 832
+    Total dataID validation rows: 1192
 
 # Developer deployment: 
 
