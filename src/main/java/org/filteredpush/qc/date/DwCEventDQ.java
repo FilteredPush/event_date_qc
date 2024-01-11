@@ -479,7 +479,6 @@ public class DwCEventDQ {
 		return result;
     }
 
-	
 	/**
      * Is the value of dwc:eventDate a valid ISO date?
      * 
@@ -488,14 +487,14 @@ public class DwCEventDQ {
      * #66 Validation SingleRecord Conformance: eventdate notstandard
      *
      * Provides: VALIDATION_EVENTDATE_STANDARD
-     * Version: 2023-03-27
+     * Version: 2023-09-18
      *
-     * @param eventDate the provided dwc:eventDate to evaluate
+     * @param eventDate the provided dwc:eventDate to evaluate as ActedUpon.
      * @return DQResponse the response of type ComplianceValue to return
      */
     @Validation(label="VALIDATION_EVENTDATE_STANDARD", description="Is the value of dwc:eventDate a valid ISO date?")
     @Provides("4f2bf8fd-fc5c-493f-a44c-e7b16153c803")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/4f2bf8fd-fc5c-493f-a44c-e7b16153c803/2023-03-27")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/4f2bf8fd-fc5c-493f-a44c-e7b16153c803/2023-09-18")
     @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; COMPLIANT if the value of dwc:eventDate is a valid ISO 8601-1 date; otherwise NOT_COMPLIANT ")
     public static DQResponse<ComplianceValue> validationEventdateStandard(
     		@ActedUpon(value = "dwc:eventDate") String eventDate) {
@@ -1724,7 +1723,7 @@ public class DwCEventDQ {
      * #67 Validation SingleRecord Consistency: eventdate inconsistent
      *
      * Provides: VALIDATION_EVENT_CONSISTENT
-     * Version: 2023-06-27
+     * Version: 2023-09-18
      *
      * @param eventDate the provided dwc:eventDate to evaluate
      * @param year the provided dwc:year to evaluate
@@ -1737,7 +1736,7 @@ public class DwCEventDQ {
      */
     @Validation(label="VALIDATION_EVENT_CONSISTENT", description="Are the values in dwc:eventDate consistent with the values in dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear?")
     @Provides("5618f083-d55a-4ac2-92b5-b9fb227b832f")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/5618f083-d55a-4ac2-92b5-b9fb227b832f/2023-06-27")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/5618f083-d55a-4ac2-92b5-b9fb227b832f/2023-09-18")
     @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY, or all of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear are EMPTY; COMPLIANT if all of the following conditions are met (1) dwc:year is EMPTY or dwc:eventDate has a precision of one year or finer and and is within a single year and the provided value of dwc:year matches the year expressed in dwc:eventDate, and (2) dwc:month is EMPTY or dwc:eventDate has a precision of one month or finer and is within a single month and the provided value in dwc:month matches the month represented by dwc:eventDate, and (3) dwc:day is EMPTY or dwc:eventDate has a precision of a day or less and is within a single day and the provided value in dwc:day matches the day represented by dwc:eventDate, and (4) dwc:startDayOfYear is empty or dwc:eventDate has a precision of one day or finer and the provided value in dwc:startDayOfYear matches the start day of the year of the range represented by dwc:eventDate, and (5) dwc:endDayOfYear is empty or dwc:eventDate has a precision of one day or finer and the provided value in dwc:endDayOfYear matches the end day of the year of the range represented by dwc:eventDate; otherwise NOT_COMPLIANT. ")
 	public static DQResponse<ComplianceValue> validationEventConsistent(
     		@ActedUpon(value = "dwc:eventDate") String eventDate,
@@ -2215,7 +2214,7 @@ public class DwCEventDQ {
      * Is the value of dwc:year within the Parameter range?
      *
 	 * Given a year, evaluate whether that year falls in the range between provided upper and lower bounds inclusive.
-	 * If null is provided for lowerBound, then the value 1500 will be used as the lower bound.  If null is provided
+	 * If null is provided for lowerBound, then the value 1582 will be used as the lower bound.  If null is provided
 	 * for the upper bound, the current year will be used.  This implementation uses the year from the local date/time 
 	 * as the upper bound, and will give different answers for values of year within 1 of the current year when run 
 	 * in different time zones within one day of a year boundary, thus this test is not suitable for fine grained 
@@ -2224,7 +2223,7 @@ public class DwCEventDQ {
      * #84 Validation SingleRecord Conformance: year outofrange
      *
      * Provides: VALIDATION_YEAR_INRANGE
-     * Version: 2023-06-28
+     * Version: 2023-09-18
      * 
      * Parameters: bdq:earliestDate="1582"; bdq:latestDate=current year
      * 
@@ -2235,7 +2234,7 @@ public class DwCEventDQ {
 	 */
     @Validation(label="VALIDATION_YEAR_INRANGE", description="Is the value of dwc:year within the Parameter range?")
     @Provides("ad0c8855-de69-4843-a80c-a5387d20fbc8")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/ad0c8855-de69-4843-a80c-a5387d20fbc8/2023-06-28")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/ad0c8855-de69-4843-a80c-a5387d20fbc8/2023-09-18")
     @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:year is not present, or is EMPTY or cannot be interpreted as an integer; COMPLIANT if the value of dwc:year is within the range bdq:earliestValidDate to bdq:latestValidDate inclusive; otherwise NOT_COMPLIANT bdq:earliestValidDate='1582',bdq:latestValidDate=current year")
     public static DQResponse<ComplianceValue> validationYearInrange(
     		@ActedUpon(value = "dwc:year") String year,  
@@ -2358,9 +2357,6 @@ public class DwCEventDQ {
     	return result;
     }	    
 
-// TODO: Implementation of VALIDATION_EVENTDATE_STANDARD is not up to date with current version: https://rs.tdwg.org/bdq/terms/4f2bf8fd-fc5c-493f-a44c-e7b16153c803/2023-09-18 see line: 497
-// TODO: Implementation of VALIDATION_EVENT_CONSISTENT is not up to date with current version: https://rs.tdwg.org/bdq/terms/5618f083-d55a-4ac2-92b5-b9fb227b832f/2023-09-18 see line: 1739
-// TODO: Implementation of VALIDATION_YEAR_INRANGE is not up to date with current version: https://rs.tdwg.org/bdq/terms/ad0c8855-de69-4843-a80c-a5387d20fbc8/2023-09-18 see line: 2240
 // TODO: Implementation of AMENDMENT_EVENTDATE_FROM_VERBATIM is not up to date with current version: https://rs.tdwg.org/bdq/terms/6d0a0c10-5e4a-4759-b448-88932f399812/2023-09-18 see line: 323
 // TODO: Implementation of VALIDATION_EVENT_TEMPORAL_NOTEMPTY is not up to date with current version: https://rs.tdwg.org/bdq/terms/41267642-60ff-4116-90eb-499fee2cd83f/2023-09-18 see line: 1952
 // TODO: Implementation of AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY is not up to date with current version: https://rs.tdwg.org/bdq/terms/3892f432-ddd0-4a0a-b713-f2e2ecbd879d/2023-09-18 see line: 1380
