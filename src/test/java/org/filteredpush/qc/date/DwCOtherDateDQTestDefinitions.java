@@ -354,5 +354,56 @@ public class DwCOtherDateDQTestDefinitions {
 		
 		
 	}
+	
+	@Test
+	
+    public void testvalidationDateidentifiedAftereventdate() { 
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if either dwc:dateIdentified 
+        // or dwc:eventDate are empty or are not interpretable as ISO 
+        // 8601-1:2019 dates; COMPLIANT if dwc:dateIdentified is equal 
+        // to or is entirely later than dwc:eventDate; otherwise NOT_COMPLIANT 
+        // 
+        String eventDate = ""; 
+        String dateIdentified = "";
+		DQResponse<ComplianceValue> result = DwCOtherDateDQ.validationDateidentifiedAftereventdate(eventDate, dateIdentified);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		assertNull(result.getValue());
+		assertNotNull(result.getComment());
+		
+        eventDate = "foo"; 
+        dateIdentified = "";
+		result = DwCOtherDateDQ.validationDateidentifiedAftereventdate(eventDate, dateIdentified);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		assertNull(result.getValue());
+		assertNotNull(result.getComment());
+		
+        eventDate = "1880-12-05"; 
+        dateIdentified = "2022-06-03";
+		result = DwCOtherDateDQ.validationDateidentifiedAftereventdate(eventDate, dateIdentified);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		assertNotNull(result.getComment());
+		
+        eventDate = "1880/1883"; 
+        dateIdentified = "1882-01-03";
+		result = DwCOtherDateDQ.validationDateidentifiedAftereventdate(eventDate, dateIdentified);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		assertNotNull(result.getComment());
+		
+        eventDate = "1880-12-04"; 
+        dateIdentified = "1782-01-03";
+		result = DwCOtherDateDQ.validationDateidentifiedAftereventdate(eventDate, dateIdentified);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		assertNotNull(result.getComment());
+		
+	}
 
 }

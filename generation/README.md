@@ -2,8 +2,10 @@ time_tests.csv and ident_time_tests.csv are the subset of TDWG BDQ TG2 tests rel
 
     head -n 1 ../../bdq/tg2/core/TG2_tests.csv > ident_time_tests.csv
     grep DATEIDENTIFIED ../../bdq/tg2/core/TG2_tests.csv >> ident_time_tests.csv
+    grep DATEIDENTIFIED ../../bdq/tg2/supplementary/TG2_supplementary_tests.csv >> ident_time_tests.csv
     head -n 1 ../../bdq/tg2/core/TG2_tests.csv > time_tests.csv
-    grep TIME ../../bdq/tg2/core/TG2_tests.csv  | grep -v DATEIDENTIFIED | grep -v DATAGENERALIZATIONS | grep -v AllDarwinCoreTerms  >> time_tests.csv
+    grep "[\" ]TIME" ../../bdq/tg2/core/TG2_tests.csv  | grep -v DATEIDENTIFIED | grep -v DATAGENERALIZATIONS | grep -v AllDarwinCoreTerms  >> time_tests.csv
+    grep "[\" ]TIME" ../../bdq/tg2/supplementary/TG2_supplementary_tests.csv  | grep -v DATEIDENTIFIED | grep -v DATAGENERALIZATIONS | grep -v AllDarwinCoreTerms  >> time_tests.csv
 
 Turtle RDF generated using kurator-ffdq using (from a kurator-ffdq directory in the same parent directory as event_date_qc) with:
 

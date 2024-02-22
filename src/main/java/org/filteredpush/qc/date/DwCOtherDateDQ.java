@@ -29,8 +29,12 @@ import java.util.Map;
  *   #76 VALIDATION_DATEIDENTIFIED_INRANGE dc8aae4b-134f-4d75-8a71-c4186239178e
  *   #69 VALIDATION_DATEIDENTIFIED_STANDARD 66269bdd-9271-4e76-b25c-7ab81eebe1d8
  *   #26 AMENDMENT_DATEIDENTIFIED_STANDARDIZED 39bb2280-1215-447b-9221-fd13bc990641
+
+ * Provides Suplementary TG2 tests: 
+ * #92 VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE 391ca46d-3842-4a18-970c-0434cbc17f07
  *   
  * Also provides: 
+ *   TODO: Go with metadata in rec_occur_qc
  *   Date Modified Format Correction (supplemental)  
  *   ModifiedDateValid (supplemental)
  * 
@@ -469,5 +473,76 @@ public class DwCOtherDateDQ {
 		}
 		return result;
 	}
+
+    /**
+    * Is the date of identification equal to, or later than the dwc:eventDate?
+    *
+    * Provides: #92 VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE
+    * Version: 2024-02-22
+    *
+    * @param eventDate the provided dwc:eventDate to evaluate as ActedUpon.
+    * @param dateIdentified the provided dwc:dateIdentified to evaluate as ActedUpon.
+    * @return DQResponse the response of type ComplianceValue  to return
+    */
+    @Validation(label="VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE", description="Is the date of identification equal to, or later than the dwc:eventDate?")
+    @Provides("391ca46d-3842-4a18-970c-0434cbc17f07")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/391ca46d-3842-4a18-970c-0434cbc17f07/2024-02-22")
+    @Specification("INTERNAL_PREREQUISITES_NOT_MET if either dwc:dateIdentified or dwc:eventDate are empty or are not interpretable as ISO 8601-1:2019 dates; COMPLIANT if dwc:dateIdentified is equal to or is entirely later than dwc:eventDate; otherwise NOT_COMPLIANT")
+    public static DQResponse<ComplianceValue> validationDateidentifiedAftereventdate(
+        @ActedUpon("dwc:eventDate") String eventDate, 
+        @ActedUpon("dwc:dateIdentified") String dateIdentified
+    ) {
+        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if either dwc:dateIdentified 
+        // or dwc:eventDate are empty or are not interpretable as ISO 
+        // 8601-1:2019 dates; COMPLIANT if dwc:dateIdentified is equal 
+        // to or is entirely later than dwc:eventDate; otherwise NOT_COMPLIANT 
+        // 
+        
+		if (DateUtils.isEmpty(dateIdentified) || DateUtils.isEmpty(eventDate)) {
+			result.addComment("No value provided for one or both of dwc:dateIdentified or dwc:eventDate.");
+			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+		} else { 
+			try { 
+		        if (DateUtils.eventDateValid(dateIdentified)) {
+			        if (DateUtils.eventDateValid(eventDate)) {
+			        	LocalDateInterval identifiedInterval = DateUtils.extractInterval(dateIdentified);
+			        	LocalDateInterval eventInterval = DateUtils.extractInterval(eventDate);
+			        	if (dateIdentified.trim().equals(eventDate.trim())) { 
+			        		result.setValue(ComplianceValue.COMPLIANT);
+			        		result.addComment("Provided value for dwc:dateIdentified '" + dateIdentified + "' is the same as the dwc:eventDate provided ["+eventDate+"] . ");
+			        	} else if (identifiedInterval.overlaps(eventInterval)) { 
+			        		result.setValue(ComplianceValue.COMPLIANT);
+			        		result.addComment("Provided value for dwc:dateIdentified '" + dateIdentified + "' overlaps the dwc:eventDate provided ["+eventDate+"] . ");
+			        	} else if (identifiedInterval.getStartDate().isAfter(eventInterval.getEndDate())) {
+			        		result.setValue(ComplianceValue.COMPLIANT);
+			        		result.addComment("Provided value for dwc:dateIdentified '" + dateIdentified + "' is entirely after the dwc:eventDate provided ["+eventDate+"] . ");
+			        	} else {
+			        		logger.debug(identifiedInterval);
+			        		logger.debug(eventInterval);
+			        		result.setValue(ComplianceValue.NOT_COMPLIANT);
+			        		result.addComment("Provided value for dwc:dateIdentified '" + dateIdentified + "' is entirely before dwc:eventDate provided ["+eventDate+"]");
+			        	}
+					} else { 
+						result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is not a validly formatted ISO date .");
+					}
+				} else { 
+					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+					result.addComment("Provided value for dwc:dateIdentified '" + dateIdentified + "' is not a validly formatted ISO date .");
+				}
+				result.setResultState(ResultState.RUN_HAS_RESULT);
+			} catch (Exception e) { 
+				logger.debug(e.getMessage());
+				result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+				result.addComment("Error interpreting one of dwc:dateIdentified ["+dateIdentified+"] or dwc:eventDate ["+eventDate+"] as an ISO 8601-1:2019 date.");
+				result.addComment(e.getMessage());
+			}
+		}
+
+        return result;
+    }
 
 }

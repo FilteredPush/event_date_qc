@@ -1876,4 +1876,132 @@ public class DwCEventDQTestDefinitions {
 		
 	}
 
+	@Test
+	public void testValidationEnddayofyearNotempty() {
+        // COMPLIANT if dwc:endDayOfYear is not EMPTY; otherwise NOT_COMPLIANT 
+		
+		String endDayofYear = "20";
+		DQResponse<ComplianceValue> result = DwCEventDQ.validationEnddayofyearNotempty(endDayofYear);
+		logger.debug(result.getComment());
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		endDayofYear = "foo";
+		result = DwCEventDQ.validationEnddayofyearNotempty(endDayofYear);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		endDayofYear = "";
+		result = DwCEventDQ.validationEnddayofyearNotempty(endDayofYear);
+		logger.debug(result.getComment());
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+	}
+
+	@Test
+	public void testValidationStartdayofyearNotempty() {
+        // COMPLIANT if dwc:startDayOfYear is not EMPTY; otherwise 
+        // NOT_COMPLIANT 
+		
+		String startDayOfYear = "18";
+		DQResponse<ComplianceValue> result = DwCEventDQ.validationStartdayofyearNotempty(startDayOfYear);
+		logger.debug(result.getComment());
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		startDayOfYear = "foo";
+		result = DwCEventDQ.validationStartdayofyearNotempty(startDayOfYear);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		startDayOfYear = "";
+		result = DwCEventDQ.validationStartdayofyearNotempty(startDayOfYear);
+		logger.debug(result.getComment());
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+	}
+
+	@Test
+	public void testValidationEventtimeNotempty() {
+        // COMPLIANT if dwc:eventTime is not EMPTY; otherwise NOT_COMPLIANT 
+		
+		String eventTime = "18:00";
+		DQResponse<ComplianceValue> result = DwCEventDQ.validationEventtimeNotempty(eventTime);
+		logger.debug(result.getComment());
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventTime = "foo";
+		result = DwCEventDQ.validationEventtimeNotempty(eventTime);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		eventTime = "";
+		result = DwCEventDQ.validationEventtimeNotempty(eventTime);
+		logger.debug(result.getComment());
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+	}
+	
+
+	@Test
+	public void testValidationVerbatimeventdateNotempty() {
+        // COMPLIANT if dwc:verbatimEventDate is not EMPTY; otherwise 
+        // NOT_COMPLIANT 
+		
+		String verbatimEventDate = "1800";
+		DQResponse<ComplianceValue> result = DwCEventDQ.validationVerbatimeventdateNotempty(verbatimEventDate);
+		logger.debug(result.getComment());
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		verbatimEventDate = "foo";
+		result = DwCEventDQ.validationEventdateNotEmpty(verbatimEventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		verbatimEventDate = "";
+		result = DwCEventDQ.validationEventdateNotEmpty(verbatimEventDate);
+		logger.debug(result.getComment());
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+	}
+
+	@Test
+	public void testValidationMonthNotempty() {
+        // COMPLIANT if dwc:month is not EMPTY; otherwise NOT_COMPLIANT 
+		
+		String month = "marwth";
+		DQResponse<ComplianceValue> result = DwCEventDQ.validationMonthNotempty(month);
+		logger.debug(result.getComment());
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		month = "foo";
+		result = DwCEventDQ.validationMonthNotempty(month);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		
+		month = "";
+		result = DwCEventDQ.validationMonthNotempty(month);
+		logger.debug(result.getComment());
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+	}
+	
 }

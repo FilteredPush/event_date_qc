@@ -67,8 +67,15 @@ import java.util.Map;
  * #52	AMENDMENT_EVENT_FROM_EVENTDATE 710fe118-17e1-440f-b428-88ba3f547d6d
  * 
  * Also Provides support for the following supplemental, rejected, or other tests: 
- *  
- *  #37 VALIDATION_DAY_MONTH_SWAPPED  dayMonthTransposition(@ActedUpon(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) 
+ * Supplementary: 
+ * #267 VALIDATION_ENDDAYOFYEAR_NOTEMPTY 0267c35f-a02b-4dc9-9a01-38797faa6b2b 
+ * #264 VALIDATION_STARTDAYOFYEAR_NOTEMPTY 167d4346-6fac-40eb-9d2e-30b7683dac04
+ * #255 VALIDATION_EVENTTIME_NOTEMPTY aaebbde6-a101-4665-ba1e-6d4d8c561a31
+ * #250 VALIDATION_VERBATIMEVENTDATE_NOTEMPTY 9bc8b105-902a-489c-aae8-3b7075e1b948
+ * #241 VALIDATION_MONTH_NOTEMPTY dc2fc946-8114-491b-8a7b-3242a274a221
+ *
+ * Rejected/Other
+ * #37 VALIDATION_DAY_MONTH_SWAPPED  dayMonthTransposition(@ActedUpon(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) 
  *  EVENTDATE_PRECISON_YEAR_OR_BETTER isEventDateYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) 
  *                                also isEventDateJulianYearOrLess(@ActedUpon(value="dwc:eventDate") String eventDate) 
  *  MEASURE_EVENT_NOTEMPTY 9dc97514-3b88-4afc-931d-5fc386be21ee (other)
@@ -2365,5 +2372,178 @@ public class DwCEventDQ {
     	}
     	return result;
     }	    
+
+    /**
+    * Is there a value in dwc:endDayOfYear?
+    *
+    * Provides: #267 VALIDATION_ENDDAYOFYEAR_NOTEMPTY
+    * Version: 2024-02-08
+    *
+    * @param endDayOfYear the provided dwc:endDayOfYear to evaluate as ActedUpon.
+    * @return DQResponse the response of type ComplianceValue  to return
+    */
+    @Validation(label="VALIDATION_ENDDAYOFYEAR_NOTEMPTY", description="Is there a value in dwc:endDayOfYear?")
+    @Provides("0267c35f-a02b-4dc9-9a01-38797faa6b2b")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/0267c35f-a02b-4dc9-9a01-38797faa6b2b/2024-02-08")
+    @Specification("COMPLIANT if dwc:endDayOfYear is not EMPTY; otherwise NOT_COMPLIANT ")
+    public static DQResponse<ComplianceValue> validationEnddayofyearNotempty(
+        @ActedUpon("dwc:endDayOfYear") String endDayOfYear
+    ) {
+        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+
+        // Specification
+        // COMPLIANT if dwc:endDayOfYear is not EMPTY; otherwise NOT_COMPLIANT 
+        // 
+
+		if (DateUtils.isEmpty(endDayOfYear)) {
+			result.addComment("No value provided for dwc:endDayOfYear.");
+			result.setValue(ComplianceValue.NOT_COMPLIANT);
+			result.setResultState(ResultState.RUN_HAS_RESULT);
+		} else { 
+			result.addComment("Some value provided for dwc:endDayOfYear.");
+			result.setValue(ComplianceValue.COMPLIANT);
+			result.setResultState(ResultState.RUN_HAS_RESULT);
+		}
+
+        return result;
+    }
+
+    /**
+    * Is there a value in dwc:startDayOfYear?
+    *
+    * Provides: #264 VALIDATION_STARTDAYOFYEAR_NOTEMPTY
+    * Version: 2024-02-07
+    *
+    * @param startDayOfYear the provided dwc:startDayOfYear to evaluate as ActedUpon.
+    * @return DQResponse the response of type ComplianceValue  to return
+    */
+    @Validation(label="VALIDATION_STARTDAYOFYEAR_NOTEMPTY", description="Is there a value in dwc:startDayOfYear?")
+    @Provides("167d4346-6fac-40eb-9d2e-30b7683dac04")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/167d4346-6fac-40eb-9d2e-30b7683dac04/2024-02-07")
+    @Specification("COMPLIANT if dwc:startDayOfYear is not EMPTY; otherwise NOT_COMPLIANT ")
+    public static DQResponse<ComplianceValue> validationStartdayofyearNotempty(
+        @ActedUpon("dwc:startDayOfYear") String startDayOfYear
+    ) {
+        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+
+        // Specification
+        // COMPLIANT if dwc:startDayOfYear is not EMPTY; otherwise 
+        // NOT_COMPLIANT 
+
+		if (DateUtils.isEmpty(startDayOfYear)) {
+			result.addComment("No value provided for dwc:startDayOfYear.");
+			result.setValue(ComplianceValue.NOT_COMPLIANT);
+			result.setResultState(ResultState.RUN_HAS_RESULT);
+		} else { 
+			result.addComment("Some value provided for dwc:startDayOfYear.");
+			result.setValue(ComplianceValue.COMPLIANT);
+			result.setResultState(ResultState.RUN_HAS_RESULT);
+		}
+
+        return result;
+    }
+
+    /**
+    * Is there a value in dwc:eventTime?
+    *
+    * Provides: #255 VALIDATION_EVENTTIME_NOTEMPTY
+    * Version: 2024-02-07
+    *
+    * @param eventTime the provided dwc:eventTime to evaluate as ActedUpon.
+    * @return DQResponse the response of type ComplianceValue  to return
+    */
+    @Validation(label="VALIDATION_EVENTTIME_NOTEMPTY", description="Is there a value in dwc:eventTime?")
+    @Provides("aaebbde6-a101-4665-ba1e-6d4d8c561a31")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/aaebbde6-a101-4665-ba1e-6d4d8c561a31/2024-02-07")
+    @Specification("COMPLIANT if dwc:eventTime is not EMPTY; otherwise NOT_COMPLIANT ")
+    public static DQResponse<ComplianceValue> validationEventtimeNotempty(
+        @ActedUpon("dwc:eventTime") String eventTime
+    ) {
+        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+
+        // Specification
+        // COMPLIANT if dwc:eventTime is not EMPTY; otherwise NOT_COMPLIANT 
+
+		if (DateUtils.isEmpty(eventTime)) {
+			result.addComment("No value provided for dwc:eventTime.");
+			result.setValue(ComplianceValue.NOT_COMPLIANT);
+			result.setResultState(ResultState.RUN_HAS_RESULT);
+		} else { 
+			result.addComment("Some value provided for dwc:eventTime.");
+			result.setValue(ComplianceValue.COMPLIANT);
+			result.setResultState(ResultState.RUN_HAS_RESULT);
+		}
+
+        return result;
+    }
+
+    /**
+    * Is there a value in dwc:verbatimEventDate?
+    *
+    * Provides: #250 VALIDATION_VERBATIMEVENTDATE_NOTEMPTY
+    * Version: 2024-02-04
+    *
+    * @param verbatimEventDate the provided dwc:verbatimEventDate to evaluate as ActedUpon.
+    * @return DQResponse the response of type ComplianceValue  to return
+    */
+    @Validation(label="VALIDATION_VERBATIMEVENTDATE_NOTEMPTY", description="Is there a value in dwc:verbatimEventDate?")
+    @Provides("9bc8b105-902a-489c-aae8-3b7075e1b948")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/9bc8b105-902a-489c-aae8-3b7075e1b948/2024-02-04")
+    @Specification("COMPLIANT if dwc:verbatimEventDate is not EMPTY; otherwise NOT_COMPLIANT ")
+    public static DQResponse<ComplianceValue> validationVerbatimeventdateNotempty(
+        @ActedUpon("dwc:verbatimEventDate") String verbatimEventDate
+    ) {
+        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+
+        // Specification
+        // COMPLIANT if dwc:verbatimEventDate is not EMPTY; otherwise 
+        // NOT_COMPLIANT 
+
+		if (DateUtils.isEmpty(verbatimEventDate)) {
+			result.addComment("No value provided for dwc:verbatimEventDate.");
+			result.setValue(ComplianceValue.NOT_COMPLIANT);
+			result.setResultState(ResultState.RUN_HAS_RESULT);
+		} else { 
+			result.addComment("Some value provided for dwc:verbatimEventDate.");
+			result.setValue(ComplianceValue.COMPLIANT);
+			result.setResultState(ResultState.RUN_HAS_RESULT);
+		}
+
+        return result;
+    }
+
+    /**
+    * Is there a value in dwc:month?
+    *
+    * Provides: #241 VALIDATION_MONTH_NOTEMPTY
+    * Version: 2024-02-04
+    *
+    * @param month the provided dwc:month to evaluate as ActedUpon.
+    * @return DQResponse the response of type ComplianceValue  to return
+    */
+    @Validation(label="VALIDATION_MONTH_NOTEMPTY", description="Is there a value in dwc:month?")
+    @Provides("dc2fc946-8114-491b-8a7b-3242a274a221")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/dc2fc946-8114-491b-8a7b-3242a274a221/2024-02-04")
+    @Specification("COMPLIANT if dwc:month is not EMPTY; otherwise NOT_COMPLIANT ")
+    public static DQResponse<ComplianceValue> validationMonthNotempty(
+        @ActedUpon("dwc:month") String month
+    ) {
+        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+
+        // Specification
+        // COMPLIANT if dwc:month is not EMPTY; otherwise NOT_COMPLIANT 
+        
+		if (DateUtils.isEmpty(month)) {
+			result.addComment("No value provided for dwc:month.");
+			result.setValue(ComplianceValue.NOT_COMPLIANT);
+			result.setResultState(ResultState.RUN_HAS_RESULT);
+		} else { 
+			result.addComment("Some value provided for dwc:month.");
+			result.setValue(ComplianceValue.COMPLIANT);
+			result.setResultState(ResultState.RUN_HAS_RESULT);
+		}
+
+        return result;
+    }
 
 }
