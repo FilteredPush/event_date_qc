@@ -6,23 +6,6 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix fn: <http://www.w3.org/2005/xpath-functions#> .
 
-<http://rs.tdwg.org/bdq/ffdq/Implementation> rdfbeans:bindingClass "org.datakurator.ffdq.model.solutions.Implementation" .
-
-<http://rs.tdwg.org/bdq/ffdq/Mechanism> rdfbeans:bindingClass "org.datakurator.ffdq.model.Mechanism" .
-
-<http://rs.tdwg.org/bdq/ffdq/Specification> rdfbeans:bindingClass "org.datakurator.ffdq.model.Specification" .
-
-<urn:uuid:4cfc840a-4216-46b3-992d-8e9a00ec70f2> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:f51e15a6-a67d-4729-9c28-3766299d2985> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
-
-<urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> a <http://rs.tdwg.org/bdq/ffdq/Mechanism> ;
-	rdfs:label "Kurator: Date Validator - DwCEventDQ:v3.0.4-SNAPSHOT" .
-
-<urn:uuid:f51e15a6-a67d-4729-9c28-3766299d2985> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "COMPLIANT if dwc:eventDate is not EMPTY; otherwise NOT_COMPLIANT " ;
-	rdfs:label "VALIDATION_EVENTDATE_NOTEMPTY" .
-
 <http://rs.tdwg.org/bdq/ffdq/ActedUpon> rdfbeans:bindingClass "org.datakurator.ffdq.model.ActedUpon" .
 
 <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> rdfbeans:bindingClass "org.datakurator.ffdq.model.context.ContextualizedCriterion" .
@@ -31,87 +14,144 @@
 
 <http://rs.tdwg.org/bdq/ffdq/ResourceType> rdfbeans:bindingClass "org.datakurator.ffdq.model.ResourceType" .
 
-<http://rs.tdwg.org/bdq/ffdq/ValidationMethod> rdfbeans:bindingClass "org.datakurator.ffdq.model.solutions.ValidationMethod" .
+<http://rs.tdwg.org/bdq/ffdq/UseCase> rdfbeans:bindingClass "org.datakurator.ffdq.model.needs.UseCase" .
+
+<http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> rdfbeans:bindingClass "org.datakurator.ffdq.model.needs.ValidationPolicy" .
+
+<https://rs.tdwg.org/bdq/terms/Alien-Species> a <http://rs.tdwg.org/bdq/ffdq/UseCase> ;
+	rdfs:label "bdq:Alien-Species" .
 
 <rt:SingleRecord> a <http://rs.tdwg.org/bdq/ffdq/ResourceType> ;
 	rdfs:label "SingleRecord" .
 
-<urn:uuid:230ad1c7-a5b7-40cc-8949-3c8704e16a0a> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
-	rdfs:label "Completeness: notempty" .
+<urn:uuid:24e38f4f-eae3-450e-a600-ff869becd51b> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Alien-Species> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:9a5a9652-6c3e-4d19-a0d5-8182c8e7c8f4> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is there a value in dwc:eventDate? Validation for SingleRecord in UseCase bdq:Alien-Species" .
 
-<urn:uuid:32bae765-8f56-401f-acba-32abc7ceed1b> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:44de3619-40d6-4b2d-891e-0ee68c6728b8> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:230ad1c7-a5b7-40cc-8949-3c8704e16a0a> ;
+<urn:uuid:9a5a9652-6c3e-4d19-a0d5-8182c8e7c8f4> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:d4739651-babd-4d1d-b771-bbd42896056e> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:c584a688-0e9f-42b0-8844-12ae55013b7f> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
 	rdfs:comment "Is there a value in dwc:eventDate?" ;
 	rdfs:label "Is there a value in dwc:eventDate? Validation for SingleRecord" .
 
-<urn:uuid:44de3619-40d6-4b2d-891e-0ee68c6728b8> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
+<urn:uuid:c584a688-0e9f-42b0-8844-12ae55013b7f> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
+	rdfs:label "Completeness: notempty" .
 
-<urn:uuid:ddbb5d37-27f8-4207-a76d-27ae5d4d54b3> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:32bae765-8f56-401f-acba-32abc7ceed1b> ;
+<urn:uuid:d4739651-babd-4d1d-b771-bbd42896056e> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:eventDate" .
+
+<https://rs.tdwg.org/bdq/terms/Spatial-Temporal Patterns> a <http://rs.tdwg.org/bdq/ffdq/UseCase> ;
+	rdfs:label "bdq:Spatial-Temporal Patterns" .
+
+<urn:uuid:e3944f3c-a51c-4eec-8817-adb02d89cdc9> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Spatial-Temporal Patterns> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:9a5a9652-6c3e-4d19-a0d5-8182c8e7c8f4> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is there a value in dwc:eventDate? Validation for SingleRecord in UseCase bdq:Spatial-Temporal Patterns" .
+
+<https://rs.tdwg.org/bdq/terms/Record-Management> a <http://rs.tdwg.org/bdq/ffdq/UseCase> ;
+	rdfs:label "bdq:Record-Management" .
+
+<urn:uuid:937d4bd8-6c96-48ba-8d8b-a82fec70c7ca> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:9a5a9652-6c3e-4d19-a0d5-8182c8e7c8f4> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is there a value in dwc:eventDate? Validation for SingleRecord in UseCase bdq:Record-Management" .
+
+<https://rs.tdwg.org/bdq/terms/Biotic-Relationships> a <http://rs.tdwg.org/bdq/ffdq/UseCase> ;
+	rdfs:label "bdq:Biotic-Relationships" .
+
+<urn:uuid:d7f2b337-94d2-4f53-9410-ca22846b3b49> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Biotic-Relationships> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:9a5a9652-6c3e-4d19-a0d5-8182c8e7c8f4> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is there a value in dwc:eventDate? Validation for SingleRecord in UseCase bdq:Biotic-Relationships" .
+
+<http://rs.tdwg.org/bdq/ffdq/Specification> rdfbeans:bindingClass "org.datakurator.ffdq.model.Specification" .
+
+<http://rs.tdwg.org/bdq/ffdq/ValidationMethod> rdfbeans:bindingClass "org.datakurator.ffdq.model.solutions.ValidationMethod" .
+
+<urn:uuid:6f203717-a87c-4f8e-88e5-7e696c052de4> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:9a5a9652-6c3e-4d19-a0d5-8182c8e7c8f4> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:f51e15a6-a67d-4729-9c28-3766299d2985> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> .
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> ;
+	rdfs:label "ValidationMethod: Is there a value in dwc:eventDate? Validation for SingleRecord with Specification VALIDATION_EVENTDATE_NOTEMPTY" .
 
-<urn:uuid:3cff4dc4-72e9-4abe-9bf3-8a30f1618432> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or if the value of dwc:eventDate is not a valid ISO 8601-1 date; COMPLIANT if the range of dwc:eventDate is entirely within the range bdq:earliestValidDate to bdq:latestValidDate, inclusive, otherwise NOT_COMPLIANT bdq:earliestValidDate default =\"1582-11-15\",bdq:latestValidDate default = current year" ;
-	rdfs:label "VALIDATION_EVENTDATE_INRANGE" .
+<urn:uuid:f51e15a6-a67d-4729-9c28-3766299d2985> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "COMPLIANT if dwc:eventDate is not EMPTY; otherwise NOT_COMPLIANT " ;
+	rdfs:label "VALIDATION_EVENTDATE_NOTEMPTY" .
 
-<urn:uuid:77be178f-ea6c-4fe9-b599-19136bf3c0ff> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:3cff4dc4-72e9-4abe-9bf3-8a30f1618432> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
-
-<urn:uuid:381140b4-f67b-4c8f-a1fa-059246d45edf> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
+<urn:uuid:300d148b-db45-4c51-a81c-4fcb3d6eb75d> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
 	rdfs:label "Conformance: inrange" .
 
-<urn:uuid:4cabee4d-b561-4c3c-bd5b-6e3b1fc43df2> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
-
-<urn:uuid:554f2e5d-aba3-49fc-adbe-e309f5712830> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:4cabee4d-b561-4c3c-bd5b-6e3b1fc43df2> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:381140b4-f67b-4c8f-a1fa-059246d45edf> ;
+<urn:uuid:dc11bba6-7eb1-431b-bc85-7604a9e1c09b> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:f11f4539-bcdb-4e9d-b496-1881e3342e61> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:300d148b-db45-4c51-a81c-4fcb3d6eb75d> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
 	rdfs:comment "Is the value of dwc:eventDate entirely with the Parameter Range?" ;
 	rdfs:label "Is the value of dwc:eventDate entirely with the Parameter Range? Validation for SingleRecord" .
 
-<urn:uuid:bbb0c4af-94cc-4489-b746-18f9c0205762> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:554f2e5d-aba3-49fc-adbe-e309f5712830> ;
+<urn:uuid:e44af9db-2060-4760-a13a-7748f9334559> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Spatial-Temporal Patterns> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:dc11bba6-7eb1-431b-bc85-7604a9e1c09b> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is the value of dwc:eventDate entirely with the Parameter Range? Validation for SingleRecord in UseCase bdq:Spatial-Temporal Patterns" .
+
+<urn:uuid:f11f4539-bcdb-4e9d-b496-1881e3342e61> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:eventDate" .
+
+<urn:uuid:0b32488b-d5c1-4f56-a9e4-d6bb6b80fc0f> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:dc11bba6-7eb1-431b-bc85-7604a9e1c09b> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is the value of dwc:eventDate entirely with the Parameter Range? Validation for SingleRecord in UseCase bdq:Record-Management" .
+
+<urn:uuid:0b711bda-4e92-4b59-81bc-81f488824c41> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:dc11bba6-7eb1-431b-bc85-7604a9e1c09b> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:3cff4dc4-72e9-4abe-9bf3-8a30f1618432> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> .
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> ;
+	rdfs:label "ValidationMethod: Is the value of dwc:eventDate entirely with the Parameter Range? Validation for SingleRecord with Specification VALIDATION_EVENTDATE_INRANGE" .
 
-<urn:uuid:81373db9-283f-4500-b824-3ddcd29d57b5> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:c09ecbf9-34e3-4f3e-b74a-8796af15e59f> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
+<urn:uuid:3cff4dc4-72e9-4abe-9bf3-8a30f1618432> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or if the value of dwc:eventDate is not a valid ISO 8601-1 date; COMPLIANT if the range of dwc:eventDate is entirely within the range bdq:earliestValidDate to bdq:latestValidDate, inclusive, otherwise NOT_COMPLIANT bdq:earliestValidDate default =\"1582-11-15\",bdq:latestValidDate default = current year" ;
+	rdfs:label "VALIDATION_EVENTDATE_INRANGE" .
 
-<urn:uuid:c09ecbf9-34e3-4f3e-b74a-8796af15e59f> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "COMPLIANT if dwc:year is not EMPTY; otherwise NOT_COMPLIANT " ;
-	rdfs:label "VALIDATION_YEAR_NOTEMPTY" .
+<urn:uuid:29d83f03-2349-44a2-afb4-0c0efa7e586c> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Alien-Species> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:884f5b0f-b497-45b1-8eb2-58bee8c12837> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is there a value in dwc:year? Validation for SingleRecord in UseCase bdq:Alien-Species" .
 
-<urn:uuid:15a7fe70-4cec-4d8f-bd09-6f380f1f8a63> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
-	rdfs:label "Completeness: notempty" .
+<urn:uuid:42d20b28-6673-40da-b372-ee09e6ed3ae3> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/year> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:year" .
 
-<urn:uuid:20cdcd67-2e9a-4d5c-8820-c668a7d8c463> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:6ac6cd63-fc25-46c1-82e1-3922ae82f72f> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:15a7fe70-4cec-4d8f-bd09-6f380f1f8a63> ;
+<urn:uuid:884f5b0f-b497-45b1-8eb2-58bee8c12837> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:42d20b28-6673-40da-b372-ee09e6ed3ae3> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:c1385da6-e2ef-42c0-872f-51cd8e3dd524> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
 	rdfs:comment "Is there a value in dwc:year?" ;
 	rdfs:label "Is there a value in dwc:year? Validation for SingleRecord" .
 
-<urn:uuid:6ac6cd63-fc25-46c1-82e1-3922ae82f72f> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/year> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
+<urn:uuid:c1385da6-e2ef-42c0-872f-51cd8e3dd524> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
+	rdfs:label "Completeness: notempty" .
 
-<urn:uuid:aabeccea-b564-4381-b74a-fa7b60a17800> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:20cdcd67-2e9a-4d5c-8820-c668a7d8c463> ;
+<urn:uuid:e5e59d65-365a-41c0-9b85-106060a75b46> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Spatial-Temporal Patterns> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:884f5b0f-b497-45b1-8eb2-58bee8c12837> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is there a value in dwc:year? Validation for SingleRecord in UseCase bdq:Spatial-Temporal Patterns" .
+
+<urn:uuid:c8683956-5975-4a9e-a164-aa46aa998f16> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:884f5b0f-b497-45b1-8eb2-58bee8c12837> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is there a value in dwc:year? Validation for SingleRecord in UseCase bdq:Record-Management" .
+
+<urn:uuid:940545df-efe5-4cf1-8e29-0540a9bd23df> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:884f5b0f-b497-45b1-8eb2-58bee8c12837> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:c09ecbf9-34e3-4f3e-b74a-8796af15e59f> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> .
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> ;
+	rdfs:label "ValidationMethod: Is there a value in dwc:year? Validation for SingleRecord with Specification VALIDATION_YEAR_NOTEMPTY" .
 
-<urn:uuid:710fe118-17e1-440f-b428-88ba3f547d6d> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or contains an invalid value according to ISO 8601-1; FILLED_IN (1) dwc:day from dwc:eventDate if dwc:day is EMPTY and dwc:eventDate has a precision of a day or finer and is within a single day, (2) dwc:month from dwc:eventDate if dwc:month is EMPTY and dwc:eventDate has a precision of a single month or finer and is within a single month, (3) dwc:year from dwc:eventDate if dwc:year is EMPTY and dwc:eventDate has a precision of a single year or finer and is within a single year, (4) dwc:startDayOfYear and dwc:endDayOfYear if they are EMPTY and dwc:eventDate has a precision of a day or better; otherwise NOT_AMENDED. " ;
-	rdfs:label "AMENDMENT_EVENT_FROM_EVENTDATE" .
+<urn:uuid:c09ecbf9-34e3-4f3e-b74a-8796af15e59f> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "COMPLIANT if dwc:year is not EMPTY; otherwise NOT_COMPLIANT " ;
+	rdfs:label "VALIDATION_YEAR_NOTEMPTY" .
 
-<urn:uuid:fd283e29-57c0-4c9f-b905-49fa5729c752> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:710fe118-17e1-440f-b428-88ba3f547d6d> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
-
-<http://rs.tdwg.org/bdq/ffdq/AmendmentMethod> rdfbeans:bindingClass "org.datakurator.ffdq.model.solutions.AmendmentMethod" .
+<http://rs.tdwg.org/bdq/ffdq/AmendmentPolicy> rdfbeans:bindingClass "org.datakurator.ffdq.model.needs.AmendmentPolicy" .
 
 <http://rs.tdwg.org/bdq/ffdq/Consulted> rdfbeans:bindingClass "org.datakurator.ffdq.model.Consulted" .
 
@@ -119,404 +159,542 @@
 
 <http://rs.tdwg.org/bdq/ffdq/Enhancement> rdfbeans:bindingClass "org.datakurator.ffdq.model.Enhancement" .
 
-<urn:uuid:308d835e-e407-4a73-b233-d24cc4286e66> a <http://rs.tdwg.org/bdq/ffdq/Enhancement> ;
+<urn:uuid:0782ff59-6d7b-463f-b5c2-cf98bbf9122e> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:f9941fe4-2178-457e-88b2-c59d05ad9591> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasUseCase> <https://rs.tdwg.org/bdq/terms/Spatial-Temporal Patterns> ;
+	a <http://rs.tdwg.org/bdq/ffdq/AmendmentPolicy> ;
+	rdfs:label "AmendmentPolicy: Propose amendment to values in any of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear or dwc:endDayOfYear from the content of dwc:eventDate.Amedment for SingleRecord in UseCase bdq:Spatial-Temporal Patterns" .
+
+<urn:uuid:4d8a448e-8711-44dc-9e9b-ccfe2bd94044> a <http://rs.tdwg.org/bdq/ffdq/Enhancement> ;
 	rdfs:label "Completeness: eventdate" .
 
-<urn:uuid:3e08c207-90b3-4417-9410-05ad840c31a6> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:9136aaa1-ad16-4691-9d2d-159bcabb86dd> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasConsultedInformationElement> <urn:uuid:c69e92ed-3189-4f63-9369-bf8d64f0b2a2> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasEnhancement> <urn:uuid:308d835e-e407-4a73-b233-d24cc4286e66> ;
+<urn:uuid:662005c1-7060-47c2-b821-714dd4bc3765> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/day> , <http://rs.tdwg.org/dwc/terms/endDayOfYear> , <http://rs.tdwg.org/dwc/terms/month> , <http://rs.tdwg.org/dwc/terms/startDayOfYear> , <http://rs.tdwg.org/dwc/terms/year> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear" .
+
+<urn:uuid:e9561522-53a4-4044-be17-22a44e20a894> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
+	a <http://rs.tdwg.org/bdq/ffdq/Consulted> ;
+	rdfs:label "Information Element Consulted dwc:eventDate" .
+
+<urn:uuid:f9941fe4-2178-457e-88b2-c59d05ad9591> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:662005c1-7060-47c2-b821-714dd4bc3765> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasConsultedInformationElement> <urn:uuid:e9561522-53a4-4044-be17-22a44e20a894> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasEnhancement> <urn:uuid:4d8a448e-8711-44dc-9e9b-ccfe2bd94044> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedEnhancement> ;
 	rdfs:comment "Propose amendment to values in any of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear or dwc:endDayOfYear from the content of dwc:eventDate." ;
 	rdfs:label "Propose amendment to values in any of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear or dwc:endDayOfYear from the content of dwc:eventDate.Amedment for SingleRecord" .
 
-<urn:uuid:64b88398-e5d4-4db4-8125-a356f751fe0e> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:3e08c207-90b3-4417-9410-05ad840c31a6> ;
+<urn:uuid:eac6781a-1888-46c8-8cf9-7d3dda1106c3> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:f9941fe4-2178-457e-88b2-c59d05ad9591> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
+	a <http://rs.tdwg.org/bdq/ffdq/AmendmentPolicy> ;
+	rdfs:label "AmendmentPolicy: Propose amendment to values in any of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear or dwc:endDayOfYear from the content of dwc:eventDate.Amedment for SingleRecord in UseCase bdq:Record-Management" .
+
+<http://rs.tdwg.org/bdq/ffdq/AmendmentMethod> rdfbeans:bindingClass "org.datakurator.ffdq.model.solutions.AmendmentMethod" .
+
+<urn:uuid:2a4aa4b2-eb8e-425f-a5bf-b9680e5a2089> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:f9941fe4-2178-457e-88b2-c59d05ad9591> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:710fe118-17e1-440f-b428-88ba3f547d6d> ;
-	a <http://rs.tdwg.org/bdq/ffdq/AmendmentMethod> .
+	a <http://rs.tdwg.org/bdq/ffdq/AmendmentMethod> ;
+	rdfs:label "AmendmentMethod: Propose amendment to values in any of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear or dwc:endDayOfYear from the content of dwc:eventDate.Amedment for SingleRecord with Specification AMENDMENT_EVENT_FROM_EVENTDATE" .
 
-<urn:uuid:9136aaa1-ad16-4691-9d2d-159bcabb86dd> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/day> , <http://rs.tdwg.org/dwc/terms/endDayOfYear> , <http://rs.tdwg.org/dwc/terms/month> , <http://rs.tdwg.org/dwc/terms/startDayOfYear> , <http://rs.tdwg.org/dwc/terms/year> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
+<urn:uuid:710fe118-17e1-440f-b428-88ba3f547d6d> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or contains an invalid value according to ISO 8601-1; FILLED_IN (1) dwc:day from dwc:eventDate if dwc:day is EMPTY and dwc:eventDate has a precision of a day or finer and is within a single day, (2) dwc:month from dwc:eventDate if dwc:month is EMPTY and dwc:eventDate has a precision of a single month or finer and is within a single month, (3) dwc:year from dwc:eventDate if dwc:year is EMPTY and dwc:eventDate has a precision of a single year or finer and is within a single year, (4) dwc:startDayOfYear and dwc:endDayOfYear if they are EMPTY and dwc:eventDate has a precision of a day or better; otherwise NOT_AMENDED. " ;
+	rdfs:label "AMENDMENT_EVENT_FROM_EVENTDATE" .
 
-<urn:uuid:c69e92ed-3189-4f63-9369-bf8d64f0b2a2> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Consulted> .
+<urn:uuid:501e110b-ec35-468e-94eb-7846a9b761c2> a <http://rs.tdwg.org/bdq/ffdq/Enhancement> ;
+	rdfs:label "Conformance: standardized" .
 
-<urn:uuid:718dfc3c-cb52-4fca-b8e2-0e722f375da7> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; AMENDED if the value of dwc:eventDate was not a properly formatted ISO 8601-1 date but was unambiguous, and was altered to be a valid ISO 8601-1 date; otherwise NOT_AMENDED " ;
-	rdfs:label "AMENDMENT_EVENTDATE_STANDARDIZED" .
+<urn:uuid:6b625219-e2c3-4508-871c-be89c90a714a> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:e0204894-c246-4c2c-ba3d-e015e6e250d6> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasUseCase> <https://rs.tdwg.org/bdq/terms/Spatial-Temporal Patterns> ;
+	a <http://rs.tdwg.org/bdq/ffdq/AmendmentPolicy> ;
+	rdfs:label "AmendmentPolicy: Propose amendment of the value of dwc:eventDate to a valid ISO date.Amedment for SingleRecord in UseCase bdq:Spatial-Temporal Patterns" .
 
-<urn:uuid:ebc3f79f-e546-4cdf-9989-485ceaa153a6> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:718dfc3c-cb52-4fca-b8e2-0e722f375da7> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
+<urn:uuid:ba2e52d6-1304-409f-a83b-c65b8177d4b8> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:eventDate" .
 
-<urn:uuid:0d704eb6-90ad-4400-a8f6-637c2b3368b3> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:d2693a1d-b974-49d7-baf6-d123dc452110> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasEnhancement> <urn:uuid:49e67fac-394e-4884-96ec-cc1a8c68e16b> ;
+<urn:uuid:e0204894-c246-4c2c-ba3d-e015e6e250d6> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:ba2e52d6-1304-409f-a83b-c65b8177d4b8> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasEnhancement> <urn:uuid:501e110b-ec35-468e-94eb-7846a9b761c2> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedEnhancement> ;
 	rdfs:comment "Propose amendment of the value of dwc:eventDate to a valid ISO date." ;
 	rdfs:label "Propose amendment of the value of dwc:eventDate to a valid ISO date.Amedment for SingleRecord" .
 
-<urn:uuid:24e2402f-a034-4e8f-97b3-38b0cf1f3ad6> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:0d704eb6-90ad-4400-a8f6-637c2b3368b3> ;
+<urn:uuid:adcbe3d4-bb4d-453d-ba5d-2c2511adeb4c> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:e0204894-c246-4c2c-ba3d-e015e6e250d6> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
+	a <http://rs.tdwg.org/bdq/ffdq/AmendmentPolicy> ;
+	rdfs:label "AmendmentPolicy: Propose amendment of the value of dwc:eventDate to a valid ISO date.Amedment for SingleRecord in UseCase bdq:Record-Management" .
+
+<urn:uuid:718dfc3c-cb52-4fca-b8e2-0e722f375da7> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; AMENDED if the value of dwc:eventDate was not a properly formatted ISO 8601-1 date but was unambiguous, and was altered to be a valid ISO 8601-1 date; otherwise NOT_AMENDED " ;
+	rdfs:label "AMENDMENT_EVENTDATE_STANDARDIZED" .
+
+<urn:uuid:80708f8b-709a-4107-9f06-4b5b3730315e> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:e0204894-c246-4c2c-ba3d-e015e6e250d6> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:718dfc3c-cb52-4fca-b8e2-0e722f375da7> ;
-	a <http://rs.tdwg.org/bdq/ffdq/AmendmentMethod> .
+	a <http://rs.tdwg.org/bdq/ffdq/AmendmentMethod> ;
+	rdfs:label "AmendmentMethod: Propose amendment of the value of dwc:eventDate to a valid ISO date.Amedment for SingleRecord with Specification AMENDMENT_EVENTDATE_STANDARDIZED" .
 
-<urn:uuid:49e67fac-394e-4884-96ec-cc1a8c68e16b> a <http://rs.tdwg.org/bdq/ffdq/Enhancement> ;
-	rdfs:label "Conformance: standardized" .
+<urn:uuid:00b2e12d-5403-4e1a-adf6-772704742e28> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:eventDate" .
 
-<urn:uuid:d2693a1d-b974-49d7-baf6-d123dc452110> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
+<urn:uuid:0c34820f-7df2-4564-aeb9-cfb5042d5231> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
+	rdfs:label "Conformance: standard" .
 
-<urn:uuid:4f2bf8fd-fc5c-493f-a44c-e7b16153c803> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; COMPLIANT if the value of dwc:eventDate is a valid ISO 8601-1 date; otherwise NOT_COMPLIANT " ;
-	rdfs:label "VALIDATION_EVENTDATE_STANDARD" .
-
-<urn:uuid:93295187-03f0-4f16-92dd-98a406280e74> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:4f2bf8fd-fc5c-493f-a44c-e7b16153c803> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
-
-<urn:uuid:7ac6c413-db7c-46f8-a967-a4c9474ffcd3> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:cb4aa63c-6a38-4f4a-8e4a-e57f19fae607> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:823f8270-34f7-4f94-a0d2-49ad02f1413a> ;
+<urn:uuid:4948ebbe-b777-47e4-95b4-944e91cf24b6> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:00b2e12d-5403-4e1a-adf6-772704742e28> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:0c34820f-7df2-4564-aeb9-cfb5042d5231> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
 	rdfs:comment "Is the value of dwc:eventDate a valid ISO date?" ;
 	rdfs:label "Is the value of dwc:eventDate a valid ISO date? Validation for SingleRecord" .
 
-<urn:uuid:823f8270-34f7-4f94-a0d2-49ad02f1413a> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
-	rdfs:label "Conformance: standard" .
+<urn:uuid:d792e662-5498-4e5d-a3ab-d5fb006b414d> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Alien-Species> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:4948ebbe-b777-47e4-95b4-944e91cf24b6> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is the value of dwc:eventDate a valid ISO date? Validation for SingleRecord in UseCase bdq:Alien-Species" .
 
-<urn:uuid:bdc7a2b8-b931-4011-8f7f-de827913cd5a> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:7ac6c413-db7c-46f8-a967-a4c9474ffcd3> ;
+<urn:uuid:4125e606-4ead-4842-948e-fc3b8b68050e> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Spatial-Temporal Patterns> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:4948ebbe-b777-47e4-95b4-944e91cf24b6> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is the value of dwc:eventDate a valid ISO date? Validation for SingleRecord in UseCase bdq:Spatial-Temporal Patterns" .
+
+<urn:uuid:ad3e9ddd-ef0a-4a09-9bea-48ed1d2374f3> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:4948ebbe-b777-47e4-95b4-944e91cf24b6> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is the value of dwc:eventDate a valid ISO date? Validation for SingleRecord in UseCase bdq:Record-Management" .
+
+<urn:uuid:3d63f2ab-e04d-44b8-8f9e-69346a6b8511> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Biotic-Relationships> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:4948ebbe-b777-47e4-95b4-944e91cf24b6> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is the value of dwc:eventDate a valid ISO date? Validation for SingleRecord in UseCase bdq:Biotic-Relationships" .
+
+<urn:uuid:4f2bf8fd-fc5c-493f-a44c-e7b16153c803> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; COMPLIANT if the value of dwc:eventDate is a valid ISO 8601-1 date; otherwise NOT_COMPLIANT " ;
+	rdfs:label "VALIDATION_EVENTDATE_STANDARD" .
+
+<urn:uuid:a47532eb-3d8f-42f4-b045-395c5ba586b0> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:4948ebbe-b777-47e4-95b4-944e91cf24b6> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:4f2bf8fd-fc5c-493f-a44c-e7b16153c803> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> .
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> ;
+	rdfs:label "ValidationMethod: Is the value of dwc:eventDate a valid ISO date? Validation for SingleRecord with Specification VALIDATION_EVENTDATE_STANDARD" .
 
-<urn:uuid:cb4aa63c-6a38-4f4a-8e4a-e57f19fae607> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
-
-<urn:uuid:20fd7e13-fe61-4c93-81ad-1eab58f834fe> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:5618f083-d55a-4ac2-92b5-b9fb227b832f> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
-
-<urn:uuid:5618f083-d55a-4ac2-92b5-b9fb227b832f> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY, or all of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear are EMPTY; COMPLIANT if all of the following conditions are met (1) dwc:year is EMPTY or dwc:eventDate has a precision of one year or finer and and is within a single year and the provided value of dwc:year matches the year expressed in dwc:eventDate, and (2) dwc:month is EMPTY or dwc:eventDate has a precision of one month or finer and is within a single month and the provided value in dwc:month matches the month represented by dwc:eventDate, and (3) dwc:day is EMPTY or dwc:eventDate has a precision of a day or less and is within a single day and the provided value in dwc:day matches the day represented by dwc:eventDate, and (4) dwc:startDayOfYear is empty or dwc:eventDate has a precision of one day or finer and the provided value in dwc:startDayOfYear matches the start day of the year of the range represented by dwc:eventDate, and (5) dwc:endDayOfYear is empty or dwc:eventDate has a precision of one day or finer and the provided value in dwc:endDayOfYear matches the end day of the year of the range represented by dwc:eventDate; otherwise NOT_COMPLIANT. " ;
-	rdfs:label "VALIDATION_EVENT_CONSISTENT" .
-
-<urn:uuid:6db66d5a-e2e0-433c-b1be-68863fdb8813> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:facb8a0b-a7f2-49e1-ab6b-323225f6c323> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:5618f083-d55a-4ac2-92b5-b9fb227b832f> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> .
-
-<urn:uuid:81e00737-366a-42ba-9e48-d4e82b50cc9f> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
+<urn:uuid:0d6c04d0-c569-4557-9a14-44d02ef0f248> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
 	rdfs:label "Consistency: consistent" .
 
-<urn:uuid:8df765dd-6ea5-4ace-b6e6-4bfc71f1e1d8> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/day> , <http://rs.tdwg.org/dwc/terms/endDayOfYear> , <http://rs.tdwg.org/dwc/terms/eventDate> , <http://rs.tdwg.org/dwc/terms/month> , <http://rs.tdwg.org/dwc/terms/startDayOfYear> , <http://rs.tdwg.org/dwc/terms/year> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
+<urn:uuid:1a666f4d-b72a-45a3-9f3a-3d295b4d92ec> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/day> , <http://rs.tdwg.org/dwc/terms/endDayOfYear> , <http://rs.tdwg.org/dwc/terms/eventDate> , <http://rs.tdwg.org/dwc/terms/month> , <http://rs.tdwg.org/dwc/terms/startDayOfYear> , <http://rs.tdwg.org/dwc/terms/year> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:eventDate, dwc:day, dwc:month, dwc:year, dwc:startDayOfYear, dwc:endDayOfYear" .
 
-<urn:uuid:facb8a0b-a7f2-49e1-ab6b-323225f6c323> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:8df765dd-6ea5-4ace-b6e6-4bfc71f1e1d8> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:81e00737-366a-42ba-9e48-d4e82b50cc9f> ;
+<urn:uuid:78e210a8-30e3-4c01-b055-904a82056426> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:1a666f4d-b72a-45a3-9f3a-3d295b4d92ec> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:0d6c04d0-c569-4557-9a14-44d02ef0f248> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
 	rdfs:comment "Are the values in dwc:eventDate consistent with the values in dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear?" ;
 	rdfs:label "Are the values in dwc:eventDate consistent with the values in dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear? Validation for SingleRecord" .
 
-<urn:uuid:40529bf2-c940-4c44-ac0a-ac4aaf32e567> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:ad0c8855-de69-4843-a80c-a5387d20fbc8> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
+<urn:uuid:ae381c09-1783-4346-b5ca-028052fcd791> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Alien-Species> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:78e210a8-30e3-4c01-b055-904a82056426> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Are the values in dwc:eventDate consistent with the values in dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear? Validation for SingleRecord in UseCase bdq:Alien-Species" .
 
-<urn:uuid:ad0c8855-de69-4843-a80c-a5387d20fbc8> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:year is not present, or is EMPTY or cannot be interpreted as an integer; COMPLIANT if the value of dwc:year is within the range bdq:earliestValidDate to bdq:latestValidDate inclusive; otherwise NOT_COMPLIANT bdq:earliestValidDate=\"1582\",bdq:latestValidDate=current year" ;
-	rdfs:label "VALIDATION_YEAR_INRANGE" .
+<urn:uuid:9531c9cb-27b6-45e8-a097-d115bd408b6b> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:78e210a8-30e3-4c01-b055-904a82056426> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Are the values in dwc:eventDate consistent with the values in dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear? Validation for SingleRecord in UseCase bdq:Record-Management" .
 
-<urn:uuid:8d389a99-6d07-44a3-a0e1-5f4ad9a30b83> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:9effd7ee-80af-4652-a86a-bb85fb269039> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:ddadc34c-b852-407b-98e0-f6876bd63539> ;
+<urn:uuid:ed7f13f1-dda2-426c-8232-f66dd31c414e> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Biotic-Relationships> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:78e210a8-30e3-4c01-b055-904a82056426> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Are the values in dwc:eventDate consistent with the values in dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear? Validation for SingleRecord in UseCase bdq:Biotic-Relationships" .
+
+<urn:uuid:0e8b8d37-f3dd-49e6-ba78-8b5bb757cafc> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:78e210a8-30e3-4c01-b055-904a82056426> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:5618f083-d55a-4ac2-92b5-b9fb227b832f> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> ;
+	rdfs:label "ValidationMethod: Are the values in dwc:eventDate consistent with the values in dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear? Validation for SingleRecord with Specification VALIDATION_EVENT_CONSISTENT" .
+
+<urn:uuid:5618f083-d55a-4ac2-92b5-b9fb227b832f> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY, or all of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear are EMPTY; COMPLIANT if all of the following conditions are met (1) dwc:year is EMPTY or dwc:eventDate has a precision of one year or finer and and is within a single year and the provided value of dwc:year matches the year expressed in dwc:eventDate, and (2) dwc:month is EMPTY or dwc:eventDate has a precision of one month or finer and is within a single month and the provided value in dwc:month matches the month represented by dwc:eventDate, and (3) dwc:day is EMPTY or dwc:eventDate has a precision of a day or less and is within a single day and the provided value in dwc:day matches the day represented by dwc:eventDate, and (4) dwc:startDayOfYear is empty or dwc:eventDate has a precision of one day or finer and the provided value in dwc:startDayOfYear matches the start day of the year of the range represented by dwc:eventDate, and (5) dwc:endDayOfYear is empty or dwc:eventDate has a precision of one day or finer and the provided value in dwc:endDayOfYear matches the end day of the year of the range represented by dwc:eventDate; otherwise NOT_COMPLIANT. " ;
+	rdfs:label "VALIDATION_EVENT_CONSISTENT" .
+
+<urn:uuid:1515041d-e7cc-4592-b168-ff0bb39572d3> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/year> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:year" .
+
+<urn:uuid:850bd392-925f-45ce-9f6e-e1790e1ee864> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Alien-Species> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:9fd3ce8d-cf88-4e3a-975f-6c6cac668871> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is the value of dwc:year within the Parameter range? Validation for SingleRecord in UseCase bdq:Alien-Species" .
+
+<urn:uuid:9fd3ce8d-cf88-4e3a-975f-6c6cac668871> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:1515041d-e7cc-4592-b168-ff0bb39572d3> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:d687e751-a617-4be8-807d-a7be4e720ad7> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
 	rdfs:comment "Is the value of dwc:year within the Parameter range?" ;
 	rdfs:label "Is the value of dwc:year within the Parameter range? Validation for SingleRecord" .
 
-<urn:uuid:9effd7ee-80af-4652-a86a-bb85fb269039> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/year> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
-
-<urn:uuid:ddadc34c-b852-407b-98e0-f6876bd63539> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
+<urn:uuid:d687e751-a617-4be8-807d-a7be4e720ad7> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
 	rdfs:label "Conformance: inrange" .
 
-<urn:uuid:e5a7df86-48b6-4f5d-9a30-fb39e08ecb9f> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:8d389a99-6d07-44a3-a0e1-5f4ad9a30b83> ;
+<urn:uuid:7412bc02-0134-4002-9a6c-a4e4faf3b427> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Spatial-Temporal Patterns> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:9fd3ce8d-cf88-4e3a-975f-6c6cac668871> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is the value of dwc:year within the Parameter range? Validation for SingleRecord in UseCase bdq:Spatial-Temporal Patterns" .
+
+<urn:uuid:07b0e6ef-26fd-4ec9-9bf3-7c15c0c6e8a1> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:9fd3ce8d-cf88-4e3a-975f-6c6cac668871> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is the value of dwc:year within the Parameter range? Validation for SingleRecord in UseCase bdq:Record-Management" .
+
+<urn:uuid:ad0c8855-de69-4843-a80c-a5387d20fbc8> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:year is not present, or is EMPTY or cannot be interpreted as an integer; COMPLIANT if the value of dwc:year is within the range bdq:earliestValidDate to bdq:latestValidDate inclusive; otherwise NOT_COMPLIANT bdq:earliestValidDate=\"1582\",bdq:latestValidDate=current year" ;
+	rdfs:label "VALIDATION_YEAR_INRANGE" .
+
+<urn:uuid:b2dff1d5-1eb5-4b5e-a1cc-ad154ed8a842> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:9fd3ce8d-cf88-4e3a-975f-6c6cac668871> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:ad0c8855-de69-4843-a80c-a5387d20fbc8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> .
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> ;
+	rdfs:label "ValidationMethod: Is the value of dwc:year within the Parameter range? Validation for SingleRecord with Specification VALIDATION_YEAR_INRANGE" .
 
-<urn:uuid:57890a77-beac-401d-a538-45f1af92ea73> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
-
-<urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY or the value of dwc:verbatimEventDate is EMPTY or not unambiguously interpretable as an ISO 8601-1 date; FILLED_IN the value of dwc:eventDate if an unambiguous ISO 8601-1 date was interpreted from dwc:verbatimEventDate; otherwise NOT_AMENDED " ;
-	rdfs:label "AMENDMENT_EVENTDATE_FROM_VERBATIM" .
-
-<urn:uuid:0472ad6e-5f6a-4bab-a1bc-1bd63296d248> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:67369bb3-d8eb-432e-aa33-af9bc71bb0d7> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasConsultedInformationElement> <urn:uuid:f39155f5-be2c-4e92-864b-779e9979c4c4> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasEnhancement> <urn:uuid:77124396-d12f-4af4-85c2-5bb252497680> ;
+<urn:uuid:3bb0c246-ae76-4140-956a-9675c9e0f773> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:f9c9e0a6-9335-4f34-9e14-747b22fe0bd4> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasConsultedInformationElement> <urn:uuid:9808799e-231d-49e3-9713-9e5a633485c1> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasEnhancement> <urn:uuid:f20b8e16-8b71-441e-9733-836f705132e9> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedEnhancement> ;
 	rdfs:comment "Propose amendment to the value of dwc:eventDate from the content of dwc:verbatimEventDate." ;
 	rdfs:label "Propose amendment to the value of dwc:eventDate from the content of dwc:verbatimEventDate.Amedment for SingleRecord" .
 
-<urn:uuid:4ffdba23-feac-455f-8fc3-6836b079ba14> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:0472ad6e-5f6a-4bab-a1bc-1bd63296d248> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812> ;
-	a <http://rs.tdwg.org/bdq/ffdq/AmendmentMethod> .
+<urn:uuid:9808799e-231d-49e3-9713-9e5a633485c1> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/verbatimEventDate> ;
+	a <http://rs.tdwg.org/bdq/ffdq/Consulted> ;
+	rdfs:label "Information Element Consulted dwc:verbatimEventDate" .
 
-<urn:uuid:67369bb3-d8eb-432e-aa33-af9bc71bb0d7> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
+<urn:uuid:9f281806-551c-4530-aa3e-6ca2df4b087b> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:3bb0c246-ae76-4140-956a-9675c9e0f773> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
+	a <http://rs.tdwg.org/bdq/ffdq/AmendmentPolicy> ;
+	rdfs:label "AmendmentPolicy: Propose amendment to the value of dwc:eventDate from the content of dwc:verbatimEventDate.Amedment for SingleRecord in UseCase bdq:Record-Management" .
 
-<urn:uuid:77124396-d12f-4af4-85c2-5bb252497680> a <http://rs.tdwg.org/bdq/ffdq/Enhancement> ;
+<urn:uuid:f20b8e16-8b71-441e-9733-836f705132e9> a <http://rs.tdwg.org/bdq/ffdq/Enhancement> ;
 	rdfs:label "Completeness: verbatim" .
 
-<urn:uuid:f39155f5-be2c-4e92-864b-779e9979c4c4> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/verbatimEventDate> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Consulted> .
+<urn:uuid:f9c9e0a6-9335-4f34-9e14-747b22fe0bd4> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:eventDate" .
 
-<urn:uuid:41267642-60ff-4116-90eb-499fee2cd83f> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "COMPLIANT if any of dwc:eventDate, dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear, dwc:verbatimEventDate are NOT EMPTY; otherwise NOT_COMPLIANT. " ;
-	rdfs:label "VALIDATION_EVENT_TEMPORAL_NOTEMPTY" .
+<urn:uuid:1fb44ee5-917e-4cb0-b403-fbdfcde82154> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:3bb0c246-ae76-4140-956a-9675c9e0f773> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812> ;
+	a <http://rs.tdwg.org/bdq/ffdq/AmendmentMethod> ;
+	rdfs:label "AmendmentMethod: Propose amendment to the value of dwc:eventDate from the content of dwc:verbatimEventDate.Amedment for SingleRecord with Specification AMENDMENT_EVENTDATE_FROM_VERBATIM" .
 
-<urn:uuid:7a5ddd31-a90e-4ec5-b0bc-bc528a55192f> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:41267642-60ff-4116-90eb-499fee2cd83f> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
+<urn:uuid:6d0a0c10-5e4a-4759-b448-88932f399812> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY or the value of dwc:verbatimEventDate is EMPTY or not unambiguously interpretable as an ISO 8601-1 date; FILLED_IN the value of dwc:eventDate if an unambiguous ISO 8601-1 date was interpreted from dwc:verbatimEventDate; otherwise NOT_AMENDED " ;
+	rdfs:label "AMENDMENT_EVENTDATE_FROM_VERBATIM" .
 
-<urn:uuid:15a41055-5927-46ed-8c40-a35775c5a392> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:3934db81-2952-417e-bde5-507e0c1ae37a> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:41267642-60ff-4116-90eb-499fee2cd83f> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> .
-
-<urn:uuid:336528ff-abff-43da-8b94-df149f99aa2b> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/day> , <http://rs.tdwg.org/dwc/terms/endDayOfYear> , <http://rs.tdwg.org/dwc/terms/eventDate> , <http://rs.tdwg.org/dwc/terms/month> , <http://rs.tdwg.org/dwc/terms/startDayOfYear> , <http://rs.tdwg.org/dwc/terms/verbatimEventDate> , <http://rs.tdwg.org/dwc/terms/year> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
-
-<urn:uuid:3934db81-2952-417e-bde5-507e0c1ae37a> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:336528ff-abff-43da-8b94-df149f99aa2b> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:6d1405de-e4d8-4b99-a35b-2fe54cb93847> ;
+<urn:uuid:05be6a86-1994-4ad0-8264-460e1166ec10> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:ef02c787-e9c6-43e2-9075-a14b3212e361> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:9c7bff24-3116-4c96-9c7f-8caab3a18143> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
 	rdfs:comment "Is there a value in any of the terms dwc:eventDate, dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear, dwc:verbatimEventDate?" ;
 	rdfs:label "Is there a value in any of the terms dwc:eventDate, dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear, dwc:verbatimEventDate? Validation for SingleRecord" .
 
-<urn:uuid:6d1405de-e4d8-4b99-a35b-2fe54cb93847> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
+<urn:uuid:7a2325d2-d22d-4d83-9e05-809b36331e5b> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Spatial-Temporal Patterns> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:05be6a86-1994-4ad0-8264-460e1166ec10> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is there a value in any of the terms dwc:eventDate, dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear, dwc:verbatimEventDate? Validation for SingleRecord in UseCase bdq:Spatial-Temporal Patterns" .
+
+<urn:uuid:9c7bff24-3116-4c96-9c7f-8caab3a18143> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
 	rdfs:label "Completeness: notempty" .
 
-<urn:uuid:3892f432-ddd0-4a0a-b713-f2e2ecbd879d> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL _PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY or dwc:year is EMPTY or is not interpretable as a valid year; FILLED_IN the value of dwc:eventDate if an ISO 8601-1 date was interpreted from the values in dwc:year, dwc:month and dwc:day; otherwise NOT_AMENDED. " ;
-	rdfs:label "AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY" .
+<urn:uuid:ef02c787-e9c6-43e2-9075-a14b3212e361> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/day> , <http://rs.tdwg.org/dwc/terms/endDayOfYear> , <http://rs.tdwg.org/dwc/terms/eventDate> , <http://rs.tdwg.org/dwc/terms/month> , <http://rs.tdwg.org/dwc/terms/startDayOfYear> , <http://rs.tdwg.org/dwc/terms/verbatimEventDate> , <http://rs.tdwg.org/dwc/terms/year> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:eventDate, dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear, dwc:verbatimEventDate" .
 
-<urn:uuid:7381ffe4-ae9c-49df-9f4a-a16c73a16026> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:3892f432-ddd0-4a0a-b713-f2e2ecbd879d> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
+<urn:uuid:14720272-3c6c-4aac-8a2e-a13a4bf55d2c> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:05be6a86-1994-4ad0-8264-460e1166ec10> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is there a value in any of the terms dwc:eventDate, dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear, dwc:verbatimEventDate? Validation for SingleRecord in UseCase bdq:Record-Management" .
 
-<urn:uuid:3a39d829-6f21-41b2-84be-9a8145908f9d> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/day> , <http://rs.tdwg.org/dwc/terms/month> , <http://rs.tdwg.org/dwc/terms/year> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Consulted> .
+<urn:uuid:41267642-60ff-4116-90eb-499fee2cd83f> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "COMPLIANT if any of dwc:eventDate, dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear, dwc:verbatimEventDate are NOT EMPTY; otherwise NOT_COMPLIANT. " ;
+	rdfs:label "VALIDATION_EVENT_TEMPORAL_NOTEMPTY" .
 
-<urn:uuid:778f8225-8c19-4d6a-b664-b5d9312d47c5> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:b53c592c-1131-418f-a43a-6cb13957b7c0> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:3892f432-ddd0-4a0a-b713-f2e2ecbd879d> ;
-	a <http://rs.tdwg.org/bdq/ffdq/AmendmentMethod> .
+<urn:uuid:70c12622-ecfe-4a41-ba29-0c70ffbc629d> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:05be6a86-1994-4ad0-8264-460e1166ec10> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:41267642-60ff-4116-90eb-499fee2cd83f> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> ;
+	rdfs:label "ValidationMethod: Is there a value in any of the terms dwc:eventDate, dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear, dwc:verbatimEventDate? Validation for SingleRecord with Specification VALIDATION_EVENT_TEMPORAL_NOTEMPTY" .
 
-<urn:uuid:7db0ca01-4aa0-4693-8be7-d3bacf9c34bd> a <http://rs.tdwg.org/bdq/ffdq/Enhancement> ;
-	rdfs:label "Completeness: yearmonthday" .
-
-<urn:uuid:b53c592c-1131-418f-a43a-6cb13957b7c0> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:bbd599b1-b179-4013-bdbb-e7cf60ceb7d4> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasConsultedInformationElement> <urn:uuid:3a39d829-6f21-41b2-84be-9a8145908f9d> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasEnhancement> <urn:uuid:7db0ca01-4aa0-4693-8be7-d3bacf9c34bd> ;
+<urn:uuid:37caaf34-564b-4da6-95ff-dda210ea1d73> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:baa868d4-2a21-4816-b37b-f5873e40d4cd> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasConsultedInformationElement> <urn:uuid:7e10e590-2cef-4291-8d68-d6f5a5130e60> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasEnhancement> <urn:uuid:bf3920d9-2fd2-4ba1-a0fd-bd804d5b2f7b> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedEnhancement> ;
 	rdfs:comment "Propose amendment to the value of dwc:eventDate from values in dwc:year, dwc:month and dwc:day." ;
 	rdfs:label "Propose amendment to the value of dwc:eventDate from values in dwc:year, dwc:month and dwc:day.Amedment for SingleRecord" .
 
-<urn:uuid:bbd599b1-b179-4013-bdbb-e7cf60ceb7d4> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
+<urn:uuid:68b741c1-e2ae-4494-a029-742d0603bb75> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:37caaf34-564b-4da6-95ff-dda210ea1d73> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
+	a <http://rs.tdwg.org/bdq/ffdq/AmendmentPolicy> ;
+	rdfs:label "AmendmentPolicy: Propose amendment to the value of dwc:eventDate from values in dwc:year, dwc:month and dwc:day.Amedment for SingleRecord in UseCase bdq:Record-Management" .
 
-<urn:uuid:8d787cb5-73e2-4c39-9cd1-67c7361dc02e> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if (1) dwc:day is EMPTY, or (2) dwc:day is not interpretable as an integer, or (3) dwc:day is interpretable as an integer between 29 and 31 inclusive and dwc:month is not interpretable as an integer between 1 and 12, or (4) dwc:month is interpretable as the integer 2 and dwc:day is interpretable as the integer 29 and dwc:year is not interpretable as a valid ISO 8601-1 year; COMPLIANT if (1) the value of dwc:day is interpretable as an integer between 1 and 28 inclusive, or (2) dwc:day is interpretable as an integer between 29 and 30 and dwc:month is interpretable as an integer in the set (4,6,9,11), or (3) dwc:day is interpretable as an integer between 29 and 31 and dwc:month is interpretable as an integer in the set (1,3,5,7,8,10,12), or (4) dwc:day is interpretable as the integer 29 and dwc:month is interpretable as the integer 2 and dwc:year is interpretable as is a valid leap year (evenly divisible by 400 or (evenly divisible by 4 but not evenly divisible by 100)); otherwise NOT_COMPLIANT. " ;
-	rdfs:label "VALIDATION_DAY_INRANGE" .
+<urn:uuid:7e10e590-2cef-4291-8d68-d6f5a5130e60> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/day> , <http://rs.tdwg.org/dwc/terms/month> , <http://rs.tdwg.org/dwc/terms/year> ;
+	a <http://rs.tdwg.org/bdq/ffdq/Consulted> ;
+	rdfs:label "Information Element Consulted dwc:year, dwc:month, dwc:day" .
 
-<urn:uuid:c153d5e9-0da3-4433-abb0-f8b4808d0264> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:8d787cb5-73e2-4c39-9cd1-67c7361dc02e> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
+<urn:uuid:baa868d4-2a21-4816-b37b-f5873e40d4cd> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:eventDate" .
 
-<urn:uuid:3763b618-7959-4451-a3dc-3d79839d805f> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
-	rdfs:label "Conformance: inrange" .
+<urn:uuid:bf3920d9-2fd2-4ba1-a0fd-bd804d5b2f7b> a <http://rs.tdwg.org/bdq/ffdq/Enhancement> ;
+	rdfs:label "Completeness: yearmonthday" .
 
-<urn:uuid:42feb290-7a37-45ce-9e0d-58f3d93915c8> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:9cd50944-9de8-45d8-85ae-5d0adb72953e> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:8d787cb5-73e2-4c39-9cd1-67c7361dc02e> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> .
+<urn:uuid:3892f432-ddd0-4a0a-b713-f2e2ecbd879d> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "INTERNAL _PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY or dwc:year is EMPTY or is not interpretable as a valid year; FILLED_IN the value of dwc:eventDate if an ISO 8601-1 date was interpreted from the values in dwc:year, dwc:month and dwc:day; otherwise NOT_AMENDED. " ;
+	rdfs:label "AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY" .
 
-<urn:uuid:9cd50944-9de8-45d8-85ae-5d0adb72953e> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:aa03d01f-0511-47bf-9a0f-39f82d676349> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:3763b618-7959-4451-a3dc-3d79839d805f> ;
+<urn:uuid:648b3a33-afe5-4584-b55a-e94e8ea58696> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:37caaf34-564b-4da6-95ff-dda210ea1d73> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:3892f432-ddd0-4a0a-b713-f2e2ecbd879d> ;
+	a <http://rs.tdwg.org/bdq/ffdq/AmendmentMethod> ;
+	rdfs:label "AmendmentMethod: Propose amendment to the value of dwc:eventDate from values in dwc:year, dwc:month and dwc:day.Amedment for SingleRecord with Specification AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY" .
+
+<urn:uuid:22cf7129-03c8-4027-b334-adba88ed3eb6> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/day> , <http://rs.tdwg.org/dwc/terms/month> , <http://rs.tdwg.org/dwc/terms/year> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:day, dwc:month, dwc:year" .
+
+<urn:uuid:569e0ded-da98-43e0-8f3c-d0dfedc27901> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:22cf7129-03c8-4027-b334-adba88ed3eb6> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:a29f4d0f-48cd-4d56-82e4-854cebb57930> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
 	rdfs:comment "Is the value of dwc:day interpretable as a valid integer between 1 and 28 inclusive or 29, 30 or 31 given the relative month and year?" ;
 	rdfs:label "Is the value of dwc:day interpretable as a valid integer between 1 and 28 inclusive or 29, 30 or 31 given the relative month and year? Validation for SingleRecord" .
 
-<urn:uuid:aa03d01f-0511-47bf-9a0f-39f82d676349> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/day> , <http://rs.tdwg.org/dwc/terms/month> , <http://rs.tdwg.org/dwc/terms/year> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
+<urn:uuid:8d7712c7-f554-4366-93a8-c1d750f3d741> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Spatial-Temporal Patterns> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:569e0ded-da98-43e0-8f3c-d0dfedc27901> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is the value of dwc:day interpretable as a valid integer between 1 and 28 inclusive or 29, 30 or 31 given the relative month and year? Validation for SingleRecord in UseCase bdq:Spatial-Temporal Patterns" .
 
-<urn:uuid:01c6dafa-0886-4b7e-9881-2c3018c98bdc> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:month is EMPTY; COMPLIANT if the value of dwc:month is interpretable as an integer between 1 and 12 inclusive; otherwise NOT_COMPLIANT " ;
-	rdfs:label "VALIDATION_MONTH_STANDARD" .
+<urn:uuid:a29f4d0f-48cd-4d56-82e4-854cebb57930> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
+	rdfs:label "Conformance: inrange" .
 
-<urn:uuid:805cd285-c74c-4421-816e-1c73795558bb> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:01c6dafa-0886-4b7e-9881-2c3018c98bdc> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
+<urn:uuid:feab083c-d3d3-41b5-b8e1-45e6107e545c> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:569e0ded-da98-43e0-8f3c-d0dfedc27901> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is the value of dwc:day interpretable as a valid integer between 1 and 28 inclusive or 29, 30 or 31 given the relative month and year? Validation for SingleRecord in UseCase bdq:Record-Management" .
 
-<urn:uuid:34806cb4-a131-42f3-bca6-cbec5f35cafb> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
+<urn:uuid:713a1db1-f7ca-419b-8810-e674475f6aaf> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:569e0ded-da98-43e0-8f3c-d0dfedc27901> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:8d787cb5-73e2-4c39-9cd1-67c7361dc02e> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> ;
+	rdfs:label "ValidationMethod: Is the value of dwc:day interpretable as a valid integer between 1 and 28 inclusive or 29, 30 or 31 given the relative month and year? Validation for SingleRecord with Specification VALIDATION_DAY_INRANGE" .
+
+<urn:uuid:8d787cb5-73e2-4c39-9cd1-67c7361dc02e> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if (1) dwc:day is EMPTY, or (2) dwc:day is not interpretable as an integer, or (3) dwc:day is interpretable as an integer between 29 and 31 inclusive and dwc:month is not interpretable as an integer between 1 and 12, or (4) dwc:month is interpretable as the integer 2 and dwc:day is interpretable as the integer 29 and dwc:year is not interpretable as a valid ISO 8601-1 year; COMPLIANT if (1) the value of dwc:day is interpretable as an integer between 1 and 28 inclusive, or (2) dwc:day is interpretable as an integer between 29 and 30 and dwc:month is interpretable as an integer in the set (4,6,9,11), or (3) dwc:day is interpretable as an integer between 29 and 31 and dwc:month is interpretable as an integer in the set (1,3,5,7,8,10,12), or (4) dwc:day is interpretable as the integer 29 and dwc:month is interpretable as the integer 2 and dwc:year is interpretable as is a valid leap year (evenly divisible by 400 or (evenly divisible by 4 but not evenly divisible by 100)); otherwise NOT_COMPLIANT. " ;
+	rdfs:label "VALIDATION_DAY_INRANGE" .
+
+<urn:uuid:2afda711-8f29-4696-9671-d9a0dc0ea1e5> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/month> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:month" .
+
+<urn:uuid:5c1787b8-fd11-43fe-bc48-7fc697bf9d1a> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
 	rdfs:label "Conformance: standard" .
 
-<urn:uuid:7f9791f2-3f0c-413f-b4d6-52488ce14bd6> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:adba4152-d04c-43e7-b282-fac69a5f7606> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:01c6dafa-0886-4b7e-9881-2c3018c98bdc> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> .
-
-<urn:uuid:8e54b663-2690-4618-a97b-5ea692d6f218> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/month> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
-
-<urn:uuid:adba4152-d04c-43e7-b282-fac69a5f7606> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:8e54b663-2690-4618-a97b-5ea692d6f218> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:34806cb4-a131-42f3-bca6-cbec5f35cafb> ;
+<urn:uuid:c9315105-0fe7-4eb9-a56d-9d44f122aace> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:2afda711-8f29-4696-9671-d9a0dc0ea1e5> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:5c1787b8-fd11-43fe-bc48-7fc697bf9d1a> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
 	rdfs:comment "Is the value of dwc:month interpretable as an integer between 1 and 12 inclusive?" ;
 	rdfs:label "Is the value of dwc:month interpretable as an integer between 1 and 12 inclusive? Validation for SingleRecord" .
 
-<urn:uuid:24faad78-de4f-4c4f-bff7-73a76ca4a131> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:b129fa4d-b25b-43f7-9645-5ed4d44b357b> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
+<urn:uuid:e992653f-14af-4af9-a907-35117e34d83d> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Spatial-Temporal Patterns> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:c9315105-0fe7-4eb9-a56d-9d44f122aace> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is the value of dwc:month interpretable as an integer between 1 and 12 inclusive? Validation for SingleRecord in UseCase bdq:Spatial-Temporal Patterns" .
 
-<urn:uuid:b129fa4d-b25b-43f7-9645-5ed4d44b357b> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; AMENDED the value of dwc:day if the value was unambiguously interpreted as an integer between 1 and 31 inclusive; otherwise NOT_AMENDED " ;
-	rdfs:label "AMENDMENT_DAY_STANDARDIZED" .
+<urn:uuid:b0a90815-ad52-4f6c-bb6e-a68d7705f34e> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:c9315105-0fe7-4eb9-a56d-9d44f122aace> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is the value of dwc:month interpretable as an integer between 1 and 12 inclusive? Validation for SingleRecord in UseCase bdq:Record-Management" .
 
-<urn:uuid:64635f36-f2b3-42e7-8112-0ee82654dbb4> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:e82a5a53-c9c3-4c6f-9390-4ea85f414931> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasEnhancement> <urn:uuid:c5404281-516f-4f18-889a-2b5169da5ab1> ;
+<urn:uuid:01c6dafa-0886-4b7e-9881-2c3018c98bdc> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:month is EMPTY; COMPLIANT if the value of dwc:month is interpretable as an integer between 1 and 12 inclusive; otherwise NOT_COMPLIANT " ;
+	rdfs:label "VALIDATION_MONTH_STANDARD" .
+
+<urn:uuid:19c6bb68-81e3-4589-92a4-0ad6496bf458> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:c9315105-0fe7-4eb9-a56d-9d44f122aace> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:01c6dafa-0886-4b7e-9881-2c3018c98bdc> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> ;
+	rdfs:label "ValidationMethod: Is the value of dwc:month interpretable as an integer between 1 and 12 inclusive? Validation for SingleRecord with Specification VALIDATION_MONTH_STANDARD" .
+
+<urn:uuid:286f8936-c0dc-4f49-ace2-a5cc0fd93a27> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:d44fa727-83b7-4ce0-9381-fb9f4f0827aa> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasUseCase> <https://rs.tdwg.org/bdq/terms/Spatial-Temporal Patterns> ;
+	a <http://rs.tdwg.org/bdq/ffdq/AmendmentPolicy> ;
+	rdfs:label "AmendmentPolicy: Propose amendment to the value of dwc:day as an integer between 1 and 31 inclusive.Amedment for SingleRecord in UseCase bdq:Spatial-Temporal Patterns" .
+
+<urn:uuid:5e310f16-8bd1-4471-a6ea-4b8096ce9029> a <http://rs.tdwg.org/bdq/ffdq/Enhancement> ;
+	rdfs:label "Conformance: standardized" .
+
+<urn:uuid:803ba55b-0555-497e-9f29-bdbf2b12848b> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/day> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:day" .
+
+<urn:uuid:d44fa727-83b7-4ce0-9381-fb9f4f0827aa> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:803ba55b-0555-497e-9f29-bdbf2b12848b> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasEnhancement> <urn:uuid:5e310f16-8bd1-4471-a6ea-4b8096ce9029> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedEnhancement> ;
 	rdfs:comment "Propose amendment to the value of dwc:day as an integer between 1 and 31 inclusive." ;
 	rdfs:label "Propose amendment to the value of dwc:day as an integer between 1 and 31 inclusive.Amedment for SingleRecord" .
 
-<urn:uuid:c5404281-516f-4f18-889a-2b5169da5ab1> a <http://rs.tdwg.org/bdq/ffdq/Enhancement> ;
-	rdfs:label "Conformance: standardized" .
+<urn:uuid:a73a8bfd-dfa8-4c3d-bd12-1907187dcf19> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:d44fa727-83b7-4ce0-9381-fb9f4f0827aa> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
+	a <http://rs.tdwg.org/bdq/ffdq/AmendmentPolicy> ;
+	rdfs:label "AmendmentPolicy: Propose amendment to the value of dwc:day as an integer between 1 and 31 inclusive.Amedment for SingleRecord in UseCase bdq:Record-Management" .
 
-<urn:uuid:ccd2db7a-3122-46d6-8393-b7041271f79f> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:64635f36-f2b3-42e7-8112-0ee82654dbb4> ;
+<urn:uuid:645c8f4f-de8d-4c96-98f4-eff0287a77ac> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:d44fa727-83b7-4ce0-9381-fb9f4f0827aa> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:b129fa4d-b25b-43f7-9645-5ed4d44b357b> ;
-	a <http://rs.tdwg.org/bdq/ffdq/AmendmentMethod> .
+	a <http://rs.tdwg.org/bdq/ffdq/AmendmentMethod> ;
+	rdfs:label "AmendmentMethod: Propose amendment to the value of dwc:day as an integer between 1 and 31 inclusive.Amedment for SingleRecord with Specification AMENDMENT_DAY_STANDARDIZED" .
 
-<urn:uuid:e82a5a53-c9c3-4c6f-9390-4ea85f414931> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/day> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
+<urn:uuid:b129fa4d-b25b-43f7-9645-5ed4d44b357b> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; AMENDED the value of dwc:day if the value was unambiguously interpreted as an integer between 1 and 31 inclusive; otherwise NOT_AMENDED " ;
+	rdfs:label "AMENDMENT_DAY_STANDARDIZED" .
 
-<urn:uuid:2e371d57-1eb3-4fe3-8a61-dff43ced50cf> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:month is EMPTY; AMENDED the value of dwc:month if it was able to be unambiguously interpreted as an integer between 1 and 12 inclusive; otherwise NOT_AMENDED " ;
-	rdfs:label "AMENDMENT_MONTH_STANDARDIZED" .
+<urn:uuid:0fe337ee-06dc-438e-8b89-3052195e4d8a> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/month> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:month" .
 
-<urn:uuid:c98574ea-5d00-4cc2-b657-e8fc33ed9110> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:2e371d57-1eb3-4fe3-8a61-dff43ced50cf> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
-
-<urn:uuid:363867c1-4244-43a1-a3ba-d641577b7937> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:f9b70285-669e-4528-af4c-c66e8f50a0cd> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasEnhancement> <urn:uuid:b6015709-0a85-4151-887b-3b32b8dc4c63> ;
+<urn:uuid:335dff71-ae88-4722-8e99-8bc9900ccd4b> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:0fe337ee-06dc-438e-8b89-3052195e4d8a> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasEnhancement> <urn:uuid:f23410cf-e251-49c4-9c09-08a5badb1604> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedEnhancement> ;
 	rdfs:comment "Propose an amendment to the value of dwc:month as an integer between 1 and 12 inclusive." ;
 	rdfs:label "Propose an amendment to the value of dwc:month as an integer between 1 and 12 inclusive.Amedment for SingleRecord" .
 
-<urn:uuid:8fc98ea1-e358-4e2a-83d7-46554e2d798d> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:363867c1-4244-43a1-a3ba-d641577b7937> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:2e371d57-1eb3-4fe3-8a61-dff43ced50cf> ;
-	a <http://rs.tdwg.org/bdq/ffdq/AmendmentMethod> .
+<urn:uuid:6102f61c-7781-49ee-a1ee-622a181d2e8c> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:335dff71-ae88-4722-8e99-8bc9900ccd4b> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasUseCase> <https://rs.tdwg.org/bdq/terms/Spatial-Temporal Patterns> ;
+	a <http://rs.tdwg.org/bdq/ffdq/AmendmentPolicy> ;
+	rdfs:label "AmendmentPolicy: Propose an amendment to the value of dwc:month as an integer between 1 and 12 inclusive.Amedment for SingleRecord in UseCase bdq:Spatial-Temporal Patterns" .
 
-<urn:uuid:b6015709-0a85-4151-887b-3b32b8dc4c63> a <http://rs.tdwg.org/bdq/ffdq/Enhancement> ;
+<urn:uuid:f23410cf-e251-49c4-9c09-08a5badb1604> a <http://rs.tdwg.org/bdq/ffdq/Enhancement> ;
 	rdfs:label "Conformance: standardized" .
 
-<urn:uuid:f9b70285-669e-4528-af4c-c66e8f50a0cd> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/month> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
+<urn:uuid:371f45b9-ca1a-4183-89d6-465e346d2c3c> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:335dff71-ae88-4722-8e99-8bc9900ccd4b> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
+	a <http://rs.tdwg.org/bdq/ffdq/AmendmentPolicy> ;
+	rdfs:label "AmendmentPolicy: Propose an amendment to the value of dwc:month as an integer between 1 and 12 inclusive.Amedment for SingleRecord in UseCase bdq:Record-Management" .
 
-<urn:uuid:2fc1f638-bdb6-4bcc-ae6f-0291acdc2e46> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:85803c7e-2a5a-42e1-b8d3-299a44cafc46> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
+<urn:uuid:2e371d57-1eb3-4fe3-8a61-dff43ced50cf> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:month is EMPTY; AMENDED the value of dwc:month if it was able to be unambiguously interpreted as an integer between 1 and 12 inclusive; otherwise NOT_AMENDED " ;
+	rdfs:label "AMENDMENT_MONTH_STANDARDIZED" .
 
-<urn:uuid:85803c7e-2a5a-42e1-b8d3-299a44cafc46> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:startDayOfYear is EMPTY or if the value of dwc:startDayOfYear is equal to 366 and (dwc:eventDate is EMPTY or the value of dwc:eventDate cannot be interpreted to find single year or a start year in a range); COMPLIANT if the value of dwc:startDayOfYear is an integer between 1 and 365, inclusive, or if the value of dwc:startDayOfYear is 366 and the start year interpreted from dwc:eventDate is a leap year; otherwise NOT_COMPLIANT " ;
-	rdfs:label "VALIDATION_STARTDAYOFYEAR_INRANGE" .
+<urn:uuid:9c1636f1-f176-454b-838c-a4f487b90bdd> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:335dff71-ae88-4722-8e99-8bc9900ccd4b> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:2e371d57-1eb3-4fe3-8a61-dff43ced50cf> ;
+	a <http://rs.tdwg.org/bdq/ffdq/AmendmentMethod> ;
+	rdfs:label "AmendmentMethod: Propose an amendment to the value of dwc:month as an integer between 1 and 12 inclusive.Amedment for SingleRecord with Specification AMENDMENT_MONTH_STANDARDIZED" .
 
-<urn:uuid:35a8e665-5c73-4ea9-bd46-5fd7b3c4e827> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/startDayOfYear> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
-
-<urn:uuid:4f6afdd4-135f-42d1-8a42-dcf9a471ff74> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:35a8e665-5c73-4ea9-bd46-5fd7b3c4e827> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasConsultedInformationElement> <urn:uuid:8dcdf99e-05f3-49b6-bcc3-5ceb7b51e8d3> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:620c5562-c2a1-4258-81da-6ebc3b365677> ;
+<urn:uuid:1f3bb873-116c-4e9d-97e8-f6e43e67b881> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:2ee7f61a-be65-4fc6-aae7-a41f38fd3e32> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasConsultedInformationElement> <urn:uuid:4dc6684a-0e2a-4703-a062-effb41bebc97> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:dd961250-451a-4e65-a4e2-bb55453067e9> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
 	rdfs:comment "Is the value of dwc:startDayOfYear an integer between 1 and 365 inclusive, or 366 if a leap year?" ;
 	rdfs:label "Is the value of dwc:startDayOfYear an integer between 1 and 365 inclusive, or 366 if a leap year? Validation for SingleRecord" .
 
-<urn:uuid:620c5562-c2a1-4258-81da-6ebc3b365677> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
+<urn:uuid:2ee7f61a-be65-4fc6-aae7-a41f38fd3e32> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/startDayOfYear> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:startDayOfYear" .
+
+<urn:uuid:36dd00bf-919f-4fff-a160-c52350329b77> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Alien-Species> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:1f3bb873-116c-4e9d-97e8-f6e43e67b881> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is the value of dwc:startDayOfYear an integer between 1 and 365 inclusive, or 366 if a leap year? Validation for SingleRecord in UseCase bdq:Alien-Species" .
+
+<urn:uuid:4dc6684a-0e2a-4703-a062-effb41bebc97> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
+	a <http://rs.tdwg.org/bdq/ffdq/Consulted> ;
+	rdfs:label "Information Element Consulted dwc:eventDate" .
+
+<urn:uuid:dd961250-451a-4e65-a4e2-bb55453067e9> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
 	rdfs:label "Conformance: inrange" .
 
-<urn:uuid:86f6a0a4-ab35-49a3-84eb-598d1f88b297> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:4f6afdd4-135f-42d1-8a42-dcf9a471ff74> ;
+<urn:uuid:6f920852-da16-4084-8213-96f736dbb282> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Spatial-Temporal Patterns> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:1f3bb873-116c-4e9d-97e8-f6e43e67b881> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is the value of dwc:startDayOfYear an integer between 1 and 365 inclusive, or 366 if a leap year? Validation for SingleRecord in UseCase bdq:Spatial-Temporal Patterns" .
+
+<urn:uuid:3622396f-7917-4f2a-bb6d-1b4079f2d047> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:1f3bb873-116c-4e9d-97e8-f6e43e67b881> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is the value of dwc:startDayOfYear an integer between 1 and 365 inclusive, or 366 if a leap year? Validation for SingleRecord in UseCase bdq:Record-Management" .
+
+<urn:uuid:512298f6-daaa-47c6-925c-c3ca4694f1aa> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:1f3bb873-116c-4e9d-97e8-f6e43e67b881> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:85803c7e-2a5a-42e1-b8d3-299a44cafc46> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> .
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> ;
+	rdfs:label "ValidationMethod: Is the value of dwc:startDayOfYear an integer between 1 and 365 inclusive, or 366 if a leap year? Validation for SingleRecord with Specification VALIDATION_STARTDAYOFYEAR_INRANGE" .
 
-<urn:uuid:8dcdf99e-05f3-49b6-bcc3-5ceb7b51e8d3> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Consulted> .
+<urn:uuid:85803c7e-2a5a-42e1-b8d3-299a44cafc46> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:startDayOfYear is EMPTY or if the value of dwc:startDayOfYear is equal to 366 and (dwc:eventDate is EMPTY or the value of dwc:eventDate cannot be interpreted to find single year or a start year in a range); COMPLIANT if the value of dwc:startDayOfYear is an integer between 1 and 365, inclusive, or if the value of dwc:startDayOfYear is 366 and the start year interpreted from dwc:eventDate is a leap year; otherwise NOT_COMPLIANT " ;
+	rdfs:label "VALIDATION_STARTDAYOFYEAR_INRANGE" .
 
-<urn:uuid:3d569e6a-2308-4281-94ef-c93434258ad6> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:9a39d88c-7eee-46df-b32a-c109f9f81fb8> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
+<urn:uuid:25ffb470-0be8-4550-9322-e4f103e121e4> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
+	a <http://rs.tdwg.org/bdq/ffdq/Consulted> ;
+	rdfs:label "Information Element Consulted dwc:eventDate" .
 
-<urn:uuid:9a39d88c-7eee-46df-b32a-c109f9f81fb8> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:endDayOfYear is EMPTY or if the value of dwc:endDayOfYear is equal to 366 and (dwc:eventDate is EMPTY or the value of dwc:eventDate cannot be interpreted to find a single year or an end year in a range); COMPLIANT if the value of dwc:endDayOfYear is an integer between 1 and 365 inclusive, or if the value of dwc:endDayOfYear is 366 and the end year interpreted from dwc:eventDate is a leap year; otherwise NOT_COMPLIANT " ;
-	rdfs:label "VALIDATION_ENDDAYOFYEAR_INRANGE" .
-
-<urn:uuid:347e5906-2325-418f-a527-bd71ac4ceacf> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Consulted> .
-
-<urn:uuid:43642265-a86a-426e-83b1-eb037e264209> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
-	rdfs:label "Conformance: inrange" .
-
-<urn:uuid:9fdc7ecc-0506-450e-96a7-a1bc6b27c5ed> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/endDayOfYear> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
-
-<urn:uuid:a7df8907-3f41-44b8-9b24-859a2c318280> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:bdfe6d88-8256-4a88-a762-ceedd52ecd28> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:9a39d88c-7eee-46df-b32a-c109f9f81fb8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> .
-
-<urn:uuid:bdfe6d88-8256-4a88-a762-ceedd52ecd28> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:9fdc7ecc-0506-450e-96a7-a1bc6b27c5ed> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasConsultedInformationElement> <urn:uuid:347e5906-2325-418f-a527-bd71ac4ceacf> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:43642265-a86a-426e-83b1-eb037e264209> ;
+<urn:uuid:4c96688f-4ddd-46b1-9806-c76f338fc1a6> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:9872b24b-16dc-4be6-bc2d-2bb2353a0409> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasConsultedInformationElement> <urn:uuid:25ffb470-0be8-4550-9322-e4f103e121e4> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:c3c64840-eea7-42bc-baa2-6668d758a33c> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
 	rdfs:comment "Is the value of dwc:endDayOfYear an integer between 1 and 365 inclusive, or 366 if a leap year?" ;
 	rdfs:label "Is the value of dwc:endDayOfYear an integer between 1 and 365 inclusive, or 366 if a leap year? Validation for SingleRecord" .
 
-<urn:uuid:4534afe3-abb4-4bf0-8cce-e25ba3924c35> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:eb0a44fa-241c-4d64-98df-ad4aa837307b> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
+<urn:uuid:739c0e83-0581-434f-a2cc-548d8a953bfb> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Spatial-Temporal Patterns> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:4c96688f-4ddd-46b1-9806-c76f338fc1a6> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is the value of dwc:endDayOfYear an integer between 1 and 365 inclusive, or 366 if a leap year? Validation for SingleRecord in UseCase bdq:Spatial-Temporal Patterns" .
 
-<urn:uuid:eb0a44fa-241c-4d64-98df-ad4aa837307b> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate was not EMPTY or any of dwc:year, dwc:startDayOfYear, or dwc:endDayOfYear were EMPTY or any of the values in dwc:year, dwc:startDayOfYear, or dwc:endDayOfYear were not independently interpretable; FILLED_IN the value of dwc:eventDate from values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear if the value of dwc:startDayOfYear is less than the value of dwc:endDayOfYear; otherwise NOT_AMENDED " ;
-	rdfs:label "AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR" .
+<urn:uuid:9872b24b-16dc-4be6-bc2d-2bb2353a0409> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/endDayOfYear> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:endDayOfYear" .
 
-<urn:uuid:4aaada76-6c9d-48d8-9a0a-48cab37883cd> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/endDayOfYear> , <http://rs.tdwg.org/dwc/terms/startDayOfYear> , <http://rs.tdwg.org/dwc/terms/year> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Consulted> .
+<urn:uuid:c3c64840-eea7-42bc-baa2-6668d758a33c> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
+	rdfs:label "Conformance: inrange" .
 
-<urn:uuid:7a9ccecc-9970-43c7-9de2-d8f624c9354c> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:889866ff-23c0-4b47-9196-323fbcf270a3> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:eb0a44fa-241c-4d64-98df-ad4aa837307b> ;
-	a <http://rs.tdwg.org/bdq/ffdq/AmendmentMethod> .
+<urn:uuid:96e50eac-c27c-4216-ba8b-7434e5045236> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:4c96688f-4ddd-46b1-9806-c76f338fc1a6> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is the value of dwc:endDayOfYear an integer between 1 and 365 inclusive, or 366 if a leap year? Validation for SingleRecord in UseCase bdq:Record-Management" .
 
-<urn:uuid:80f1464c-6b15-40ed-b5c6-1afd624639dd> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
+<urn:uuid:5947ad1a-3d2b-4168-8fe9-876514dd658b> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:4c96688f-4ddd-46b1-9806-c76f338fc1a6> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:9a39d88c-7eee-46df-b32a-c109f9f81fb8> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> ;
+	rdfs:label "ValidationMethod: Is the value of dwc:endDayOfYear an integer between 1 and 365 inclusive, or 366 if a leap year? Validation for SingleRecord with Specification VALIDATION_ENDDAYOFYEAR_INRANGE" .
 
-<urn:uuid:889866ff-23c0-4b47-9196-323fbcf270a3> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:80f1464c-6b15-40ed-b5c6-1afd624639dd> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasConsultedInformationElement> <urn:uuid:4aaada76-6c9d-48d8-9a0a-48cab37883cd> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasEnhancement> <urn:uuid:af661429-a95e-4f48-8812-01a3cb3def18> ;
+<urn:uuid:9a39d88c-7eee-46df-b32a-c109f9f81fb8> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:endDayOfYear is EMPTY or if the value of dwc:endDayOfYear is equal to 366 and (dwc:eventDate is EMPTY or the value of dwc:eventDate cannot be interpreted to find a single year or an end year in a range); COMPLIANT if the value of dwc:endDayOfYear is an integer between 1 and 365 inclusive, or if the value of dwc:endDayOfYear is 366 and the end year interpreted from dwc:eventDate is a leap year; otherwise NOT_COMPLIANT " ;
+	rdfs:label "VALIDATION_ENDDAYOFYEAR_INRANGE" .
+
+<urn:uuid:029bf651-8edf-4c5b-9b4a-fc13bb5912c6> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:eventDate" .
+
+<urn:uuid:8a84dafd-b490-42c8-aee9-d0b3df2b9ea9> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/endDayOfYear> , <http://rs.tdwg.org/dwc/terms/startDayOfYear> , <http://rs.tdwg.org/dwc/terms/year> ;
+	a <http://rs.tdwg.org/bdq/ffdq/Consulted> ;
+	rdfs:label "Information Element Consulted dwc:year, dwc:startDayOfYear, dwc:endDayOfYear" .
+
+<urn:uuid:93fbb067-dfc4-4bce-a1e9-74d90488fe90> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:029bf651-8edf-4c5b-9b4a-fc13bb5912c6> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasConsultedInformationElement> <urn:uuid:8a84dafd-b490-42c8-aee9-d0b3df2b9ea9> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasEnhancement> <urn:uuid:a9661c12-9fa4-4e6d-a93a-799c3ce0dc20> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedEnhancement> ;
 	rdfs:comment "Propose amendment to the value of dwc:eventDate from values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear." ;
 	rdfs:label "Propose amendment to the value of dwc:eventDate from values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear.Amedment for SingleRecord" .
 
-<urn:uuid:af661429-a95e-4f48-8812-01a3cb3def18> a <http://rs.tdwg.org/bdq/ffdq/Enhancement> ;
+<urn:uuid:a9661c12-9fa4-4e6d-a93a-799c3ce0dc20> a <http://rs.tdwg.org/bdq/ffdq/Enhancement> ;
 	rdfs:label "Completeness: yearstartdayofyearenddayofyear" .
 
-<urn:uuid:56b6c695-adf1-418e-95d2-da04cad7be53> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or if the value of dwc:eventDate is not a valid ISO 8601-1 date; otherwise RUN_HAS_RESULT with the result being the duration (sensu ISO 8601-1) expressed in the dwc:eventDate, in seconds. " ;
-	rdfs:label "MEASURE_EVENTDATE_DURATIONINSECONDS" .
+<urn:uuid:b8edeafa-aae5-4ef3-80da-d457301774a4> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:93fbb067-dfc4-4bce-a1e9-74d90488fe90> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
+	a <http://rs.tdwg.org/bdq/ffdq/AmendmentPolicy> ;
+	rdfs:label "AmendmentPolicy: Propose amendment to the value of dwc:eventDate from values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear.Amedment for SingleRecord in UseCase bdq:Record-Management" .
 
-<urn:uuid:a9f01f6c-6066-43b9-83be-9246a1760e00> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:56b6c695-adf1-418e-95d2-da04cad7be53> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
+<urn:uuid:2b1171e0-10a7-4604-bd34-695e989c53eb> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:93fbb067-dfc4-4bce-a1e9-74d90488fe90> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:eb0a44fa-241c-4d64-98df-ad4aa837307b> ;
+	a <http://rs.tdwg.org/bdq/ffdq/AmendmentMethod> ;
+	rdfs:label "AmendmentMethod: Propose amendment to the value of dwc:eventDate from values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear.Amedment for SingleRecord with Specification AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR" .
+
+<urn:uuid:eb0a44fa-241c-4d64-98df-ad4aa837307b> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate was not EMPTY or any of dwc:year, dwc:startDayOfYear, or dwc:endDayOfYear were EMPTY or any of the values in dwc:year, dwc:startDayOfYear, or dwc:endDayOfYear were not independently interpretable; FILLED_IN the value of dwc:eventDate from values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear if the value of dwc:startDayOfYear is less than the value of dwc:endDayOfYear; otherwise NOT_AMENDED " ;
+	rdfs:label "AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR" .
 
 <d:resolution: durationinseconds> a <http://rs.tdwg.org/bdq/ffdq/Dimension> ;
 	rdfs:label "Resolution: durationinseconds" .
@@ -525,168 +703,184 @@
 
 <http://rs.tdwg.org/bdq/ffdq/Dimension> rdfbeans:bindingClass "org.datakurator.ffdq.model.Dimension" .
 
-<http://rs.tdwg.org/bdq/ffdq/MeasurementMethod> rdfbeans:bindingClass "org.datakurator.ffdq.model.solutions.MeasurementMethod" .
+<http://rs.tdwg.org/bdq/ffdq/MeasurementPolicy> rdfbeans:bindingClass "org.datakurator.ffdq.model.needs.MeasurementPolicy" .
 
-<urn:uuid:2f88f5f4-a981-49ce-8a83-ca146c1b7cbf> <http://rs.tdwg.org/bdq/ffdq/dimensionInContext> <urn:uuid:f0cfc4d1-5cc7-4618-bbfc-f48d44040429> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:56b6c695-adf1-418e-95d2-da04cad7be53> ;
-	a <http://rs.tdwg.org/bdq/ffdq/MeasurementMethod> .
-
-<urn:uuid:e2e4214c-8439-4b78-879c-f8c7d138edb4> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
-
-<urn:uuid:f0cfc4d1-5cc7-4618-bbfc-f48d44040429> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:e2e4214c-8439-4b78-879c-f8c7d138edb4> ;
+<urn:uuid:3dd0ded4-ee60-4428-8562-8266a80c8dcb> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:923ce43f-7fac-45df-bebd-7814fbad1da7> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasDimension> <d:resolution: durationinseconds> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedDimension> ;
 	rdfs:comment "What is the duration of dwc:eventDate in seconds?" ;
 	rdfs:label "What is the duration of dwc:eventDate in seconds? Measure of Resolution for SingleRecord" .
 
-<urn:uuid:47ff73ba-0028-4f79-9ce1-ee7008d66498> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; COMPLIANT if the value of the field dwc:day is an integer between 1 and 31 inclusive; otherwise NOT_COMPLIANT. " ;
-	rdfs:label "VALIDATION_DAY_STANDARD" .
+<urn:uuid:6cf42ab7-0814-4e98-a5b3-5d6666f327a5> <http://rs.tdwg.org/bdq/ffdq/dimensionInContext> <urn:uuid:3dd0ded4-ee60-4428-8562-8266a80c8dcb> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasUseCase> <https://rs.tdwg.org/bdq/terms/Spatial-Temporal Patterns> ;
+	a <http://rs.tdwg.org/bdq/ffdq/MeasurementPolicy> ;
+	rdfs:label "MeasurementPolicy: What is the duration of dwc:eventDate in seconds? Measure of Resolution for SingleRecord in UseCase bdq:Spatial-Temporal Patterns" .
 
-<urn:uuid:4ef0197d-72b7-4a8e-8cd6-e03526e3d4b1> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:47ff73ba-0028-4f79-9ce1-ee7008d66498> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
+<urn:uuid:923ce43f-7fac-45df-bebd-7814fbad1da7> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:eventDate" .
 
-<urn:uuid:1129c53f-c75e-4269-87f4-24d121025028> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:870fc6ae-b061-4be3-aac4-734640ba7c83> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:d6c0dbb9-e9b1-458d-b1a9-7f2db4b298f3> ;
+<urn:uuid:8146143a-7934-4b88-93c4-c92ab3dd871c> <http://rs.tdwg.org/bdq/ffdq/dimensionInContext> <urn:uuid:3dd0ded4-ee60-4428-8562-8266a80c8dcb> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
+	a <http://rs.tdwg.org/bdq/ffdq/MeasurementPolicy> ;
+	rdfs:label "MeasurementPolicy: What is the duration of dwc:eventDate in seconds? Measure of Resolution for SingleRecord in UseCase bdq:Record-Management" .
+
+<http://rs.tdwg.org/bdq/ffdq/MeasurementMethod> rdfbeans:bindingClass "org.datakurator.ffdq.model.solutions.MeasurementMethod" .
+
+<urn:uuid:56b6c695-adf1-418e-95d2-da04cad7be53> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or if the value of dwc:eventDate is not a valid ISO 8601-1 date; otherwise RUN_HAS_RESULT with the result being the duration (sensu ISO 8601-1) expressed in the dwc:eventDate, in seconds. " ;
+	rdfs:label "MEASURE_EVENTDATE_DURATIONINSECONDS" .
+
+<urn:uuid:e7482664-c4ce-4fd6-8753-4f0009f62dc1> <http://rs.tdwg.org/bdq/ffdq/dimensionInContext> <urn:uuid:3dd0ded4-ee60-4428-8562-8266a80c8dcb> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:56b6c695-adf1-418e-95d2-da04cad7be53> ;
+	a <http://rs.tdwg.org/bdq/ffdq/MeasurementMethod> ;
+	rdfs:label "MeasurementMethod: What is the duration of dwc:eventDate in seconds? Measure of Resolution for SingleRecord with Specification MEASURE_EVENTDATE_DURATIONINSECONDS" .
+
+<urn:uuid:0b7e9ef1-fedc-4ae5-bef9-45446d942828> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Spatial-Temporal Patterns> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:ad1e1cc9-1569-4870-958c-8ea1ecae1e22> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is the value of dwc:day an integer between 1 and 31 inclusive? Validation for SingleRecord in UseCase bdq:Spatial-Temporal Patterns" .
+
+<urn:uuid:7ce0886e-338e-4415-ab89-f107b02d30ef> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/day> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:day" .
+
+<urn:uuid:ad1e1cc9-1569-4870-958c-8ea1ecae1e22> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:7ce0886e-338e-4415-ab89-f107b02d30ef> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:ef627933-07a9-4070-9d9b-82e3d58b82b1> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
 	rdfs:comment "Is the value of dwc:day an integer between 1 and 31 inclusive?" ;
 	rdfs:label "Is the value of dwc:day an integer between 1 and 31 inclusive? Validation for SingleRecord" .
 
-<urn:uuid:4fcc30e1-795a-459c-b6fc-683234d30060> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:1129c53f-c75e-4269-87f4-24d121025028> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:47ff73ba-0028-4f79-9ce1-ee7008d66498> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> .
-
-<urn:uuid:870fc6ae-b061-4be3-aac4-734640ba7c83> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/day> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
-
-<urn:uuid:d6c0dbb9-e9b1-458d-b1a9-7f2db4b298f3> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
+<urn:uuid:ef627933-07a9-4070-9d9b-82e3d58b82b1> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
 	rdfs:label "Conformance: standard" .
+
+<urn:uuid:065f3a46-75b4-46a4-b5d4-558017eba343> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
+	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:ad1e1cc9-1569-4870-958c-8ea1ecae1e22> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: Is the value of dwc:day an integer between 1 and 31 inclusive? Validation for SingleRecord in UseCase bdq:Record-Management" .
+
+<urn:uuid:47ff73ba-0028-4f79-9ce1-ee7008d66498> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; COMPLIANT if the value of the field dwc:day is an integer between 1 and 31 inclusive; otherwise NOT_COMPLIANT. " ;
+	rdfs:label "VALIDATION_DAY_STANDARD" .
+
+<urn:uuid:88f7df99-2a76-4256-a1ac-9649b8c82fc4> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:ad1e1cc9-1569-4870-958c-8ea1ecae1e22> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:47ff73ba-0028-4f79-9ce1-ee7008d66498> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> ;
+	rdfs:label "ValidationMethod: Is the value of dwc:day an integer between 1 and 31 inclusive? Validation for SingleRecord with Specification VALIDATION_DAY_STANDARD" .
 
 <urn:uuid:0267c35f-a02b-4dc9-9a01-38797faa6b2b> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
 	rdfs:comment "COMPLIANT if dwc:endDayOfYear is not EMPTY; otherwise NOT_COMPLIANT " ;
 	rdfs:label "VALIDATION_ENDDAYOFYEAR_NOTEMPTY" .
 
-<urn:uuid:ec2ee479-5825-4b7a-8e86-a703e0358bdd> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:0267c35f-a02b-4dc9-9a01-38797faa6b2b> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
+<urn:uuid:1a6ff242-e219-4de5-b49c-a3aabb522543> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:cb9e6fa1-ca33-46a5-8268-881b44cb054c> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:0267c35f-a02b-4dc9-9a01-38797faa6b2b> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> ;
+	rdfs:label "ValidationMethod: Is there a value in dwc:endDayOfYear? Validation for SingleRecord with Specification VALIDATION_ENDDAYOFYEAR_NOTEMPTY" .
 
-<urn:uuid:00c31a71-6170-446d-a82c-1fa36cc09fc4> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/endDayOfYear> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
+<urn:uuid:5ab47edd-0dd7-41b8-9e16-118c9d46fbf4> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/endDayOfYear> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:endDayOfYear" .
 
-<urn:uuid:407bc265-b434-4e00-a216-f0284966d360> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
+<urn:uuid:a6337bc9-e0ec-4ff4-ad37-e355a3cc8d20> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
 	rdfs:label "Completeness: notempty" .
 
-<urn:uuid:6f52b522-fd98-4736-a730-3917eb8214f8> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:d10d782b-0028-460d-ba63-21c28b3901f7> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:0267c35f-a02b-4dc9-9a01-38797faa6b2b> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> .
-
-<urn:uuid:d10d782b-0028-460d-ba63-21c28b3901f7> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:00c31a71-6170-446d-a82c-1fa36cc09fc4> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:407bc265-b434-4e00-a216-f0284966d360> ;
+<urn:uuid:cb9e6fa1-ca33-46a5-8268-881b44cb054c> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:5ab47edd-0dd7-41b8-9e16-118c9d46fbf4> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:a6337bc9-e0ec-4ff4-ad37-e355a3cc8d20> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
 	rdfs:comment "Is there a value in dwc:endDayOfYear?" ;
 	rdfs:label "Is there a value in dwc:endDayOfYear? Validation for SingleRecord" .
 
+<urn:uuid:13a300f2-6f71-414f-93e3-68b7cd21c913> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:2559a586-90c7-4e2e-8bb8-ca9036983546> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:167d4346-6fac-40eb-9d2e-30b7683dac04> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> ;
+	rdfs:label "ValidationMethod: Is there a value in dwc:startDayOfYear? Validation for SingleRecord with Specification VALIDATION_STARTDAYOFYEAR_NOTEMPTY" .
+
 <urn:uuid:167d4346-6fac-40eb-9d2e-30b7683dac04> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
 	rdfs:comment "COMPLIANT if dwc:startDayOfYear is not EMPTY; otherwise NOT_COMPLIANT " ;
 	rdfs:label "VALIDATION_STARTDAYOFYEAR_NOTEMPTY" .
 
-<urn:uuid:412979e8-708b-4a05-a3f7-b24154a61f33> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:167d4346-6fac-40eb-9d2e-30b7683dac04> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
-
-<urn:uuid:390ec6e4-e97e-40b1-a851-a42f58f1a53d> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:f04158f2-48a4-4503-872c-95ac17fc5c1e> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:8085774a-ed9b-4753-95d8-6052c84db679> ;
+<urn:uuid:2559a586-90c7-4e2e-8bb8-ca9036983546> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:bfa7539e-5aef-4722-a139-5c29c51e7e9a> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:6321f61b-3f1d-4acf-b910-ca242ec0d821> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
 	rdfs:comment "Is there a value in dwc:startDayOfYear?" ;
 	rdfs:label "Is there a value in dwc:startDayOfYear? Validation for SingleRecord" .
 
-<urn:uuid:8085774a-ed9b-4753-95d8-6052c84db679> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
+<urn:uuid:6321f61b-3f1d-4acf-b910-ca242ec0d821> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
 	rdfs:label "Completeness: notempty" .
 
-<urn:uuid:ef77f7d9-cda2-441f-9cd2-d778ff848cf5> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:390ec6e4-e97e-40b1-a851-a42f58f1a53d> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:167d4346-6fac-40eb-9d2e-30b7683dac04> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> .
+<urn:uuid:bfa7539e-5aef-4722-a139-5c29c51e7e9a> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/startDayOfYear> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:startDayOfYear" .
 
-<urn:uuid:f04158f2-48a4-4503-872c-95ac17fc5c1e> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/startDayOfYear> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
-
-<urn:uuid:aa10819d-b67b-42e7-ac61-1bdde7b94740> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:aaebbde6-a101-4665-ba1e-6d4d8c561a31> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
-
-<urn:uuid:aaebbde6-a101-4665-ba1e-6d4d8c561a31> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "COMPLIANT if dwc:eventTime is not EMPTY; otherwise NOT_COMPLIANT " ;
-	rdfs:label "VALIDATION_EVENTTIME_NOTEMPTY" .
-
-<urn:uuid:37c74031-e266-4b81-9e8c-924d1e383339> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:ab65878d-4c97-425a-a53f-f08a18aef44f> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:aaebbde6-a101-4665-ba1e-6d4d8c561a31> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> .
-
-<urn:uuid:a8a8d826-5bb8-44cf-8465-69ed97a738cc> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventTime> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
-
-<urn:uuid:ab65878d-4c97-425a-a53f-f08a18aef44f> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:a8a8d826-5bb8-44cf-8465-69ed97a738cc> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:fbbcb1ac-302f-45c1-b9d1-f4f9d2eb7132> ;
+<urn:uuid:1379a6f3-0b4f-4d0c-afe1-d858e68a34b9> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:8bbda0aa-d0a5-4aa5-9248-90dead5b111e> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:c01d5619-6c45-4dcf-894f-18c87e1fa86e> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
 	rdfs:comment "Is there a value in dwc:eventTime?" ;
 	rdfs:label "Is there a value in dwc:eventTime? Validation for SingleRecord" .
 
-<urn:uuid:fbbcb1ac-302f-45c1-b9d1-f4f9d2eb7132> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
+<urn:uuid:83f9b40e-da1f-4ccb-833c-089a18e04645> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:1379a6f3-0b4f-4d0c-afe1-d858e68a34b9> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:aaebbde6-a101-4665-ba1e-6d4d8c561a31> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> ;
+	rdfs:label "ValidationMethod: Is there a value in dwc:eventTime? Validation for SingleRecord with Specification VALIDATION_EVENTTIME_NOTEMPTY" .
+
+<urn:uuid:8bbda0aa-d0a5-4aa5-9248-90dead5b111e> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventTime> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:eventTime" .
+
+<urn:uuid:aaebbde6-a101-4665-ba1e-6d4d8c561a31> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "COMPLIANT if dwc:eventTime is not EMPTY; otherwise NOT_COMPLIANT " ;
+	rdfs:label "VALIDATION_EVENTTIME_NOTEMPTY" .
+
+<urn:uuid:c01d5619-6c45-4dcf-894f-18c87e1fa86e> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
 	rdfs:label "Completeness: notempty" .
 
-<urn:uuid:9bc8b105-902a-489c-aae8-3b7075e1b948> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "COMPLIANT if dwc:verbatimEventDate is not EMPTY; otherwise NOT_COMPLIANT " ;
-	rdfs:label "VALIDATION_VERBATIMEVENTDATE_NOTEMPTY" .
-
-<urn:uuid:ed1c98ba-ed3e-4c97-8be1-ac2d784e27ba> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:9bc8b105-902a-489c-aae8-3b7075e1b948> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
-
-<urn:uuid:096dad0a-bfde-4694-a6b6-cde82978c05d> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/verbatimEventDate> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
-
-<urn:uuid:0e61f06b-e37e-490c-acb1-d61e3d8128b5> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:3394479f-bfc1-42f2-bef3-a12bebe5474f> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:9bc8b105-902a-489c-aae8-3b7075e1b948> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> .
-
-<urn:uuid:3394479f-bfc1-42f2-bef3-a12bebe5474f> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:096dad0a-bfde-4694-a6b6-cde82978c05d> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:587f9c51-cfc7-4425-a216-40955bbafb14> ;
+<urn:uuid:0249f4e5-0901-4682-97b4-4987b6f1d828> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:f6b6d966-15af-4e4f-a481-54dab3d0ae87> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:cf0a617f-97d9-4ba3-a0cd-24ba7469be9c> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
 	rdfs:comment "Is there a value in dwc:verbatimEventDate?" ;
 	rdfs:label "Is there a value in dwc:verbatimEventDate? Validation for SingleRecord" .
 
-<urn:uuid:587f9c51-cfc7-4425-a216-40955bbafb14> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
+<urn:uuid:9bc8b105-902a-489c-aae8-3b7075e1b948> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "POTENTIAL_ISSUE if dwc:verbatimEventDate is not EMPTY; otherwise NOT_ISSUE " ;
+	rdfs:label "ISSUE_VERBATIMEVENTDATE_NOTEMPTY" .
+
+<urn:uuid:a265a7e2-df82-456f-b767-b7b1c8d28df5> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:0249f4e5-0901-4682-97b4-4987b6f1d828> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:9bc8b105-902a-489c-aae8-3b7075e1b948> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> ;
+	rdfs:label "ValidationMethod: Is there a value in dwc:verbatimEventDate? Validation for SingleRecord with Specification ISSUE_VERBATIMEVENTDATE_NOTEMPTY" .
+
+<urn:uuid:cf0a617f-97d9-4ba3-a0cd-24ba7469be9c> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
 	rdfs:label "Completeness: notempty" .
 
-<urn:uuid:dc2fc946-8114-491b-8a7b-3242a274a221> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "COMPLIANT if dwc:month is not EMPTY; otherwise NOT_COMPLIANT " ;
-	rdfs:label "VALIDATION_MONTH_NOTEMPTY" .
+<urn:uuid:f6b6d966-15af-4e4f-a481-54dab3d0ae87> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/verbatimEventDate> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:verbatimEventDate" .
 
-<urn:uuid:e204df80-2eac-4191-a4a6-9f86b8faacaf> <http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:dc2fc946-8114-491b-8a7b-3242a274a221> ;
-	<http://rs.tdwg.org/bdq/ffdq/implementedBy> <urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Implementation> .
-
-<urn:uuid:3f6b9fd3-e5ab-4e91-b8b2-877ee70ca59f> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
-	rdfs:label "Completeness: notempty" .
-
-<urn:uuid:486770ad-366e-455f-88fb-614e9be73379> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:787d9045-6704-44d3-afac-a539c7f19b42> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:3f6b9fd3-e5ab-4e91-b8b2-877ee70ca59f> ;
+<urn:uuid:64926e6a-f391-45f0-8d7a-ff8025e0dd65> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:cccdf289-9633-4700-a373-cc1ff6fd2274> ;
+	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:b8741e56-ed98-4100-8704-7be275139fb0> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
 	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
 	rdfs:comment "Is there a value in dwc:month?" ;
 	rdfs:label "Is there a value in dwc:month? Validation for SingleRecord" .
 
-<urn:uuid:4aba19b5-c987-46cb-8ddd-55006013fad1> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:486770ad-366e-455f-88fb-614e9be73379> ;
+<urn:uuid:9a65a76f-e6f6-4189-8978-7adaadb32ad0> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:64926e6a-f391-45f0-8d7a-ff8025e0dd65> ;
 	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:dc2fc946-8114-491b-8a7b-3242a274a221> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> .
+	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> ;
+	rdfs:label "ValidationMethod: Is there a value in dwc:month? Validation for SingleRecord with Specification VALIDATION_MONTH_NOTEMPTY" .
 
-<urn:uuid:787d9045-6704-44d3-afac-a539c7f19b42> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/month> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> .
+<urn:uuid:b8741e56-ed98-4100-8704-7be275139fb0> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
+	rdfs:label "Completeness: notempty" .
+
+<urn:uuid:cccdf289-9633-4700-a373-cc1ff6fd2274> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/month> ;
+	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:month" .
+
+<urn:uuid:dc2fc946-8114-491b-8a7b-3242a274a221> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
+	rdfs:comment "COMPLIANT if dwc:month is not EMPTY; otherwise NOT_COMPLIANT " ;
+	rdfs:label "VALIDATION_MONTH_NOTEMPTY" .

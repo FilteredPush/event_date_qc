@@ -12,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.datakurator.ffdq.api.DQResponse;
 import org.datakurator.ffdq.api.result.AmendmentValue;
 import org.datakurator.ffdq.api.result.ComplianceValue;
+import org.datakurator.ffdq.api.result.IssueValue;
 import org.datakurator.ffdq.api.result.NumericalValue;
 import org.datakurator.ffdq.model.ResultState;
 import org.junit.Test;
@@ -1955,28 +1956,27 @@ public class DwCEventDQTestDefinitions {
 
 	@Test
 	public void testValidationVerbatimeventdateNotempty() {
-        // COMPLIANT if dwc:verbatimEventDate is not EMPTY; otherwise 
-        // NOT_COMPLIANT 
+		// POTENTIAL_ISSUE if dwc:verbatimEventDate is not EMPTY; otherwise NOT_ISSUE
 		
 		String verbatimEventDate = "1800";
-		DQResponse<ComplianceValue> result = DwCEventDQ.validationVerbatimeventdateNotempty(verbatimEventDate);
+		DQResponse<IssueValue> result = DwCEventDQ.issueVerbatimeventdateNotempty(verbatimEventDate);
 		logger.debug(result.getComment());
 		assertFalse(DateUtils.isEmpty(result.getComment()));
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
-		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		assertEquals(IssueValue.NOT_ISSUE.getLabel(), result.getValue().getLabel());
 		
 		verbatimEventDate = "foo";
-		result = DwCEventDQ.validationEventdateNotEmpty(verbatimEventDate);
+		result = DwCEventDQ.issueVerbatimeventdateNotempty(verbatimEventDate);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
-		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		assertEquals(IssueValue.NOT_ISSUE.getLabel(), result.getValue().getLabel());
 		
 		verbatimEventDate = "";
-		result = DwCEventDQ.validationEventdateNotEmpty(verbatimEventDate);
+		result = DwCEventDQ.issueVerbatimeventdateNotempty(verbatimEventDate);
 		logger.debug(result.getComment());
 		assertFalse(DateUtils.isEmpty(result.getComment()));
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
-		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		assertEquals(IssueValue.POTENTIAL_ISSUE.getLabel(), result.getValue().getLabel());
 	}
 
 	@Test

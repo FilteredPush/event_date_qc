@@ -23,6 +23,7 @@ import org.datakurator.ffdq.api.DQResponse;
 import org.datakurator.ffdq.api.result.AmendmentValue;
 import org.datakurator.ffdq.api.result.CompletenessValue;
 import org.datakurator.ffdq.api.result.ComplianceValue;
+import org.datakurator.ffdq.api.result.IssueValue;
 import org.datakurator.ffdq.api.result.NumericalValue;
 import org.datakurator.ffdq.model.ResultState;
 
@@ -71,8 +72,8 @@ import java.util.Map;
  * #267 VALIDATION_ENDDAYOFYEAR_NOTEMPTY 0267c35f-a02b-4dc9-9a01-38797faa6b2b 
  * #264 VALIDATION_STARTDAYOFYEAR_NOTEMPTY 167d4346-6fac-40eb-9d2e-30b7683dac04
  * #255 VALIDATION_EVENTTIME_NOTEMPTY aaebbde6-a101-4665-ba1e-6d4d8c561a31
- * #250 VALIDATION_VERBATIMEVENTDATE_NOTEMPTY 9bc8b105-902a-489c-aae8-3b7075e1b948
  * #241 VALIDATION_MONTH_NOTEMPTY dc2fc946-8114-491b-8a7b-3242a274a221
+ * #250 ISSUE_VERBATIMEVENTDATE_NOTEMPTY 9bc8b105-902a-489c-aae8-3b7075e1b948
  *
  * Rejected/Other
  * #37 VALIDATION_DAY_MONTH_SWAPPED  dayMonthTransposition(@ActedUpon(value="dwc:month") String month, @ActedUpon(value="dwc:day") String day) 
@@ -2480,32 +2481,31 @@ public class DwCEventDQ {
     /**
     * Is there a value in dwc:verbatimEventDate?
     *
-    * Provides: #250 VALIDATION_VERBATIMEVENTDATE_NOTEMPTY
-    * Version: 2024-02-04
+    * Provides: #250 ISSUE_VERBATIMEVENTDATE_NOTEMPTY
+    * Version: 2024-04-02
     *
     * @param verbatimEventDate the provided dwc:verbatimEventDate to evaluate as ActedUpon.
     * @return DQResponse the response of type ComplianceValue  to return
     */
-    @Validation(label="VALIDATION_VERBATIMEVENTDATE_NOTEMPTY", description="Is there a value in dwc:verbatimEventDate?")
+    @Validation(label="ISSUE_VERBATIMEVENTDATE_NOTEMPTY", description="Is there a value in dwc:verbatimEventDate?")
     @Provides("9bc8b105-902a-489c-aae8-3b7075e1b948")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/9bc8b105-902a-489c-aae8-3b7075e1b948/2024-02-04")
-    @Specification("COMPLIANT if dwc:verbatimEventDate is not EMPTY; otherwise NOT_COMPLIANT ")
-    public static DQResponse<ComplianceValue> validationVerbatimeventdateNotempty(
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/9bc8b105-902a-489c-aae8-3b7075e1b948/2024-04-02")
+    @Specification("POTENTIAL_ISSUE if dwc:verbatimEventDate is not EMPTY; otherwise NOT_ISSUE ")
+    public static DQResponse<IssueValue> issueVerbatimeventdateNotempty(
         @ActedUpon("dwc:verbatimEventDate") String verbatimEventDate
     ) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+        DQResponse<IssueValue> result = new DQResponse<IssueValue>();
 
         // Specification
-        // COMPLIANT if dwc:verbatimEventDate is not EMPTY; otherwise 
-        // NOT_COMPLIANT 
+        // POTENTIAL_ISSUE if dwc:verbatimEventDate is not EMPTY; otherwise NOT_ISSUE
 
 		if (DateUtils.isEmpty(verbatimEventDate)) {
 			result.addComment("No value provided for dwc:verbatimEventDate.");
-			result.setValue(ComplianceValue.NOT_COMPLIANT);
+			result.setValue(IssueValue.POTENTIAL_ISSUE);
 			result.setResultState(ResultState.RUN_HAS_RESULT);
 		} else { 
 			result.addComment("Some value provided for dwc:verbatimEventDate.");
-			result.setValue(ComplianceValue.COMPLIANT);
+			result.setValue(IssueValue.NOT_ISSUE);
 			result.setResultState(ResultState.RUN_HAS_RESULT);
 		}
 
