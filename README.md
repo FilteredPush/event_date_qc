@@ -11,6 +11,8 @@ This library provides two classes each with a set of static methods which provid
 
 This library provides implementations for the Time related tests in the TDWG BDQ TG2 test suite.
 
+Version 3.0.4 is up to date with the CORE and SUPPLEMENTAL Time related tests as of 2024-07-10.
+
 # Include using maven
 
 Available in Maven Central.
@@ -18,7 +20,7 @@ Available in Maven Central.
     <dependency>
         <groupId>org.filteredpush</groupId>
         <artifactId>event_date_qc</artifactId>
-        <version>3.0.2</version>
+        <version>3.0.4</version>
     </dependency>
 
 # Building
