@@ -97,7 +97,7 @@ import java.util.Map;
  */
 @Mechanism(
 		value = "urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8",
-		label = "Kurator: Date Validator - DwCEventDQ:v3.0.4-SNAPSHOT")
+		label = "Kurator: Date Validator - DwCEventDQ:v3.0.4")
 public class DwCEventDQ {
 	
 	private static final Log logger = LogFactory.getLog(DwCEventDQ.class);
