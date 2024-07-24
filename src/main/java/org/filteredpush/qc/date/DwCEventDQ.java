@@ -2059,7 +2059,7 @@ public class DwCEventDQ {
      * #52 Amendment SingleRecord Completeness: event from eventdate
      *
      * Provides: AMENDMENT_EVENT_FROM_EVENTDATE
-     * Version: 2023-09-17
+     * Version: 2024-07-23
 	 *
      * @param eventDate the provided dwc:eventDate to evaluate
      * @param year the provided dwc:year to evaluate for emptyness and fill in 
@@ -2071,8 +2071,8 @@ public class DwCEventDQ {
 	 */
     @Amendment(label="AMENDMENT_EVENT_FROM_EVENTDATE", description="Propose amendment to values in any of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear or dwc:endDayOfYear from the content of dwc:eventDate.")
     @Provides("710fe118-17e1-440f-b428-88ba3f547d6d")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/710fe118-17e1-440f-b428-88ba3f547d6d/2023-09-17")
-    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or contains an invalid value according to ISO 8601-1; FILLED_IN (1) dwc:day from dwc:eventDate if dwc:day is EMPTY and dwc:eventDate has a precision of a day or finer and is within a single day, (2) dwc:month from dwc:eventDate if dwc:month is EMPTY and dwc:eventDate has a precision of a single month or finer and is within a single month, (3) dwc:year from dwc:eventDate if dwc:year is EMPTY and dwc:eventDate has a precision of a single year or finer and is within a single year, (4) dwc:startDayOfYear and dwc:endDayOfYear if they are EMPTY and dwc:eventDate has a precision of a day or better; otherwise NOT_AMENDED. ")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/710fe118-17e1-440f-b428-88ba3f547d6d/2023-07-23")
+    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or contains an invalid value according to ISO 8601-1; FILLED_IN if any of (1) dwc:day from dwc:eventDate if dwc:day is EMPTY and dwc:eventDate has a precision of a day or finer and is within a single day, (2) dwc:month from dwc:eventDate if dwc:month is EMPTY and dwc:eventDate has a precision of a single month or finer and is within a single month, (3) dwc:year from dwc:eventDate if dwc:year is EMPTY and dwc:eventDate has a precision of a single year or finer and is within a single year, (4) dwc:startDayOfYear and dwc:endDayOfYear if they are EMPTY and dwc:eventDate has a precision of a day or better; otherwise NOT_AMENDED.")
 	public static DQResponse<AmendmentValue> amendmentEventFromEventdate(
     		@Consulted(value = "dwc:eventDate") String eventDate,
 			@ActedUpon(value = "dwc:year") String year,
@@ -2085,18 +2085,18 @@ public class DwCEventDQ {
     	DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
     	
         // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
-        // or contains an invalid value according to ISO 8601-1; FILLED_IN 
-        // (1) dwc:day from dwc:eventDate if dwc:day is EMPTY and dwc:eventDate 
-        // has a precision of a day or finer and is within a single 
-        // day, (2) dwc:month from dwc:eventDate if dwc:month is EMPTY 
-        // and dwc:eventDate has a precision of a single month or finer 
-        // and is within a single month, (3) dwc:year from dwc:eventDate 
-        // if dwc:year is EMPTY and dwc:eventDate has a precision of 
-        // a single year or finer and is within a single year, (4) 
-        // dwc:startDayOfYear and dwc:endDayOfYear if they are EMPTY 
-        // and dwc:eventDate has a precision of a day or better; otherwise 
-        // NOT_AMENDED. 
+    	// INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or 
+    	// contains an invalid value according to ISO 8601-1; 
+    	// FILLED_IN if any of (1) dwc:day from dwc:eventDate if dwc:day is EMPTY 
+    	// and dwc:eventDate has a precision of a day or finer and is within a single day, 
+    	// (2) dwc:month from dwc:eventDate if dwc:month is EMPTY and dwc:eventDate 
+    	// has a precision of a single month or finer and is within a single month, 
+    	// (3) dwc:year from dwc:eventDate if dwc:year is EMPTY and dwc:eventDate has 
+    	// a precision of a single year or finer and is within a single year, 
+    	// (4) dwc:startDayOfYear and dwc:endDayOfYear if they are EMPTY and 
+    	// dwc:eventDate has a precision of a day or better; 
+    	// otherwise NOT_AMENDED.
+    	
     	if (DateUtils.isEmpty(eventDate)) {
     		result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
     		result.addComment("No value for dwc:eventDate was provided, no data to fill in from.");

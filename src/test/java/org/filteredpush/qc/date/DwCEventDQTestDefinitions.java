@@ -243,16 +243,17 @@ public class DwCEventDQTestDefinitions {
 	public void testAmendmentEventFromEventdate() {
 		
         // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
-        // or contains an invalid value according to ISO 8601-1; FILLED_IN 
-        // (1) dwc:day from dwc:eventDate if dwc:day is EMPTY and dwc:eventDate 
-        // has a precision of a day or finer, (2) dwc:month from dwc:eventDate 
-        // if dwc:month is EMPTY and dwc:eventDate has a precision 
-        // of a single month or finer, (3) dwc:year from dwc:eventDate if dwc:year 
-        // is EMPTY and dwc:eventDate has a precision of a single year 
-        // or finer and is within a single year, (4) dwc:startDayOfYear 
-        // and dwc:endDayOfYear if they are EMPTY and dwc:eventDate 
-        // has a precision of a day or better; otherwise NOT_AMENDED. 
+    	// INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or 
+    	// contains an invalid value according to ISO 8601-1; 
+    	// FILLED_IN if any of (1) dwc:day from dwc:eventDate if dwc:day is EMPTY 
+    	// and dwc:eventDate has a precision of a day or finer and is within a single day, 
+    	// (2) dwc:month from dwc:eventDate if dwc:month is EMPTY and dwc:eventDate 
+    	// has a precision of a single month or finer and is within a single month, 
+    	// (3) dwc:year from dwc:eventDate if dwc:year is EMPTY and dwc:eventDate has 
+    	// a precision of a single year or finer and is within a single year, 
+    	// (4) dwc:startDayOfYear and dwc:endDayOfYear if they are EMPTY and 
+    	// dwc:eventDate has a precision of a day or better; 
+    	// otherwise NOT_AMENDED.
 		
 		String eventDate = "";
 		String year = "1832";
