@@ -30,14 +30,12 @@ import java.util.Map;
  *   #69 VALIDATION_DATEIDENTIFIED_STANDARD 66269bdd-9271-4e76-b25c-7ab81eebe1d8
  *   #26 AMENDMENT_DATEIDENTIFIED_STANDARDIZED 39bb2280-1215-447b-9221-fd13bc990641
 
- * Provides Suplementary TG2 tests: 
+ * Provides Supplementary TG2 tests: 
  * #92 VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE 391ca46d-3842-4a18-970c-0434cbc17f07
+ * #224 VALIDATION_MODIFIED_NOTEMPTY e17918fc-25ca-4a3a-828b-4502432b98c4
+ * #272 VALIDATION_MODIFIED_STANDARD c253f11a-6161-4692-bfce-4328f1961630
+ * #273 AMENDMENT_MODIFIED_STANDARDIZED 718dfc3c-cb52-4fca-b8e2-0e722f375da7
  *   
- * Also provides: 
- *   TODO: Go with metadata in rec_occur_qc
- *   Date Modified Format Correction (supplemental)  
- *   ModifiedDateValid (supplemental)
- * 
  * @author mole
  *
  */
@@ -545,4 +543,193 @@ public class DwCOtherDateDQ {
         return result;
     }
 
+    
+    /**
+    * Is there a value in dcterms:modified?
+    *
+    * Provides: #224 VALIDATION_MODIFIED_NOTEMPTY
+    * Version: 2024-01-29
+    *
+    * @param modified the provided dcterms:modified to evaluate as ActedUpon.
+    * @return DQResponse the response of type ComplianceValue  to return
+    */
+    @Validation(label="VALIDATION_MODIFIED_NOTEMPTY", description="Is there a value in dcterms:modified?")
+    @Provides("e17918fc-25ca-4a3a-828b-4502432b98c4")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/e17918fc-25ca-4a3a-828b-4502432b98c4/2024-01-29")
+    @Specification("COMPLIANT if dcterms:modified is not EMPTY; otherwise NOT_COMPLIANT ")
+    public static DQResponse<ComplianceValue> validationModifiedNotempty(
+        @ActedUpon("dcterms:modified") String modified
+    ) {
+        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+
+        // Specification
+        // COMPLIANT if dcterms:modified is not EMPTY; otherwise NOT_COMPLIANT 
+
+		if (DateUtils.isEmpty(modified)) {
+			result.addComment("No value provided for dcterms:modified.");
+			result.setValue(ComplianceValue.NOT_COMPLIANT);
+			result.setResultState(ResultState.RUN_HAS_RESULT);
+		} else { 
+			result.addComment("Some value provided for dcterms:modified.");
+			result.setValue(ComplianceValue.COMPLIANT);
+			result.setResultState(ResultState.RUN_HAS_RESULT);
+		}
+        
+        return result;
+    }
+    
+    /**
+    * Does the value of dcterms:modified a valid ISO date?
+    *
+    * Provides: VALIDATION_MODIFIED_STANDARD
+    * Version: 2024-02-08
+    *
+    * @param modified the provided dcterms:modified to evaluate as ActedUpon.
+    * @return DQResponse the response of type ComplianceValue  to return
+    */
+    @Validation(label="VALIDATION_MODIFIED_STANDARD", description="Does the value of dcterms:modified a valid ISO date?")
+    @Provides("c253f11a-6161-4692-bfce-4328f1961630")
+    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/c253f11a-6161-4692-bfce-4328f1961630/2024-02-08")
+    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dcterms:modified is EMPTY; COMPLIANT if the value of dcterms:modified is a valid ISO 8601-1 date; otherwise NOT_COMPLIANT. ")
+    public DQResponse<ComplianceValue> validationModifiedStandard(
+        @ActedUpon("dcterms:modified") String modified
+    ) {
+        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+
+        // Specification
+        // INTERNAL_PREREQUISITES_NOT_MET if dcterms:modified is EMPTY; 
+        // COMPLIANT if the value of dcterms:modified is a valid ISO 
+        // 8601-1 date; otherwise NOT_COMPLIANT. 
+        
+		if (DateUtils.isEmpty(modified)) {
+			result.addComment("No value provided for dwc:modified.");
+			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+		} else {
+			try {
+				if (DateUtils.eventDateValid(modified)) {
+					result.setValue(ComplianceValue.COMPLIANT);
+					result.addComment("Provided value for dwc:modified '" + modified + "' is formated as an ISO date. ");
+				} else {
+					result.setValue(ComplianceValue.NOT_COMPLIANT);
+					result.addComment("Provided value for dwc:modified '" + modified + "' is not a validly formatted ISO date .");
+				}
+				result.setResultState(ResultState.RUN_HAS_RESULT);
+			} catch (Exception e) {
+				logger.debug(e.getMessage());
+				result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+				result.addComment(e.getMessage());
+			}
+		}	
+
+        return result;
+    }
+    
+	/**
+	 * Propose amendment of the value of dcterms:modified to a valid ISO date and time..
+	 * 
+	 * #273 Amendment SingleRecord Conformance: dateidentified standardized
+	 *
+	 * Provides: AMENDMENT_MODIFIED_STANDARDIZED
+	 * Version: 2024-02-12
+	 *
+	 * @param modified the provided dwc:modified to evaluate
+	 * @return DQResponse the response of type AmendmentValue to return
+	 */
+	@Amendment(label="AMENDMENT_MODIFIED_STANDARDIZED", description="Propose amendment of the value of dcterms:modified to a valid ISO date and time.")
+	@Provides("718dfc3c-cb52-4fca-b8e2-0e722f375da7")
+	@ProvidesVersion("https://rs.tdwg.org/bdq/terms/718dfc3c-cb52-4fca-b8e2-0e722f375da7/2024-02-12")
+	@Specification("INTERNAL_PREREQUISITES_NOT_MET if dcterms:modified is EMPTY; AMENDED if the value of dcterms:modified was not a properly formatted ISO 8601-1 date/time but was unambiguous, and was altered to be a valid ISO 8601-1 date/time; otherwise NOT_AMENDED")
+	public static DQResponse<AmendmentValue> amendmentModifiedStandardized(
+			@ActedUpon("dcterms:modified") String modified) {
+		DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
+
+		// Specification
+		// INTERNAL_PREREQUISITES_NOT_MET if dcterms:modified is EMPTY; 
+		// AMENDED if the value of dcterms:modified was not a properly 
+		// formatted ISO 8601-1 date/time but was unambiguous, 
+		// and was altered to be a valid ISO 8601-1 date/time; 
+		// otherwise NOT_AMENDED
+
+		if (DateUtils.eventDateValid(modified)) {
+			result.setResultState(ResultState.NOT_AMENDED);
+			result.addComment("dcterms:modified contains a correctly formatted date, not changing.");
+		} else {
+			if (DateUtils.isEmpty(modified)) {
+				result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+				result.addComment("dcterms:modified does not contains a value.");
+			} else {
+				EventResult extractResponse = DateUtils.extractDateFromVerbatimER(modified);
+				if (!extractResponse.getResultState().equals(EventResult.EventQCResultState.NOT_RUN) &&
+						(extractResponse.getResultState().equals(EventResult.EventQCResultState.RANGE) ||
+								extractResponse.getResultState().equals(EventResult.EventQCResultState.DATE) ||
+								extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS) ||
+								extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)
+						)
+						)
+				{
+					Map<String, String> correctedValues = new HashMap<>();
+					correctedValues.put("dterms:modified", extractResponse.getResult());
+
+					if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
+						result.setResultState(ResultState.NOT_AMENDED); 
+						result.addComment("Potential interpretation of dcterms:modified [" + modified + "] as ["+ extractResponse.getResult() +"], but such interpretation is ambiguous." );
+						result.addComment(extractResponse.getComment());
+					} else {
+						if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
+							result.setResultState(ResultState.NOT_AMENDED); 
+							result.addComment("Potential interpretation of dcterms:modified [" + modified + "] as ["+ extractResponse.getResult() +"] is suspect.");
+							result.addComment(extractResponse.getComment());
+						} else { 
+							result.addComment("Unabmiguous interpretation of dcterms:modified [" + modified + "] as ["+ extractResponse.getResult() +"].");
+							result.setResultState(ResultState.AMENDED);
+							result.setValue(new AmendmentValue(correctedValues));
+						} 
+					}
+				} else {
+					boolean matched = false;
+					logger.debug(modified);
+					if (modified.matches("^[0-9]{4}.[0-9]{2}.[0-9]{2}$")) { 
+						try {
+							// try to see if this is yyyy-dd-mm error for yyyy-mm-dd
+							Integer secondBit = Integer.parseInt(modified.substring(5,7));
+							Integer thirdBit = Integer.parseInt(modified.substring(8));
+							if (secondBit>12 && thirdBit<12) {
+								// try switching second and third parts of date.
+								String toTest = modified.substring(0, 4).concat("-").concat(modified.substring(8)).concat("-").concat(modified.substring(5, 7));
+								logger.debug(toTest);
+								LocalDateInterval testingToTest = new LocalDateInterval(toTest);
+								if (testingToTest!=null && testingToTest.isSingleDay()) { 
+									Map<String, String> correctedValues = new HashMap<>();
+									correctedValues.put("dwc:modified", testingToTest.toString());
+									result.addComment("Unabmiguous interpretation of dcterms:modified [" + modified + "] as ["+ extractResponse.getResult() +"].");
+									result.setResultState(ResultState.AMENDED);
+									result.setValue(new AmendmentValue(correctedValues));
+									matched = true;
+								}
+							}
+						} catch (Exception e) {
+							logger.debug(e.getMessage());
+						}
+					}
+					if (!matched) { 
+						EventResult tryVerbatimResult = DateUtils.extractDateFromVerbatimER(modified);
+						if (tryVerbatimResult.getResultState().equals(EventResult.EventQCResultState.DATE)) { 
+							Map<String, String> correctedValues = new HashMap<>();
+							correctedValues.put("dwc:modified", tryVerbatimResult.getResult());
+							result.addComment("Unabmiguous interpretation of dcterms:modified [" + modified + "] as ["+ extractResponse.getResult() +"].");
+							result.setResultState(ResultState.AMENDED);
+							result.setValue(new AmendmentValue(correctedValues));
+						} else { 
+							// per specification, internal prerequisites not met only if empty, failure result is NOT_AMENDED.
+							result.setResultState(ResultState.NOT_AMENDED);
+							result.addComment("Unable to extract a date from " + modified);
+						} 
+					} 
+				}
+			}
+		}		
+
+		return result;
+	}
+    
 }

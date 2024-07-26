@@ -406,4 +406,25 @@ public class DwCOtherDateDQTestDefinitions {
 		
 	}
 
+	/**
+	 * Test method for {@link org.filteredpush.qc.date.DwCOtherDateDQ#validationModifiedNotempty(java.lang.String)}.
+	 */
+	@Test
+	public void testValidationModifiedNotempty() {
+		String modified = "foo";
+		DQResponse<ComplianceValue> result = DwCOtherDateDQ.validationModifiedNotempty(modified);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+		assertNotNull(result.getComment());
+		
+		modified = "";
+		result = DwCOtherDateDQ.validationModifiedNotempty(modified);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
+		assertNotNull(result.getComment());
+		
+	}
+	
 }
