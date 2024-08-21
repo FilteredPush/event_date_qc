@@ -211,6 +211,13 @@ public class DwCOtherDateDQTestDefinitions {
         // is a valid ISO 8601-1 date and dwc:dateIdentified overlaps 
         // or is later than the dwc:eventDate; otherwise NOT_COMPLIANT 
 		
+		dateIdentified = "1963-03-08T14:07-0600"; 
+		eventDate = "1962-11-01T10:00-0600";
+		result = DwCOtherDateDQDefaults.validationDateidentifiedInrange(dateIdentified, eventDate);
+		logger.debug(result.getComment());
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());		
+		
 		dateIdentified = "1950-05-06"; 
 		eventDate = ""; 
 		earlyestValidDate = "1900-01-01";
