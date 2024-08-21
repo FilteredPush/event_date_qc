@@ -117,7 +117,7 @@ public class DwCOtherDateDQ {
 	public static DQResponse<ComplianceValue> validationDateidentifiedInrange(
 		@ActedUpon("dwc:dateIdentified") String dateIdentified,
 		@Consulted("dwc:eventDate") String eventDate, 
-		@Parameter(name="bdq:earliestVaildDate") String earliestValidDate,
+		@Parameter(name="bdq:earliestValidDate") String earliestValidDate,
 		@Parameter(name="bdq:latestValidDate") String latestValidDate,
 		@Parameter(name="bdq:includeEventDate") String includeEventDate
 	) {
