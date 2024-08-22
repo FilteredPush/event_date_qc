@@ -145,7 +145,7 @@ public class DwCOtherDateDQ {
 		if (DateUtils.isEmpty(earliestValidDate)) { 
 			earliestValidDate = "1753-01-01";
 		}
-		if (DateUtils.isEmpty(earliestValidDate)) { 
+		if (DateUtils.isEmpty(latestValidDate)) { 
 			latestValidDate  = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
 		}
 		if (DateUtils.isEmpty(includeEventDate)) { 
