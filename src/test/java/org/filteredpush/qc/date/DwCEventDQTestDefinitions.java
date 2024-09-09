@@ -933,6 +933,15 @@ public class DwCEventDQTestDefinitions {
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
 		assertFalse(DateUtils.isEmpty(result.getComment()));
 		
+		// leap day in a non-leap year
+		eventDate="";
+		year="1981";
+		month="02";
+		day="29";
+		result = DwCEventDQ.amendmentEventDateFromYearMonthDay(eventDate, year, month, day);
+		assertEquals(ResultState.NOT_AMENDED.getLabel(), result.getResultState().getLabel());
+		assertFalse(DateUtils.isEmpty(result.getComment()));
+		
 		eventDate="";
 		year="1880";
 		month="32";
