@@ -14,3 +14,5 @@ buildNumber.properties
 .idea
 *.iml
 /bin/
+darwin_cloud.txt
+dq-report.ttl
