@@ -16,3 +16,5 @@ buildNumber.properties
 /bin/
 darwin_cloud.txt
 dq-report.ttl
+src/main/java/org/filteredpush/qc/date/DwCEventDQ_stubs.java
+src/main/java/org/filteredpush/qc/date/DwCOtherDateDQ_stubs.java
