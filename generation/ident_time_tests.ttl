@@ -1,4 +1,15 @@
 @prefix rdfbeans: <http://viceversatech.com/rdfbeans/2.0/> .
+@prefix dwciri: <http://rs.tdwg.org/dwc/iri/> .
+@prefix bdqcore: <https://rs.tdwg.org/bdqcore/terms> .
+@prefix dwc: <http://rs.tdwg.org/dwc/terms/> .
+@prefix bdqenh: <https://rs.tdwg.org/bdqenh/terms/> .
+@prefix bdqcrit: <https://rs.tdwg.org/bdqcrit/terms/> .
+@prefix dwcloud: <http://datakurator.org/none/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix bdqdim: <https://rs.tdwg.org/bdqdim/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix bdq: <https://rs.tdwg.org/bdq/terms/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sesame: <http://www.openrdf.org/schema/sesame#> .
@@ -6,182 +17,189 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix fn: <http://www.w3.org/2005/xpath-functions#> .
 
-<http://rs.tdwg.org/bdq/ffdq/ActedUpon> rdfbeans:bindingClass "org.datakurator.ffdq.model.ActedUpon" .
+<bdqdim:Conformance> a <https://rs.tdwg.org/bdqffdq/terms/DataQualityDimension> ;
+	rdfs:label "Conformance" .
 
-<http://rs.tdwg.org/bdq/ffdq/AmendmentPolicy> rdfbeans:bindingClass "org.datakurator.ffdq.model.needs.AmendmentPolicy" .
+<bdqenh:Standardized> a <http://rs.tdwg.org/bdqffdq/terms/Enhancement> ;
+	rdfs:label "Standardized" .
 
-<http://rs.tdwg.org/bdq/ffdq/ContextualizedEnhancement> rdfbeans:bindingClass "org.datakurator.ffdq.model.context.ContextualizedEnhancement" .
-
-<http://rs.tdwg.org/bdq/ffdq/Enhancement> rdfbeans:bindingClass "org.datakurator.ffdq.model.Enhancement" .
-
-<http://rs.tdwg.org/bdq/ffdq/ResourceType> rdfbeans:bindingClass "org.datakurator.ffdq.model.ResourceType" .
-
-<http://rs.tdwg.org/bdq/ffdq/UseCase> rdfbeans:bindingClass "org.datakurator.ffdq.model.needs.UseCase" .
-
-<https://rs.tdwg.org/bdq/terms/Spatial-Temporal Patterns> a <http://rs.tdwg.org/bdq/ffdq/UseCase> ;
-	rdfs:label "bdq:Spatial-Temporal Patterns" .
-
-<rt:SingleRecord> a <http://rs.tdwg.org/bdq/ffdq/ResourceType> ;
+<bdqffdq:SingleRecord> a <https://rs.tdwg.org/bdqffdq/terms/ResourceType> ;
 	rdfs:label "SingleRecord" .
 
-<urn:uuid:4fd7a9bf-e8ec-4d17-b831-c3cee0b46c8c> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:dada2b93-59fa-4e77-bf46-fc5ee2c17f0b> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasUseCase> <https://rs.tdwg.org/bdq/terms/Spatial-Temporal Patterns> ;
-	a <http://rs.tdwg.org/bdq/ffdq/AmendmentPolicy> ;
-	rdfs:label "AmendmentPolicy: Propose amendment to the value of dwc:dateIdentified to a valid ISO date.Amedment for SingleRecord in UseCase bdq:Spatial-Temporal Patterns" .
+<https://rs.tdwg.org/bdqcore/terms/39bb2280-1215-447b-9221-fd13bc990641-2024-09-16> dcterms:bibliographicCitation "ISO (2019) ISO 8601-1:2019(en) Date and time — Representations for information interchange — Part 1: Basic rules. https://www.iso.org/obp/ui/; Wikipedia (2020) ISO 8601. https://en.wikipedia.org/wiki/ISO_8601; Library of Congress (2019) Extended Date/Time Format (EDTF). https://www.loc.gov/standards/datetime/" ;
+	dcterms:isVersionOf <https://rs.tdwg.org/bdqcore/terms/39bb2280-1215-447b-9221-fd13bc990641> ;
+	dcterms:issued "2024-09-16" ;
+	a <https://rs.tdwg.org/bdqffdq/terms/Amendment> ;
+	rdfs:comment "Proposes an amendment to the value of dwc:dateIdentified to a valid ISO date." ;
+	rdfs:label "AMENDMENT_DATEIDENTIFIED_STANDARDIZED" ;
+	skos:historyNote "https://github.com/tdwg/bdq/issues/26" ;
+	skos:note "We reference Wikipedia for the ISO standard because the standard documents are not free." ;
+	skos:prefLabel "Amendment dwc:dateIdentified Standard for SingleRecord" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasActedUponInformationElement> <urn:uuid:e4f1fc86-c84d-4e92-9cf2-5250f243b371> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasDataQualityDimension> <bdqdim:Conformance> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasEnhancement> <bdqenh:Standardized> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasResourceType> <bdqffdq:SingleRecord> .
 
-<urn:uuid:608b50a0-fc80-40d7-bfab-b036041d24c1> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/dateIdentified> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
-	rdfs:label "Information Element ActedUpon dwc:dateIdentified" .
+<urn:uuid:e4f1fc86-c84d-4e92-9cf2-5250f243b371> a <https://rs.tdwg.org/bdqffdq/terms/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:dateIdentified" ;
+	<https://rs.tdwg.org/bdqffdq/terms/composedOf> dwc:dateIdentified ;
+	<skos:prefLabel> "Information Element ActedUpon dwc:dateIdentified" .
 
-<urn:uuid:713824b0-453e-4dc6-8ffc-a672f3ef74df> a <http://rs.tdwg.org/bdq/ffdq/Enhancement> ;
-	rdfs:label "Conformance: standardized" .
+<urn:uuid:0836e914-75d8-4cda-a39f-f21a08382732> a <https://rs.tdwg.org/bdqffdq/terms/AmendmentMethod> ;
+	rdfs:label "AmendmentMethod: AMENDMENT_DATEIDENTIFIED_STANDARDIZED with Specification Specification for: AMENDMENT_DATEIDENTIFIED_STANDARDIZED" ;
+	skos:historyNote "Source: Kurator" ;
+	skos:prefLabel "AmendmentMethod: AMENDMENT_DATEIDENTIFIED_STANDARDIZED with Specification Specification for: AMENDMENT_DATEIDENTIFIED_STANDARDIZED" ;
+	<https://rs.tdwg.org/bdqffdq/terms/forAmendment> <https://rs.tdwg.org/bdqcore/terms/39bb2280-1215-447b-9221-fd13bc990641-2024-09-16> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasSpecification> <urn:uuid:16e40618-e9bd-479a-b1e8-8aee3467109f> .
 
-<urn:uuid:dada2b93-59fa-4e77-bf46-fc5ee2c17f0b> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:608b50a0-fc80-40d7-bfab-b036041d24c1> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasEnhancement> <urn:uuid:713824b0-453e-4dc6-8ffc-a672f3ef74df> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedEnhancement> ;
-	rdfs:comment "Propose amendment to the value of dwc:dateIdentified to a valid ISO date." ;
-	rdfs:label "Propose amendment to the value of dwc:dateIdentified to a valid ISO date.Amedment for SingleRecord" .
+<urn:uuid:16e40618-e9bd-479a-b1e8-8aee3467109f> a <https://rs.tdwg.org/bdqffdq/terms/Specification> ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is bdq:Empty; AMENDED if the value of dwc:dateIdentified is not a properly formatted ISO 8601 date but is unambiguous and altered to be a valid ISO 8601 date; otherwise NOT_AMENDED." ;
+	rdfs:label "Specification for: AMENDMENT_DATEIDENTIFIED_STANDARDIZED" ;
+	skos:example "dwc:dateIdentified=\"2021-28-10\": Response.status=AMENDED, Response.result=dwc:dateIdentified=\"2021-10-28\", Response.comment=\"dwc:dateIdentified assuming dwc:year, dwc:day and dwc:month\"" , "dwc:dateIdentified=\"21-10-28\": Response.status=NOT_AMENDED, Response.result=, Response.comment=\"dwc:dateIdentified contains ambiguous values. It could be dd-mm-yy or yy-mm-dd\"" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasAuthoritiesDefaults> "" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasExpectedResponse> "INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is bdq:Empty; AMENDED if the value of dwc:dateIdentified is not a properly formatted ISO 8601 date but is unambiguous and altered to be a valid ISO 8601 date; otherwise NOT_AMENDED." .
 
-<https://rs.tdwg.org/bdq/terms/Record-Management> a <http://rs.tdwg.org/bdq/ffdq/UseCase> ;
-	rdfs:label "bdq:Record-Management" .
+<bdqcrit:Standard> a <https://rs.tdwg.org/bdqffdq/terms/Criterion> ;
+	rdfs:label "Standard" .
 
-<urn:uuid:44970ef6-f730-4b06-871e-5a862ea415a3> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:dada2b93-59fa-4e77-bf46-fc5ee2c17f0b> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
-	a <http://rs.tdwg.org/bdq/ffdq/AmendmentPolicy> ;
-	rdfs:label "AmendmentPolicy: Propose amendment to the value of dwc:dateIdentified to a valid ISO date.Amedment for SingleRecord in UseCase bdq:Record-Management" .
+<https://rs.tdwg.org/bdqcore/terms/66269bdd-9271-4e76-b25c-7ab81eebe1d8-2024-09-16> dcterms:bibliographicCitation "ISO (2019) ISO 8601-1:2019(en) Date and time — Representations for information interchange — Part 1: Basic rules. https://www.iso.org/obp/ui/; Wikipedia (2020) ISO 8601. https://en.wikipedia.org/wiki/ISO_8601; Library of Congress (2019) Extended Date/Time Format (EDTF). https://www.loc.gov/standards/datetime/" ;
+	dcterms:isVersionOf <https://rs.tdwg.org/bdqcore/terms/66269bdd-9271-4e76-b25c-7ab81eebe1d8> ;
+	dcterms:issued "2024-09-16" ;
+	a <https://rs.tdwg.org/bdqffdq/terms/Validation> ;
+	rdfs:comment "Is the value of dwc:dateIdentified a valid ISO date?" ;
+	rdfs:label "VALIDATION_DATEIDENTIFIED_STANDARD" ;
+	skos:historyNote "https://api.github.com/repos/tdwg/bdq/issues/69" ;
+	skos:note "" ;
+	skos:prefLabel "Validation dwc:dateIdentified Standard for SingleRecord" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasActedUponInformationElement> <urn:uuid:e4f1fc86-c84d-4e92-9cf2-5250f243b371> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasCriterion> <bdqcrit:Standard> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasDataQualityDimension> <bdqdim:Conformance> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasResourceType> <bdqffdq:SingleRecord> .
 
-<https://rs.tdwg.org/bdq/terms/Taxon-Management> a <http://rs.tdwg.org/bdq/ffdq/UseCase> ;
+<urn:uuid:4c6a5522-ae8c-42d3-a396-8fc3aee49ef9> a <https://rs.tdwg.org/bdqffdq/terms/ValidationMethod> ;
+	rdfs:label "ValidationMethod: VALIDATION_DATEIDENTIFIED_STANDARD with Specification for: VALIDATION_DATEIDENTIFIED_STANDARD" ;
+	skos:prefLabel "ValidationMethod: VALIDATION_DATEIDENTIFIED_STANDARD with Specification for: VALIDATION_DATEIDENTIFIED_STANDARD" ;
+	<https://rs.tdwg.org/bdqffdq/terms/forValidation> <https://rs.tdwg.org/bdqcore/terms/66269bdd-9271-4e76-b25c-7ab81eebe1d8-2024-09-16> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasSpecification> <urn:uuid:89f8b2ea-fc35-4941-929a-0e32cfbeb1a6> .
+
+<urn:uuid:89f8b2ea-fc35-4941-929a-0e32cfbeb1a6> a <https://rs.tdwg.org/bdqffdq/terms/Specification> ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is bdq:Empty; COMPLIANT if the value of dwc:dateIdentified contains a valid ISO 8601 date; otherwise NOT_COMPLIANT" ;
+	rdfs:label "Specification for: VALIDATION_DATEIDENTIFIED_STANDARD" ;
+	skos:example "dwc:dateIdentified=\"1963-03-08T14:07\": Response.status=RUN_HAS_RESULT, Response.result=COMPLIANT, Response.comment=\"dwc:dateIdentified is a valid ISO 8601-1:2019 date\"" , "dwc:dateIdentified=\"1963-03-08X14:07-0600\": Response.status=RUN_HAS_RESULT, Response.result=NOT_COMPLIANT, Response.comment=\"dwc:dateIdentified is not a valid ISO 8601-1:2019 date\"" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasAuthoritiesDefaults> "" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasExpectedResponse> "INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is bdq:Empty; COMPLIANT if the value of dwc:dateIdentified contains a valid ISO 8601 date; otherwise NOT_COMPLIANT" .
+
+<bdqcrit:InRange> a <https://rs.tdwg.org/bdqffdq/terms/Criterion> ;
+	rdfs:label "InRange" .
+
+<bdqdim:Likeliness> a <https://rs.tdwg.org/bdqffdq/terms/DataQualityDimension> ;
+	rdfs:label "Likeliness" .
+
+<https://rs.tdwg.org/bdqcore/terms/dc8aae4b-134f-4d75-8a71-c4186239178e-2024-10-14> dcterms:bibliographicCitation "ISO (2019) ISO 8601-1:2019(en) Date and time — Representations for information interchange — Part 1: Basic rules. https://www.iso.org/obp/ui/; Wikipedia (2020) ISO 8601. https://en.wikipedia.org/wiki/ISO_8601; Library of Congress (2019) Extended Date/Time Format (EDTF). https://www.loc.gov/standards/datetime/" ;
+	dcterms:isVersionOf <https://rs.tdwg.org/bdqcore/terms/dc8aae4b-134f-4d75-8a71-c4186239178e> ;
+	dcterms:issued "2024-10-14" ;
+	a <https://rs.tdwg.org/bdqffdq/terms/Validation> ;
+	rdfs:comment "Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate?" ;
+	rdfs:label "VALIDATION_DATEIDENTIFIED_INRANGE" ;
+	skos:historyNote "https://api.github.com/repos/tdwg/bdq/issues/76" ;
+	skos:note "There may be valid identifications prior to Linnaeus, but this test will flag these under the default value of bdq:earliestValidDate, as for most biodiversity data, pre-linnaean identification dates are likely to be errors. If a parameter is not set, then the default is 1753-01-01. This test will, by design, flag as problematic cases (such as LTER plots and marine mammal sightings) where a known individual organism is identified by a specialist and then subsequently observed without new taxonomic identifications being made." ;
+	skos:prefLabel "Validation dwc:dateIdentified In Range for SingleRecord" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasActedUponInformationElement> <urn:uuid:e4f1fc86-c84d-4e92-9cf2-5250f243b371> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasConsultedInformationElement> <urn:uuid:73513536-e916-4290-800a-c2daf8932e28> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasCriterion> <bdqcrit:InRange> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasDataQualityDimension> <bdqdim:Likeliness> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasResourceType> <bdqffdq:SingleRecord> .
+
+<urn:uuid:73513536-e916-4290-800a-c2daf8932e28> a <https://rs.tdwg.org/bdqffdq/terms/Consulted> ;
+	rdfs:label "Information Element Consulted dwc:eventDate" ;
+	<https://rs.tdwg.org/bdqffdq/terms/composedOf> dwc:eventDate ;
+	<skos:prefLabel> "Information Element Consulted dwc:eventDate" .
+
+<bdq:earliestValidDate> a <https://rs.tdwg.org/bdqffdq/terms/Parameter> .
+
+<bdq:includeEventDate> a <https://rs.tdwg.org/bdqffdq/terms/Parameter> .
+
+<bdq:latestValidDate> a <https://rs.tdwg.org/bdqffdq/terms/Parameter> .
+
+<urn:uuid:035b2695-f056-40d0-ab39-e216bd0c7754> a <https://rs.tdwg.org/bdqffdq/terms/Argument> ;
+	rdfs:label "Default value for bdq:latestValidDate:\"{current day}\"" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasArgumentValue> "{current day}" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasParameter> <bdq:latestValidDate> .
+
+<urn:uuid:4c5cc6c1-69bc-4d88-825f-5bba97936290> a <https://rs.tdwg.org/bdqffdq/terms/Argument> ;
+	rdfs:label "Default value for bdq:earliestValidDate:\"1753-01-01\"" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasArgumentValue> "1753-01-01" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasParameter> <bdq:earliestValidDate> .
+
+<urn:uuid:67ddf706-c8ee-4cf2-a9d0-d161fc6b7d69> a <https://rs.tdwg.org/bdqffdq/terms/ValidationMethod> ;
+	rdfs:label "ValidationMethod: VALIDATION_DATEIDENTIFIED_INRANGE with Specification for: VALIDATION_DATEIDENTIFIED_INRANGE" ;
+	skos:historyNote "Source: GBIF, ALA" ;
+	skos:prefLabel "ValidationMethod: VALIDATION_DATEIDENTIFIED_INRANGE with Specification for: VALIDATION_DATEIDENTIFIED_INRANGE" ;
+	<https://rs.tdwg.org/bdqffdq/terms/forValidation> <https://rs.tdwg.org/bdqcore/terms/dc8aae4b-134f-4d75-8a71-c4186239178e-2024-10-14> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasSpecification> <urn:uuid:a25786df-a624-4ff2-8962-6b23e8b07b0b> .
+
+<urn:uuid:a25786df-a624-4ff2-8962-6b23e8b07b0b> a <https://rs.tdwg.org/bdqffdq/terms/Specification> ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if (1) dwc:dateIdentified is bdq:Empty, or (2) dwc:dateIdentified contains an invalid value according to ISO 8601, or (3) bdq:includeEventDate=true and dwc:eventDate is not a valid ISO 8601 date; COMPLIANT if the value of dwc:dateIdentified is between bdq:earliestValidDate and bdq:latestValidDate inclusive and either (1) dwc:eventDate is bdq:Empty or bdq:includeEventDate=false, or (2) if dwc:eventDate is a valid ISO 8601 date and dwc:dateIdentified overlaps or is later than the dwc:eventDate; otherwise NOT_COMPLIANT ,bdq:earliestValidDate default = \"1753-01-01\",bdq:latestValidDate default = \"{current day}\",bdq:includeEventDate default = \"true\"" ;
+	rdfs:label "Specification for: VALIDATION_DATEIDENTIFIED_INRANGE" ;
+	skos:example "dwc:dateIdentified=\"1963-03-08T14:07-0600\", dwc:eventDate=\"1962-11-01T10:00-0600\": Response.status=RUN_HAS_RESULT, Response.result=COMPLIANT, Response.comment=\"dwc:dateIdentified is in range\"" , "dwc:dateIdentified=\"1963-03-08T14:07-0600\", dwc:eventDate=\"1964-11-01T10:00-0600\": Response.status=RUN_HAS_RESULT, Response.result=NOT_COMPLIANT, Response.comment=\"dwc:dateIdentified before dwc:eventDate\"" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasArgument> <urn:uuid:035b2695-f056-40d0-ab39-e216bd0c7754> , <urn:uuid:4c5cc6c1-69bc-4d88-825f-5bba97936290> , <urn:uuid:af751691-c074-4968-8abe-f251b1dd95e7> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasAuthoritiesDefaults> ",bdq:earliestValidDate default = \"1753-01-01\",bdq:latestValidDate default = \"{current day}\",bdq:includeEventDate default = \"true\"" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasExpectedResponse> "INTERNAL_PREREQUISITES_NOT_MET if (1) dwc:dateIdentified is bdq:Empty, or (2) dwc:dateIdentified contains an invalid value according to ISO 8601, or (3) bdq:includeEventDate=true and dwc:eventDate is not a valid ISO 8601 date; COMPLIANT if the value of dwc:dateIdentified is between bdq:earliestValidDate and bdq:latestValidDate inclusive and either (1) dwc:eventDate is bdq:Empty or bdq:includeEventDate=false, or (2) if dwc:eventDate is a valid ISO 8601 date and dwc:dateIdentified overlaps or is later than the dwc:eventDate; otherwise NOT_COMPLIANT" .
+
+<urn:uuid:af751691-c074-4968-8abe-f251b1dd95e7> a <https://rs.tdwg.org/bdqffdq/terms/Argument> ;
+	rdfs:label "Default value for bdq:includeEventDate:\"true\"" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasArgumentValue> "true" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasParameter> <bdq:includeEventDate> .
+
+<bdqcrit:Consistent> a <https://rs.tdwg.org/bdqffdq/terms/Criterion> ;
+	rdfs:label "Consistent" .
+
+<bdqdim:Likelihood> a <https://rs.tdwg.org/bdqffdq/terms/DataQualityDimension> ;
+	rdfs:label "Likelihood" .
+
+<https://rs.tdwg.org/bdqcore/terms/391ca46d-3842-4a18-970c-0434cbc17f07-2024-09-16> dcterms:bibliographicCitation "" ;
+	dcterms:isVersionOf <https://rs.tdwg.org/bdqcore/terms/391ca46d-3842-4a18-970c-0434cbc17f07> ;
+	dcterms:issued "2024-09-16" ;
+	a <https://rs.tdwg.org/bdqffdq/terms/Validation> ;
+	rdfs:comment "Is the date of identification equal to, or later than the dwc:eventDate?" ;
+	rdfs:label "VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE" ;
+	skos:historyNote "https://api.github.com/repos/tdwg/bdq/issues/92" ;
+	skos:note "There might be identification dates that are legitimately before dwc:eventDate.  This test will, by design, flag as problematic cases (such as LTER plots, bird banding data, and marine mammal sightings) where a known individual organism is identified by a specialist and then subsequently observed (or collected) without new taxonomic identifications being made." ;
+	skos:prefLabel "Missing prefLabel for SingleRecord" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasActedUponInformationElement> <urn:uuid:0df70740-4ef5-4dbb-b434-d87427902a5b> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasCriterion> <bdqcrit:Consistent> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasDataQualityDimension> <bdqdim:Likelihood> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasResourceType> <bdqffdq:SingleRecord> .
+
+<urn:uuid:0df70740-4ef5-4dbb-b434-d87427902a5b> a <https://rs.tdwg.org/bdqffdq/terms/ActedUpon> ;
+	rdfs:label "Information Element ActedUpon dwc:eventDate, dwc:dateIdentified" ;
+	<https://rs.tdwg.org/bdqffdq/terms/composedOf> dwc:dateIdentified , dwc:eventDate ;
+	<skos:prefLabel> "Information Element ActedUpon dwc:eventDate, dwc:dateIdentified" .
+
+<urn:uuid:e405a2d1-aba1-46de-b5e6-74ce36546f3b> a <https://rs.tdwg.org/bdqffdq/terms/ValidationMethod> ;
+	rdfs:label "ValidationMethod: VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE with Specification for: VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE" ;
+	skos:historyNote "Source: ALA" ;
+	skos:prefLabel "ValidationMethod: VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE with Specification for: VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE" ;
+	<https://rs.tdwg.org/bdqffdq/terms/forValidation> <https://rs.tdwg.org/bdqcore/terms/391ca46d-3842-4a18-970c-0434cbc17f07-2024-09-16> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasSpecification> <urn:uuid:ed9b418a-d4f9-441d-8f4a-778fb1c277da> .
+
+<urn:uuid:ed9b418a-d4f9-441d-8f4a-778fb1c277da> a <https://rs.tdwg.org/bdqffdq/terms/Specification> ;
+	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if either dwc:dateIdentified or dwc:eventDate are empty or are not interpretable as ISO 8601 dates; COMPLIANT if dwc:dateIdentified is equal to or is entirely later than dwc:eventDate; otherwise NOT_COMPLIANT" ;
+	rdfs:label "Specification for: VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE" ;
+	skos:example "dwc:dateIdentified=\"2001-01\", dwc:eventDate=\"2010-02-14\": Response.status=RUN_HAS_RESULT, Response.result=NOT_COMPLIANT, Response.comment=\"dwc:dateIdentified is before dwc:eventDate\"" , "dwc:dateIdentified=\"2021-01\", dwc:eventDate=\"2010-02-14\": Response.status=RUN_HAS_RESULT, Response.result=COMPLIANT, Response.comment=\"dwc:dateIdentified is after dwc:eventDate\"" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasAuthoritiesDefaults> "" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasExpectedResponse> "INTERNAL_PREREQUISITES_NOT_MET if either dwc:dateIdentified or dwc:eventDate are empty or are not interpretable as ISO 8601 dates; COMPLIANT if dwc:dateIdentified is equal to or is entirely later than dwc:eventDate; otherwise NOT_COMPLIANT" .
+
+bdq:Taxon-Management a <https://rs.tdwg.org/bdqffdq/terms/UseCase> ;
 	rdfs:label "bdq:Taxon-Management" .
 
-<urn:uuid:8e4e346e-cbd0-4cda-bef5-ff57ce8ff4c2> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:dada2b93-59fa-4e77-bf46-fc5ee2c17f0b> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasUseCase> <https://rs.tdwg.org/bdq/terms/Taxon-Management> ;
-	a <http://rs.tdwg.org/bdq/ffdq/AmendmentPolicy> ;
-	rdfs:label "AmendmentPolicy: Propose amendment to the value of dwc:dateIdentified to a valid ISO date.Amedment for SingleRecord in UseCase bdq:Taxon-Management" .
+<urn:uuid:2622f308-93b9-4b80-bf3e-14bc094eefca> a <https://rs.tdwg.org/bdqffdq/terms/ValidationPolicy> ;
+	rdfs:label "ValidationPolicy: (2) validations  in UseCase bdq:Taxon-Management" ;
+	skos:prefLabel "ValidationPolicy: (2) validations  in UseCase bdq:Taxon-Management" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasUseCase> bdq:Taxon-Management ;
+	<https://rs.tdwg.org/bdqffdq/terms/includesInPolicy> <https://rs.tdwg.org/bdqcore/terms/66269bdd-9271-4e76-b25c-7ab81eebe1d8-2024-09-16> , <https://rs.tdwg.org/bdqcore/terms/dc8aae4b-134f-4d75-8a71-c4186239178e-2024-10-14> .
 
-<http://rs.tdwg.org/bdq/ffdq/AmendmentMethod> rdfbeans:bindingClass "org.datakurator.ffdq.model.solutions.AmendmentMethod" .
-
-<http://rs.tdwg.org/bdq/ffdq/Specification> rdfbeans:bindingClass "org.datakurator.ffdq.model.Specification" .
-
-<urn:uuid:39bb2280-1215-447b-9221-fd13bc990641> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is EMPTY; AMENDED if the value of dwc:dateIdentified was not a properly formatted ISO 8601-1 date but was unambiguous and was altered to be a valid ISO 8601-1 date; otherwise NOT_AMENDED. bdq:sourceAuthority = \"ISO 8601-1:2019\" {[https://www.iso.org/iso-8601-date-and-time-format.html]}" ;
-	rdfs:label "AMENDMENT_DATEIDENTIFIED_STANDARDIZED" .
-
-<urn:uuid:6f296d88-1ac3-4219-bdce-0d3c19b1fc2c> <http://rs.tdwg.org/bdq/ffdq/enhancementInContext> <urn:uuid:dada2b93-59fa-4e77-bf46-fc5ee2c17f0b> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:39bb2280-1215-447b-9221-fd13bc990641> ;
-	a <http://rs.tdwg.org/bdq/ffdq/AmendmentMethod> ;
-	rdfs:label "AmendmentMethod: Propose amendment to the value of dwc:dateIdentified to a valid ISO date.Amedment for SingleRecord with Specification AMENDMENT_DATEIDENTIFIED_STANDARDIZED" .
-
-<http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> rdfbeans:bindingClass "org.datakurator.ffdq.model.context.ContextualizedCriterion" .
-
-<http://rs.tdwg.org/bdq/ffdq/Criterion> rdfbeans:bindingClass "org.datakurator.ffdq.model.Criterion" .
-
-<http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> rdfbeans:bindingClass "org.datakurator.ffdq.model.needs.ValidationPolicy" .
-
-<urn:uuid:5e80bd73-4b29-4cff-a581-8300c4f056b9> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
-	rdfs:label "Conformance: standard" .
-
-<urn:uuid:ce85945d-8525-4c01-9638-01bb7530e0e0> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/dateIdentified> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
-	rdfs:label "Information Element ActedUpon dwc:dateIdentified" .
-
-<urn:uuid:cf2f2bd2-b304-40f3-9585-6df977aa90dc> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:ce85945d-8525-4c01-9638-01bb7530e0e0> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:5e80bd73-4b29-4cff-a581-8300c4f056b9> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
-	rdfs:comment "Is the value of dwc:dateIdentified a valid ISO date?" ;
-	rdfs:label "Is the value of dwc:dateIdentified a valid ISO date? Validation for SingleRecord" .
-
-<urn:uuid:e48fa092-4469-40fb-b59e-d191c585ee11> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Spatial-Temporal Patterns> ;
-	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:cf2f2bd2-b304-40f3-9585-6df977aa90dc> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
-	rdfs:label "ValidationPolicy: Is the value of dwc:dateIdentified a valid ISO date? Validation for SingleRecord in UseCase bdq:Spatial-Temporal Patterns" .
-
-<urn:uuid:12196ba8-355b-4ad9-9604-0398a8dc2cdb> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
-	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:cf2f2bd2-b304-40f3-9585-6df977aa90dc> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
-	rdfs:label "ValidationPolicy: Is the value of dwc:dateIdentified a valid ISO date? Validation for SingleRecord in UseCase bdq:Record-Management" .
-
-<urn:uuid:541c58f0-8bac-43a5-9008-b4f8b0ca293a> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Taxon-Management> ;
-	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:cf2f2bd2-b304-40f3-9585-6df977aa90dc> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
-	rdfs:label "ValidationPolicy: Is the value of dwc:dateIdentified a valid ISO date? Validation for SingleRecord in UseCase bdq:Taxon-Management" .
-
-<http://rs.tdwg.org/bdq/ffdq/ValidationMethod> rdfbeans:bindingClass "org.datakurator.ffdq.model.solutions.ValidationMethod" .
-
-<urn:uuid:66269bdd-9271-4e76-b25c-7ab81eebe1d8> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is EMPTY; COMPLIANT if the value of dwc:dateIdentified contains a valid ISO 8601-1 date; otherwise NOT_COMPLIANT " ;
-	rdfs:label "VALIDATION_DATEIDENTIFIED_STANDARD" .
-
-<urn:uuid:753775c2-57db-4de1-be33-9ad2abb9d9ab> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:cf2f2bd2-b304-40f3-9585-6df977aa90dc> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:66269bdd-9271-4e76-b25c-7ab81eebe1d8> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> ;
-	rdfs:label "ValidationMethod: Is the value of dwc:dateIdentified a valid ISO date? Validation for SingleRecord with Specification VALIDATION_DATEIDENTIFIED_STANDARD" .
-
-<http://rs.tdwg.org/bdq/ffdq/Consulted> rdfbeans:bindingClass "org.datakurator.ffdq.model.Consulted" .
-
-<urn:uuid:1c6cf16e-d133-4e6e-bb8e-8613838da834> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
-	rdfs:label "Likeliness: inrange" .
-
-<urn:uuid:201029a2-a69b-459d-b09d-eb9b7b98c0a2> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/eventDate> ;
-	a <http://rs.tdwg.org/bdq/ffdq/Consulted> ;
-	rdfs:label "Information Element Consulted dwc:eventDate" .
-
-<urn:uuid:31ad9115-a852-47f5-b84d-07fe6683fbf8> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/dateIdentified> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
-	rdfs:label "Information Element ActedUpon dwc:dateIdentified" .
-
-<urn:uuid:4cabfe23-92d1-4116-946f-31cde84388ef> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:31ad9115-a852-47f5-b84d-07fe6683fbf8> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasConsultedInformationElement> <urn:uuid:201029a2-a69b-459d-b09d-eb9b7b98c0a2> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:1c6cf16e-d133-4e6e-bb8e-8613838da834> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
-	rdfs:comment "Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate?" ;
-	rdfs:label "Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate? Validation for SingleRecord" .
-
-<urn:uuid:dd23fe27-d4c9-4cb7-8ff9-a73d08bb3948> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Spatial-Temporal Patterns> ;
-	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:4cabfe23-92d1-4116-946f-31cde84388ef> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
-	rdfs:label "ValidationPolicy: Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate? Validation for SingleRecord in UseCase bdq:Spatial-Temporal Patterns" .
-
-<urn:uuid:a9a50b1e-e9a8-48db-af26-9161873dec62> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Record-Management> ;
-	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:4cabfe23-92d1-4116-946f-31cde84388ef> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
-	rdfs:label "ValidationPolicy: Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate? Validation for SingleRecord in UseCase bdq:Record-Management" .
-
-<urn:uuid:b1d66cf2-ff8f-4b4c-bd18-d4c76462895b> <http://rs.tdwg.org/bdq/ffdq/coversUseCase> <https://rs.tdwg.org/bdq/terms/Taxon-Management> ;
-	<http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:4cabfe23-92d1-4116-946f-31cde84388ef> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationPolicy> ;
-	rdfs:label "ValidationPolicy: Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate? Validation for SingleRecord in UseCase bdq:Taxon-Management" .
-
-<urn:uuid:53d3bb8d-6274-4536-a9a0-7831ef97bae4> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:4cabfe23-92d1-4116-946f-31cde84388ef> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:dc8aae4b-134f-4d75-8a71-c4186239178e> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> ;
-	rdfs:label "ValidationMethod: Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate? Validation for SingleRecord with Specification VALIDATION_DATEIDENTIFIED_INRANGE" .
-
-<urn:uuid:dc8aae4b-134f-4d75-8a71-c4186239178e> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if (1) dwc:dateIdentified is EMPTY, or (2) dwc:dateIdentified contains an invalid value according to ISO 8601-1, or (3) bdq:includeEventDate=true and dwc:eventDate is not a valid ISO 8601-1 date; COMPLIANT if the value of dwc:dateIdentified is between bdq:earliestValidDate and bdq:latestValidDate inclusive and either (1) dwc:eventDate is EMPTY or bdq:includeEventDate=false, or (2) if dwc:eventDate is a valid ISO 8601-1 date and dwc:dateIdentified overlaps or is later than the dwc:eventDate; otherwise NOT_COMPLIANT bdq:sourceAuthority = \"ISO 8601-1:2019\" {[https://www.iso.org/iso-8601-date-and-time-format.html]},bdq:earliestValidDate default=\"1753-01-01\",bdq:latestValidDate default=[current day],bdq:includeEventDate default=true" ;
-	rdfs:label "VALIDATION_DATEIDENTIFIED_INRANGE" .
-
-<urn:uuid:391ca46d-3842-4a18-970c-0434cbc17f07> a <http://rs.tdwg.org/bdq/ffdq/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if either dwc:dateIdentified or dwc:eventDate are empty or are not interpretable as ISO 8601-1:2019 dates; COMPLIANT if dwc:dateIdentified is equal to or is entirely later than dwc:eventDate; otherwise NOT_COMPLIANT " ;
-	rdfs:label "VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE" .
-
-<urn:uuid:581bf46c-4be0-47c6-b4ff-abbc9e5311c7> <http://rs.tdwg.org/bdq/ffdq/criterionInContext> <urn:uuid:8f5a5508-b198-4590-8087-13388cb54676> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasSpecification> <urn:uuid:391ca46d-3842-4a18-970c-0434cbc17f07> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ValidationMethod> ;
-	rdfs:label "ValidationMethod: Is the date of identification equal to, or later than the dwc:eventDate? Validation for SingleRecord with Specification VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE" .
-
-<urn:uuid:627975a6-d9ec-4a6c-818c-22cc1c713933> <http://rs.tdwg.org/bdq/ffdq/composedOf> <http://rs.tdwg.org/dwc/terms/dateIdentified> , <http://rs.tdwg.org/dwc/terms/eventDate> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ActedUpon> ;
-	rdfs:label "Information Element ActedUpon dwc:eventDate, dwc:dateIdentified" .
-
-<urn:uuid:8f5a5508-b198-4590-8087-13388cb54676> <http://rs.tdwg.org/bdq/ffdq/hasActedUponInformationElement> <urn:uuid:627975a6-d9ec-4a6c-818c-22cc1c713933> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasCriterion> <urn:uuid:d0d7a00a-61c7-4a74-9ecb-4090ca68b60a> ;
-	<http://rs.tdwg.org/bdq/ffdq/hasResourceType> <rt:SingleRecord> ;
-	a <http://rs.tdwg.org/bdq/ffdq/ContextualizedCriterion> ;
-	rdfs:comment "Is the date of identification equal to, or later than the dwc:eventDate?" ;
-	rdfs:label "Is the date of identification equal to, or later than the dwc:eventDate? Validation for SingleRecord" .
-
-<urn:uuid:d0d7a00a-61c7-4a74-9ecb-4090ca68b60a> a <http://rs.tdwg.org/bdq/ffdq/Criterion> ;
-	rdfs:label "Likelihood: aftereventdate" .
+<urn:uuid:05b21497-a98f-4024-af0e-36d8de5cc317> a <https://rs.tdwg.org/bdqffdq/terms/AmendmentPolicy> ;
+	rdfs:label "AmendmentPolicy: (1) amendments  in UseCase bdq:Taxon-Management" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasUseCase> bdq:Taxon-Management ;
+	<https://rs.tdwg.org/bdqffdq/terms/includesInPolicy> <https://rs.tdwg.org/bdqcore/terms/39bb2280-1215-447b-9221-fd13bc990641-2024-09-16> .

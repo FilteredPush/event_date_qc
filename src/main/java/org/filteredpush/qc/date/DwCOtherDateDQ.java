@@ -732,4 +732,8 @@ public class DwCOtherDateDQ {
 		return result;
 	}
     
+// TODO: Implementation of AMENDMENT_DATEIDENTIFIED_STANDARDIZED is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/39bb2280-1215-447b-9221-fd13bc990641/2024-09-16 see line: 278
+// TODO: Implementation of VALIDATION_DATEIDENTIFIED_STANDARD is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/66269bdd-9271-4e76-b25c-7ab81eebe1d8/2024-09-16 see line: 61
+// TODO: Implementation of VALIDATION_DATEIDENTIFIED_INRANGE is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/dc8aae4b-134f-4d75-8a71-c4186239178e/2024-09-16 see line: 114
+// TODO: Implementation of VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/391ca46d-3842-4a18-970c-0434cbc17f07/2024-09-16 see line: 486
 }
