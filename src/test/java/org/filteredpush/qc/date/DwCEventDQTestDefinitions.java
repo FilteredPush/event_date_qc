@@ -673,21 +673,22 @@ public class DwCEventDQTestDefinitions {
         // bdq:earliestDate="1582"; bdq:latestDate=current year
 		
 		String year = "";
-		DQResponse<ComplianceValue> result = DwCEventDQ.validationYearInrange(year, null, null);
+		String upperBound = null;
+		DQResponse<ComplianceValue> result = DwCEventDQ.validationYearInrange(year, null, upperBound);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
 		assertNull(result.getValue());
 		assertFalse(DateUtils.isEmpty(result.getComment()));
 		
 		year = "foo";
-		result = DwCEventDQ.validationYearInrange(year, null, null);
+		result = DwCEventDQ.validationYearInrange(year, null, upperBound);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
 		assertNull(result.getValue());
 		assertFalse(DateUtils.isEmpty(result.getComment()));
 		
 		year = "1880";
-		result = DwCEventDQ.validationYearInrange(year, null, null);
+		result = DwCEventDQ.validationYearInrange(year, null, upperBound);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
@@ -695,35 +696,35 @@ public class DwCEventDQTestDefinitions {
 		assertFalse(DateUtils.isEmpty(result.getComment()));
 		
 		year = "1480";
-		result = DwCEventDQ.validationYearInrange(year, null, null);
+		result = DwCEventDQ.validationYearInrange(year, null, upperBound);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		assertFalse(DateUtils.isEmpty(result.getComment()));
 		
 		year = "1583";
-		result = DwCEventDQ.validationYearInrange(year, null, null);
+		result = DwCEventDQ.validationYearInrange(year, null, upperBound);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
 		assertFalse(DateUtils.isEmpty(result.getComment()));
 		
 		year = "1582";
-		result = DwCEventDQ.validationYearInrange(year, null, null);
+		result = DwCEventDQ.validationYearInrange(year, null, upperBound);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
 		assertFalse(DateUtils.isEmpty(result.getComment()));
 		
 		year = "1581";
-		result = DwCEventDQ.validationYearInrange(year, null, null);
+		result = DwCEventDQ.validationYearInrange(year, null, upperBound);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		assertFalse(DateUtils.isEmpty(result.getComment()));
 		
 		year = "1580";
-		result = DwCEventDQ.validationYearInrange(year, null, null);
+		result = DwCEventDQ.validationYearInrange(year, null, upperBound);
 		logger.debug(result.getComment());
 		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());

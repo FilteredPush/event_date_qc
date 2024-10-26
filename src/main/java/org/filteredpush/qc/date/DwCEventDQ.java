@@ -118,7 +118,7 @@ public class DwCEventDQ {
      */
     @Measure(label="MEASURE_EVENTDATE_DURATIONINSECONDS", description="What is the duration of dwc:eventDate in seconds?", dimension= Dimension.RESOLUTION)
     @Provides("56b6c695-adf1-418e-95d2-da04cad7be53")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/56b6c695-adf1-418e-95d2-da04cad7be53/2023-09-18")
+    @ProvidesVersion(value="https://rs.tdwg.org/bdqcore/terms/56b6c695-adf1-418e-95d2-da04cad7be53/2023-09-18")
     @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or if the value of dwc:eventDate is not a valid ISO 8601-1 date; otherwise RUN_HAS_RESULT with the result being the duration (sensu ISO 8601-1) expressed in the dwc:eventDate, in seconds. ")
     public static DQResponse<NumericalValue> measureEventdateDurationinseconds(@ActedUpon("dwc:eventDate") String eventDate) {
         DQResponse<NumericalValue> result = new DQResponse<NumericalValue>();
@@ -194,7 +194,7 @@ public class DwCEventDQ {
 	 */
     @Validation(label="VALIDATION_EVENTDATE_NOTEMPTY", description="Is there a value in dwc:eventDate?")
 	@Provides("f51e15a6-a67d-4729-9c28-3766299d2985")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/f51e15a6-a67d-4729-9c28-3766299d2985/2023-09-17")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/f51e15a6-a67d-4729-9c28-3766299d2985/2023-09-17")
     @Specification("COMPLIANT if dwc:eventDate is not EMPTY; otherwise NOT_COMPLIANT ")
 	public static DQResponse<ComplianceValue> validationEventdateNotEmpty(@ActedUpon("dwc:eventDate") String eventDate) {
 		DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
@@ -229,7 +229,7 @@ public class DwCEventDQ {
 	 */
     @Validation(label="VALIDATION_YEAR_NOTEMPTY", description="Is there a value in dwc:year?")
 	@Provides(value="c09ecbf9-34e3-4f3e-b74a-8796af15e59f")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/c09ecbf9-34e3-4f3e-b74a-8796af15e59f/2023-09-17")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/c09ecbf9-34e3-4f3e-b74a-8796af15e59f/2023-09-17")
     @Specification("COMPLIANT if dwc:year is not EMPTY; otherwise NOT_COMPLIANT ")
 	public static DQResponse<ComplianceValue> validationYearNotEmpty(@ActedUpon(value = "dwc:year") String year) {
 		DQResponse<ComplianceValue> result = new DQResponse<>();
@@ -332,7 +332,7 @@ public class DwCEventDQ {
      */
     @Amendment(label="AMENDMENT_EVENTDATE_FROM_VERBATIM", description="Propose amendment to the value of dwc:eventDate from the content of dwc:verbatimEventDate.")
     @Provides("6d0a0c10-5e4a-4759-b448-88932f399812")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/6d0a0c10-5e4a-4759-b448-88932f399812/2023-09-18")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/6d0a0c10-5e4a-4759-b448-88932f399812/2023-09-18")
     @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY or the value of dwc:verbatimEventDate is EMPTY or not unambiguously interpretable as an ISO 8601-1 date; FILLED_IN the value of dwc:eventDate if an unambiguous ISO 8601-1 date was interpreted from dwc:verbatimEventDate; otherwise NOT_AMENDED ")
     public static DQResponse<AmendmentValue> amendmentEventdateFromVerbatim(
     		@ActedUpon("dwc:eventDate") String eventDate, 
@@ -505,7 +505,7 @@ public class DwCEventDQ {
      */
     @Validation(label="VALIDATION_EVENTDATE_STANDARD", description="Is the value of dwc:eventDate a valid ISO date?")
     @Provides("4f2bf8fd-fc5c-493f-a44c-e7b16153c803")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/4f2bf8fd-fc5c-493f-a44c-e7b16153c803/2023-09-18")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/4f2bf8fd-fc5c-493f-a44c-e7b16153c803/2023-09-18")
     @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; COMPLIANT if the value of dwc:eventDate is a valid ISO 8601-1 date; otherwise NOT_COMPLIANT ")
     public static DQResponse<ComplianceValue> validationEventdateStandard(
     		@ActedUpon(value = "dwc:eventDate") String eventDate) {
@@ -556,7 +556,7 @@ public class DwCEventDQ {
      */
     @Amendment(label="AMENDMENT_EVENTDATE_STANDARDIZED", description="Propose amendment of the value of dwc:eventDate to a valid ISO date.")
     @Provides("718dfc3c-cb52-4fca-b8e2-0e722f375da7")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/718dfc3c-cb52-4fca-b8e2-0e722f375da7/2023-09-18")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/718dfc3c-cb52-4fca-b8e2-0e722f375da7/2023-09-18")
     @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY; AMENDED if the value of dwc:eventDate was not a properly formatted ISO 8601-1 date but was unambiguous, and was altered to be a valid ISO 8601-1 date; otherwise NOT_AMENDED ")
     public static DQResponse<AmendmentValue> amendmentEventdateStandardized(
     		@ActedUpon(value = "dwc:eventDate") String eventDate) {
@@ -636,7 +636,7 @@ public class DwCEventDQ {
      */
     @Validation(label="VALIDATION_DAY_STANDARD", description="Is the value of dwc:day an integer between 1 and 31 inclusive?")
     @Provides("47ff73ba-0028-4f79-9ce1-ee7008d66498")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/47ff73ba-0028-4f79-9ce1-ee7008d66498/2023-09-18")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/47ff73ba-0028-4f79-9ce1-ee7008d66498/2023-09-18")
     @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; COMPLIANT if the value of the field dwc:day is an integer between 1 and 31 inclusive; otherwise NOT_COMPLIANT. ")
     public static DQResponse<ComplianceValue> validationDayStandard(@ActedUpon("dwc:day") String day) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
@@ -687,7 +687,7 @@ public class DwCEventDQ {
      */
     @Validation(label="VALIDATION_MONTH_STANDARD", description="Is the value of dwc:month interpretable as an integer between 1 and 12 inclusive?")
     @Provides("01c6dafa-0886-4b7e-9881-2c3018c98bdc")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/01c6dafa-0886-4b7e-9881-2c3018c98bdc/2023-09-18")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/01c6dafa-0886-4b7e-9881-2c3018c98bdc/2023-09-18")
     @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:month is EMPTY; COMPLIANT if the value of dwc:month is interpretable as an integer between 1 and 12 inclusive; otherwise NOT_COMPLIANT ")
     public static DQResponse<ComplianceValue> validationMonthStandard(@ActedUpon("dwc:month") String month) {
     	DQResponse<ComplianceValue> result = new DQResponse<>();
@@ -825,7 +825,7 @@ public class DwCEventDQ {
      */
     @Validation(label="VALIDATION_DAY_INRANGE", description="Is the value of dwc:day interpretable as a valid integer between 1 and 28 inclusive or 29, 30 or 31 given the relative month and year?")
     @Provides("8d787cb5-73e2-4c39-9cd1-67c7361dc02e")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/8d787cb5-73e2-4c39-9cd1-67c7361dc02e/2023-09-18")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/8d787cb5-73e2-4c39-9cd1-67c7361dc02e/2023-09-18")
     @Specification("INTERNAL_PREREQUISITES_NOT_MET if (1) dwc:day is EMPTY, or (2) dwc:day is not interpretable as an integer, or (3) dwc:day is interpretable as an integer between 29 and 31 inclusive and dwc:month is not interpretable as an integer between 1 and 12, or (4) dwc:month is interpretable as the integer 2 and dwc:day is interpretable as the integer 29 and dwc:year is not interpretable as a valid ISO 8601-1 year; COMPLIANT if (1) the value of dwc:day is interpretable as an integer between 1 and 28 inclusive, or (2) dwc:day is interpretable as an integer between 29 and 30 and dwc:month is interpretable as an integer in the set (4,6,9,11), or (3) dwc:day is interpretable as an integer between 29 and 31 and dwc:month is interpretable as an integer in the set (1,3,5,7,8,10,12), or (4) dwc:day is interpretable as the integer 29 and dwc:month is interpretable as the integer 2 and dwc:year is interpretable as is a valid leap year (evenly divisible by 400 or (evenly divisible by 4 but not evenly divisible by 100)); otherwise NOT_COMPLIANT. ")
     public static DQResponse<ComplianceValue> validationDayInrange(
     		@ActedUpon("dwc:year") String year, 
@@ -1083,7 +1083,7 @@ public class DwCEventDQ {
      */
     @Validation(label="VALIDATION_STARTDAYOFYEAR_INRANGE", description="Is the value of dwc:startDayOfYear an integer between 1 and 365 inclusive, or 366 if a leap year?")
     @Provides("85803c7e-2a5a-42e1-b8d3-299a44cafc46")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/85803c7e-2a5a-42e1-b8d3-299a44cafc46/2023-09-18")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/85803c7e-2a5a-42e1-b8d3-299a44cafc46/2023-09-18")
     @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:startDayOfYear is EMPTY or if the value of dwc:startDayOfYear is equal to 366 and (dwc:eventDate is EMPTY or the value of dwc:eventDate cannot be interpreted to find single year or a start year in a range); COMPLIANT if the value of dwc:startDayOfYear is an integer between 1 and 365, inclusive, or if the value of dwc:startDayOfYear is 366 and the start year interpreted from dwc:eventDate is a leap year; otherwise NOT_COMPLIANT ")
     public static final DQResponse<ComplianceValue> validationStartdayofyearInrange(
     		@ActedUpon(value="dwc:startDayOfYear") String startDayOfYear, 
@@ -1185,7 +1185,7 @@ public class DwCEventDQ {
      */
     @Validation(label="VALIDATION_ENDDAYOFYEAR_INRANGE", description="Is the value of dwc:endDayOfYear an integer between 1 and 365 inclusive, or 366 if a leap year?")
     @Provides("9a39d88c-7eee-46df-b32a-c109f9f81fb8")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/9a39d88c-7eee-46df-b32a-c109f9f81fb8/2023-09-18")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/9a39d88c-7eee-46df-b32a-c109f9f81fb8/2023-09-18")
     @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:endDayOfYear is EMPTY or if the value of dwc:endDayOfYear is equal to 366 and (dwc:eventDate is EMPTY or the value of dwc:eventDate cannot be interpreted to find a single year or an end year in a range); COMPLIANT if the value of dwc:endDayOfYear is an integer between 1 and 365 inclusive, or if the value of dwc:endDayOfYear is 366 and the end year interpreted from dwc:eventDate is a leap year; otherwise NOT_COMPLIANT ")
     public static final DQResponse<ComplianceValue> validationEnddayofyearInrange(
     		@ActedUpon(value="dwc:endDayOfYear") String endDay, 
@@ -1293,7 +1293,7 @@ public class DwCEventDQ {
      */
     @Amendment(label="AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR", description="Propose amendment to the value of dwc:eventDate from values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear.")
     @Provides("eb0a44fa-241c-4d64-98df-ad4aa837307b")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/eb0a44fa-241c-4d64-98df-ad4aa837307b/2023-09-18")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/eb0a44fa-241c-4d64-98df-ad4aa837307b/2023-09-18")
     @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate was not EMPTY or any of dwc:year, dwc:startDayOfYear, or dwc:endDayOfYear were EMPTY or any of the values in dwc:year, dwc:startDayOfYear, or dwc:endDayOfYear were not independently interpretable; FILLED_IN the value of dwc:eventDate from values in dwc:year, dwc:startDayOfYear and dwc:endDayOfYear if the value of dwc:startDayOfYear is less than the value of dwc:endDayOfYear; otherwise NOT_AMENDED ")
     public static final DQResponse<AmendmentValue> amendmentEventdateFromYearstartdayofyearenddayofyear(
     		@ActedUpon(value="dwc:eventDate") String eventDate, 
@@ -1393,7 +1393,7 @@ public class DwCEventDQ {
      */
     @Amendment(label="AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY", description="Propose amendment to the value of dwc:eventDate from values in dwc:year, dwc:month and dwc:day.")
     @Provides("3892f432-ddd0-4a0a-b713-f2e2ecbd879d")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/3892f432-ddd0-4a0a-b713-f2e2ecbd879d/2023-09-18")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/3892f432-ddd0-4a0a-b713-f2e2ecbd879d/2023-09-18")
     @Specification("INTERNAL _PREREQUISITES_NOT_MET if dwc:eventDate is not EMPTY or dwc:year is EMPTY or is not interpretable as a valid year; FILLED_IN the value of dwc:eventDate if an ISO 8601-1 date was interpreted from the values in dwc:year, dwc:month and dwc:day; otherwise NOT_AMENDED. ")
     public static final DQResponse<AmendmentValue> amendmentEventDateFromYearMonthDay(
     		@ActedUpon(value="dwc:eventDate") String eventDate, 
@@ -1533,7 +1533,7 @@ public class DwCEventDQ {
      */
     @Amendment(label="AMENDMENT_MONTH_STANDARDIZED", description="Propose an amendment to the value of dwc:month as an integer between 1 and 12 inclusive.")
     @Provides("2e371d57-1eb3-4fe3-8a61-dff43ced50cf")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/2e371d57-1eb3-4fe3-8a61-dff43ced50cf/2023-09-18")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/2e371d57-1eb3-4fe3-8a61-dff43ced50cf/2023-09-18")
     @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:month is EMPTY; AMENDED the value of dwc:month if it was able to be unambiguously interpreted as an integer between 1 and 12 inclusive; otherwise NOT_AMENDED ")
     public static final DQResponse<AmendmentValue> amendmentMonthStandardized(@ActedUpon(value="dwc:month") String month) {
     	DQResponse<AmendmentValue> result = new DQResponse<>();
@@ -1619,7 +1619,7 @@ public class DwCEventDQ {
      */
     @Amendment(label="AMENDMENT_DAY_STANDARDIZED", description="Propose amendment to the value of dwc:day as a integer between 1 and 31 inclusive.")
     @Provides("b129fa4d-b25b-43f7-9645-5ed4d44b357b")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/b129fa4d-b25b-43f7-9645-5ed4d44b357b/2023-09-18")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/b129fa4d-b25b-43f7-9645-5ed4d44b357b/2023-09-18")
     @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:day is EMPTY; AMENDED the value of dwc:day if the value was unambiguously interpreted as an integer between 1 and 31 inclusive; otherwise NOT_AMENDED ")
     public static final DQResponse<AmendmentValue> amendmentDayStandardized(@ActedUpon(value="dwc:day") String day) {
     	DQResponse<AmendmentValue> result = new DQResponse<>();
@@ -1752,7 +1752,7 @@ public class DwCEventDQ {
      */
     @Validation(label="VALIDATION_EVENT_CONSISTENT", description="Are the values in dwc:eventDate consistent with the values in dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear?")
     @Provides("5618f083-d55a-4ac2-92b5-b9fb227b832f")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/5618f083-d55a-4ac2-92b5-b9fb227b832f/2023-09-18")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/5618f083-d55a-4ac2-92b5-b9fb227b832f/2023-09-18")
     @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY, or all of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear and dwc:endDayOfYear are EMPTY; COMPLIANT if all of the following conditions are met (1) dwc:year is EMPTY or dwc:eventDate has a precision of one year or finer and and is within a single year and the provided value of dwc:year matches the year expressed in dwc:eventDate, and (2) dwc:month is EMPTY or dwc:eventDate has a precision of one month or finer and is within a single month and the provided value in dwc:month matches the month represented by dwc:eventDate, and (3) dwc:day is EMPTY or dwc:eventDate has a precision of a day or less and is within a single day and the provided value in dwc:day matches the day represented by dwc:eventDate, and (4) dwc:startDayOfYear is empty or dwc:eventDate has a precision of one day or finer and the provided value in dwc:startDayOfYear matches the start day of the year of the range represented by dwc:eventDate, and (5) dwc:endDayOfYear is empty or dwc:eventDate has a precision of one day or finer and the provided value in dwc:endDayOfYear matches the end day of the year of the range represented by dwc:eventDate; otherwise NOT_COMPLIANT. ")
 	public static DQResponse<ComplianceValue> validationEventConsistent(
     		@ActedUpon(value = "dwc:eventDate") String eventDate,
@@ -1966,7 +1966,7 @@ public class DwCEventDQ {
      */
     @Validation(label="VALIDATION_EVENT_TEMPORAL_NOTEMPTY", description="Is there a value in any of the terms dwc:eventDate, dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear, dwc:verbatimEventDate?")
     @Provides("41267642-60ff-4116-90eb-499fee2cd83f")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/41267642-60ff-4116-90eb-499fee2cd83f/2023-09-18")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/41267642-60ff-4116-90eb-499fee2cd83f/2023-09-18")
     @Specification("COMPLIANT if any of dwc:eventDate, dwc:year, dwc:month, dwc:day, dwc:startDayOfYear, dwc:endDayOfYear, dwc:verbatimEventDate are NOT EMPTY; otherwise NOT_COMPLIANT. ")
     public static DQResponse<ComplianceValue> validationEventTemporalNotEmpty(
     		@ActedUpon(value = "dwc:eventDate") String eventDate,
@@ -2071,7 +2071,7 @@ public class DwCEventDQ {
 	 */
     @Amendment(label="AMENDMENT_EVENT_FROM_EVENTDATE", description="Propose amendment to values in any of dwc:year, dwc:month, dwc:day, dwc:startDayOfYear or dwc:endDayOfYear from the content of dwc:eventDate.")
     @Provides("710fe118-17e1-440f-b428-88ba3f547d6d")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/710fe118-17e1-440f-b428-88ba3f547d6d/2023-07-23")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/710fe118-17e1-440f-b428-88ba3f547d6d/2023-07-23")
     @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or contains an invalid value according to ISO 8601-1; FILLED_IN if any of (1) dwc:day from dwc:eventDate if dwc:day is EMPTY and dwc:eventDate has a precision of a day or finer and is within a single day, (2) dwc:month from dwc:eventDate if dwc:month is EMPTY and dwc:eventDate has a precision of a single month or finer and is within a single month, (3) dwc:year from dwc:eventDate if dwc:year is EMPTY and dwc:eventDate has a precision of a single year or finer and is within a single year, (4) dwc:startDayOfYear and dwc:endDayOfYear if they are EMPTY and dwc:eventDate has a precision of a day or better; otherwise NOT_AMENDED.")
 	public static DQResponse<AmendmentValue> amendmentEventFromEventdate(
     		@Consulted(value = "dwc:eventDate") String eventDate,
@@ -2227,6 +2227,30 @@ public class DwCEventDQ {
     	return result;
 	}
     
+    /**
+     * Is the value of dwc:year within the Parameter range, accepts integer parameter ranges.
+     * 
+     * @param year the provided dwc:year to evaluate
+	 * @param lowerBound Integer bdq:earliestValidDate integer for lower bound of range of in range years, if null 1582 will be used.
+	 * @param upperBound Integer bdq:latestValidDate integer for upper bound of range of in range years, if null current year will be used.
+     * @return
+     */
+    public static DQResponse<ComplianceValue> validationYearInrange(
+    		@ActedUpon(value = "dwc:year") String year,  
+    		@Parameter(name = "bdq:earliestValidDate") Integer lowerBound,
+    		@Parameter(name = "bdq:latestValidDate") Integer upperBound) 
+    {
+    	String lowerBoundString = null;
+    	if (lowerBound!=null) { 
+    		lowerBoundString = Integer.toString(lowerBound);
+    	}
+    	String upperBoundString = null;
+    	if (upperBound!=null) { 
+    		upperBoundString = Integer.toString(upperBound);
+    	}
+    	
+    	return validationYearInrange(year, lowerBoundString, upperBoundString);
+    } 
 	/**
      * Is the value of dwc:year within the Parameter range?
      *
@@ -2240,23 +2264,23 @@ public class DwCEventDQ {
      * #84 Validation SingleRecord Conformance: year outofrange
      *
      * Provides: VALIDATION_YEAR_INRANGE
-     * Version: 2023-09-18
+     * Version: 2024-08-23
      * 
      * Parameters: bdq:earliestDate="1582"; bdq:latestDate=current year
      * 
      * @param year the provided dwc:year to evaluate
-	 * @param lowerBound bdq:earliestDate integer for lower bound of range of in range years, if null 1582 will be used.
-	 * @param upperBound bdq:latestDate integer for upper bound of range of in range years, if null current year will be used.
+	 * @param lowerBound bdq:earliestValidDate integer for lower bound of range of in range years, if null 1582 will be used.
+	 * @param upperBound bdq:latestValidDate integer for upper bound of range of in range years, if null current year will be used.
      * @return DQResponse the response of type ComplianceValue to return
 	 */
     @Validation(label="VALIDATION_YEAR_INRANGE", description="Is the value of dwc:year within the Parameter range?")
     @Provides("ad0c8855-de69-4843-a80c-a5387d20fbc8")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/ad0c8855-de69-4843-a80c-a5387d20fbc8/2023-09-18")
-    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:year is not present, or is EMPTY or cannot be interpreted as an integer; COMPLIANT if the value of dwc:year is within the range bdq:earliestValidDate to bdq:latestValidDate inclusive; otherwise NOT_COMPLIANT bdq:earliestValidDate='1582',bdq:latestValidDate=current year")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/ad0c8855-de69-4843-a80c-a5387d20fbc8/2024-08-23")
+    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:year is bdq:Empty or cannot be interpreted as an integer; COMPLIANT if the value of dwc:year is within the range bdq:earliestValidDate to bdq:latestValidDate inclusive; otherwise NOT_COMPLIANT")
     public static DQResponse<ComplianceValue> validationYearInrange(
     		@ActedUpon(value = "dwc:year") String year,  
-    		@Parameter(name = "bdq:earliestDate") Integer lowerBound,
-    		@Parameter(name = "bdq:latestDate") Integer upperBound) 
+    		@Parameter(name = "bdq:earliestValidDate") String lowerBound,
+    		@Parameter(name = "bdq:latestValidDate") String upperBound) 
     {
     	DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
     	
@@ -2269,13 +2293,21 @@ public class DwCEventDQ {
         // year 
 
         // This test is defined as parameterized.
-        // bdq:earliestDate="1582"; bdq:latestDate=current year
+        // bdq:earliestValidDate="1582"; bdq:latestValidDate=current year
     	
     	if (lowerBound==null) { 
-    		lowerBound = 1582;
+    		lowerBound = "1582";
+        } else {
+        	if (!lowerBound.equals("1582")) { 
+        		result.addComment("Using non-default argument ["+ lowerBound +"] for Parameter bdq:earliestValidDate.");
+        	}	
     	}
     	if (upperBound==null) { 
-    		upperBound = LocalDateTime.now().getYear();
+    		upperBound = Integer.toString(LocalDateTime.now().getYear());
+        } else {
+        	if (!lowerBound.equals(Integer.toString(LocalDateTime.now().getYear()))) { 
+        		result.addComment("Using non-default argument ["+ upperBound +"] for Parameter bdq:earliestDate.");
+        	}	
     	}
     	if (DateUtils.isEmpty(year)) {
     		result.addComment("No value provided for dwc:year.");
@@ -2283,12 +2315,14 @@ public class DwCEventDQ {
     	} else { 
     		try { 
     			int numericYear = Integer.parseInt(year.trim());
-    			if (numericYear<lowerBound || numericYear>upperBound) { 
+    			int numericLowerBound = Integer.parseInt(lowerBound);
+    			int numericUpperBound = Integer.parseInt(upperBound);
+    			if (numericYear<numericLowerBound || numericYear>numericUpperBound) { 
     				result.setValue(ComplianceValue.NOT_COMPLIANT);
-    				result.addComment("Provided value for dwc:year '" + year + "' is not an integer in the range " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");
+    				result.addComment("Provided value for dwc:year '" + year + "' is not an integer in the range " + lowerBound + " to " + upperBound + " (current year).");
     			} else { 
     				result.setValue(ComplianceValue.COMPLIANT);
-    				result.addComment("Provided value for dwc:year '" + year + "' is an integer in the range " + lowerBound.toString() + " to " + upperBound.toString() + " (current year).");
+    				result.addComment("Provided value for dwc:year '" + year + "' is an integer in the range " + lowerBound + " to " + upperBound + " (current year).");
     			}
     			result.setResultState(ResultState.RUN_HAS_RESULT);
     		} catch (NumberFormatException e) { 
@@ -2301,6 +2335,16 @@ public class DwCEventDQ {
     }		
 	
     /**
+    * Is the value of dwc:eventDate entirely with the Parameter Range?
+    *
+    * Provides: VALIDATION_EVENTDATE_INRANGE
+    *
+    * @param eventDate the provided dwc:eventDate to evaluate as ActedUpon.
+    * @return DQResponse the response of type ComplianceValue  to return
+    */
+    
+    
+    /**
      * Is the value of dwc:eventDate entirely with the Parameter Range?
      * 
      * #36 Validation SingleRecord Conformance: eventdate outofrange
@@ -2310,7 +2354,7 @@ public class DwCEventDQ {
      * current year by default)   
      *
      * Provides: VALIDATION_EVENTDATE_INRANGE
-     * Version: 2023-09-17
+     * Version: 2024-09-16
      *
      * @param eventDate the provided dwc:eventDate to evaluate
      * @param earlyestValidDate the earlyest date for which eventDate can be valid
@@ -2319,8 +2363,8 @@ public class DwCEventDQ {
      */
     @Validation(label="VALIDATION_EVENTDATE_INRANGE", description="Is the value of dwc:eventDate entirely with the Parameter Range?")
     @Provides("3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2023-09-17")
-    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY or if the value of dwc:eventDate is not a valid ISO 8601-1 date; COMPLIANT if the range of dwc:eventDate is entirely within the range bdq:earliestValidDate to bdq:latestValidDate, inclusive, otherwise NOT_COMPLIANT bdq:earliestValidDate default ='1582-11-15',bdq:latestValidDate default = current year")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2024-09-16")
+    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is bdq:Empty or if the value of dwc:eventDate is not a valid ISO 8601 date; COMPLIANT if the range of dwc:eventDate is entirely within the range bdq:earliestValidDate to bdq:latestValidDate, inclusive, otherwise NOT_COMPLIANT")
     public static DQResponse<ComplianceValue> validationEventdateInrange(
     		@ActedUpon("dwc:eventDate") String eventDate, 
     		@Parameter(name="bdq:earliestValidDate") String earlyestValidDate, 
@@ -2339,9 +2383,18 @@ public class DwCEventDQ {
         
         if (DateUtils.isEmpty(latestValidDate)) {
         	latestValidDate = String.format("%04d",Calendar.getInstance().get(Calendar.YEAR)) + "-12-31";
+        } else {
+        	if (!latestValidDate.equals(String.format("%04d",Calendar.getInstance().get(Calendar.YEAR)))) { 
+        		result.addComment("Using non-default argument ["+ latestValidDate +"] for Parameter bdq:latestValidDate.");
+        	}
         }
+        String DEFAULT_EARLEST_VALID_DATE = "1582-11-15";
         if (DateUtils.isEmpty(earlyestValidDate)) { 
-        	earlyestValidDate = "1582-11-15";
+        	earlyestValidDate = DEFAULT_EARLEST_VALID_DATE;
+        } else {
+        	if (!earlyestValidDate.equals(DEFAULT_EARLEST_VALID_DATE)) { 
+        		result.addComment("Using non-default argument ["+ earlyestValidDate +"] for Parameter bdq:earliestValidDate.");
+        	}
         }
         
     	if (DateUtils.isEmpty(eventDate)) {
@@ -2388,7 +2441,7 @@ public class DwCEventDQ {
     */
     @Validation(label="VALIDATION_ENDDAYOFYEAR_NOTEMPTY", description="Is there a value in dwc:endDayOfYear?")
     @Provides("0267c35f-a02b-4dc9-9a01-38797faa6b2b")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/0267c35f-a02b-4dc9-9a01-38797faa6b2b/2024-02-08")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/0267c35f-a02b-4dc9-9a01-38797faa6b2b/2024-02-08")
     @Specification("COMPLIANT if dwc:endDayOfYear is not EMPTY; otherwise NOT_COMPLIANT ")
     public static DQResponse<ComplianceValue> validationEnddayofyearNotempty(
         @ActedUpon("dwc:endDayOfYear") String endDayOfYear
@@ -2423,7 +2476,7 @@ public class DwCEventDQ {
     */
     @Validation(label="VALIDATION_STARTDAYOFYEAR_NOTEMPTY", description="Is there a value in dwc:startDayOfYear?")
     @Provides("167d4346-6fac-40eb-9d2e-30b7683dac04")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/167d4346-6fac-40eb-9d2e-30b7683dac04/2024-02-07")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/167d4346-6fac-40eb-9d2e-30b7683dac04/2024-02-07")
     @Specification("COMPLIANT if dwc:startDayOfYear is not EMPTY; otherwise NOT_COMPLIANT ")
     public static DQResponse<ComplianceValue> validationStartdayofyearNotempty(
         @ActedUpon("dwc:startDayOfYear") String startDayOfYear
@@ -2458,7 +2511,7 @@ public class DwCEventDQ {
     */
     @Validation(label="VALIDATION_EVENTTIME_NOTEMPTY", description="Is there a value in dwc:eventTime?")
     @Provides("aaebbde6-a101-4665-ba1e-6d4d8c561a31")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/aaebbde6-a101-4665-ba1e-6d4d8c561a31/2024-02-07")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/aaebbde6-a101-4665-ba1e-6d4d8c561a31/2024-02-07")
     @Specification("COMPLIANT if dwc:eventTime is not EMPTY; otherwise NOT_COMPLIANT ")
     public static DQResponse<ComplianceValue> validationEventtimeNotempty(
         @ActedUpon("dwc:eventTime") String eventTime
@@ -2492,7 +2545,7 @@ public class DwCEventDQ {
     */
     @Validation(label="ISSUE_VERBATIMEVENTDATE_NOTEMPTY", description="Is there a value in dwc:verbatimEventDate?")
     @Provides("9bc8b105-902a-489c-aae8-3b7075e1b948")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/9bc8b105-902a-489c-aae8-3b7075e1b948/2024-04-02")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/9bc8b105-902a-489c-aae8-3b7075e1b948/2024-04-02")
     @Specification("POTENTIAL_ISSUE if dwc:verbatimEventDate is not EMPTY; otherwise NOT_ISSUE ")
     public static DQResponse<IssueValue> issueVerbatimeventdateNotempty(
         @ActedUpon("dwc:verbatimEventDate") String verbatimEventDate
@@ -2526,7 +2579,7 @@ public class DwCEventDQ {
     */
     @Validation(label="VALIDATION_MONTH_NOTEMPTY", description="Is there a value in dwc:month?")
     @Provides("dc2fc946-8114-491b-8a7b-3242a274a221")
-    @ProvidesVersion("https://rs.tdwg.org/bdq/terms/dc2fc946-8114-491b-8a7b-3242a274a221/2024-02-04")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/dc2fc946-8114-491b-8a7b-3242a274a221/2024-02-04")
     @Specification("COMPLIANT if dwc:month is not EMPTY; otherwise NOT_COMPLIANT ")
     public static DQResponse<ComplianceValue> validationMonthNotempty(
         @ActedUpon("dwc:month") String month
@@ -2549,31 +2602,15 @@ public class DwCEventDQ {
         return result;
     }
 
-// TODO: Implementation of VALIDATION_EVENTDATE_NOTEMPTY is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/f51e15a6-a67d-4729-9c28-3766299d2985/2023-09-17 see line: 196
-// TODO: Implementation of VALIDATION_EVENTDATE_INRANGE is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/3cff4dc4-72e9-4abe-9bf3-8a30f1618432/2024-09-16 see line: 2321
-// TODO: Implementation of VALIDATION_YEAR_NOTEMPTY is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/c09ecbf9-34e3-4f3e-b74a-8796af15e59f/2023-09-17 see line: 231
 // TODO: Implementation of AMENDMENT_EVENT_FROM_EVENTDATE is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/710fe118-17e1-440f-b428-88ba3f547d6d/2024-09-16 see line: 2073
 // TODO: Implementation of AMENDMENT_EVENTDATE_STANDARDIZED is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/718dfc3c-cb52-4fca-b8e2-0e722f375da7/2024-09-16 see line: 558
 // TODO: Implementation of VALIDATION_EVENTDATE_STANDARD is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/4f2bf8fd-fc5c-493f-a44c-e7b16153c803/2024-09-16 see line: 507
-// TODO: Implementation of VALIDATION_EVENT_CONSISTENT is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/5618f083-d55a-4ac2-92b5-b9fb227b832f/2023-09-18 see line: 1754
-// TODO: Implementation of VALIDATION_YEAR_INRANGE is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/ad0c8855-de69-4843-a80c-a5387d20fbc8/2024-08-23 see line: 2253
 // TODO: Implementation of AMENDMENT_EVENTDATE_FROM_VERBATIM is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/6d0a0c10-5e4a-4759-b448-88932f399812/2024-09-16 see line: 334
 // TODO: Implementation of VALIDATION_EVENTTEMPORAL_NOTEMPTY is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/41267642-60ff-4116-90eb-499fee2cd83f/2023-09-30 see line: 1968
 // TODO: Implementation of AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/3892f432-ddd0-4a0a-b713-f2e2ecbd879d/2024-09-15 see line: 1395
 // TODO: Implementation of VALIDATION_DAY_INRANGE is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/8d787cb5-73e2-4c39-9cd1-67c7361dc02e/2024-09-16 see line: 827
-// TODO: Implementation of VALIDATION_MONTH_STANDARD is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/01c6dafa-0886-4b7e-9881-2c3018c98bdc/2023-09-18 see line: 689
-// TODO: Implementation of AMENDMENT_DAY_STANDARDIZED is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/b129fa4d-b25b-43f7-9645-5ed4d44b357b/2023-09-18 see line: 1621
-// TODO: Implementation of AMENDMENT_MONTH_STANDARDIZED is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/2e371d57-1eb3-4fe3-8a61-dff43ced50cf/2023-09-18 see line: 1535
-// TODO: Implementation of VALIDATION_STARTDAYOFYEAR_INRANGE is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/85803c7e-2a5a-42e1-b8d3-299a44cafc46/2023-09-18 see line: 1085
-// TODO: Implementation of VALIDATION_ENDDAYOFYEAR_INRANGE is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/9a39d88c-7eee-46df-b32a-c109f9f81fb8/2023-09-18 see line: 1187
 // TODO: Implementation of AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/eb0a44fa-241c-4d64-98df-ad4aa837307b/2024-08-18 see line: 1295
 // TODO: Implementation of MEASURE_EVENTDATE_DURATIONINSECONDS is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/56b6c695-adf1-418e-95d2-da04cad7be53/2024-09-16 see line: 120
-// TODO: Implementation of VALIDATION_DAY_STANDARD is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/47ff73ba-0028-4f79-9ce1-ee7008d66498/2023-09-18 see line: 638
 // TODO: Implementation of AMENDMENT_MODIFIED_STANDARDIZED is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/718dfc3c-cb52-4fca-b8e2-0e722f375da7/2024-09-18 see line: 558
-// TODO: Implementation of VALIDATION_ENDDAYOFYEAR_NOTEMPTY is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/0267c35f-a02b-4dc9-9a01-38797faa6b2b/2024-02-08 see line: 2390
-// TODO: Implementation of VALIDATION_STARTDAYOFYEAR_NOTEMPTY is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/167d4346-6fac-40eb-9d2e-30b7683dac04/2024-02-07 see line: 2425
-// TODO: Implementation of VALIDATION_EVENTTIME_NOTEMPTY is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/aaebbde6-a101-4665-ba1e-6d4d8c561a31/2024-02-07 see line: 2460
-// TODO: Implementation of ISSUE_VERBATIMEVENTDATE_NOTEMPTY is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/9bc8b105-902a-489c-aae8-3b7075e1b948/2024-04-02 see line: 2494
-// TODO: Implementation of VALIDATION_MONTH_NOTEMPTY is not up to date with current version: https://rs.tdwg.org/bdqcore/terms/dc2fc946-8114-491b-8a7b-3242a274a221/2024-02-04 see line: 2528
 
 }
