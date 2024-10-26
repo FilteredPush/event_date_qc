@@ -154,12 +154,24 @@ public class DwCOtherDateDQ {
 		DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 		if (DateUtils.isEmpty(earliestValidDate)) { 
 			earliestValidDate = "1753-01-01";
+		} else { 
+			if (!earliestValidDate.equals("1753-01-01")) { 
+        		result.addComment("Using non-default argument ["+ earliestValidDate +"] for Parameter bdq:earliestValidDate.");
+			}
 		}
 		if (DateUtils.isEmpty(latestValidDate)) { 
 			latestValidDate  = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
+		} else { 
+			if (!latestValidDate.equals(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))) { 
+        		result.addComment("Using non-default argument ["+ latestValidDate +"] for Parameter bdq:latestValidDate.");
+			}
 		}
 		if (DateUtils.isEmpty(includeEventDate)) { 
 			includeEventDate = "true";
+		} else { 
+			if (!includeEventDate.equals("true")) { 
+        		result.addComment("Using non-default argument ["+ includeEventDate +"] for Parameter bdq:includeEventDate.");
+			}			
 		}
 		Boolean includeEventDateBoolean = false;
 		if (includeEventDate.toLowerCase().equals("true")) { 
