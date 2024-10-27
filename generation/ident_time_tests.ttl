@@ -117,16 +117,7 @@
 
 <bdq:earliestValidDate> a <https://rs.tdwg.org/bdqffdq/terms/Parameter> .
 
-<bdq:includeEventDate> a <https://rs.tdwg.org/bdqffdq/terms/Parameter> .
-
-<bdq:latestValidDate> a <https://rs.tdwg.org/bdqffdq/terms/Parameter> .
-
-<urn:uuid:035b2695-f056-40d0-ab39-e216bd0c7754> a <https://rs.tdwg.org/bdqffdq/terms/Argument> ;
-	rdfs:label "Default value for bdq:latestValidDate:\"{current day}\"" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasArgumentValue> "{current day}" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasParameter> <bdq:latestValidDate> .
-
-<urn:uuid:4c5cc6c1-69bc-4d88-825f-5bba97936290> a <https://rs.tdwg.org/bdqffdq/terms/Argument> ;
+<urn:uuid:49e026c8-5901-408f-9a2a-cc83d93a5ef8> a <https://rs.tdwg.org/bdqffdq/terms/Argument> ;
 	rdfs:label "Default value for bdq:earliestValidDate:\"1753-01-01\"" ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasArgumentValue> "1753-01-01" ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasParameter> <bdq:earliestValidDate> .
@@ -142,14 +133,9 @@
 	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if (1) dwc:dateIdentified is bdq:Empty, or (2) dwc:dateIdentified contains an invalid value according to ISO 8601, or (3) bdq:includeEventDate=true and dwc:eventDate is not a valid ISO 8601 date; COMPLIANT if the value of dwc:dateIdentified is between bdq:earliestValidDate and bdq:latestValidDate inclusive and either (1) dwc:eventDate is bdq:Empty or bdq:includeEventDate=false, or (2) if dwc:eventDate is a valid ISO 8601 date and dwc:dateIdentified overlaps or is later than the dwc:eventDate; otherwise NOT_COMPLIANT ,bdq:earliestValidDate default = \"1753-01-01\",bdq:latestValidDate default = \"{current day}\",bdq:includeEventDate default = \"true\"" ;
 	rdfs:label "Specification for: VALIDATION_DATEIDENTIFIED_INRANGE" ;
 	skos:example "dwc:dateIdentified=\"1963-03-08T14:07-0600\", dwc:eventDate=\"1962-11-01T10:00-0600\": Response.status=RUN_HAS_RESULT, Response.result=COMPLIANT, Response.comment=\"dwc:dateIdentified is in range\"" , "dwc:dateIdentified=\"1963-03-08T14:07-0600\", dwc:eventDate=\"1964-11-01T10:00-0600\": Response.status=RUN_HAS_RESULT, Response.result=NOT_COMPLIANT, Response.comment=\"dwc:dateIdentified before dwc:eventDate\"" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasArgument> <urn:uuid:035b2695-f056-40d0-ab39-e216bd0c7754> , <urn:uuid:4c5cc6c1-69bc-4d88-825f-5bba97936290> , <urn:uuid:af751691-c074-4968-8abe-f251b1dd95e7> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasArgument> <urn:uuid:49e026c8-5901-408f-9a2a-cc83d93a5ef8> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasAuthoritiesDefaults> ",bdq:earliestValidDate default = \"1753-01-01\",bdq:latestValidDate default = \"{current day}\",bdq:includeEventDate default = \"true\"" ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasExpectedResponse> "INTERNAL_PREREQUISITES_NOT_MET if (1) dwc:dateIdentified is bdq:Empty, or (2) dwc:dateIdentified contains an invalid value according to ISO 8601, or (3) bdq:includeEventDate=true and dwc:eventDate is not a valid ISO 8601 date; COMPLIANT if the value of dwc:dateIdentified is between bdq:earliestValidDate and bdq:latestValidDate inclusive and either (1) dwc:eventDate is bdq:Empty or bdq:includeEventDate=false, or (2) if dwc:eventDate is a valid ISO 8601 date and dwc:dateIdentified overlaps or is later than the dwc:eventDate; otherwise NOT_COMPLIANT" .
-
-<urn:uuid:af751691-c074-4968-8abe-f251b1dd95e7> a <https://rs.tdwg.org/bdqffdq/terms/Argument> ;
-	rdfs:label "Default value for bdq:includeEventDate:\"true\"" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasArgumentValue> "true" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasParameter> <bdq:includeEventDate> .
 
 <bdqcrit:Consistent> a <https://rs.tdwg.org/bdqffdq/terms/Criterion> ;
 	rdfs:label "Consistent" .
@@ -166,12 +152,12 @@
 	skos:historyNote "https://api.github.com/repos/tdwg/bdq/issues/92" ;
 	skos:note "There might be identification dates that are legitimately before dwc:eventDate.  This test will, by design, flag as problematic cases (such as LTER plots, bird banding data, and marine mammal sightings) where a known individual organism is identified by a specialist and then subsequently observed (or collected) without new taxonomic identifications being made." ;
 	skos:prefLabel "Missing prefLabel for SingleRecord" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasActedUponInformationElement> <urn:uuid:0df70740-4ef5-4dbb-b434-d87427902a5b> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasActedUponInformationElement> <urn:uuid:6eeb7be1-201d-406d-bb22-1d04248e5d8a> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasCriterion> <bdqcrit:Consistent> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasDataQualityDimension> <bdqdim:Likelihood> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasResourceType> <bdqffdq:SingleRecord> .
 
-<urn:uuid:0df70740-4ef5-4dbb-b434-d87427902a5b> a <https://rs.tdwg.org/bdqffdq/terms/ActedUpon> ;
+<urn:uuid:6eeb7be1-201d-406d-bb22-1d04248e5d8a> a <https://rs.tdwg.org/bdqffdq/terms/ActedUpon> ;
 	rdfs:label "Information Element ActedUpon dwc:eventDate, dwc:dateIdentified" ;
 	<https://rs.tdwg.org/bdqffdq/terms/composedOf> dwc:dateIdentified , dwc:eventDate ;
 	<skos:prefLabel> "Information Element ActedUpon dwc:eventDate, dwc:dateIdentified" .
