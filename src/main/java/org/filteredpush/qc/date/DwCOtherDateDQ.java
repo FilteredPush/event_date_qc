@@ -669,8 +669,8 @@ public class DwCOtherDateDQ {
 	 * @return DQResponse the response of type AmendmentValue to return
 	 */
 	@Amendment(label="AMENDMENT_MODIFIED_STANDARDIZED", description="Propose amendment of the value of dcterms:modified to a valid ISO date and time.")
-	@Provides("718dfc3c-cb52-4fca-b8e2-0e722f375da7")
-	@ProvidesVersion("https://rs.tdwg.org/bdq/terms/718dfc3c-cb52-4fca-b8e2-0e722f375da7/2024-02-12")
+	@Provides("dfb4a260-4cbc-45b2-bf86-28be49c2cceb")
+	@ProvidesVersion("https://rs.tdwg.org/bdq/terms/dfb4a260-4cbc-45b2-bf86-28be49c2cceb/2024-09-18")
 	@Specification("INTERNAL_PREREQUISITES_NOT_MET if dcterms:modified is EMPTY; AMENDED if the value of dcterms:modified was not a properly formatted ISO 8601-1 date/time but was unambiguous, and was altered to be a valid ISO 8601-1 date/time; otherwise NOT_AMENDED")
 	public static DQResponse<AmendmentValue> amendmentModifiedStandardized(
 			@ActedUpon("dcterms:modified") String modified) {
