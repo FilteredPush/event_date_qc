@@ -117,11 +117,6 @@
 
 <bdq:earliestValidDate> a <https://rs.tdwg.org/bdqffdq/terms/Parameter> .
 
-<urn:uuid:353d1af3-f99b-4d46-b2f3-29ab4e0935ce> a <https://rs.tdwg.org/bdqffdq/terms/Argument> ;
-	rdfs:label "Default value for bdq:earliestValidDate:\"1753-01-01\"" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasArgumentValue> "1753-01-01" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasParameter> <bdq:earliestValidDate> .
-
 <urn:uuid:67ddf706-c8ee-4cf2-a9d0-d161fc6b7d69> a <https://rs.tdwg.org/bdqffdq/terms/ValidationMethod> ;
 	rdfs:label "ValidationMethod: VALIDATION_DATEIDENTIFIED_INRANGE with Specification for: VALIDATION_DATEIDENTIFIED_INRANGE" ;
 	skos:historyNote "Source: GBIF, ALA" ;
@@ -133,9 +128,14 @@
 	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if (1) dwc:dateIdentified is bdq:Empty, or (2) dwc:dateIdentified contains an invalid value according to ISO 8601, or (3) bdq:includeEventDate=true and dwc:eventDate is not a valid ISO 8601 date; COMPLIANT if the value of dwc:dateIdentified is between bdq:earliestValidDate and bdq:latestValidDate inclusive and either (1) dwc:eventDate is bdq:Empty or bdq:includeEventDate=false, or (2) if dwc:eventDate is a valid ISO 8601 date and dwc:dateIdentified overlaps or is later than the dwc:eventDate; otherwise NOT_COMPLIANT ,bdq:earliestValidDate default = \"1753-01-01\",bdq:latestValidDate default = \"{current day}\",bdq:includeEventDate default = \"true\"" ;
 	rdfs:label "Specification for: VALIDATION_DATEIDENTIFIED_INRANGE" ;
 	skos:example "dwc:dateIdentified=\"1963-03-08T14:07-0600\", dwc:eventDate=\"1962-11-01T10:00-0600\": Response.status=RUN_HAS_RESULT, Response.result=COMPLIANT, Response.comment=\"dwc:dateIdentified is in range\"" , "dwc:dateIdentified=\"1963-03-08T14:07-0600\", dwc:eventDate=\"1964-11-01T10:00-0600\": Response.status=RUN_HAS_RESULT, Response.result=NOT_COMPLIANT, Response.comment=\"dwc:dateIdentified before dwc:eventDate\"" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasArgument> <urn:uuid:353d1af3-f99b-4d46-b2f3-29ab4e0935ce> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasArgument> <urn:uuid:d9591ff9-6aff-482f-867c-8984c7db27c3> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasAuthoritiesDefaults> ",bdq:earliestValidDate default = \"1753-01-01\",bdq:latestValidDate default = \"{current day}\",bdq:includeEventDate default = \"true\"" ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasExpectedResponse> "INTERNAL_PREREQUISITES_NOT_MET if (1) dwc:dateIdentified is bdq:Empty, or (2) dwc:dateIdentified contains an invalid value according to ISO 8601, or (3) bdq:includeEventDate=true and dwc:eventDate is not a valid ISO 8601 date; COMPLIANT if the value of dwc:dateIdentified is between bdq:earliestValidDate and bdq:latestValidDate inclusive and either (1) dwc:eventDate is bdq:Empty or bdq:includeEventDate=false, or (2) if dwc:eventDate is a valid ISO 8601 date and dwc:dateIdentified overlaps or is later than the dwc:eventDate; otherwise NOT_COMPLIANT" .
+
+<urn:uuid:d9591ff9-6aff-482f-867c-8984c7db27c3> a <https://rs.tdwg.org/bdqffdq/terms/Argument> ;
+	rdfs:label "Default value for bdq:earliestValidDate:\"1753-01-01\"" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasArgumentValue> "1753-01-01" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasParameter> <bdq:earliestValidDate> .
 
 <bdqcrit:Consistent> a <https://rs.tdwg.org/bdqffdq/terms/Criterion> ;
 	rdfs:label "Consistent" .
@@ -152,12 +152,12 @@
 	skos:historyNote "https://api.github.com/repos/tdwg/bdq/issues/92" ;
 	skos:note "There might be identification dates that are legitimately before dwc:eventDate.  This test will, by design, flag as problematic cases (such as LTER plots, bird banding data, and marine mammal sightings) where a known individual organism is identified by a specialist and then subsequently observed (or collected) without new taxonomic identifications being made." ;
 	skos:prefLabel "Missing prefLabel for SingleRecord" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasActedUponInformationElement> <urn:uuid:ad23bd01-1a07-48d0-b15b-909b39d91459> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasActedUponInformationElement> <urn:uuid:7e3435d4-d2e7-42b2-a89a-dfa9ed318354> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasCriterion> <bdqcrit:Consistent> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasDataQualityDimension> <bdqdim:Likelihood> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasResourceType> <bdqffdq:SingleRecord> .
 
-<urn:uuid:ad23bd01-1a07-48d0-b15b-909b39d91459> a <https://rs.tdwg.org/bdqffdq/terms/ActedUpon> ;
+<urn:uuid:7e3435d4-d2e7-42b2-a89a-dfa9ed318354> a <https://rs.tdwg.org/bdqffdq/terms/ActedUpon> ;
 	rdfs:label "Information Element ActedUpon dwc:eventDate, dwc:dateIdentified" ;
 	<https://rs.tdwg.org/bdqffdq/terms/composedOf> dwc:dateIdentified , dwc:eventDate ;
 	<skos:prefLabel> "Information Element ActedUpon dwc:eventDate, dwc:dateIdentified" .
@@ -185,12 +185,12 @@
 	skos:historyNote "https://github.com/tdwg/bdq/issues/273" ;
 	skos:note "The intent of the amended range is to capture the original uncertainty where possible. As in the example, we amend \"1999-11\" instead of \"1999-11-01/1999-11-31\".  An AMBIGUOUS response is possible. See Comments." ;
 	skos:prefLabel "Missing prefLabel for SingleRecord" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasActedUponInformationElement> <urn:uuid:e295c515-1657-4179-bd71-9bf1a14356a0> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasActedUponInformationElement> <urn:uuid:77bc31c7-ef81-47e7-b67a-90af4e0c76bc> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasDataQualityDimension> <bdqdim:Conformance> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasEnhancement> <bdqenh:Standardized> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasResourceType> <bdqffdq:SingleRecord> .
 
-<urn:uuid:e295c515-1657-4179-bd71-9bf1a14356a0> a <https://rs.tdwg.org/bdqffdq/terms/ActedUpon> ;
+<urn:uuid:77bc31c7-ef81-47e7-b67a-90af4e0c76bc> a <https://rs.tdwg.org/bdqffdq/terms/ActedUpon> ;
 	rdfs:label "Information Element ActedUpon dcterms:modified" ;
 	<https://rs.tdwg.org/bdqffdq/terms/composedOf> dcterms:modified ;
 	<skos:prefLabel> "Information Element ActedUpon dcterms:modified" .
@@ -218,7 +218,7 @@
 	skos:historyNote "https://api.github.com/repos/tdwg/bdq/issues/272" ;
 	skos:note "This bdq:Supplementary test is not regarded as CORE (cf. bdq:CORE) because of one or more of the reasons: not being widely applicable; not informative; likely to return a high percentage of either bdq:COMPLIANT or bdq:NOT_COMPLIANT results (cf bdq:Response.result). A Supplementary test may be implemented as CORE when a suitable use case exists." ;
 	skos:prefLabel "Missing prefLabel for SingleRecord" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasActedUponInformationElement> <urn:uuid:e295c515-1657-4179-bd71-9bf1a14356a0> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasActedUponInformationElement> <urn:uuid:77bc31c7-ef81-47e7-b67a-90af4e0c76bc> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasCriterion> <bdqcrit:Standard> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasDataQualityDimension> <bdqdim:Conformance> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasResourceType> <bdqffdq:SingleRecord> .
@@ -252,7 +252,7 @@
 	skos:historyNote "https://api.github.com/repos/tdwg/bdq/issues/224" ;
 	skos:note "This bdq:Supplementary test is not regarded as CORE (cf. bdq:CORE) because of one or more of the reasons: not being widely applicable; not informative; not straightforward to implement or likely to return a high percentage of either bdq:COMPLIANT or bdq:NOT_COMPLIANT results (cf bdq:Response.result). A Supplementary test may be implemented as CORE when a suitable use case exists. See Issue comments below." ;
 	skos:prefLabel "Missing prefLabel for SingleRecord" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasActedUponInformationElement> <urn:uuid:e295c515-1657-4179-bd71-9bf1a14356a0> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasActedUponInformationElement> <urn:uuid:77bc31c7-ef81-47e7-b67a-90af4e0c76bc> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasCriterion> <bdqcrit:NotEmpty> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasDataQualityDimension> <bdqdim:Completeness> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasResourceType> <bdqffdq:SingleRecord> .
