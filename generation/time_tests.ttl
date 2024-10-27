@@ -127,11 +127,11 @@
 	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is bdq:Empty or if the value of dwc:eventDate is not a valid ISO 8601 date; COMPLIANT if the range of dwc:eventDate is entirely within the range bdq:earliestValidDate to bdq:latestValidDate, inclusive, otherwise NOT_COMPLIANT bdq:earliestValidDate default =\"1582-11-15\",bdq:latestValidDate default = \"{current year}\"" ;
 	rdfs:label "Specification for: VALIDATION_EVENTDATE_INRANGE" ;
 	skos:example "dwc:eventDate=\"1962-11-01T10:00-0600\": Response.status=RUN_HAS_RESULT, Response.result=COMPLIANT, Response.comment=\"dwc:eventDate is IN_RANGE\"" , "dwc:eventDate=\"2300-11-01T10:00\": Response.status=RUN_HAS_RESULT, Response.result=NOT_COMPLIANT, Response.comment=\"dwc:eventDate is NOT_IN_RANGE\"" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasArgument> <urn:uuid:84ea48a6-0669-4b21-840a-073cc747b279> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasArgument> <urn:uuid:61839f88-fcf6-45c8-9a2a-c214860ee4d9> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasAuthoritiesDefaults> "bdq:earliestValidDate default =\"1582-11-15\",bdq:latestValidDate default = \"{current year}\"" ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasExpectedResponse> "INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is bdq:Empty or if the value of dwc:eventDate is not a valid ISO 8601 date; COMPLIANT if the range of dwc:eventDate is entirely within the range bdq:earliestValidDate to bdq:latestValidDate, inclusive, otherwise NOT_COMPLIANT" .
 
-<urn:uuid:84ea48a6-0669-4b21-840a-073cc747b279> a <https://rs.tdwg.org/bdqffdq/terms/Argument> ;
+<urn:uuid:61839f88-fcf6-45c8-9a2a-c214860ee4d9> a <https://rs.tdwg.org/bdqffdq/terms/Argument> ;
 	rdfs:label "Default value for bdq:earliestValidDate:\"1582-11-15\"" ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasArgumentValue> "1582-11-15" ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasParameter> <bdq:earliestValidDate> .
@@ -326,11 +326,6 @@
 	<https://rs.tdwg.org/bdqffdq/terms/hasDataQualityDimension> <bdqdim:Conformance> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasResourceType> <bdqffdq:SingleRecord> .
 
-<urn:uuid:0ac1c992-b533-446c-9547-dfd887f176ab> a <https://rs.tdwg.org/bdqffdq/terms/Argument> ;
-	rdfs:label "Default value for bdq:earliestValidDate:\"1582\"" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasArgumentValue> "1582" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasParameter> <bdq:earliestValidDate> .
-
 <urn:uuid:7922ab56-6eae-4257-9691-d55d24842274> a <https://rs.tdwg.org/bdqffdq/terms/ValidationMethod> ;
 	rdfs:label "ValidationMethod: VALIDATION_YEAR_INRANGE with Specification for: VALIDATION_YEAR_INRANGE" ;
 	skos:historyNote "Source: VertNet" ;
@@ -342,9 +337,14 @@
 	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dwc:year is bdq:Empty or cannot be interpreted as an integer; COMPLIANT if the value of dwc:year is within the range bdq:earliestValidDate to bdq:latestValidDate inclusive; otherwise NOT_COMPLIANT bdq:earliestValidDate default = \"1582\",bdq:latestValidDate default = \"{current year}\"" ;
 	rdfs:label "Specification for: VALIDATION_YEAR_INRANGE" ;
 	skos:example "dwc:year=\"1952\": Response.status=RUN_HAS_RESULT, Response.result=COMPLIANT, Response.comment=\"dwc:year is in RANGE\"" , "dwc:year=\"9999\": Response.status=RUN_HAS_RESULT, Response.result=NOT_COMPLIANT, Response.comment=\"dwc:year is not in RANGE. The value in year has not yet come to pass.\"" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasArgument> <urn:uuid:0ac1c992-b533-446c-9547-dfd887f176ab> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasArgument> <urn:uuid:b0f50625-a647-468c-a0e1-df9a1cfafc8e> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasAuthoritiesDefaults> "bdq:earliestValidDate default = \"1582\",bdq:latestValidDate default = \"{current year}\"" ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasExpectedResponse> "INTERNAL_PREREQUISITES_NOT_MET if dwc:year is bdq:Empty or cannot be interpreted as an integer; COMPLIANT if the value of dwc:year is within the range bdq:earliestValidDate to bdq:latestValidDate inclusive; otherwise NOT_COMPLIANT" .
+
+<urn:uuid:b0f50625-a647-468c-a0e1-df9a1cfafc8e> a <https://rs.tdwg.org/bdqffdq/terms/Argument> ;
+	rdfs:label "Default value for bdq:earliestValidDate:\"1582\"" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasArgumentValue> "1582" ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasParameter> <bdq:earliestValidDate> .
 
 <https://rs.tdwg.org/bdqcore/terms/6d0a0c10-5e4a-4759-b448-88932f399812-2024-09-16> dcterms:bibliographicCitation "ISO (2019) ISO 8601-1:2019(en) Date and time — Representations for information interchange — Part 1: Basic rules. https://www.iso.org/obp/ui/; Wikipedia (2020) ISO 8601. https://en.wikipedia.org/wiki/ISO_8601; Library of Congress (2019) Extended Date/Time Format (EDTF). https://www.loc.gov/standards/datetime/" ;
 	dcterms:isVersionOf <https://rs.tdwg.org/bdqcore/terms/6d0a0c10-5e4a-4759-b448-88932f399812> ;
@@ -761,67 +761,6 @@
 	<https://rs.tdwg.org/bdqffdq/terms/forValidation> <https://rs.tdwg.org/bdqcore/terms/47ff73ba-0028-4f79-9ce1-ee7008d66498-2024-09-05> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasSpecification> <urn:uuid:c0fce1a1-8879-4175-8a71-ce037655c358> .
 
-<https://rs.tdwg.org/bdqcore/terms/dfb4a260-4cbc-45b2-bf86-28be49c2cceb-2024-10-27> dcterms:bibliographicCitation "ISO 8601-1: Latest version (currently 2019(en)) Date and time — Representations for information interchange — Part 1: Basic rules (https://www.iso.org/obp/ui/#iso:std:iso:8601:-1:ed-1:v1:en); Wikipedia (2020). ISO 8601 (https://en.wikipedia.org/wiki/ISO_8601); Library of Congress (2019). Extended Date/Time Format (EDTF) (https://www.loc.gov/standards/datetime/)" ;
-	dcterms:isVersionOf <https://rs.tdwg.org/bdqcore/terms/dfb4a260-4cbc-45b2-bf86-28be49c2cceb> ;
-	dcterms:issued "2024-10-27" ;
-	a <https://rs.tdwg.org/bdqffdq/terms/Amendment> ;
-	rdfs:comment "Propose amendment of the value of dcterms:modified to a valid ISO date and time." ;
-	rdfs:label "AMENDMENT_MODIFIED_STANDARDIZED" ;
-	skos:historyNote "https://github.com/tdwg/bdq/issues/273" ;
-	skos:note "The intent of the amended range is to capture the original uncertainty where possible. As in the example, we amend \"1999-11\" instead of \"1999-11-01/1999-11-31\".  An AMBIGUOUS response is possible. See Comments." ;
-	skos:prefLabel "Missing prefLabel for SingleRecord" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasActedUponInformationElement> <urn:uuid:a0134869-fe1b-4438-9a82-f6d99b6c0270> ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasDataQualityDimension> <bdqdim:Conformance> ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasEnhancement> <bdqenh:Standardized> ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasResourceType> <bdqffdq:SingleRecord> .
-
-<urn:uuid:a0134869-fe1b-4438-9a82-f6d99b6c0270> a <https://rs.tdwg.org/bdqffdq/terms/ActedUpon> ;
-	rdfs:label "Information Element ActedUpon dcterms:modified" ;
-	<https://rs.tdwg.org/bdqffdq/terms/composedOf> dcterms:modified ;
-	<skos:prefLabel> "Information Element ActedUpon dcterms:modified" .
-
-<urn:uuid:369904b2-1176-419c-8daa-aba5e760aa48> a <https://rs.tdwg.org/bdqffdq/terms/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dcterms:modified is bdq:Empty; AMENDED if the value of dcterms:modified is not a properly formatted ISO 8601 date/time but is unambiguous, and is altered to be a valid ISO 8601 date/time; otherwise NOT_AMENDED" ;
-	rdfs:label "Specification for: AMENDMENT_MODIFIED_STANDARDIZED" ;
-	skos:example "dcterms:modified=\"10-28\": Response.status=NOT_AMENDED, Response.result=, Response.comment=\"dcterms:modified contains an ambiguous value\"" , "dcterms:modified=\"2021-28-10T15:19\": Response.status=AMENDED, Response.result=dcterms:modified=\"2021-10-28T15:19\", Response.comment=\"dcterms:modified contains an interpretable value. Assuming year-day-month input format\"" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasAuthoritiesDefaults> "" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasExpectedResponse> "INTERNAL_PREREQUISITES_NOT_MET if dcterms:modified is bdq:Empty; AMENDED if the value of dcterms:modified is not a properly formatted ISO 8601 date/time but is unambiguous, and is altered to be a valid ISO 8601 date/time; otherwise NOT_AMENDED" .
-
-<urn:uuid:9180fd00-2c49-4793-8598-443da633363d> a <https://rs.tdwg.org/bdqffdq/terms/AmendmentMethod> ;
-	rdfs:label "AmendmentMethod: AMENDMENT_MODIFIED_STANDARDIZED with Specification Specification for: AMENDMENT_MODIFIED_STANDARDIZED" ;
-	skos:historyNote "Source: TG2" ;
-	skos:prefLabel "AmendmentMethod: AMENDMENT_MODIFIED_STANDARDIZED with Specification Specification for: AMENDMENT_MODIFIED_STANDARDIZED" ;
-	<https://rs.tdwg.org/bdqffdq/terms/forAmendment> <https://rs.tdwg.org/bdqcore/terms/dfb4a260-4cbc-45b2-bf86-28be49c2cceb-2024-10-27> ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasSpecification> <urn:uuid:369904b2-1176-419c-8daa-aba5e760aa48> .
-
-<https://rs.tdwg.org/bdqcore/terms/c253f11a-6161-4692-bfce-4328f1961630-2024-09-16> dcterms:bibliographicCitation "Dublin Core Metadata Terms (https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#modified) " ;
-	dcterms:isVersionOf <https://rs.tdwg.org/bdqcore/terms/c253f11a-6161-4692-bfce-4328f1961630> ;
-	dcterms:issued "2024-09-16" ;
-	a <https://rs.tdwg.org/bdqffdq/terms/Validation> ;
-	rdfs:comment "Does the value of dcterms:modified a valid ISO date?" ;
-	rdfs:label "VALIDATION_MODIFIED_STANDARD" ;
-	skos:historyNote "https://api.github.com/repos/tdwg/bdq/issues/272" ;
-	skos:note "This bdq:Supplementary test is not regarded as CORE (cf. bdq:CORE) because of one or more of the reasons: not being widely applicable; not informative; likely to return a high percentage of either bdq:COMPLIANT or bdq:NOT_COMPLIANT results (cf bdq:Response.result). A Supplementary test may be implemented as CORE when a suitable use case exists." ;
-	skos:prefLabel "Missing prefLabel for SingleRecord" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasActedUponInformationElement> <urn:uuid:a0134869-fe1b-4438-9a82-f6d99b6c0270> ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasCriterion> <bdqcrit:Standard> ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasDataQualityDimension> <bdqdim:Conformance> ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasResourceType> <bdqffdq:SingleRecord> .
-
-<urn:uuid:9ddd0e81-be7e-47f9-a3d4-fa3704750ad5> a <https://rs.tdwg.org/bdqffdq/terms/ValidationMethod> ;
-	rdfs:label "ValidationMethod: VALIDATION_MODIFIED_STANDARD with Specification for: VALIDATION_MODIFIED_STANDARD" ;
-	skos:historyNote "Source: TG2" ;
-	skos:prefLabel "ValidationMethod: VALIDATION_MODIFIED_STANDARD with Specification for: VALIDATION_MODIFIED_STANDARD" ;
-	<https://rs.tdwg.org/bdqffdq/terms/forValidation> <https://rs.tdwg.org/bdqcore/terms/c253f11a-6161-4692-bfce-4328f1961630-2024-09-16> ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasSpecification> <urn:uuid:aafbdb98-9875-4baa-bcd7-685bafadab82> .
-
-<urn:uuid:aafbdb98-9875-4baa-bcd7-685bafadab82> a <https://rs.tdwg.org/bdqffdq/terms/Specification> ;
-	rdfs:comment "INTERNAL_PREREQUISITES_NOT_MET if dcterms:modified is bdq:Empty; COMPLIANT if the value of dcterms:modified is a valid ISO 8601 date; otherwise NOT_COMPLIANT." ;
-	rdfs:label "Specification for: VALIDATION_MODIFIED_STANDARD" ;
-	skos:example "dcterms:modified=\"1963-03-08T14:67-0600\": Response.status=RUN_HAS_RESULT, Response.result=NOT_COMPLIANT, Response.comment=\"dwc:eventDate does not contain a valid ISO 8601-1:2019 date\"" , "dcterms:modified=\"2022-03-08T14\": Response.status=RUN_HAS_RESULT, Response.result=COMPLIANT, Response.comment=\"dwc:eventDate contains a valid ISO 8601-1:2019 date\"" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasAuthoritiesDefaults> "" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasExpectedResponse> "INTERNAL_PREREQUISITES_NOT_MET if dcterms:modified is bdq:Empty; COMPLIANT if the value of dcterms:modified is a valid ISO 8601 date; otherwise NOT_COMPLIANT." .
-
 <https://rs.tdwg.org/bdqcore/terms/0267c35f-a02b-4dc9-9a01-38797faa6b2b-2024-09-05> dcterms:bibliographicCitation "" ;
 	dcterms:isVersionOf <https://rs.tdwg.org/bdqcore/terms/0267c35f-a02b-4dc9-9a01-38797faa6b2b> ;
 	dcterms:issued "2024-09-05" ;
@@ -887,12 +826,12 @@
 	skos:historyNote "https://api.github.com/repos/tdwg/bdq/issues/255" ;
 	skos:note "This bdq:Supplementary test is not regarded as CORE (cf. bdq:CORE) because assessment of dwc:eventTime is out of scope for the CORE use case, where temporal resolution is only considered down to the resolution of approximately one day.  Time is often known for observational occurrence data, but very seldom recorded for vouchered specimen data.  This test has significant value for research and other uses of observational data.   Any analysis of time data needs to be very cognizant of substantial problems related to temporal data of which time zones are just the tip of the iceberg, see: https://xkcd.com/2867/,Time is  of one or more of the reasons: not being widely applicable; not informative; not straightforward to implement or likely to return a high percentage of either bdq:COMPLIANT or bdq:NOT_COMPLIANT results (cf bdq:Response.result). A Supplementary test may be implemented as CORE when a suitable use case exists." ;
 	skos:prefLabel "Missing prefLabel for SingleRecord" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasActedUponInformationElement> <urn:uuid:2a5e26db-f413-47ea-a37b-72e9c8b06591> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasActedUponInformationElement> <urn:uuid:c1d88aed-44de-4aa3-b21e-fef022c97ebc> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasCriterion> <bdqcrit:NotEmpty> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasDataQualityDimension> <bdqdim:Completeness> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasResourceType> <bdqffdq:SingleRecord> .
 
-<urn:uuid:2a5e26db-f413-47ea-a37b-72e9c8b06591> a <https://rs.tdwg.org/bdqffdq/terms/ActedUpon> ;
+<urn:uuid:c1d88aed-44de-4aa3-b21e-fef022c97ebc> a <https://rs.tdwg.org/bdqffdq/terms/ActedUpon> ;
 	rdfs:label "Information Element ActedUpon dwc:eventTime" ;
 	<https://rs.tdwg.org/bdqffdq/terms/composedOf> dwc:eventTime ;
 	<skos:prefLabel> "Information Element ActedUpon dwc:eventTime" .
@@ -920,12 +859,12 @@
 	skos:historyNote "https://api.github.com/repos/tdwg/bdq/issues/250" ;
 	skos:note "This bdq:Supplementary test is not regarded as CORE (cf. bdq:CORE) because of one or more of the reasons: not being widely applicable; not informative; likely to return a high percentage of either bdq:COMPLIANT or bdq:NOT_COMPLIANT results (cf bdq:Response.result). A Supplementary test may be implemented as CORE when a suitable use case exists." ;
 	skos:prefLabel "Missing prefLabel for SingleRecord" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasActedUponInformationElement> <urn:uuid:370ef3ee-a09e-436e-8731-de37030222c1> ;
+	<https://rs.tdwg.org/bdqffdq/terms/hasActedUponInformationElement> <urn:uuid:e61fea6b-aa96-43b5-815c-90fef0a27536> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasCriterion> <bdqcrit:NotEmpty> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasDataQualityDimension> <bdqdim:Completeness> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasResourceType> <bdqffdq:SingleRecord> .
 
-<urn:uuid:370ef3ee-a09e-436e-8731-de37030222c1> a <https://rs.tdwg.org/bdqffdq/terms/ActedUpon> ;
+<urn:uuid:e61fea6b-aa96-43b5-815c-90fef0a27536> a <https://rs.tdwg.org/bdqffdq/terms/ActedUpon> ;
 	rdfs:label "Information Element ActedUpon dwc:verbatimEventDate" ;
 	<https://rs.tdwg.org/bdqffdq/terms/composedOf> dwc:verbatimEventDate ;
 	<skos:prefLabel> "Information Element ActedUpon dwc:verbatimEventDate" .
@@ -971,34 +910,6 @@
 	skos:prefLabel "ValidationMethod: VALIDATION_MONTH_NOTEMPTY with Specification for: VALIDATION_MONTH_NOTEMPTY" ;
 	<https://rs.tdwg.org/bdqffdq/terms/forValidation> <https://rs.tdwg.org/bdqcore/terms/dc2fc946-8114-491b-8a7b-3242a274a221-2024-09-05> ;
 	<https://rs.tdwg.org/bdqffdq/terms/hasSpecification> <urn:uuid:72c4b1da-c0d1-4da6-9128-92fa14439242> .
-
-<https://rs.tdwg.org/bdqcore/terms/e17918fc-25ca-4a3a-828b-4502432b98c4-2024-09-05> dcterms:bibliographicCitation "" ;
-	dcterms:isVersionOf <https://rs.tdwg.org/bdqcore/terms/e17918fc-25ca-4a3a-828b-4502432b98c4> ;
-	dcterms:issued "2024-09-05" ;
-	a <https://rs.tdwg.org/bdqffdq/terms/Validation> ;
-	rdfs:comment "Is there a value in dcterms:modified?" ;
-	rdfs:label "VALIDATION_MODIFIED_NOTEMPTY" ;
-	skos:historyNote "https://api.github.com/repos/tdwg/bdq/issues/224" ;
-	skos:note "This bdq:Supplementary test is not regarded as CORE (cf. bdq:CORE) because of one or more of the reasons: not being widely applicable; not informative; not straightforward to implement or likely to return a high percentage of either bdq:COMPLIANT or bdq:NOT_COMPLIANT results (cf bdq:Response.result). A Supplementary test may be implemented as CORE when a suitable use case exists. See Issue comments below." ;
-	skos:prefLabel "Missing prefLabel for SingleRecord" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasActedUponInformationElement> <urn:uuid:a0134869-fe1b-4438-9a82-f6d99b6c0270> ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasCriterion> <bdqcrit:NotEmpty> ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasDataQualityDimension> <bdqdim:Completeness> ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasResourceType> <bdqffdq:SingleRecord> .
-
-<urn:uuid:3eaefeb3-41e6-44de-82e5-577c03622785> a <https://rs.tdwg.org/bdqffdq/terms/Specification> ;
-	rdfs:comment "COMPLIANT if dcterms:modified is bdq:NotEmpty; otherwise NOT_COMPLIANT" ;
-	rdfs:label "Specification for: VALIDATION_MODIFIED_NOTEMPTY" ;
-	skos:example "dcterms:modified=\"2022-01-02\": Response.status=RUN_HAS_RESULT, Response.result=COMPLIANT, Response.comment=\"dcterms:modified is bdq:NotEmpty\"" , "dcterms:modified=\"[null]\": Response.status=RUN_HAS_RESULT, Response.result=NOT_COMPLIANT, Response.comment=\"dcterms:modified is bdq:Empty\"" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasAuthoritiesDefaults> "" ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasExpectedResponse> "COMPLIANT if dcterms:modified is bdq:NotEmpty; otherwise NOT_COMPLIANT" .
-
-<urn:uuid:b910b4b8-a788-4548-9e3b-00c3ec5c2446> a <https://rs.tdwg.org/bdqffdq/terms/ValidationMethod> ;
-	rdfs:label "ValidationMethod: VALIDATION_MODIFIED_NOTEMPTY with Specification for: VALIDATION_MODIFIED_NOTEMPTY" ;
-	skos:historyNote "Source: TG2" ;
-	skos:prefLabel "ValidationMethod: VALIDATION_MODIFIED_NOTEMPTY with Specification for: VALIDATION_MODIFIED_NOTEMPTY" ;
-	<https://rs.tdwg.org/bdqffdq/terms/forValidation> <https://rs.tdwg.org/bdqcore/terms/e17918fc-25ca-4a3a-828b-4502432b98c4-2024-09-05> ;
-	<https://rs.tdwg.org/bdqffdq/terms/hasSpecification> <urn:uuid:3eaefeb3-41e6-44de-82e5-577c03622785> .
 
 bdq:Spatial-Temporal_Patterns a <https://rs.tdwg.org/bdqffdq/terms/UseCase> ;
 	rdfs:label "bdq:Spatial-Temporal_Patterns" .
