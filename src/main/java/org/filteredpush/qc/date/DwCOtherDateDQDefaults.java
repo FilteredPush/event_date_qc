@@ -46,16 +46,16 @@ public class DwCOtherDateDQDefaults extends DwCOtherDateDQ {
 	 * with default values: bdq:earliestVaidDate="1753-01-01"; bdq:latestValidDate=current day
 	 *
 	 * Provides: VALIDATION_DATEIDENTIFIED_INRANGE
-	 * Version: 2023-09-18
+     * Version: 2024-09-16
 	 *
 	 * @param dateIdentified the provided dwc:dateIdentified to evaluate
 	 * @param eventDate the provided dwc:eventDate to evaluate as preceding dateIdentified
 	 * @return DQResponse the response of type ComplianceValue  to return
 	 */
-	@Validation(label="VALIDATION_DATEIDENTIFIED_INRANGE", description="Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate?")
-	@Provides("dc8aae4b-134f-4d75-8a71-c4186239178e")
-	@ProvidesVersion("https://rs.tdwg.org/bdq/terms/dc8aae4b-134f-4d75-8a71-c4186239178e/2023-09-18")
-	@Specification("INTERNAL_PREREQUISITES_NOT_MET if (1) dwc:dateIdentified is EMPTY, or (2) dwc:dateIdentified contains an invalid value according to ISO 8601-1, or (3) bdq:includeEventDate=true and dwc:eventDate is not a valid ISO 8601-1 date; COMPLIANT if the value of dwc:dateIdentified is between bdq:earliestValidDate and bdq:latestValidDate inclusive and either (1) dwc:eventDate is EMPTY or bdq:includeEventDate=false, or (2) if dwc:eventDate is a valid ISO 8601-1 date and dwc:dateIdentified overlaps or is later than the dwc:eventDate; otherwise NOT_COMPLIANT bdq:sourceAuthority = 'ISO 8601-1:2019' {[https://www.iso.org/iso-8601-date-and-time-format.html]},bdq:earliestValidDate default='1753-01-01',bdq:latestValidDate default=[current day],bdq:includeEventDate default=true")
+    @Validation(label="VALIDATION_DATEIDENTIFIED_INRANGE", description="Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate?")
+    @Provides("dc8aae4b-134f-4d75-8a71-c4186239178e")
+    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/dc8aae4b-134f-4d75-8a71-c4186239178e/2024-09-16")
+    @Specification("INTERNAL_PREREQUISITES_NOT_MET if (1) dwc:dateIdentified is bdq:Empty, or (2) dwc:dateIdentified contains an invalid value according to ISO 8601, or (3) bdq:includeEventDate=true and dwc:eventDate is not a valid ISO 8601 date; COMPLIANT if the value of dwc:dateIdentified is between bdq:earliestValidDate and bdq:latestValidDate inclusive and either (1) dwc:eventDate is bdq:Empty or bdq:includeEventDate=false, or (2) if dwc:eventDate is a valid ISO 8601 date and dwc:dateIdentified overlaps or is later than the dwc:eventDate; otherwise NOT_COMPLIANT. ,bdq:earliestValidDate default = '1753-01-01',bdq:latestValidDate default = '{current day}',bdq:includeEventDate default = 'true'")
 	public static DQResponse<ComplianceValue> validationDateidentifiedInrange(
 		@ActedUpon("dwc:dateIdentified") String dateIdentified,
 		@Consulted("dwc:eventDate") String eventDate
