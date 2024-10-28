@@ -26,7 +26,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.filteredpush.qc.date.DateUtils;
+import org.filteredpush.qc.date.util.DateUtils;
 import org.junit.Test;
 
 /**
@@ -57,7 +57,7 @@ public class DateUtilsTest {
 	}
 	
 	/**
-	 * Test method for {@link org.filteredpush.qc.date.DateUtils#stringIsISOFormattedDate(java.lang.String)}.
+	 * Test method for {@link org.filteredpush.qc.date.util.DateUtils#stringIsISOFormattedDate(java.lang.String)}.
 	 */
 	@Test
 	public void teststringIsISOFormattedDate() {
@@ -88,7 +88,7 @@ public class DateUtilsTest {
 	}
 	
 	/**
-	 * Test method for {@link org.filteredpush.qc.date.DateUtils#createEventDateFromParts(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
+	 * Test method for {@link org.filteredpush.qc.date.util.DateUtils#createEventDateFromParts(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
 	 */
 	@Test
 	public void testCreateEventDateFromParts() {
@@ -147,7 +147,7 @@ public class DateUtilsTest {
 	}
 
 	/**
-	 * Test method for {@link org.filteredpush.qc.date.DateUtils#isRange(java.lang.String)}.
+	 * Test method for {@link org.filteredpush.qc.date.util.DateUtils#isRange(java.lang.String)}.
 	 */
     @Test
     public void isRangeTest() { 
@@ -162,7 +162,7 @@ public class DateUtilsTest {
     }
 
 	/**
-	 * Test method for {@link org.filteredpush.qc.date.DateUtils#extractInterval(java.lang.String)}.
+	 * Test method for {@link org.filteredpush.qc.date.util.DateUtils#extractInterval(java.lang.String)}.
 	 */
 	@Test
 	public void testExtractDateInterval() {
@@ -360,7 +360,7 @@ public class DateUtilsTest {
 	}
     	
 	/**
-	 * Test method for {@link org.filteredpush.qc.date.DateUtils#extractDate(java.lang.String)}.
+	 * Test method for {@link org.filteredpush.qc.date.util.DateUtils#extractDate(java.lang.String)}.
 	 */
     @Test
     public void extractDateTest() { 

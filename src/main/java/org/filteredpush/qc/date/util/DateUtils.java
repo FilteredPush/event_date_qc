@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.filteredpush.qc.date;
+package org.filteredpush.qc.date.util;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -24,7 +24,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.time.Period;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -36,14 +35,15 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.datakurator.ffdq.api.ResultState;
+import org.filteredpush.qc.date.EmptyDateException;
+import org.filteredpush.qc.date.EventResult;
+import org.filteredpush.qc.date.LocalDateInterval;
 import org.filteredpush.qc.date.EventResult.EventQCResultState;
-import org.filteredpush.qc.date.LocalDateInterval.DatePair;
+import org.filteredpush.qc.date.LocalDateTimeInterval;
+import org.filteredpush.qc.date.TimeExtractionException;
 
-import java.time.LocalTime;
 import java.time.Instant;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -53,7 +53,6 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.time.temporal.ChronoField;
-import java.time.temporal.TemporalUnit;
 
 /**
  * Utility functions for working with DarwinCore date concepts.
