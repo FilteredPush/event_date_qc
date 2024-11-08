@@ -9,9 +9,9 @@ DOI: 10.5281/zenodo.166329
 
 This library provides two classes each with a set of static methods which provide functions to support data quality control of date data in the context of biodiversity.  DateUtils provides a set of primitive methods for working with event date data, and DwCEventQC provides a wrapper set of annotated methods for making assertions about event date data in terms of the Fittness for Use Framework.  
 
-This library provides implementations for the Time related tests in the TDWG BDQ TG2 test suite.
+This library provides implementations for the Time related tests in the TDWG BDQ Core test suite.
 
-Version 3.0.4 is up to date with the CORE and SUPPLEMENTAL Time related tests as of 2024-07-10.
+Version 3.0.5 is up to date with the CORE and SUPPLEMENTAL Time related tests as of 2024-11-08.
 
 # Include using maven
 
@@ -20,7 +20,7 @@ Available in Maven Central.
     <dependency>
         <groupId>org.filteredpush</groupId>
         <artifactId>event_date_qc</artifactId>
-        <version>3.0.4</version>
+        <version>3.0.5</version>
     </dependency>
 
 # Building

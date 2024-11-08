@@ -43,7 +43,7 @@ import org.datakurator.ffdq.api.result.ComplianceValue;
  */
 @Mechanism(
 		value = "urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8",
-		label = "Kurator: Date Validator - DwCEventDQ:v3.0.5-SNAPSHOT")
+		label = "Kurator: Date Validator - DwCEventDQ:v3.0.5")
 public class DwCEventDQDefaults extends DwCEventDQ {
 
 	private static final Log logger = LogFactory.getLog(DwCEventDQDefaults.class);
