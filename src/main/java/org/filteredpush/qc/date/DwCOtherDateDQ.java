@@ -44,24 +44,24 @@ import java.util.Map;
 		value = "urn:uuid:bf5b7706-d0a6-4c65-9644-c750e7188ee0",
 		label = "Kurator: Date Validator - DwCOtherDateDQ:v3.0.6-SNAPSHOT")
 public class DwCOtherDateDQ {
-	
+
 	private static final Log logger = LogFactory.getLog(DwCOtherDateDQ.class);
-	
+
 	/**
 	 * Is the value of dwc:dateIdentified a valid ISO date?
 	 * 
 	 * #69 Validation SingleRecord Conformance: dateidentified notstandard
 	 *
 	 * Provides: VALIDATION_DATEIDENTIFIED_STANDARD
-     * Version: 2024-09-16
+	 * Version: 2024-09-16
 	 *
 	 * @param dateIdentified the provided dwc:dateIdentified to evaluate as ActedUpon.
 	 * @return DQResponse the response of type ComplianceValue to return
 	 */
-    @Validation(label="VALIDATION_DATEIDENTIFIED_STANDARD", description="Is the value of dwc:dateIdentified a valid ISO date?")
-    @Provides("66269bdd-9271-4e76-b25c-7ab81eebe1d8")
-    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/66269bdd-9271-4e76-b25c-7ab81eebe1d8/2024-09-16")
-    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is bdq:Empty; COMPLIANT if the value of dwc:dateIdentified contains a valid ISO 8601 date; otherwise NOT_COMPLIANT")
+	@Validation(label="VALIDATION_DATEIDENTIFIED_STANDARD", description="Is the value of dwc:dateIdentified a valid ISO date?")
+	@Provides("66269bdd-9271-4e76-b25c-7ab81eebe1d8")
+	@ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/66269bdd-9271-4e76-b25c-7ab81eebe1d8/2024-09-16")
+	@Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is bdq:Empty; COMPLIANT if the value of dwc:dateIdentified contains a valid ISO 8601 date; otherwise NOT_COMPLIANT")
 	public static DQResponse<ComplianceValue> validationDateidentifiedStandard(
 			@ActedUpon("dwc:dateIdentified") String dateIdentified) {
 		DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
@@ -70,7 +70,7 @@ public class DwCOtherDateDQ {
 		// INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is 
 		// EMPTY; COMPLIANT if the value of dwc:dateIdentified contains 
 		// a valid ISO 8601-1 date; otherwise NOT_COMPLIANT 
-		
+
 		if (DateUtils.isEmpty(dateIdentified)) {
 			result.addComment("No value provided for dwc:dateIdentified.");
 			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -90,28 +90,28 @@ public class DwCOtherDateDQ {
 				result.addComment(e.getMessage());
 			}
 		}		
-		
+
 		return result;
 	}
-	
-    /**
-    * Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate?
-    *
-    * Provides: VALIDATION_DATEIDENTIFIED_INRANGE
-    *
-    * @param dateIdentified the provided dwc:dateIdentified to evaluate as ActedUpon.
-    * @param eventDate the provided dwc:eventDate to evaluate as Consulted.
-    * @return DQResponse the response of type ComplianceValue  to return
-    */
-   	
-    
+
+	/**
+	 * Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate?
+	 *
+	 * Provides: VALIDATION_DATEIDENTIFIED_INRANGE
+	 *
+	 * @param dateIdentified the provided dwc:dateIdentified to evaluate as ActedUpon.
+	 * @param eventDate the provided dwc:eventDate to evaluate as Consulted.
+	 * @return DQResponse the response of type ComplianceValue  to return
+	 */
+
+
 	/**
 	 * Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate?
 	 * 
 	 * #76 Validation SingleRecord Likelihood: dateidentified outofrange
 	 *
 	 * Provides: VALIDATION_DATEIDENTIFIED_INRANGE
-     * Version: 2024-09-16
+	 * Version: 2024-09-16
 	 *
 	 * @param dateIdentified the provided dwc:dateIdentified to evaluate
 	 * @param eventDate the provided dwc:eventDate to evaluate as preceding dateIdentified
@@ -121,17 +121,17 @@ public class DwCOtherDateDQ {
 	 *   the eventDate.
 	 * @return DQResponse the response of type ComplianceValue  to return
 	 */
-    @Validation(label="VALIDATION_DATEIDENTIFIED_INRANGE", description="Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate?")
-    @Provides("dc8aae4b-134f-4d75-8a71-c4186239178e")
-    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/dc8aae4b-134f-4d75-8a71-c4186239178e/2024-09-16")
-    @Specification("INTERNAL_PREREQUISITES_NOT_MET if (1) dwc:dateIdentified is bdq:Empty, or (2) dwc:dateIdentified contains an invalid value according to ISO 8601, or (3) bdq:includeEventDate=true and dwc:eventDate is not a valid ISO 8601 date; COMPLIANT if the value of dwc:dateIdentified is between bdq:earliestValidDate and bdq:latestValidDate inclusive and either (1) dwc:eventDate is bdq:Empty or bdq:includeEventDate=false, or (2) if dwc:eventDate is a valid ISO 8601 date and dwc:dateIdentified overlaps or is later than the dwc:eventDate; otherwise NOT_COMPLIANT. ,bdq:earliestValidDate default = '1753-01-01',bdq:latestValidDate default = '{current day}',bdq:includeEventDate default = 'true'")
+	@Validation(label="VALIDATION_DATEIDENTIFIED_INRANGE", description="Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate?")
+	@Provides("dc8aae4b-134f-4d75-8a71-c4186239178e")
+	@ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/dc8aae4b-134f-4d75-8a71-c4186239178e/2024-09-16")
+	@Specification("INTERNAL_PREREQUISITES_NOT_MET if (1) dwc:dateIdentified is bdq:Empty, or (2) dwc:dateIdentified contains an invalid value according to ISO 8601, or (3) bdq:includeEventDate=true and dwc:eventDate is not a valid ISO 8601 date; COMPLIANT if the value of dwc:dateIdentified is between bdq:earliestValidDate and bdq:latestValidDate inclusive and either (1) dwc:eventDate is bdq:Empty or bdq:includeEventDate=false, or (2) if dwc:eventDate is a valid ISO 8601 date and dwc:dateIdentified overlaps or is later than the dwc:eventDate; otherwise NOT_COMPLIANT. ,bdq:earliestValidDate default = '1753-01-01',bdq:latestValidDate default = '{current day}',bdq:includeEventDate default = 'true'")
 	public static DQResponse<ComplianceValue> validationDateidentifiedInrange(
-		@ActedUpon("dwc:dateIdentified") String dateIdentified,
-		@Consulted("dwc:eventDate") String eventDate, 
-		@Parameter(name="bdq:earliestValidDate") String earliestValidDate,
-		@Parameter(name="bdq:latestValidDate") String latestValidDate,
-		@Parameter(name="bdq:includeEventDate") String includeEventDate
-	) {
+			@ActedUpon("dwc:dateIdentified") String dateIdentified,
+			@Consulted("dwc:eventDate") String eventDate, 
+			@Parameter(name="bdq:earliestValidDate") String earliestValidDate,
+			@Parameter(name="bdq:latestValidDate") String latestValidDate,
+			@Parameter(name="bdq:includeEventDate") String includeEventDate
+			) {
 
 		// Specification
 		// INTERNAL_PREREQUISITES_NOT_MET if (1) dwc:dateIdentified 
@@ -157,21 +157,21 @@ public class DwCOtherDateDQ {
 			earliestValidDate = "1753-01-01";
 		} else { 
 			if (!earliestValidDate.equals("1753-01-01")) { 
-        		result.addComment("Using non-default argument ["+ earliestValidDate +"] for Parameter bdq:earliestValidDate.");
+				result.addComment("Using non-default argument ["+ earliestValidDate +"] for Parameter bdq:earliestValidDate.");
 			}
 		}
 		if (DateUtils.isEmpty(latestValidDate)) { 
 			latestValidDate  = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
 		} else { 
 			if (!latestValidDate.equals(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))) { 
-        		result.addComment("Using non-default argument ["+ latestValidDate +"] for Parameter bdq:latestValidDate.");
+				result.addComment("Using non-default argument ["+ latestValidDate +"] for Parameter bdq:latestValidDate.");
 			}
 		}
 		if (DateUtils.isEmpty(includeEventDate)) { 
 			includeEventDate = "true";
 		} else { 
 			if (!includeEventDate.equals("true")) { 
-        		result.addComment("Using non-default argument ["+ includeEventDate +"] for Parameter bdq:includeEventDate.");
+				result.addComment("Using non-default argument ["+ includeEventDate +"] for Parameter bdq:includeEventDate.");
 			}			
 		}
 		Boolean includeEventDateBoolean = false;
@@ -189,7 +189,7 @@ public class DwCOtherDateDQ {
 
 		logger.debug(dateIdentified);
 		logger.debug(eventDate);
-		
+
 		if (DateUtils.isEmpty(dateIdentified)) {
 			// INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is 
 			// EMPTY 
@@ -285,22 +285,22 @@ public class DwCOtherDateDQ {
 
 		return result;
 	}
-	
+
 	/**
 	 * Propose amendment to the value of dwc:dateIdentified to a valid ISO date.
 	 * 
 	 * #26 Amendment SingleRecord Conformance: dateidentified standardized
 	 *
 	 * Provides: AMENDMENT_DATEIDENTIFIED_STANDARDIZED
-     * Version: 2024-09-16
+	 * Version: 2024-09-16
 	 *
 	 * @param dateIdentified the provided dwc:dateIdentified to evaluate
 	 * @return DQResponse the response of type AmendmentValue to return
 	 */
-    @Amendment(label="AMENDMENT_DATEIDENTIFIED_STANDARDIZED", description="Proposes an amendment to the value of dwc:dateIdentified to a valid ISO date.")
-    @Provides("39bb2280-1215-447b-9221-fd13bc990641")
-    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/39bb2280-1215-447b-9221-fd13bc990641/2024-09-16")
-    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is bdq:Empty; AMENDED if the value of dwc:dateIdentified is not a properly formatted ISO 8601 date but is unambiguous and altered to be a valid ISO 8601 date; otherwise NOT_AMENDED.")
+	@Amendment(label="AMENDMENT_DATEIDENTIFIED_STANDARDIZED", description="Proposes an amendment to the value of dwc:dateIdentified to a valid ISO date.")
+	@Provides("39bb2280-1215-447b-9221-fd13bc990641")
+	@ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/39bb2280-1215-447b-9221-fd13bc990641/2024-09-16")
+	@Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:dateIdentified is bdq:Empty; AMENDED if the value of dwc:dateIdentified is not a properly formatted ISO 8601 date but is unambiguous and altered to be a valid ISO 8601 date; otherwise NOT_AMENDED.")
 	public static DQResponse<AmendmentValue> amendmentDateidentifiedStandardized(
 			@ActedUpon("dwc:dateIdentified") String dateIdentified) {
 		DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
@@ -326,7 +326,7 @@ public class DwCOtherDateDQ {
 								extractResponse.getResultState().equals(EventResult.EventQCResultState.DATE) ||
 								extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS) ||
 								extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)
-						)
+								)
 						)
 				{
 					Map<String, String> correctedValues = new HashMap<>();
@@ -394,7 +394,7 @@ public class DwCOtherDateDQ {
 
 		return result;
 	}
-	
+
 	/**
 	 * Given a dateModified, check to see if it is empty or contains a valid date value.  If it contains
 	 * a value that is not a valid date, propose a properly formatted dateModified as an amendment.
@@ -424,7 +424,7 @@ public class DwCOtherDateDQ {
 								extractResponse.getResultState().equals(EventResult.EventQCResultState.DATE) ||
 								extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS) ||
 								extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)
-						)
+								)
 						)
 				{
 					Map<String, String> correctedValues = new HashMap<String, String>();
@@ -495,68 +495,68 @@ public class DwCOtherDateDQ {
 		return result;
 	}
 
-    /**
-    * Is the date of identification equal to, or later than the dwc:eventDate?
-    *
-    * Provides: VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE
-    *
-    * @param eventDate the provided dwc:eventDate to evaluate as ActedUpon.
-    * @param dateIdentified the provided dwc:dateIdentified to evaluate as ActedUpon.
-    * @return DQResponse the response of type ComplianceValue  to return
-    */
-   
-	
-    /**
-    * Is the date of identification equal to, or later than the dwc:eventDate?
-    *
-    * Provides: #92 VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE
-    * Version: 2024-09-16
-    *
-    * @param eventDate the provided dwc:eventDate to evaluate as ActedUpon.
-    * @param dateIdentified the provided dwc:dateIdentified to evaluate as ActedUpon.
-    * @return DQResponse the response of type ComplianceValue  to return
-    */
-    @Validation(label="VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE", description="Is the date of identification equal to, or later than the dwc:eventDate?")
-    @Provides("391ca46d-3842-4a18-970c-0434cbc17f07")
-    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/391ca46d-3842-4a18-970c-0434cbc17f07/2024-09-16")
-    @Specification("INTERNAL_PREREQUISITES_NOT_MET if either dwc:dateIdentified or dwc:eventDate are empty or are not interpretable as ISO 8601 dates; COMPLIANT if dwc:dateIdentified is equal to or is entirely later than dwc:eventDate; otherwise NOT_COMPLIANT")
-    public static DQResponse<ComplianceValue> validationDateidentifiedAftereventdate(
-        @ActedUpon("dwc:eventDate") String eventDate, 
-        @ActedUpon("dwc:dateIdentified") String dateIdentified
-    ) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+	/**
+	 * Is the date of identification equal to, or later than the dwc:eventDate?
+	 *
+	 * Provides: VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE
+	 *
+	 * @param eventDate the provided dwc:eventDate to evaluate as ActedUpon.
+	 * @param dateIdentified the provided dwc:dateIdentified to evaluate as ActedUpon.
+	 * @return DQResponse the response of type ComplianceValue  to return
+	 */
 
-        // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if either dwc:dateIdentified 
-        // or dwc:eventDate are empty or are not interpretable as ISO 
-        // 8601-1:2019 dates; COMPLIANT if dwc:dateIdentified is equal 
-        // to or is entirely later than dwc:eventDate; otherwise NOT_COMPLIANT 
-        // 
-        
+
+	/**
+	 * Is the date of identification equal to, or later than the dwc:eventDate?
+	 *
+	 * Provides: #92 VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE
+	 * Version: 2024-09-16
+	 *
+	 * @param eventDate the provided dwc:eventDate to evaluate as ActedUpon.
+	 * @param dateIdentified the provided dwc:dateIdentified to evaluate as ActedUpon.
+	 * @return DQResponse the response of type ComplianceValue  to return
+	 */
+	@Validation(label="VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE", description="Is the date of identification equal to, or later than the dwc:eventDate?")
+	@Provides("391ca46d-3842-4a18-970c-0434cbc17f07")
+	@ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/391ca46d-3842-4a18-970c-0434cbc17f07/2024-09-16")
+	@Specification("INTERNAL_PREREQUISITES_NOT_MET if either dwc:dateIdentified or dwc:eventDate are empty or are not interpretable as ISO 8601 dates; COMPLIANT if dwc:dateIdentified is equal to or is entirely later than dwc:eventDate; otherwise NOT_COMPLIANT")
+	public static DQResponse<ComplianceValue> validationDateidentifiedAftereventdate(
+			@ActedUpon("dwc:eventDate") String eventDate, 
+			@ActedUpon("dwc:dateIdentified") String dateIdentified
+			) {
+		DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+
+		// Specification
+		// INTERNAL_PREREQUISITES_NOT_MET if either dwc:dateIdentified 
+		// or dwc:eventDate are empty or are not interpretable as ISO 
+		// 8601-1:2019 dates; COMPLIANT if dwc:dateIdentified is equal 
+		// to or is entirely later than dwc:eventDate; otherwise NOT_COMPLIANT 
+		// 
+
 		if (DateUtils.isEmpty(dateIdentified) || DateUtils.isEmpty(eventDate)) {
 			result.addComment("No value provided for one or both of dwc:dateIdentified or dwc:eventDate.");
 			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
 		} else { 
 			try { 
-		        if (DateUtils.eventDateValid(dateIdentified)) {
-			        if (DateUtils.eventDateValid(eventDate)) {
-			        	LocalDateInterval identifiedInterval = DateUtils.extractInterval(dateIdentified);
-			        	LocalDateInterval eventInterval = DateUtils.extractInterval(eventDate);
-			        	if (dateIdentified.trim().equals(eventDate.trim())) { 
-			        		result.setValue(ComplianceValue.COMPLIANT);
-			        		result.addComment("Provided value for dwc:dateIdentified '" + dateIdentified + "' is the same as the dwc:eventDate provided ["+eventDate+"] . ");
-			        	} else if (identifiedInterval.overlaps(eventInterval)) { 
-			        		result.setValue(ComplianceValue.COMPLIANT);
-			        		result.addComment("Provided value for dwc:dateIdentified '" + dateIdentified + "' overlaps the dwc:eventDate provided ["+eventDate+"] . ");
-			        	} else if (identifiedInterval.getStartDate().isAfter(eventInterval.getEndDate())) {
-			        		result.setValue(ComplianceValue.COMPLIANT);
-			        		result.addComment("Provided value for dwc:dateIdentified '" + dateIdentified + "' is entirely after the dwc:eventDate provided ["+eventDate+"] . ");
-			        	} else {
-			        		logger.debug(identifiedInterval);
-			        		logger.debug(eventInterval);
-			        		result.setValue(ComplianceValue.NOT_COMPLIANT);
-			        		result.addComment("Provided value for dwc:dateIdentified '" + dateIdentified + "' is entirely before dwc:eventDate provided ["+eventDate+"]");
-			        	}
+				if (DateUtils.eventDateValid(dateIdentified)) {
+					if (DateUtils.eventDateValid(eventDate)) {
+						LocalDateInterval identifiedInterval = DateUtils.extractInterval(dateIdentified);
+						LocalDateInterval eventInterval = DateUtils.extractInterval(eventDate);
+						if (dateIdentified.trim().equals(eventDate.trim())) { 
+							result.setValue(ComplianceValue.COMPLIANT);
+							result.addComment("Provided value for dwc:dateIdentified '" + dateIdentified + "' is the same as the dwc:eventDate provided ["+eventDate+"] . ");
+						} else if (identifiedInterval.overlaps(eventInterval)) { 
+							result.setValue(ComplianceValue.COMPLIANT);
+							result.addComment("Provided value for dwc:dateIdentified '" + dateIdentified + "' overlaps the dwc:eventDate provided ["+eventDate+"] . ");
+						} else if (identifiedInterval.getStartDate().isAfter(eventInterval.getEndDate())) {
+							result.setValue(ComplianceValue.COMPLIANT);
+							result.addComment("Provided value for dwc:dateIdentified '" + dateIdentified + "' is entirely after the dwc:eventDate provided ["+eventDate+"] . ");
+						} else {
+							logger.debug(identifiedInterval);
+							logger.debug(eventInterval);
+							result.setValue(ComplianceValue.NOT_COMPLIANT);
+							result.addComment("Provided value for dwc:dateIdentified '" + dateIdentified + "' is entirely before dwc:eventDate provided ["+eventDate+"]");
+						}
 					} else { 
 						result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
 						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is not a validly formatted ISO date .");
@@ -574,29 +574,29 @@ public class DwCOtherDateDQ {
 			}
 		}
 
-        return result;
-    }
+		return result;
+	}
 
-    /**
-    * Is there a value in dcterms:modified?
-    *
-    * Provides: #224 VALIDATION_MODIFIED_NOTEMPTY
-    * Version: 2024-01-29
-    *
-    * @param modified the provided dcterms:modified to evaluate as ActedUpon.
-    * @return DQResponse the response of type ComplianceValue  to return
-    */
-    @Validation(label="VALIDATION_MODIFIED_NOTEMPTY", description="Is there a value in dcterms:modified?")
-    @Provides("e17918fc-25ca-4a3a-828b-4502432b98c4")
-    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/e17918fc-25ca-4a3a-828b-4502432b98c4/2024-01-29")
-    @Specification("COMPLIANT if dcterms:modified is bdq:NotEmpty; otherwise NOT_COMPLIANT. ")
-    public static DQResponse<ComplianceValue> validationModifiedNotempty(
-        @ActedUpon("dcterms:modified") String modified
-    ) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+	/**
+	 * Is there a value in dcterms:modified?
+	 *
+	 * Provides: #224 VALIDATION_MODIFIED_NOTEMPTY
+	 * Version: 2024-01-29
+	 *
+	 * @param modified the provided dcterms:modified to evaluate as ActedUpon.
+	 * @return DQResponse the response of type ComplianceValue  to return
+	 */
+	@Validation(label="VALIDATION_MODIFIED_NOTEMPTY", description="Is there a value in dcterms:modified?")
+	@Provides("e17918fc-25ca-4a3a-828b-4502432b98c4")
+	@ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/e17918fc-25ca-4a3a-828b-4502432b98c4/2024-01-29")
+	@Specification("COMPLIANT if dcterms:modified is bdq:NotEmpty; otherwise NOT_COMPLIANT. ")
+	public static DQResponse<ComplianceValue> validationModifiedNotempty(
+			@ActedUpon("dcterms:modified") String modified
+			) {
+		DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
-        // Specification
-        // COMPLIANT if dcterms:modified is not EMPTY; otherwise NOT_COMPLIANT 
+		// Specification
+		// COMPLIANT if dcterms:modified is not EMPTY; otherwise NOT_COMPLIANT 
 
 		if (DateUtils.isEmpty(modified)) {
 			result.addComment("No value provided for dcterms:modified.");
@@ -607,34 +607,34 @@ public class DwCOtherDateDQ {
 			result.setValue(ComplianceValue.COMPLIANT);
 			result.setResultState(ResultState.RUN_HAS_RESULT);
 		}
-        
-        return result;
-    }
-    
-    
-    /**
-    * Does the value of dcterms:modified a valid ISO date?
-    *
-    * Provides: VALIDATION_MODIFIED_STANDARD
-    * Version: 2024-09-16
-    *
-    * @param modified the provided dcterms:modified to evaluate as ActedUpon.
-    * @return DQResponse the response of type ComplianceValue  to return
-    */
-    @Validation(label="VALIDATION_MODIFIED_STANDARD", description="Does the value of dcterms:modified a valid ISO date?")
-    @Provides("c253f11a-6161-4692-bfce-4328f1961630")
-    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/c253f11a-6161-4692-bfce-4328f1961630/2024-09-16")
-    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dcterms:modified is bdq:Empty; COMPLIANT if the value of dcterms:modified is a valid ISO 8601 date; otherwise NOT_COMPLIANT.. ")
-    public DQResponse<ComplianceValue> validationModifiedStandard(
-        @ActedUpon("dcterms:modified") String modified
-    ) {
-        DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
 
-        // Specification
-        // INTERNAL_PREREQUISITES_NOT_MET if dcterms:modified is EMPTY; 
-        // COMPLIANT if the value of dcterms:modified is a valid ISO 
-        // 8601-1 date; otherwise NOT_COMPLIANT. 
-        
+		return result;
+	}
+
+
+	/**
+	 * Does the value of dcterms:modified a valid ISO date?
+	 *
+	 * Provides: VALIDATION_MODIFIED_STANDARD
+	 * Version: 2024-09-16
+	 *
+	 * @param modified the provided dcterms:modified to evaluate as ActedUpon.
+	 * @return DQResponse the response of type ComplianceValue  to return
+	 */
+	@Validation(label="VALIDATION_MODIFIED_STANDARD", description="Does the value of dcterms:modified a valid ISO date?")
+	@Provides("c253f11a-6161-4692-bfce-4328f1961630")
+	@ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/c253f11a-6161-4692-bfce-4328f1961630/2024-09-16")
+	@Specification("INTERNAL_PREREQUISITES_NOT_MET if dcterms:modified is bdq:Empty; COMPLIANT if the value of dcterms:modified is a valid ISO 8601 date; otherwise NOT_COMPLIANT.. ")
+	public DQResponse<ComplianceValue> validationModifiedStandard(
+			@ActedUpon("dcterms:modified") String modified
+			) {
+		DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
+
+		// Specification
+		// INTERNAL_PREREQUISITES_NOT_MET if dcterms:modified is EMPTY; 
+		// COMPLIANT if the value of dcterms:modified is a valid ISO 
+		// 8601-1 date; otherwise NOT_COMPLIANT. 
+
 		if (DateUtils.isEmpty(modified)) {
 			result.addComment("No value provided for dwc:modified.");
 			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
@@ -655,25 +655,25 @@ public class DwCOtherDateDQ {
 			}
 		}	
 
-        return result;
-    }
-    
-    
+		return result;
+	}
+
+
 	/**
 	 * Propose amendment of the value of dcterms:modified to a valid ISO date and time..
 	 * 
 	 * #273 Amendment SingleRecord Conformance: dateidentified standardized
 	 *
 	 * Provides: AMENDMENT_MODIFIED_STANDARDIZED
-     * Version: 2024-09-18
+	 * Version: 2024-09-18
 	 *
 	 * @param modified the provided dwc:modified to evaluate
 	 * @return DQResponse the response of type AmendmentValue to return
 	 */
-    @Amendment(label="AMENDMENT_MODIFIED_STANDARDIZED", description="Propose amendment of the value of dcterms:modified to a valid ISO date and time.")
-    @Provides("dfb4a260-4cbc-45b2-bf86-28be49c2cceb")
-    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/dfb4a260-4cbc-45b2-bf86-28be49c2cceb/2024-09-18")
-    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dcterms:modified is bdq:Empty; AMENDED if the value of dcterms:modified is not a properly formatted ISO 8601 date/time but is unambiguous, and is altered to be a valid ISO 8601 date/time; otherwise NOT_AMENDED. ")
+	@Amendment(label="AMENDMENT_MODIFIED_STANDARDIZED", description="Propose amendment of the value of dcterms:modified to a valid ISO date and time.")
+	@Provides("dfb4a260-4cbc-45b2-bf86-28be49c2cceb")
+	@ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/dfb4a260-4cbc-45b2-bf86-28be49c2cceb/2024-09-18")
+	@Specification("INTERNAL_PREREQUISITES_NOT_MET if dcterms:modified is bdq:Empty; AMENDED if the value of dcterms:modified is not a properly formatted ISO 8601 date/time but is unambiguous, and is altered to be a valid ISO 8601 date/time; otherwise NOT_AMENDED. ")
 	public static DQResponse<AmendmentValue> amendmentModifiedStandardized(
 			@ActedUpon("dcterms:modified") String modified) {
 		DQResponse<AmendmentValue> result = new DQResponse<AmendmentValue>();
@@ -699,7 +699,7 @@ public class DwCOtherDateDQ {
 								extractResponse.getResultState().equals(EventResult.EventQCResultState.DATE) ||
 								extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS) ||
 								extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)
-						)
+								)
 						)
 				{
 					Map<String, String> correctedValues = new HashMap<>();
