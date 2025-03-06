@@ -1,7 +1,10 @@
-# event_date_qc
+# event_date_qc 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.filteredpush/event_date_qc/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.filteredpush/event_date_qc)
+[![Javadocs](http://javadoc.io/badge/org.filteredpush/event_date_qc.svg)](http://javadoc.io/doc/org.filteredpush/event_date_qc)
+
 Data Quality library for dwc:eventDate and other dwc:Event terms.
 
-Tools for working with dates in forms found in biodiversity data.
+Tools for working with dates in forms found in biodiversity data. This library provides a set of static methods for working with dwc:Event to evaluate the quality of temporal data expressed with Darwin Core terms.
 
 DOI: 10.5281/zenodo.166329 
 
