@@ -2337,16 +2337,6 @@ public class DwCEventDQ {
 
 	/**
 	 * Is the value of dwc:eventDate entirely with the Parameter Range?
-	 *
-	 * Provides: VALIDATION_EVENTDATE_INRANGE
-	 *
-	 * @param eventDate the provided dwc:eventDate to evaluate as ActedUpon.
-	 * @return DQResponse the response of type ComplianceValue  to return
-	 */
-
-
-	/**
-	 * Is the value of dwc:eventDate entirely with the Parameter Range?
 	 * 
 	 * #36 Validation SingleRecord Conformance: eventdate outofrange
 	 * 
