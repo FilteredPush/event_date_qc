@@ -386,17 +386,21 @@ public class DwCOtherDateDQ {
 	}
 
 	/**
+	 * Use amendmentModifiedStandardized instead, this method is deprecated.
+	 *
 	 * Given a dateModified, check to see if it is empty or contains a valid date value.  If it contains
 	 * a value that is not a valid date, propose a properly formatted dateModified as an amendment.
 	 *
 	 * @param modified dcterms:modified (date last modified) to check
 	 * @return an implementation of DQAmendmentResponse, with a value containing a key for dwc:eventDate and a
 	 *	resultState is AMENDED if a new value is proposed.
+	 * @see DwCOtherDateDQ#amendmentModifiedStandardized(String)
 	 */
 	@Provides(value = "urn:uuid:367bf43f-9cb6-45b2-b45f-b8152f1d334a")
 	@Amendment(label = "Date Modified Format Correction", description = "Try to propose a correction for a date modified")
 	@Specification(value = "Check dcterms:modified to see if it is empty or contains a valid date value. If it contains a " +
 			"value that is not a valid date, propose a properly formatted dcterms:modified as an amendment.")
+	@Deprecated
 	public static DQResponse<AmendmentValue> correctModifiedDateFormat(@ActedUpon(value = "dcterms:modified") String modified) {
 		DQResponse<AmendmentValue> result = new DQResponse<>();
 
@@ -442,6 +446,8 @@ public class DwCOtherDateDQ {
 	}
 
 	/**
+	 * Use validationModifiedStandard instead, this method is deprecated.
+	 *
 	 * Test to see whether a provided dcterms:modified is a validly formated ISO date.
 	 *
 	 * Provides: ModifiedDateValid
@@ -449,12 +455,14 @@ public class DwCOtherDateDQ {
 	 * @param modified  a string to test
 	 * @return COMPLIANT if modified is a validly formated ISO date/time with a duration of less than one day, NOT_COMPLIANT if
 	 *	 not an ISO date/time or a range of days, INTERNAL_PREREQUSISITES_NOT_MET if modified is empty.
+	 * @see validationModifiedStandard(String)
 	 */
 	@Provides(value = "urn:uuid:62a9c256-43e4-41ee-8938-d2d2e99479ef")  // MODIFIED_DATE_INVALID/MODIFIED_DATE_VALID
 	@Validation(label = "Modified date correctly formatted", description = "Test to see whether a provided dcterms:modified " +
 			"is a validly formated ISO date/time.")
 	@Specification(value = "Compliant if dcterms:modified can to parsed to an explicit date/time, otherwise not compliant. " +
 			"Internal prerequisites not met if dcterms:modified is empty.")
+	@Deprecated
 	public static DQResponse<ComplianceValue> isModifiedDateValid(@ActedUpon(value = "dcterms:modified") String modified) {
 		DQResponse<ComplianceValue> result = new DQResponse<>();
 
@@ -484,17 +492,6 @@ public class DwCOtherDateDQ {
 		}
 		return result;
 	}
-
-	/**
-	 * Is the date of identification equal to, or later than the dwc:eventDate?
-	 *
-	 * Provides: VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE
-	 *
-	 * @param eventDate the provided dwc:eventDate to evaluate as ActedUpon.
-	 * @param dateIdentified the provided dwc:dateIdentified to evaluate as ActedUpon.
-	 * @return DQResponse the response of type ComplianceValue  to return
-	 */
-
 
 	/**
 	 * Is the date of identification equal to, or later than the dwc:eventDate?
@@ -605,7 +602,7 @@ public class DwCOtherDateDQ {
 	/**
 	 * Does the value of dcterms:modified a valid ISO date?
 	 *
-	 * Provides: VALIDATION_MODIFIED_STANDARD
+	 * Provides: #272 VALIDATION_MODIFIED_STANDARD
 	 * Version: 2024-09-16
 	 *
 	 * @param modified the provided dcterms:modified to evaluate as ActedUpon.
