@@ -94,16 +94,6 @@ public class DwCOtherDateDQ {
 		return result;
 	}
 
-	/**
-	 * Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate?
-	 *
-	 * Provides: VALIDATION_DATEIDENTIFIED_INRANGE
-	 *
-	 * @param dateIdentified the provided dwc:dateIdentified to evaluate as ActedUpon.
-	 * @param eventDate the provided dwc:eventDate to evaluate as Consulted.
-	 * @return DQResponse the response of type ComplianceValue  to return
-	 */
-
 
 	/**
 	 * Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate?
