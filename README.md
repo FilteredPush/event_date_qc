@@ -12,7 +12,7 @@ DOI: 10.5281/zenodo.166329
 
 This library provides two classes each with a set of static methods which provide functions to support data quality control of date data in the context of biodiversity.  DateUtils provides a set of primitive methods for working with event date data, and DwCEventQC provides a wrapper set of annotated methods for making assertions about event date data in terms of the Fittness for Use Framework.  
 
-This library provides implementations for the Time related tests in the TDWG BDQ Core test suite.
+This library provides implementations for the Time related tests in the TDWG BDQ test suite.
 
 Version 3.0.5 is up to date with the CORE and SUPPLEMENTAL Time related tests as of 2024-11-08.
 
@@ -109,7 +109,7 @@ This library provides the classes org.filteredpush.qc.date.DwCEventDQ, DwCEventD
 
 DwCEventDQ provides a set of static methods for working with dwc:Event terms wrapping the static methods in DateUtils and returning objects that implement the API provided by ffdq-api for reporting data quality assertions in terms of the Fit4U Framework. 
 
-As of 2023-07-04, the current set of dwc:Event class related test specifications in the core test suite by the TDWG BDQIG TG2 tests and assertions task group have implementations in DwCEventDQ, and other date/time related tests have implementations in DwCOtherDateDQ.  Methods for tests that can be parameterized can be invoked from methods in DwCEventDQDefaults that do not take a parameter, but use the default value for any parameter as provided for in the test specifications.   These methods are annotated with @Provides, @Validation/Amendment/Measure, @ProvidesVersion, and @Specification annotations in the form:   
+As of 2023-07-04, the current set of dwc:Event class related test specifications in the BDQ test suite by the TDWG BDQIG TG2 tests and assertions task group have implementations in DwCEventDQ, and other date/time related tests have implementations in DwCOtherDateDQ.  Methods for tests that can be parameterized can be invoked from methods in DwCEventDQDefaults that do not take a parameter, but use the default value for any parameter as provided for in the test specifications.   These methods are annotated with @Provides, @Validation/Amendment/Measure, @ProvidesVersion, and @Specification annotations in the form:   
 
     @Provides("f51e15a6-a67d-4729-9c28-3766299d2985")
     @Validation(label="VALIDATION_EVENTDATE_NOTEMPTY", description="Is there a value in dwc:eventDate")

@@ -54,7 +54,7 @@ public class DwCOtherDateDQDefaults extends DwCOtherDateDQ {
 	 */
     @Validation(label="VALIDATION_DATEIDENTIFIED_INRANGE", description="Is the value of dwc:dateIdentified within Parameter ranges and either overlap or is later than dwc:eventDate?")
     @Provides("dc8aae4b-134f-4d75-8a71-c4186239178e")
-    @ProvidesVersion("https://rs.tdwg.org/bdqcore/terms/dc8aae4b-134f-4d75-8a71-c4186239178e/2024-09-16")
+    @ProvidesVersion("https://rs.tdwg.org/bdqtest/terms/dc8aae4b-134f-4d75-8a71-c4186239178e/2024-09-16")
     @Specification("INTERNAL_PREREQUISITES_NOT_MET if (1) dwc:dateIdentified is bdq:Empty, or (2) dwc:dateIdentified contains an invalid value according to ISO 8601, or (3) bdq:includeEventDate=true and dwc:eventDate is not a valid ISO 8601 date; COMPLIANT if the value of dwc:dateIdentified is between bdq:earliestValidDate and bdq:latestValidDate inclusive and either (1) dwc:eventDate is bdq:Empty or bdq:includeEventDate=false, or (2) if dwc:eventDate is a valid ISO 8601 date and dwc:dateIdentified overlaps or is later than the dwc:eventDate; otherwise NOT_COMPLIANT. ,bdq:earliestValidDate default = '1753-01-01',bdq:latestValidDate default = '{current day}',bdq:includeEventDate default = 'true'")
 	public static DQResponse<ComplianceValue> validationDateidentifiedInrange(
 		@ActedUpon("dwc:dateIdentified") String dateIdentified,
