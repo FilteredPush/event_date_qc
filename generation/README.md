@@ -7,8 +7,8 @@ time_tests.csv and ident_time_tests.csv are the subset of TDWG BDQ TG2 tests rel
     grep _MODIFIED_ ../../bdq/tg2/core/TG2_tests.csv >> ident_time_tests.csv
     grep _MODIFIED_ ../../bdq/tg2/supplementary/TG2_supplementary_tests.csv >> ident_time_tests.csv
     head -n 1 ../../bdq/tg2/core/TG2_tests.csv > time_tests.csv
-    grep "[\" ]TIME" ../../bdq/tg2/core/TG2_tests.csv  | grep -v DATEIDENTIFIED | grep -v _MODIFIED_ | grep -v DATAGENERALIZATIONS | grep -v AllValidationTestsRunOnSingleRecord | grep -v AllAmendmentTestsRunOnSingleRecord >> time_tests.csv
-    grep "[\" ]TIME" ../../bdq/tg2/supplementary/TG2_supplementary_tests.csv  | grep -v DATEIDENTIFIED | grep -v _MODIFIED_ | grep -v DATAGENERALIZATIONS | grep -v AllValidationTestsRunOnSingleRecord  >> time_tests.csv
+    grep "[\" ]TIME" ../../bdq/tg2/core/TG2_tests.csv  | grep -v DATEIDENTIFIED | grep -v _MODIFIED_ | grep -v DATAGENERALIZATIONS | grep -v AllValidationTestsRunOnSingleRecord | grep -v AllAmendmentTestsRunOnSingleRecord | grep -v AllDarwinCoreTerms >> time_tests.csv
+    grep "[\" ]TIME" ../../bdq/tg2/supplementary/TG2_supplementary_tests.csv  | grep -v DATEIDENTIFIED | grep -v _MODIFIED_ | grep -v DATAGENERALIZATIONS | grep -v AllValidationTestsRunOnSingleRecord | grep -v AllDarwinCoreTerms >> time_tests.csv
     cp ../../bdq/tg2/core/TG2_tests_additional_guids.csv additional_guids.csv
     grep -v Method ../../bdq/tg2/supplementary/TG2_supplementary_additional_guids.csv >> additional_guids.csv
 
