@@ -49,7 +49,7 @@ import java.util.Map;
  */
 @Mechanism(
 		value = "urn:uuid:bf5b7706-d0a6-4c65-9644-c750e7188ee0",
-		label = "Kurator: Date Validator - DwCOtherDateDQ:v3.1.0")
+		label = "Kurator: Date Validator - DwCOtherDateDQ:v3.1.0-SNAPSHOT")
 public class DwCOtherDateDQDefaults extends DwCOtherDateDQ {
 	
 	private static final Log logger = LogFactory.getLog(DwCOtherDateDQ.class);

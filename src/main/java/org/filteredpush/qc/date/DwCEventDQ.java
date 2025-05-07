@@ -39,11 +39,11 @@ import java.util.Map;
 /**
  * Darwin Core Event eventDate related Data Quality Measures, Validations, and Enhancements. 
  *
- * Provides support for the following TDWG DQIG TG2 measures: 
+ * Provides support for the following TDWG BDQ Standard measures: 
  *
  * #140 MEASURE_EVENTDATE_DURATIONINSECONDS 56b6c695-adf1-418e-95d2-da04cad7be53
  * 
- * Provides support for the following TDWG DQIG TG2 validations
+ * Provides support for the following TDWG BDQ Standard validations
  * 
  * #88  VALIDATION_EVENT_TEMPORAL_NOTEMPTY 41267642-60ff-4116-90eb-499fee2cd83f
  * #33  VALIDATION_EVENTDATE_NOTEMPTY f51e15a6-a67d-4729-9c28-3766299d2985
@@ -58,7 +58,7 @@ import java.util.Map;
  * #66  VALIDATION_EVENTDATE_STANDARD 4f2bf8fd-fc5c-493f-a44c-e7b16153c803
  * #67  VALIDATION_EVENT_CONSISTENT 5618f083-d55a-4ac2-92b5-b9fb227b832f
  * 
- * Provides support for the following TDWG DQIG TG2 amendments 
+ * Provides support for the following TDWG BDQ Standard amendments 
  * 
  * #127	AMENDMENT_DAY_STANDARDIZED b129fa4d-b25b-43f7-9645-5ed4d44b357b
  * #128	AMENDMENT_MONTH_STANDARDIZED 2e371d57-1eb3-4fe3-8a61-dff43ced50cf
@@ -69,6 +69,7 @@ import java.util.Map;
  * #52	AMENDMENT_EVENT_FROM_EVENTDATE 710fe118-17e1-440f-b428-88ba3f547d6d
  * 
  * Also Provides support for the following supplemental, rejected, or other tests: 
+ *
  * Supplementary: 
  * #267 VALIDATION_ENDDAYOFYEAR_NOTEMPTY 0267c35f-a02b-4dc9-9a01-38797faa6b2b 
  * #264 VALIDATION_STARTDAYOFYEAR_NOTEMPTY 167d4346-6fac-40eb-9d2e-30b7683dac04
