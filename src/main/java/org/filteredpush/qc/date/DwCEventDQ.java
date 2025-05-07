@@ -1,6 +1,6 @@
 /** DwCEventDQ.java
  * 
- * Copyright 2016-2023 President and Fellows of Harvard College
+ * Copyright 2016-2025 President and Fellows of Harvard College
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,7 +98,7 @@ import java.util.Map;
  */
 @Mechanism(
 		value = "urn:uuid:a5fdf476-2e84-4004-bdc1-fc606a5ca2c8",
-		label = "Kurator: Date Validator - DwCEventDQ:v3.0.6-SNAPSHOT")
+		label = "Kurator: Date Validator - DwCEventDQ:v3.1.0")
 public class DwCEventDQ {
 
 	private static final Log logger = LogFactory.getLog(DwCEventDQ.class);
