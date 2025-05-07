@@ -14,7 +14,7 @@ This library provides two classes each with a set of static methods which provid
 
 This library provides implementations for the Time related tests in the TDWG BDQ test suite.
 
-Version 3.0.5 is up to date with the CORE and SUPPLEMENTAL Time related tests as of 2024-11-08.
+Version 3.1.0 is up to date with the CORE and SUPPLEMENTAL Time related tests as of 2025-05-06.
 
 # Include using maven
 
@@ -23,7 +23,7 @@ Available in Maven Central.
     <dependency>
         <groupId>org.filteredpush</groupId>
         <artifactId>event_date_qc</artifactId>
-        <version>3.0.5</version>
+        <version>3.1.0</version>
     </dependency>
 
 # Building
@@ -162,10 +162,10 @@ The APIs for both the java annotations for the framework and the result objects 
 
 These implementations of the TDWG BDQ TG2 test specifications are passing against all related validation data with the 2023-12-15 [test validation data](https://github.com/tdwg/bdq/blob/8b7078bf748112cbd0e9c76c415d2b0085caf5f7/tg2/core/TG2_test_validation_data.csv) including [non-printing characters](https://github.com/tdwg/bdq/blob/8b7078bf748112cbd0e9c76c415d2b0085caf5f7/tg2/core/TG2_test_validation_data_nonprintingchars.csv)). 
 
-    $ java -jar bdqtestrunner-0.0.1-SNAPSHOT-35f8cf2-executable.jar -c DwCOtherDateDQDefaults,DwCEventDQDefaults
+    $ java -jar bdqtestrunner-1.0.1-SNAPSHOT-7034128-executable.jar -c DwCOtherDateDQDefaults,DwCEventDQDefaults
 
     Validation Test Data From: https://raw.githubusercontent.com/tdwg/bdq/master/tg2/core/TG2_test_validation_data.csv
-    2024-01-11T14:42:53.613743137
+    2025-05-07T07:22:59.609279095
     Validating Test Implementations In:
     org.filteredpush.qc.date.DwCEventDQDefaults
     org.filteredpush.qc.date.DwCOtherDateDQDefaults
@@ -194,8 +194,9 @@ These implementations of the TDWG BDQ TG2 test specifications are passing agains
     8d787cb5-73e2-4c39-9cd1-67c7361dc02e 23 P:23 F: 0 VALIDATION_DAY_INRANGE #125
     85803c7e-2a5a-42e1-b8d3-299a44cafc46 11 P:11 F: 0 VALIDATION_STARTDAYOFYEAR_INRANGE #130
     Test cases: 360
-    Total cases with no implementation: 832
-    Total dataID validation rows: 1192
+    Total cases with no implementation: 944
+    Total dataID validation rows: 1305
+    Header Lines Skipped: 1
 
 # Developer deployment: 
 
