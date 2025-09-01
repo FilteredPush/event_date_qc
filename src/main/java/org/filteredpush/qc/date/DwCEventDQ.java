@@ -27,6 +27,7 @@ import org.datakurator.ffdq.api.result.IssueValue;
 import org.datakurator.ffdq.api.result.NumericalValue;
 import org.datakurator.ffdq.model.ResultState;
 import org.filteredpush.qc.date.util.DateUtils;
+import org.filteredpush.qc.date.util.NumberUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -654,7 +655,7 @@ public class DwCEventDQ {
 			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
 		} else {
 			try {
-				int numericDay = Integer.parseInt(day.trim());
+				int numericDay = NumberUtils.parseInt(day);
 				if (DateUtils.isDayInRange(numericDay)) {
 					result.setValue(ComplianceValue.COMPLIANT);
 					result.addComment("Provided value for day '" + day + "' is an integer in the range 1 to 31.");
@@ -705,7 +706,7 @@ public class DwCEventDQ {
 			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
 		} else {
 			try {
-				int numericMonth = Integer.parseInt(month.trim());
+				int numericMonth = NumberUtils.parseInt(month);
 				if (DateUtils.isMonthInRange(numericMonth)) {
 					result.setValue(ComplianceValue.COMPLIANT);
 					result.addComment("Provided value for month '" + month + "' is an integer in the range 1 to 12.");
@@ -863,7 +864,7 @@ public class DwCEventDQ {
 			result.addComment("Provided value for dwc:day [" + day + "] is EMPTY.");;
 		} else { 
 			try { 
-				Integer dayInteger = Integer.parseInt(day.trim());
+				Integer dayInteger = NumberUtils.parseInt(day);
 				if (dayInteger>=1 && dayInteger<=28) {
 					// COMP (a) the value of dwc:day is interpretable as an integer between 1 and 28 inclusive, 
 					result.setResultState(ResultState.RUN_HAS_RESULT);
@@ -884,7 +885,7 @@ public class DwCEventDQ {
 						if (DateUtils.isEmpty(month)) { 
 							throw new NumberFormatException();
 						}
-						Integer monthInteger = Integer.parseInt(month.trim());
+						Integer monthInteger = NumberUtils.parseInt(month);
 						if (dayInteger>=29 && dayInteger<=30 && 
 								(monthInteger==4 || monthInteger==6 || monthInteger==9 || monthInteger==11))
 						{ 
@@ -908,7 +909,7 @@ public class DwCEventDQ {
 								if (DateUtils.isEmpty(year)) { 
 									throw new NumberFormatException();
 								}
-								Integer yearInteger = Integer.parseInt(year.trim());
+								Integer yearInteger = NumberUtils.parseInt(year);
 								if ( ((yearInteger%400)==0) || ((yearInteger % 4)==0 && (yearInteger % 100)!=0)) { 
 									// COMP (d) dwc:day is interpretable as the 
 									// integer 29 and dwc:month is interpretable as the integer 
@@ -1034,8 +1035,8 @@ public class DwCEventDQ {
 					// month is integer, but out of range
 					if (dayResult.getResultState().equals(ResultState.RUN_HAS_RESULT)) {
 						// day is also integer
-						int dayNumeric = Integer.parseInt(day);
-						int monthNumeric = Integer.parseInt(month);
+								int dayNumeric = NumberUtils.parseInt(day);
+		int monthNumeric = NumberUtils.parseInt(month);
 						if (DateUtils.isDayInRange(monthNumeric) && DateUtils.isMonthInRange(dayNumeric)) {
 							// day is in range for months, and month is in range for days, so transpose.
 							Map<String, String> transposedValues = new HashMap<>();
@@ -1126,7 +1127,7 @@ public class DwCEventDQ {
 			result.addComment("startDayOfYear was not provided.");
 		} else {
 			try {
-				Integer numericStartDay = Integer.parseInt(startDayOfYear);
+				Integer numericStartDay = NumberUtils.parseInt(startDayOfYear);
 				if (numericStartDay>0 && numericStartDay<366) {
 					result.setValue(ComplianceValue.COMPLIANT);
 					result.setResultState(ResultState.RUN_HAS_RESULT);
@@ -1228,7 +1229,7 @@ public class DwCEventDQ {
 			result.addComment("endDayOfYear was not provided.");
 		} else {
 			try {
-				Integer numericEndDay = Integer.parseInt(endDay);
+				Integer numericEndDay = NumberUtils.parseInt(endDay);
 				if (numericEndDay>0 && numericEndDay<366) {
 					result.setValue(ComplianceValue.COMPLIANT);
 					result.setResultState(ResultState.RUN_HAS_RESULT);
@@ -1323,9 +1324,9 @@ public class DwCEventDQ {
 			result.addComment("A value exists in dwc:eventDate, ammendment not attempted.");
 		} else {
 			try {
-				Integer numericYear = Integer.parseInt(year);
-				Integer numericStartDay = Integer.parseInt(startDay);
-				Integer numericEndDay = Integer.parseInt(endDay);
+				Integer numericYear = NumberUtils.parseInt(year);
+				Integer numericStartDay = NumberUtils.parseInt(startDay);
+				Integer numericEndDay = NumberUtils.parseInt(endDay);
 				logger.debug(numericStartDay);
 				if (numericStartDay < 1 || numericStartDay > 366 || numericEndDay < 1 || numericEndDay > 366) { 
 					// out of range for possible days of year, report and fail.
@@ -1419,7 +1420,7 @@ public class DwCEventDQ {
 			result.addComment("A value exists in dwc:eventDate, ammendment not attempted.");
 		} else {
 			try {
-				Integer.parseInt(year.trim());
+				NumberUtils.parseInt(year);
 				try {
 					boolean hasMonth = false;
 					boolean hasDay = false;
@@ -1429,7 +1430,7 @@ public class DwCEventDQ {
 								// Roman numeral month values are interpretable as numbers.
 								logger.debug(month);
 								if (DateUtils.romanMonthToInteger(month)==null) { 
-									Integer monthInt = Integer.parseInt(month);
+									Integer monthInt = NumberUtils.parseInt(month);
 									if (DateUtils.isMonthInRange(monthInt)) { 
 										hasMonth=true;
 									}
@@ -1447,7 +1448,7 @@ public class DwCEventDQ {
 							logger.debug(month);
 						} else {
 							try { 
-								Integer monthInt = Integer.parseInt(month);
+								Integer monthInt = NumberUtils.parseInt(month);
 								if (DateUtils.isMonthInRange(monthInt)) { 
 									hasMonth=true;
 								}
@@ -1458,7 +1459,7 @@ public class DwCEventDQ {
 					}
 					if (!DateUtils.isEmpty(day)) {
 						try { 
-							Integer numericDay = Integer.parseInt(day.trim());
+							Integer numericDay = NumberUtils.parseInt(day);
 							if (!DateUtils.isDayInRange(numericDay)) {
 								throw new NumberFormatException("The provided value for Day is out of range for a day");
 							} else { 
@@ -1552,7 +1553,7 @@ public class DwCEventDQ {
 		} else {
 
 			try {
-				Integer monthNumeric = Integer.parseInt(month.trim());
+				Integer monthNumeric = NumberUtils.parseInt(month);
 				result.addComment("A value for dwc:month parsable as an integer was provided.");
 				if (monthNumeric >= 1 && monthNumeric <=12) { 
 					result.addComment("Provided value for dwc:month was in the range 1-12.");
@@ -1582,7 +1583,7 @@ public class DwCEventDQ {
 				} else {
 					logger.debug(monthTrim);
 					try { 
-						Integer monthInteger = Integer.parseInt(monthTrim);
+						Integer monthInteger = NumberUtils.parseInt(monthTrim);
 						result.setResultState(ResultState.AMENDED);
 						Map<String, String> values = new HashMap<>();
 						values.put("dwc:month", monthInteger.toString());
@@ -1648,7 +1649,7 @@ public class DwCEventDQ {
 			} else { 
 
 				try {
-					Integer dayNumeric = Integer.parseInt(day);
+					Integer dayNumeric = NumberUtils.parseInt(day);
 					result.addComment("A value for dwc:day parsable as an integer was provided.");
 					String dayTrimmed = day.replaceAll("[^0-9]", "");
 					String dayCleaned = dayNumeric.toString();
@@ -1698,7 +1699,7 @@ public class DwCEventDQ {
 					if (!failed) { 
 						// Try again
 						try {
-							Integer dayNumeric = Integer.parseInt(dayTrimmed.trim());
+							Integer dayNumeric = NumberUtils.parseInt(dayTrimmed);
 							logger.debug(dayNumeric);
 							if (dayNumeric>0 && dayNumeric<32) {
 								result.setResultState(ResultState.AMENDED);
@@ -1858,7 +1859,7 @@ public class DwCEventDQ {
 						result.addComment("The provided dwc:eventDate ["+eventDate+"] represents an interval of more than one day, and dwc:day contains a value ["+day+"] when it should not. ");
 						inconsistencyFound = true;
 					}
-					if (DateUtils.extractDate(eventDate).getDayOfMonth()!=Integer.parseInt(day)) {
+					if (DateUtils.extractDate(eventDate).getDayOfMonth()!=NumberUtils.parseInt(day)) {
 						result.addComment("Provided value for dwc:eventDate ["+eventDate+"] is not consistent with the provided value of dwc:day ["+day+"].");
 						inconsistencyFound = true;
 					}
@@ -1883,7 +1884,7 @@ public class DwCEventDQ {
 						result.addComment("Unable to extract startDayOfYear from dwc:eventDate ["+eventDate+"] for comparision with provided dwc:startDayOfYear ["+startDayOfYear+"].");
 						interpretationProblem = true;
 					} else {
-						if (extractedDate.getDayOfYear()!=Integer.parseInt(startDayOfYear)) {
+						if (extractedDate.getDayOfYear()!=NumberUtils.parseInt(startDayOfYear)) {
 							result.addComment("Provided value for dwc:eventDate ["+eventDate+"] is not consistent with the provided value of dwc:startDayOfYear["+startDayOfYear+"].");
 							inconsistencyFound = true;
 						}
@@ -1900,7 +1901,7 @@ public class DwCEventDQ {
 			// range represented by dwc:eventDate;
 			if (!DateUtils.isEmpty(endDayOfYear)) { 
 				if (DateUtils.hasResolutionDayOrFiner(eventDate)) { 
-					if (DateUtils.extractDateInterval(eventDate).getEnd().getDayOfYear()!=Integer.parseInt(endDayOfYear)) {
+					if (DateUtils.extractDateInterval(eventDate).getEnd().getDayOfYear()!=NumberUtils.parseInt(endDayOfYear)) {
 						result.addComment("Provided value for dwc:eventDate ["+eventDate+"] is not consistent with the provided value of dwc:endDayIfYear ["+endDayOfYear+"].");
 						inconsistencyFound = true;
 					}
@@ -2316,9 +2317,9 @@ public class DwCEventDQ {
 			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
 		} else { 
 			try { 
-				int numericYear = Integer.parseInt(year.trim());
-				int numericLowerBound = Integer.parseInt(lowerBound);
-				int numericUpperBound = Integer.parseInt(upperBound);
+						int numericYear = NumberUtils.parseInt(year);
+		int numericLowerBound = NumberUtils.parseInt(lowerBound);
+		int numericUpperBound = NumberUtils.parseInt(upperBound);
 				if (numericYear<numericLowerBound || numericYear>numericUpperBound) { 
 					result.setValue(ComplianceValue.NOT_COMPLIANT);
 					result.addComment("Provided value for dwc:year '" + year + "' is not an integer in the range " + lowerBound + " to " + upperBound + " (current year).");

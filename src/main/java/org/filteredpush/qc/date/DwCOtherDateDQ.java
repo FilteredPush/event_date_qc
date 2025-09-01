@@ -360,8 +360,8 @@ public class DwCOtherDateDQ {
 					if (dateIdentified.matches("^[0-9]{4}.[0-9]{2}.[0-9]{2}$")) { 
 						try {
 							// try to see if this is yyyy-dd-mm error for yyyy-mm-dd
-							Integer secondBit = Integer.parseInt(dateIdentified.substring(5,7));
-							Integer thirdBit = Integer.parseInt(dateIdentified.substring(8));
+							Integer secondBit = org.filteredpush.qc.date.util.NumberUtils.parseInt(dateIdentified.substring(5,7));
+							Integer thirdBit = org.filteredpush.qc.date.util.NumberUtils.parseInt(dateIdentified.substring(8));
 							if (secondBit>12 && thirdBit<12) {
 								// try switching second and third parts of date.
 								String toTest = dateIdentified.substring(0, 4).concat("-").concat(dateIdentified.substring(8)).concat("-").concat(dateIdentified.substring(5, 7));
@@ -729,8 +729,8 @@ public class DwCOtherDateDQ {
 					if (modified.matches("^[0-9]{4}.[0-9]{2}.[0-9]{2}$")) { 
 						try {
 							// try to see if this is yyyy-dd-mm error for yyyy-mm-dd
-							Integer secondBit = Integer.parseInt(modified.substring(5,7));
-							Integer thirdBit = Integer.parseInt(modified.substring(8));
+							Integer secondBit = org.filteredpush.qc.date.util.NumberUtils.parseInt(modified.substring(5,7));
+							Integer thirdBit = org.filteredpush.qc.date.util.NumberUtils.parseInt(modified.substring(8));
 							if (secondBit>12 && thirdBit<12) {
 								// try switching second and third parts of date.
 								String toTest = modified.substring(0, 4).concat("-").concat(modified.substring(8)).concat("-").concat(modified.substring(5, 7));
