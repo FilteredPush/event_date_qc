@@ -258,7 +258,7 @@ public class LocalDateTimeInterval {
     				.append(DateTimeFormatter.ISO_LOCAL_DATE)
     				.toFormatter().withResolverStyle(ResolverStyle.STRICT);
     			if (dateBit.matches("^[0-9]{1,3}$")) {
-    				dateBit = String.format("%04d", Integer.parseInt(dateBit));
+    				dateBit = String.format("%04d", org.filteredpush.qc.date.util.NumberUtils.parseInt(dateBit));
     			}
     			LocalDateTime startDateBit = LocalDateTime.parse(dateBit+"-01-01", formatter);
     			result = new DatePair(startDateBit,startDateBit.with(TemporalAdjusters.lastDayOfYear()));
@@ -267,7 +267,7 @@ public class LocalDateTimeInterval {
     			DateTimeFormatter formatter = new DateTimeFormatterBuilder()
     				.append(DateTimeFormatter.ofPattern("yyyy-MM-ddGGGGG"))
     				.toFormatter().withResolverStyle(ResolverStyle.STRICT);
-    			dateBit = String.format("%04d", Integer.parseInt(dateBit.substring(0,4)));
+    			dateBit = String.format("%04d", org.filteredpush.qc.date.util.NumberUtils.parseInt(dateBit.substring(0,4)));
     			LocalDateTime startDateBit = LocalDateTime.parse(dateBit+"-01-01B", formatter);
     			result = new DatePair(startDateBit.minusYears(1),startDateBit.minusYears(1).with(TemporalAdjusters.lastDayOfYear()));
     		} else { 
