@@ -88,7 +88,7 @@ public class DateUtilsTest {
 	}
 	
 	/**
-	 * Test method for {@link org.filteredpush.qc.date.util.DateUtils#createEventDateFromParts(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
+	 * Test method for {@link org.filteredpush.qc.date.util.DateUtils#createEventDateFromParts(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
 	 */
 	@Test
 	public void testCreateEventDateFromParts() {
@@ -2232,6 +2232,29 @@ public class DateUtilsTest {
     	assertEquals(Integer.valueOf(2),DateUtils.romanMonthToInteger("Ii"));
     	assertEquals(Integer.valueOf(11),DateUtils.romanMonthToInteger("Xi"));
     	assertEquals(Integer.valueOf(11),DateUtils.romanMonthToInteger("xI"));
+    }
+
+    @Test
+    public void testAssembleEventDateFromDecimalYearMonthDay() {
+        String y = "2020.0";
+        String m = "5.0";
+        String d = "1.0";
+        String assembled = DateUtils.createEventDateFromParts("", "", "", 
+            Integer.toString(org.filteredpush.qc.date.util.NumberUtils.parseInt(y)), 
+            Integer.toString(org.filteredpush.qc.date.util.NumberUtils.parseInt(m)), 
+            Integer.toString(org.filteredpush.qc.date.util.NumberUtils.parseInt(d)));
+        assertEquals("2020-05-01", assembled);
+    }
+
+    @Test
+    public void testAssembleEventDateFromDecimalYearAndMonth() {
+        String y = "2020.0";
+        String m = "5.0";
+        String assembled = DateUtils.createEventDateFromParts("", "", "", 
+            Integer.toString(org.filteredpush.qc.date.util.NumberUtils.parseInt(y)), 
+            Integer.toString(org.filteredpush.qc.date.util.NumberUtils.parseInt(m)), 
+            "");
+        assertEquals("2020-05", assembled);
     }
     
     @Test
