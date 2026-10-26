@@ -464,6 +464,32 @@ public class DwcEventDQTest {
 	}
 
 	@Test
+	public void testDecimalInputsAreAcceptedInValidations() {
+		DQResponse<ComplianceValue> respDay = DwCEventDQ.validationDayStandard("29.0");
+		assertEquals(ResultState.RUN_HAS_RESULT, respDay.getResultState());
+		assertEquals(ComplianceValue.COMPLIANT, respDay.getValue());
+
+		DQResponse<ComplianceValue> respMonth = DwCEventDQ.validationMonthStandard("12.0");
+		assertEquals(ResultState.RUN_HAS_RESULT, respMonth.getResultState());
+		assertEquals(ComplianceValue.COMPLIANT, respMonth.getValue());
+
+		DQResponse<ComplianceValue> respDayRange = DwCEventDQ.validationDayInrange("2020.0", "2.0", "29.0");
+		assertEquals(ResultState.RUN_HAS_RESULT, respDayRange.getResultState());
+		assertEquals(ComplianceValue.COMPLIANT, respDayRange.getValue());
+	}
+
+	@Test
+	public void testDayOfYearValidationsAcceptDecimals() {
+		DQResponse<ComplianceValue> start = DwCEventDQ.validationStartdayofyearInrange("60.0", "2020-03-01");
+		assertEquals(ResultState.RUN_HAS_RESULT, start.getResultState());
+		assertEquals(ComplianceValue.COMPLIANT, start.getValue());
+
+		DQResponse<ComplianceValue> end = DwCEventDQ.validationEnddayofyearInrange("365.0", "2020-12-31");
+		assertEquals(ResultState.RUN_HAS_RESULT, end.getResultState());
+		assertEquals(ComplianceValue.COMPLIANT, end.getValue());
+	}
+
+	@Test
 	public void testDurationInYear() {
 		DQResponse<ComplianceValue> result = null;
 		for (int i = 1981; i<=1983; i++) {
@@ -3264,4 +3290,65 @@ public class DwcEventDQTest {
 		assertNotNull(vresult.getComment());
 		
 	} 
+
+    @Test
+    public void testDecimalInputsAreHandledAcrossValidations() {
+        // Day Standard with decimal
+        DQResponse<ComplianceValue> r1 = DwCEventDQ.validationDayStandard("29.0");
+        assertEquals(ResultState.RUN_HAS_RESULT, r1.getResultState());
+        assertEquals(ComplianceValue.COMPLIANT, r1.getValue());
+
+        // Month Standard with decimal
+        DQResponse<ComplianceValue> r2 = DwCEventDQ.validationMonthStandard("12.0");
+        assertEquals(ResultState.RUN_HAS_RESULT, r2.getResultState());
+        assertEquals(ComplianceValue.COMPLIANT, r2.getValue());
+
+        // Day in range with decimals for month/day and integral year
+        DQResponse<ComplianceValue> r3 = DwCEventDQ.validationDayInrange("2020", "2.0", "29.0");
+        assertEquals(ResultState.RUN_HAS_RESULT, r3.getResultState());
+        assertEquals(ComplianceValue.COMPLIANT, r3.getValue());
+
+        // Day in range with decimal year
+        DQResponse<ComplianceValue> r4 = DwCEventDQ.validationDayInrange("2020.0", "2", "29");
+        assertEquals(ResultState.RUN_HAS_RESULT, r4.getResultState());
+        assertEquals(ComplianceValue.COMPLIANT, r4.getValue());
+
+        // startDayOfYear in range with decimal start day
+        DQResponse<ComplianceValue> r5 = DwCEventDQ.validationStartdayofyearInrange("60.0", "2020-03-01");
+        assertEquals(ResultState.RUN_HAS_RESULT, r5.getResultState());
+        assertEquals(ComplianceValue.COMPLIANT, r5.getValue());
+
+        // endDayOfYear in range with decimal end day
+        DQResponse<ComplianceValue> r6 = DwCEventDQ.validationEnddayofyearInrange("365.0", "2020-12-31");
+        assertEquals(ResultState.RUN_HAS_RESULT, r6.getResultState());
+        assertEquals(ComplianceValue.COMPLIANT, r6.getValue());
+
+        // Event date standard with parts that include decimals
+        DQResponse<ComplianceValue> r7 = DwCEventDQ.validationEventdateStandard("2020-05-01");
+        assertEquals(ResultState.RUN_HAS_RESULT, r7.getResultState());
+        assertEquals(ComplianceValue.COMPLIANT, r7.getValue());
+    }
+
+    @Test
+    public void testDecimalInputsThatShouldFail() {
+        // Non-integer decimal day should be NOT_COMPLIANT under day standard
+        DQResponse<ComplianceValue> r1 = DwCEventDQ.validationDayStandard("29.5");
+        assertEquals(ResultState.RUN_HAS_RESULT, r1.getResultState());
+        assertEquals(ComplianceValue.NOT_COMPLIANT, r1.getValue());
+
+        // Non-integer decimal month should be NOT_COMPLIANT under month standard
+        DQResponse<ComplianceValue> r2 = DwCEventDQ.validationMonthStandard("6.2");
+        assertEquals(ResultState.RUN_HAS_RESULT, r2.getResultState());
+        assertEquals(ComplianceValue.NOT_COMPLIANT, r2.getValue());
+
+        // startDayOfYear with non-integer decimal should be NOT_COMPLIANT
+        DQResponse<ComplianceValue> r3 = DwCEventDQ.validationStartdayofyearInrange("60.4", "2020-03-01");
+        assertEquals(ResultState.RUN_HAS_RESULT, r3.getResultState());
+        assertEquals(ComplianceValue.NOT_COMPLIANT, r3.getValue());
+
+        // endDayOfYear with non-integer decimal should be NOT_COMPLIANT
+        DQResponse<ComplianceValue> r4 = DwCEventDQ.validationEnddayofyearInrange("200.9", "2020-12-31");
+        assertEquals(ResultState.RUN_HAS_RESULT, r4.getResultState());
+        assertEquals(ComplianceValue.NOT_COMPLIANT, r4.getValue());
+    }
 }

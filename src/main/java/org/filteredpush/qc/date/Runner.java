@@ -52,6 +52,7 @@ import org.datakurator.ffdq.api.result.ComplianceValue;
 import org.datakurator.ffdq.api.result.NumericalValue;
 import org.datakurator.ffdq.model.ResultState;
 import org.filteredpush.qc.date.util.DateUtils;
+import org.filteredpush.qc.date.util.NumberUtils;
 
 /**
  * Selfstanding execution of event_date_qc functionality.  Can run TG2 Date related tests on flat DarwinCore 
@@ -106,7 +107,7 @@ public class Runner {
 				int limit = 0;
 				if (limitValue!=null) { 
 					try { 
-						limit = Integer.parseInt(limitValue);
+						limit = org.filteredpush.qc.date.util.NumberUtils.parseInt(limitValue);
 					} catch (NumberFormatException nfe) { 
 						logger.error(nfe.getMessage());
 					}

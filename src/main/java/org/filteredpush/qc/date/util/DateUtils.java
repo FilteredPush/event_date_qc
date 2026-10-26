@@ -43,6 +43,7 @@ import org.filteredpush.qc.date.LocalDateInterval;
 import org.filteredpush.qc.date.EventResult.EventQCResultState;
 import org.filteredpush.qc.date.LocalDateTimeInterval;
 import org.filteredpush.qc.date.TimeExtractionException;
+import org.filteredpush.qc.date.util.NumberUtils;
 
 import java.time.Instant;
 import java.time.Duration;
@@ -181,10 +182,10 @@ public class DateUtils {
 			try { 
 				StringBuffer assembly = new StringBuffer();
 				if (!isEmpty(endDayOfYear) && !startDayOfYear.trim().equals(endDayOfYear.trim())) {  
-					assembly.append(year).append("-").append(String.format("%03d",Integer.parseInt(startDayOfYear))).append("/");
-					assembly.append(year).append("-").append(String.format("%03d",Integer.parseInt(endDayOfYear)));
+							assembly.append(year).append("-").append(String.format("%03d",NumberUtils.parseInt(startDayOfYear))).append("/");
+		assembly.append(year).append("-").append(String.format("%03d",NumberUtils.parseInt(endDayOfYear)));
 				} else { 
-					assembly.append(year).append("-").append(String.format("%03d",Integer.parseInt(startDayOfYear)));
+					assembly.append(year).append("-").append(String.format("%03d",NumberUtils.parseInt(startDayOfYear)));
 				}
 			    EventResult verbatim = extractDateToDayFromVerbatimER(assembly.toString(), DateUtils.YEAR_BEFORE_SUSPECT) ;
 			    logger.debug(verbatim.getResultState().toString());
@@ -206,10 +207,10 @@ public class DateUtils {
 			try { 
 				StringBuffer assembly = new StringBuffer();
 				if (endDayOfYear !=null && endDayOfYear.trim().length() > 0 && !startDayOfYear.trim().equals(endDayOfYear.trim())) {  
-					assembly.append(verbatimEventDate).append("-").append(String.format("%03d",Integer.parseInt(startDayOfYear))).append("/");
-					assembly.append(verbatimEventDate).append("-").append(String.format("%03d",Integer.parseInt(endDayOfYear)));
+							assembly.append(verbatimEventDate).append("-").append(String.format("%03d",NumberUtils.parseInt(startDayOfYear))).append("/");
+		assembly.append(verbatimEventDate).append("-").append(String.format("%03d",NumberUtils.parseInt(endDayOfYear)));
 				} else { 
-					assembly.append(verbatimEventDate).append("-").append(String.format("%03d",Integer.parseInt(startDayOfYear)));
+					assembly.append(verbatimEventDate).append("-").append(String.format("%03d",NumberUtils.parseInt(startDayOfYear)));
 				}
 			    EventResult verbatim = extractDateToDayFromVerbatimER(assembly.toString(), DateUtils.YEAR_BEFORE_SUSPECT) ;
 			    logger.debug(verbatim.getResultState().toString());
@@ -234,9 +235,9 @@ public class DateUtils {
 			)
 		{
 			try { 
-				Integer yearInt = Integer.parseInt(year.trim());
-				Integer startInt = Integer.parseInt(startDayOfYear.trim());
-				Integer endInt = Integer.parseInt(endDayOfYear.trim());
+				Integer yearInt = NumberUtils.parseInt(year);
+				Integer startInt = NumberUtils.parseInt(startDayOfYear);
+				Integer endInt = NumberUtils.parseInt(endDayOfYear);
 				String toTest = String.format("%04d", yearInt).concat("-");
 				toTest = toTest.concat(String.format("%03d", startInt));
 				toTest = toTest.concat("/");
@@ -251,13 +252,13 @@ public class DateUtils {
 			logger.debug(result);
 		}
 		if (year!=null && year.matches("[0-9]{4}") && month!=null && month.matches("[0-9]{1,2}") &&( day==null || day.trim().length()==0 )) {  
-		    result = String.format("%04d",Integer.parseInt(year)) + "-" + String.format("%02d",Integer.parseInt(month));
+		    		result = String.format("%04d",NumberUtils.parseInt(year)) + "-" + String.format("%02d",NumberUtils.parseInt(month));
 			logger.debug(result);
 		}
 		if (year!=null && year.matches("[0-9]{4}") && month!=null && month.matches("[0-9]{1,2}") && day!=null && day.matches("[0-9]{1,2}")) {  
-		    result = String.format("%04d",Integer.parseInt(year)) + "-" + 
-                     String.format("%02d",Integer.parseInt(month)) + "-" + 
-                     String.format("%02d",Integer.parseInt(day));
+		    		result = String.format("%04d",NumberUtils.parseInt(year)) + "-" +
+                     String.format("%02d",NumberUtils.parseInt(month)) + "-" + 
+                     String.format("%02d",NumberUtils.parseInt(day));
 			logger.debug(result);
 		}
 		if (!DateUtils.isEmpty(result)) { 
@@ -1366,7 +1367,7 @@ public class DateUtils {
 							// 1815-16  won't parse in thls block as 16 is too large to be a month, passes to next block
 							// 1805-06  could be month or abbreviated year.  Suspect.
 							// 1805-03  should to be month (3<=5, thus not likely to be year range).
-							if (Integer.parseInt(startBit)>=Integer.parseInt(century+endBit)) { 
+							if (NumberUtils.parseInt(startBit)>=NumberUtils.parseInt(century+endBit)) { 
 								result.setResultState(EventResult.EventQCResultState.RANGE);
 								result.setResult(resultDate);
 							} else { 
@@ -2568,7 +2569,7 @@ public class DateUtils {
     		if (endDayOfYear==null || endDayOfYear.trim().length()==0 || startDayOfYear.trim().equals(endDayOfYear.trim())) {
     			int startDayInt = -1;
     			try {
-    				startDayInt = Integer.parseInt(startDayOfYear);
+    				startDayInt = NumberUtils.parseInt(startDayOfYear);
     			} catch (NumberFormatException e) {
     				logger.debug(e.getMessage());
     				logger.debug(startDayOfYear + " is not an integer."); 
@@ -2584,9 +2585,9 @@ public class DateUtils {
     		} else {
        			int startDayInt = -1;
        			int endDayInt = -1;
-    			try {
-    				startDayInt = Integer.parseInt(startDayOfYear);
-    				endDayInt = Integer.parseInt(endDayOfYear);
+    			       			try {
+    				startDayInt = NumberUtils.parseInt(startDayOfYear);
+    				endDayInt = NumberUtils.parseInt(endDayOfYear);
     			} catch (NumberFormatException e) {
     				logger.debug(e.getMessage());
     				result = false; 
@@ -2645,7 +2646,7 @@ public class DateUtils {
     			Integer dayBit = null;
     			if (!isEmpty(day)) { 
     				try { 
-    					dayBit = Integer.parseInt(day);
+    					dayBit = NumberUtils.parseInt(day);
     				} catch (NumberFormatException e) { 
     					anyFails = true;
     				}
@@ -2653,7 +2654,7 @@ public class DateUtils {
     			Integer monthBit = null;
     			if (!isEmpty(month)) { 
     				try { 
-    					monthBit = Integer.parseInt(month);
+    					monthBit = NumberUtils.parseInt(month);
     				} catch (NumberFormatException e) { 
     					anyFails = true;
     				}
@@ -2662,7 +2663,7 @@ public class DateUtils {
     			logger.debug(anyFails);
     			if (!isEmpty(year)) { 
     				try { 
-    					yearBit = Integer.parseInt(year);
+    					yearBit = NumberUtils.parseInt(year);
     				} catch (NumberFormatException e) { 
     					anyFails = true;
     				}
