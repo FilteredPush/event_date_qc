@@ -113,6 +113,7 @@
 							<directory>${project.basedir}</directory>
 							<includes>
 								<include>${project.artifactId}-*-executable.jar</include>
+								<include>${project.artifactId}-*-cfweblib.jar</include>
 							</includes>
 							<followSymlinks>false</followSymlinks>
 						</fileset>
@@ -176,6 +177,7 @@
 				<version>3.1.0</version>
 				<executions>
 					<execution>
+						<id>executable</id>
 						<phase>package</phase>
 						<goals>
 							<goal>shade</goal>
@@ -183,6 +185,44 @@
 						<configuration>
 							<outputDirectory>${project.basedir}</outputDirectory>
 							<outputFile>${project.artifactId}-${project.version}-${git.commit.id.abbrev}-executable.jar</outputFile>
+							<transformers>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+								<manifestEntries>
+									<Main-Class>org.filteredpush.qc.date.Runner</Main-Class>
+									<Class-Path>org/filteredpush/qc/date</Class-Path>
+									<Multi-Release>true</Multi-Release>
+								</manifestEntries>
+								</transformer>
+							</transformers>
+						</configuration>
+					</execution>
+					<execution>
+						<id>cfweblib</id>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.basedir}</outputDirectory>
+							<outputFile>${project.artifactId}-${project.version}-${git.commit.id.abbrev}-cfweblib.jar</outputFile>
+							<!-- only this library: its dependencies are in the sci_name_qc and geo_ref_qc cfweblib jars
+								(jts-core) or are provided by ColdFusion, so deploy this jar alongside those -->
+							<artifactSet>
+								<includes>
+									<include>org.filteredpush:event_date_qc</include>
+								</includes>
+							</artifactSet>
+							<filters>
+								<filter>
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>META-INF/*.SF</exclude>
+										<exclude>META-INF/*.DSA</exclude>
+										<exclude>META-INF/*.RSA</exclude>
+									</excludes>
+								</filter>
+							</filters>
 							<transformers>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">

@@ -1,5 +1,6 @@
 target/
 event_date_qc-*-executable.jar
+event_date_qc-*-cfweblib.jar
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
