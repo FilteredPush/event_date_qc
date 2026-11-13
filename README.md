@@ -113,11 +113,13 @@ As of 2023-07-04, the current set of dwc:Event class related test specifications
 
     @Provides("f51e15a6-a67d-4729-9c28-3766299d2985")
     @Validation(label="VALIDATION_EVENTDATE_NOTEMPTY", description="Is there a value in dwc:eventDate")
-	@ProvidesVersion("https://rs.tdwg.org/bdq/terms/f51e15a6-a67d-4729-9c28-3766299d2985/2022-11-08")
+	@ProvidesVersion("https://rs.tdwg.org/bdqtest/terms/version/f51e15a6-a67d-4729-9c28-3766299d2985-2023-09-17")
 	@Specification("COMPLIANT if dwc:eventDate is not EMPTY; otherwise NOT_COMPLIANT ")
     public static  DQResponse<ComplianceValue> validationEventdateNotEmpty(@ActedUpon(value = "dwc:eventDate") String eventDate) {
        ...
     } 
+
+For Tests in the BDQ standard, `@ProvidesVersion` is the IRI of the Test's version on its DateLastUpdated, in rs.tdwg.org's canonical form `https://rs.tdwg.org/bdqtest/terms/version/<uuid>-<date>` (served during the public review at https://bdq-public-review.rs.tdwg.org/). For Tests not in the standard (e.g. Supplementary), which have no rs.tdwg.org IRI, it is `urn:uuid:<uuid>`, with the version date in the method's javadoc.
 
 These tests are subject to change if there are further changes to the TDWG BDQ TG2 specifications.   The current test specifications can be found [in a csv file](https://github.com/tdwg/bdq/blob/master/tg2/core/TG2_tests.csv) with rationalle management in [issues in the tdwg/bdq issue tracker](https://github.com/tdwg/bdq/labels/TIME).  The TDWG BDQ TG2 is preparing a draft standard for biodiversity data quality including these tests.  As of 2023-07-04, specifications for the the tests implemented here are expected to be stable.  
 

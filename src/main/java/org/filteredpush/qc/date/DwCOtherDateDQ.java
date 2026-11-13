@@ -523,7 +523,7 @@ public class DwCOtherDateDQ {
 	 */
 	@Validation(label="VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE", description="Is the date of identification equal to, or later than the dwc:eventDate?")
 	@Provides("391ca46d-3842-4a18-970c-0434cbc17f07")
-	@ProvidesVersion("391ca46d-3842-4a18-970c-0434cbc17f07-2024-09-16")
+	@ProvidesVersion("urn:uuid:391ca46d-3842-4a18-970c-0434cbc17f07")
 	@Specification("INTERNAL_PREREQUISITES_NOT_MET if either dwc:dateIdentified or dwc:eventDate are empty or are not interpretable as ISO 8601 dates; COMPLIANT if dwc:dateIdentified is equal to or is entirely later than dwc:eventDate; otherwise NOT_COMPLIANT")
 	public static DQResponse<ComplianceValue> validationDateidentifiedAftereventdate(
 			@ActedUpon("dwc:eventDate") String eventDate, 
@@ -595,7 +595,7 @@ public class DwCOtherDateDQ {
 	 */
 	@Validation(label="VALIDATION_MODIFIED_NOTEMPTY", description="Is there a value in dcterms:modified?")
 	@Provides("e17918fc-25ca-4a3a-828b-4502432b98c4")
-	@ProvidesVersion("e17918fc-25ca-4a3a-828b-4502432b98c4-2024-01-29")
+	@ProvidesVersion("urn:uuid:e17918fc-25ca-4a3a-828b-4502432b98c4")
 	@Specification("COMPLIANT if dcterms:modified is bdq:NotEmpty; otherwise NOT_COMPLIANT. ")
 	public static DQResponse<ComplianceValue> validationModifiedNotempty(
 			@ActedUpon("dcterms:modified") String modified
@@ -632,7 +632,7 @@ public class DwCOtherDateDQ {
 	 */
 	@Validation(label="VALIDATION_MODIFIED_STANDARD", description="Does the value of dcterms:modified a valid ISO date?")
 	@Provides("c253f11a-6161-4692-bfce-4328f1961630")
-	@ProvidesVersion("c253f11a-6161-4692-bfce-4328f1961630-2024-09-16")
+	@ProvidesVersion("urn:uuid:c253f11a-6161-4692-bfce-4328f1961630")
 	@Specification("INTERNAL_PREREQUISITES_NOT_MET if dcterms:modified is bdq:Empty; COMPLIANT if the value of dcterms:modified is a valid ISO 8601 date; otherwise NOT_COMPLIANT.. ")
 	public DQResponse<ComplianceValue> validationModifiedStandard(
 			@ActedUpon("dcterms:modified") String modified
@@ -683,7 +683,7 @@ public class DwCOtherDateDQ {
 	 */
 	@Amendment(label="AMENDMENT_MODIFIED_STANDARDIZED", description="Propose amendment of the value of dcterms:modified to a valid ISO date and time.")
 	@Provides("dfb4a260-4cbc-45b2-bf86-28be49c2cceb")
-	@ProvidesVersion("dfb4a260-4cbc-45b2-bf86-28be49c2cceb-2024-09-18")
+	@ProvidesVersion("urn:uuid:dfb4a260-4cbc-45b2-bf86-28be49c2cceb")
 	@Specification("INTERNAL_PREREQUISITES_NOT_MET if dcterms:modified is bdq:Empty; AMENDED if the value of dcterms:modified is not a properly formatted ISO 8601 date/time but is unambiguous, and is altered to be a valid ISO 8601 date/time; otherwise NOT_AMENDED. ")
 	public static DQResponse<AmendmentValue> amendmentModifiedStandardized(
 			@ActedUpon("dcterms:modified") String modified) {

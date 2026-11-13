@@ -2440,7 +2440,7 @@ public class DwCEventDQ {
 	 */
 	@Validation(label="VALIDATION_ENDDAYOFYEAR_NOTEMPTY", description="Is there a value in dwc:endDayOfYear?")
 	@Provides("0267c35f-a02b-4dc9-9a01-38797faa6b2b")
-	@ProvidesVersion("0267c35f-a02b-4dc9-9a01-38797faa6b2b-2024-02-08")
+	@ProvidesVersion("urn:uuid:0267c35f-a02b-4dc9-9a01-38797faa6b2b")
 	@Specification("COMPLIANT if dwc:endDayOfYear is not EMPTY; otherwise NOT_COMPLIANT ")
 	public static DQResponse<ComplianceValue> validationEnddayofyearNotempty(
 			@ActedUpon("dwc:endDayOfYear") String endDayOfYear
@@ -2477,7 +2477,7 @@ public class DwCEventDQ {
 	 */
 	@Validation(label="VALIDATION_STARTDAYOFYEAR_NOTEMPTY", description="Is there a value in dwc:startDayOfYear?")
 	@Provides("167d4346-6fac-40eb-9d2e-30b7683dac04")
-	@ProvidesVersion("167d4346-6fac-40eb-9d2e-30b7683dac04-2024-02-07")
+	@ProvidesVersion("urn:uuid:167d4346-6fac-40eb-9d2e-30b7683dac04")
 	@Specification("COMPLIANT if dwc:startDayOfYear is not EMPTY; otherwise NOT_COMPLIANT ")
 	public static DQResponse<ComplianceValue> validationStartdayofyearNotempty(
 			@ActedUpon("dwc:startDayOfYear") String startDayOfYear
@@ -2514,7 +2514,7 @@ public class DwCEventDQ {
 	 */
 	@Validation(label="VALIDATION_EVENTTIME_NOTEMPTY", description="Is there a value in dwc:eventTime?")
 	@Provides("aaebbde6-a101-4665-ba1e-6d4d8c561a31")
-	@ProvidesVersion("aaebbde6-a101-4665-ba1e-6d4d8c561a31-2024-02-07")
+	@ProvidesVersion("urn:uuid:aaebbde6-a101-4665-ba1e-6d4d8c561a31")
 	@Specification("COMPLIANT if dwc:eventTime is not EMPTY; otherwise NOT_COMPLIANT ")
 	public static DQResponse<ComplianceValue> validationEventtimeNotempty(
 			@ActedUpon("dwc:eventTime") String eventTime
@@ -2550,7 +2550,7 @@ public class DwCEventDQ {
 	 */
 	@Validation(label="ISSUE_VERBATIMEVENTDATE_NOTEMPTY", description="Is there a value in dwc:verbatimEventDate?")
 	@Provides("9bc8b105-902a-489c-aae8-3b7075e1b948")
-	@ProvidesVersion("version/9bc8b105-902a-489c-aae8-3b7075e1b948-2024-04-02")
+	@ProvidesVersion("urn:uuid:9bc8b105-902a-489c-aae8-3b7075e1b948")
 	@Specification("POTENTIAL_ISSUE if dwc:verbatimEventDate is not EMPTY; otherwise NOT_ISSUE ")
 	public static DQResponse<IssueValue> issueVerbatimeventdateNotempty(
 			@ActedUpon("dwc:verbatimEventDate") String verbatimEventDate
@@ -2586,7 +2586,7 @@ public class DwCEventDQ {
 	 */
 	@Validation(label="VALIDATION_MONTH_NOTEMPTY", description="Is there a value in dwc:month?")
 	@Provides("dc2fc946-8114-491b-8a7b-3242a274a221")
-	@ProvidesVersion("dc2fc946-8114-491b-8a7b-3242a274a221-2024-02-04")
+	@ProvidesVersion("urn:uuid:dc2fc946-8114-491b-8a7b-3242a274a221")
 	@Specification("COMPLIANT if dwc:month is not EMPTY; otherwise NOT_COMPLIANT ")
 	public static DQResponse<ComplianceValue> validationMonthNotempty(
 			@ActedUpon("dwc:month") String month
