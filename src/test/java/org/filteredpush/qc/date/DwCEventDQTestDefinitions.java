@@ -74,7 +74,7 @@ public class DwCEventDQTestDefinitions {
 		// within the parameter range, otherwise NOT_COMPLIANT 
 		
 		// Parameters. This test is defined as parameterized.
-		// Default values: bdq:earliestValidDate="1600"; bdq:latestValidDate=current year
+		// Default values: bdqval:earliestValidDate="1600"; bdqval:latestValidDate=current year
 		
 		
 		String eventDate = "";
@@ -146,7 +146,7 @@ public class DwCEventDQTestDefinitions {
 		// within the parameter range, otherwise NOT_COMPLIANT 
 		
 		// Parameters. This test is defined as parameterized.
-		// Default values: bdq:earliestValidDate="1582-11-15"; bdq:latestValidDate=current year
+		// Default values: bdqval:earliestValidDate="1582-11-15"; bdqval:latestValidDate=current year
 		
 		String eventDate = "";
 		DQResponse<ComplianceValue> result = DwCEventDQ.validationEventdateInrange(eventDate, "1800-01-01", "1899-12-31");
@@ -667,11 +667,11 @@ public class DwCEventDQTestDefinitions {
         // Specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:year is not present, 
         // or is EMPTY or cannot be interpreted as an integer; COMPLIANT 
-        // if the value of dwc:year is within the range bdq:earliestValidDate 
-        // to bdq:latestValidDate inclusive; otherwise NOT_COMPLIANT 
+        // if the value of dwc:year is within the range bdqval:earliestValidDate 
+        // to bdqval:latestValidDate inclusive; otherwise NOT_COMPLIANT 
 
         // This test is defined as parameterized.
-        // bdq:earliestDate="1582"; bdq:latestDate=current year
+        // bdqval:earliestValidDate="1582"; bdqval:latestValidDate=current year
 		
 		String year = "";
 		String upperBound = null;

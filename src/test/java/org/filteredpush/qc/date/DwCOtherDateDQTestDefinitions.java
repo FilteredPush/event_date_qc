@@ -81,7 +81,7 @@ public class DwCOtherDateDQTestDefinitions {
         // or follows the dwc:eventDate; otherwise NOT_COMPLIANT
 
         // Parameters. This test is defined as parameterized.
-        // Default values: bdq:earliestVaidDate="1753-01-01"; bdq:latestValidDate=current day
+        // Default values: bdqval:earliestValidDate="1753-01-01"; bdqval:latestValidDate=current day
 		
 		String dateIdentified = "";  // dateIdentified empty
 		String eventDate = "2022-01-04";
@@ -157,19 +157,19 @@ public class DwCOtherDateDQTestDefinitions {
         // Specification
         // INTERNAL_PREREQUISITES_NOT_MET if (1) dwc:dateIdentified 
         // is EMPTY, or (2) dwc:dateIdentified contains an invalid 
-        // value according to ISO 8601-1, or (3) bdq:includeEventDate=true 
+        // value according to ISO 8601-1, or (3) bdqval:includeEventDate=true 
         // and dwc:eventDate is not a valid ISO 8601-1 date; COMPLIANT 
-        // if the value of dwc:dateIdentified is between bdq:earliestValidDate 
-        // and bdq:latestValidDate inclusive and either (1) dwc:eventDate 
-        // is EMPTY or bdq:includeEventDate=false, or (2) if dwc:eventDate 
+        // if the value of dwc:dateIdentified is between bdqval:earliestValidDate 
+        // and bdqval:latestValidDate inclusive and either (1) dwc:eventDate 
+        // is EMPTY or bdqval:includeEventDate=false, or (2) if dwc:eventDate 
         // is a valid ISO 8601-1 date and dwc:dateIdentified overlaps 
         // or is later than the dwc:eventDate; otherwise NOT_COMPLIANT 
-        // bdq:sourceAuthority is "ISO 8601-1:2019" [https://www.iso.org/obp/ui/],bdq:earliestValidDate 
-        // default="1753-01-01",bdq:latestValidDate default=[current 
-        // day],bdq:includeEventDate default=true 
+        // bdqval:sourceAuthority is "ISO 8601-1:2019" [https://www.iso.org/obp/ui/],bdqval:earliestValidDate 
+        // default="1753-01-01",bdqval:latestValidDate default=[current 
+        // day],bdqval:includeEventDate default=true 
 		
         // Parameters. This test is defined as parameterized.
-        // Default values: bdq:earliestVaidDate="1753-01-01"; bdq:latestValidDate=current day
+        // Default values: bdqval:earliestValidDate="1753-01-01"; bdqval:latestValidDate=current day
 		
 		String dateIdentified = "1950-05-06";  // dateIdentified within specified range
 		String eventDate = "1950-01-12";
@@ -205,9 +205,9 @@ public class DwCOtherDateDQTestDefinitions {
 		
 		
         // COMPLIANT 
-        // if the value of dwc:dateIdentified is between bdq:earliestValidDate 
-        // and bdq:latestValidDate inclusive and either (1) dwc:eventDate 
-        // is EMPTY or bdq:includeEventDate=false, or (2) if dwc:eventDate 
+        // if the value of dwc:dateIdentified is between bdqval:earliestValidDate 
+        // and bdqval:latestValidDate inclusive and either (1) dwc:eventDate 
+        // is EMPTY or bdqval:includeEventDate=false, or (2) if dwc:eventDate 
         // is a valid ISO 8601-1 date and dwc:dateIdentified overlaps 
         // or is later than the dwc:eventDate; otherwise NOT_COMPLIANT 
 		

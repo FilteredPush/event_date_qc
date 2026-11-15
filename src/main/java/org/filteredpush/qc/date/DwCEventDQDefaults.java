@@ -66,17 +66,17 @@ public class DwCEventDQDefaults extends DwCEventDQ {
     @Validation(label="VALIDATION_EVENTDATE_INRANGE", description="Is the value of dwc:eventDate entirely with the Parameter Range?")
     @Provides("3cff4dc4-72e9-4abe-9bf3-8a30f1618432")
     @ProvidesVersion("https://rs.tdwg.org/bdqtest/terms/version/3cff4dc4-72e9-4abe-9bf3-8a30f1618432-2024-09-16")
-    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is bdq:Empty or if the value of dwc:eventDate is not a valid ISO 8601 date; COMPLIANT if the range of dwc:eventDate is entirely within the range bdq:earliestValidDate to bdq:latestValidDate, inclusive, otherwise NOT_COMPLIANT. bdq:earliestValidDate default ='1582-11-15',bdq:latestValidDate default = '{current year}'")
+    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is bdqval:Empty or if the value of dwc:eventDate is not a valid ISO 8601 date; COMPLIANT if the range of dwc:eventDate is entirely within the range bdqval:earliestValidDate to bdqval:latestValidDate, inclusive, otherwise NOT_COMPLIANT. bdqval:earliestValidDate default ='1582-11-15',bdqval:latestValidDate default = '{current year}'")
     public static DQResponse<ComplianceValue> validationEventdateInrange(@ActedUpon("dwc:eventDate") String eventDate) {
         // Specification
         // INTERNAL_PREREQUISITES_NOT_MET if dwc:eventDate is EMPTY 
         // or if the value of dwc:eventDate is not a valid ISO 8601-1 
         // date; COMPLIANT if the range of dwc:eventDate is entirely 
-        // within the range bdq:earliestValidDate to bdq:latestValidDate, 
+        // within the range bdqval:earliestValidDate to bdqval:latestValidDate, 
         // inclusive, otherwise NOT_COMPLIANT 
 
         // Parameters. This test is defined as parameterized.
-        // Default values: bdq:earliestValidDate="1582-11-15"; bdq:latestValidDate=current year    	
+        // Default values: bdqval:earliestValidDate="1582-11-15"; bdqval:latestValidDate=current year    	
     	
     	String currentYear = String.format("%04d",Calendar.getInstance().get(Calendar.YEAR)) + "-12-31";
     	return DwCEventDQ.validationEventdateInrange(eventDate,"1582-11-15",currentYear);
@@ -100,12 +100,12 @@ public class DwCEventDQDefaults extends DwCEventDQ {
     @Validation(label="VALIDATION_YEAR_INRANGE", description="Is the value of dwc:year within the Parameter range?")
     @Provides("ad0c8855-de69-4843-a80c-a5387d20fbc8")
     @ProvidesVersion("https://rs.tdwg.org/bdqtest/terms/version/ad0c8855-de69-4843-a80c-a5387d20fbc8-2024-08-23")
-    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:year is bdq:Empty or cannot be interpreted as an integer; COMPLIANT if the value of dwc:year is within the range bdq:earliestValidDate to bdq:latestValidDate inclusive; otherwise NOT_COMPLIANT. bdq:earliestValidDate default = '1582',bdq:latestValidDate default = '{current year}'")
+    @Specification("INTERNAL_PREREQUISITES_NOT_MET if dwc:year is bdqval:Empty or cannot be interpreted as an integer; COMPLIANT if the value of dwc:year is within the range bdqval:earliestValidDate to bdqval:latestValidDate inclusive; otherwise NOT_COMPLIANT. bdqval:earliestValidDate default = '1582',bdqval:latestValidDate default = '{current year}'")
     public static DQResponse<ComplianceValue> validationYearInrange(@ActedUpon("dwc:year") String year) {
         DQResponse<ComplianceValue> result = new DQResponse<ComplianceValue>();
         // This test is defined as parameterized.
         // Default values: 
-        // bdq:earliestDate="1582"; bdq:latestDate=current year
+        // bdqval:earliestValidDate="1582"; bdqval:latestValidDate=current year
         
     	Integer upperBound = LocalDateTime.now().getYear();
 
