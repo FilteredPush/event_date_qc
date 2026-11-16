@@ -80,8 +80,8 @@ bdqtest:3cff4dc4-72e9-4abe-9bf3-8a30f1618432-2025-03-06 a bdqffdq:Validation;
   bdqffdq:hasCriterion bdqcrit:InRange;
   bdqffdq:hasActedUponInformationElement <urn:uuid:e8c9ef54-af43-4c20-98a8-a7865cc169ac>;
   dcterms:issued "2025-03-06"^^xsd:date;
-  dcterms:references <urn:uuid:42edd637-32a3-4546-8ec0-a67d98418965>, <urn:uuid:ff609365-191e-4b1b-a538-66592e548bdb>,
-    <urn:uuid:073a52a9-fa39-4876-bea1-dbbeb26c167a>;
+  dcterms:references <urn:uuid:5562a38e-ae51-4e88-bbb7-fbe629432c1b>, <urn:uuid:753fbdc5-c73f-43b7-a3c9-9903781a9789>,
+    <urn:uuid:96b1e607-e331-4cd4-9fe8-3ce2ab312f3e>;
   skos:historyNote "https://github.com/tdwg/bdq/issues/36";
   rdfs:label "VALIDATION_EVENTDATE_INRANGE";
   dcterms:isVersionOf bdqtest:3cff4dc4-72e9-4abe-9bf3-8a30f1618432;
@@ -93,13 +93,13 @@ bdqdim:Conformance a bdqffdq:DataQualityDimension;
 bdqcrit:InRange a bdqffdq:Criterion;
   rdfs:label "InRange" .
 
-<urn:uuid:42edd637-32a3-4546-8ec0-a67d98418965> a dcterms:BibliographicResource;
+<urn:uuid:5562a38e-ae51-4e88-bbb7-fbe629432c1b> a dcterms:BibliographicResource;
   dcterms:bibliographicCitation "ISO (2019) ISO 8601-1:2019(en) Date and time — Representations for information interchange — Part 1: Basic rules. https://www.iso.org/obp/ui/" .
 
-<urn:uuid:ff609365-191e-4b1b-a538-66592e548bdb> a dcterms:BibliographicResource;
+<urn:uuid:753fbdc5-c73f-43b7-a3c9-9903781a9789> a dcterms:BibliographicResource;
   dcterms:bibliographicCitation "Wikipedia (2020) ISO 8601. https://en.wikipedia.org/wiki/ISO_8601" .
 
-<urn:uuid:073a52a9-fa39-4876-bea1-dbbeb26c167a> a dcterms:BibliographicResource;
+<urn:uuid:96b1e607-e331-4cd4-9fe8-3ce2ab312f3e> a dcterms:BibliographicResource;
   dcterms:bibliographicCitation "Library of Congress (2019) Extended Date/Time Format (EDTF). https://www.loc.gov/standards/datetime/" .
 
 <urn:uuid:17f89e32-0174-4bf9-805e-ba7aec59477b> a bdqffdq:ValidationMethod;
@@ -180,8 +180,8 @@ bdqtest:710fe118-17e1-440f-b428-88ba3f547d6d-2025-03-06 a bdqffdq:Amendment;
   bdqffdq:hasActedUponInformationElement <urn:uuid:d95b6eba-3274-4ad5-bb18-357166a64b12>;
   bdqffdq:hasConsultedInformationElement <urn:uuid:73513536-e916-4290-800a-c2daf8932e28>;
   dcterms:issued "2025-03-06"^^xsd:date;
-  dcterms:references <urn:uuid:42edd637-32a3-4546-8ec0-a67d98418965>, <urn:uuid:ff609365-191e-4b1b-a538-66592e548bdb>,
-    <urn:uuid:073a52a9-fa39-4876-bea1-dbbeb26c167a>;
+  dcterms:references <urn:uuid:5562a38e-ae51-4e88-bbb7-fbe629432c1b>, <urn:uuid:753fbdc5-c73f-43b7-a3c9-9903781a9789>,
+    <urn:uuid:96b1e607-e331-4cd4-9fe8-3ce2ab312f3e>;
   skos:historyNote "https://github.com/tdwg/bdq/issues/52";
   rdfs:label "AMENDMENT_EVENT_FROM_EVENTDATE";
   dcterms:isVersionOf bdqtest:710fe118-17e1-440f-b428-88ba3f547d6d;
@@ -232,8 +232,8 @@ bdqtest:718dfc3c-cb52-4fca-b8e2-0e722f375da7-2025-03-06 a bdqffdq:Amendment;
   dcterms:description "Proposes an amendment of the value of dwc:eventDate to a valid ISO date.";
   bdqffdq:hasActedUponInformationElement <urn:uuid:e8c9ef54-af43-4c20-98a8-a7865cc169ac>;
   dcterms:issued "2025-03-06"^^xsd:date;
-  dcterms:references <urn:uuid:42edd637-32a3-4546-8ec0-a67d98418965>, <urn:uuid:ff609365-191e-4b1b-a538-66592e548bdb>,
-    <urn:uuid:073a52a9-fa39-4876-bea1-dbbeb26c167a>;
+  dcterms:references <urn:uuid:5562a38e-ae51-4e88-bbb7-fbe629432c1b>, <urn:uuid:753fbdc5-c73f-43b7-a3c9-9903781a9789>,
+    <urn:uuid:96b1e607-e331-4cd4-9fe8-3ce2ab312f3e>;
   skos:historyNote "https://github.com/tdwg/bdq/issues/61";
   rdfs:label "AMENDMENT_EVENTDATE_STANDARDIZED";
   dcterms:isVersionOf bdqtest:718dfc3c-cb52-4fca-b8e2-0e722f375da7;
@@ -268,8 +268,8 @@ bdqtest:4f2bf8fd-fc5c-493f-a44c-e7b16153c803-2025-03-06 a bdqffdq:Validation;
   bdqffdq:hasCriterion bdqcrit:Standard;
   bdqffdq:hasActedUponInformationElement <urn:uuid:e8c9ef54-af43-4c20-98a8-a7865cc169ac>;
   dcterms:issued "2025-03-06"^^xsd:date;
-  dcterms:references <urn:uuid:42edd637-32a3-4546-8ec0-a67d98418965>, <urn:uuid:ff609365-191e-4b1b-a538-66592e548bdb>,
-    <urn:uuid:073a52a9-fa39-4876-bea1-dbbeb26c167a>;
+  dcterms:references <urn:uuid:5562a38e-ae51-4e88-bbb7-fbe629432c1b>, <urn:uuid:753fbdc5-c73f-43b7-a3c9-9903781a9789>,
+    <urn:uuid:96b1e607-e331-4cd4-9fe8-3ce2ab312f3e>;
   skos:historyNote "https://github.com/tdwg/bdq/issues/66";
   rdfs:label "VALIDATION_EVENTDATE_STANDARD";
   dcterms:isVersionOf bdqtest:4f2bf8fd-fc5c-493f-a44c-e7b16153c803;
@@ -390,8 +390,8 @@ bdqtest:6d0a0c10-5e4a-4759-b448-88932f399812-2025-03-06 a bdqffdq:Amendment;
   bdqffdq:hasActedUponInformationElement <urn:uuid:e8c9ef54-af43-4c20-98a8-a7865cc169ac>;
   bdqffdq:hasConsultedInformationElement <urn:uuid:697cf278-3c46-48f4-84ab-385a7cd9db3c>;
   dcterms:issued "2025-03-06"^^xsd:date;
-  dcterms:references <urn:uuid:42edd637-32a3-4546-8ec0-a67d98418965>, <urn:uuid:ff609365-191e-4b1b-a538-66592e548bdb>,
-    <urn:uuid:073a52a9-fa39-4876-bea1-dbbeb26c167a>;
+  dcterms:references <urn:uuid:5562a38e-ae51-4e88-bbb7-fbe629432c1b>, <urn:uuid:753fbdc5-c73f-43b7-a3c9-9903781a9789>,
+    <urn:uuid:96b1e607-e331-4cd4-9fe8-3ce2ab312f3e>;
   skos:historyNote "https://github.com/tdwg/bdq/issues/86";
   rdfs:label "AMENDMENT_EVENTDATE_FROM_VERBATIM";
   dcterms:isVersionOf bdqtest:6d0a0c10-5e4a-4759-b448-88932f399812;
@@ -466,8 +466,8 @@ bdqtest:3892f432-ddd0-4a0a-b713-f2e2ecbd879d-2025-03-06 a bdqffdq:Amendment;
   bdqffdq:hasActedUponInformationElement <urn:uuid:e8c9ef54-af43-4c20-98a8-a7865cc169ac>;
   bdqffdq:hasConsultedInformationElement <urn:uuid:05f8a834-4582-4d50-8ac6-2bd766c3ae28>;
   dcterms:issued "2025-03-06"^^xsd:date;
-  dcterms:references <urn:uuid:42edd637-32a3-4546-8ec0-a67d98418965>, <urn:uuid:ff609365-191e-4b1b-a538-66592e548bdb>,
-    <urn:uuid:073a52a9-fa39-4876-bea1-dbbeb26c167a>;
+  dcterms:references <urn:uuid:5562a38e-ae51-4e88-bbb7-fbe629432c1b>, <urn:uuid:753fbdc5-c73f-43b7-a3c9-9903781a9789>,
+    <urn:uuid:96b1e607-e331-4cd4-9fe8-3ce2ab312f3e>;
   skos:historyNote "https://github.com/tdwg/bdq/issues/93";
   rdfs:label "AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY";
   dcterms:isVersionOf bdqtest:3892f432-ddd0-4a0a-b713-f2e2ecbd879d;
@@ -504,8 +504,8 @@ bdqtest:8d787cb5-73e2-4c39-9cd1-67c7361dc02e-2025-03-06 a bdqffdq:Validation;
   bdqffdq:hasCriterion bdqcrit:InRange;
   bdqffdq:hasActedUponInformationElement <urn:uuid:3b27257d-cfe4-4e47-8352-1bc4bad44ad4>;
   dcterms:issued "2025-03-06"^^xsd:date;
-  dcterms:references <urn:uuid:42edd637-32a3-4546-8ec0-a67d98418965>, <urn:uuid:ff609365-191e-4b1b-a538-66592e548bdb>,
-    <urn:uuid:073a52a9-fa39-4876-bea1-dbbeb26c167a>;
+  dcterms:references <urn:uuid:5562a38e-ae51-4e88-bbb7-fbe629432c1b>, <urn:uuid:753fbdc5-c73f-43b7-a3c9-9903781a9789>,
+    <urn:uuid:96b1e607-e331-4cd4-9fe8-3ce2ab312f3e>;
   skos:historyNote "https://github.com/tdwg/bdq/issues/125";
   rdfs:label "VALIDATION_DAY_INRANGE";
   dcterms:isVersionOf bdqtest:8d787cb5-73e2-4c39-9cd1-67c7361dc02e;
@@ -720,7 +720,7 @@ bdqtest:eb0a44fa-241c-4d64-98df-ad4aa837307b-2025-03-06 a bdqffdq:Amendment;
   bdqffdq:hasActedUponInformationElement <urn:uuid:e8c9ef54-af43-4c20-98a8-a7865cc169ac>;
   bdqffdq:hasConsultedInformationElement <urn:uuid:a7362af8-77a9-45c3-8520-1a12b8b31804>;
   dcterms:issued "2025-03-06"^^xsd:date;
-  dcterms:references <urn:uuid:42edd637-32a3-4546-8ec0-a67d98418965>, <urn:uuid:ff609365-191e-4b1b-a538-66592e548bdb>;
+  dcterms:references <urn:uuid:5562a38e-ae51-4e88-bbb7-fbe629432c1b>, <urn:uuid:753fbdc5-c73f-43b7-a3c9-9903781a9789>;
   skos:historyNote "https://github.com/tdwg/bdq/issues/132";
   rdfs:label "AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR";
   dcterms:isVersionOf bdqtest:eb0a44fa-241c-4d64-98df-ad4aa837307b;
@@ -756,7 +756,7 @@ bdqtest:56b6c695-adf1-418e-95d2-da04cad7be53-2025-03-07 a bdqffdq:Measure;
   dcterms:description "What is the duration of dwc:eventDate in seconds?";
   bdqffdq:hasActedUponInformationElement <urn:uuid:e8c9ef54-af43-4c20-98a8-a7865cc169ac>;
   dcterms:issued "2025-03-07"^^xsd:date;
-  dcterms:references <urn:uuid:42edd637-32a3-4546-8ec0-a67d98418965>, <urn:uuid:ff609365-191e-4b1b-a538-66592e548bdb>;
+  dcterms:references <urn:uuid:5562a38e-ae51-4e88-bbb7-fbe629432c1b>, <urn:uuid:753fbdc5-c73f-43b7-a3c9-9903781a9789>;
   skos:historyNote "https://github.com/tdwg/bdq/issues/140";
   rdfs:label "MEASURE_EVENTDATE_DURATIONINSECONDS";
   dcterms:isVersionOf bdqtest:56b6c695-adf1-418e-95d2-da04cad7be53;
@@ -818,7 +818,172 @@ bdqtest:47ff73ba-0028-4f79-9ce1-ee7008d66498-2025-03-06 a bdqffdq:Validation;
   rdfs:label "Specification for: VALIDATION_DAY_STANDARD";
   dcterms:description "INTERNAL_PREREQUISITES_NOT_MET if dwc:day is bdqval:Empty; COMPLIANT if the value of the field dwc:day is an integer between 1 and 31 inclusive; otherwise NOT_COMPLIANT." .
 
-<urn:uuid:59ca70a7-c66f-45d8-83df-77bb6c7c7f52> a bdqffdq:MeasurementPolicy;
+bdqtest:0267c35f-a02b-4dc9-9a01-38797faa6b2b-2025-03-06 a bdqffdq:Validation;
+  bdqffdq:hasResourceType bdqffdq:SingleRecord;
+  skos:note "This bdqval:Supplementary test is not regarded as CORE because of one or more of the reasons: not being widely applicable; not informative; not straightforward to implement or likely to return a high percentage of either bdqval:COMPLIANT or bdqval:NOT_COMPLIANT results (cf bdqval:Response.result). A Supplementary test may be implemented as CORE when a suitable Use Case exists.";
+  bdqffdq:hasDataQualityDimension bdqdim:Completeness;
+  dcterms:description "Is there a value in dwc:endDayOfYear?";
+  bdqffdq:hasCriterion bdqcrit:NotEmpty;
+  bdqffdq:hasActedUponInformationElement <urn:uuid:ef8f4379-6691-4cb9-b606-ca445f9fb060>;
+  dcterms:issued "2025-03-06"^^xsd:date;
+  skos:historyNote "https://github.com/tdwg/bdq/issues/267";
+  rdfs:label "VALIDATION_ENDDAYOFYEAR_NOTEMPTY";
+  dcterms:isVersionOf bdqtest:0267c35f-a02b-4dc9-9a01-38797faa6b2b;
+  skos:prefLabel "Missing prefLabel for SingleRecord" .
+
+<urn:uuid:7ee96dae-a035-4d9e-9606-2cae52de66cd> a bdqffdq:ValidationMethod;
+  skos:note "Example Implementations: Kurator/FilteredPush event_date_qc Library DOI: [10.5281/zenodo.596795](https://doi.org/10.5281/zenodo.596795)",
+    "Example Implementations Source Code: https://github.com/FilteredPush/event_date_qc/blob/v3.0.5/src/main/java/org/filteredpush/qc/date/DwCEventDQ.java#L2443",
+    "TG2 Validation TIME CODED Test Supplementary Completeness";
+  bdqffdq:hasSpecification <urn:uuid:a997dcf7-9c0d-49ed-94b6-4489db26abf7>;
+  skos:historyNote "Source: TG2";
+  rdfs:label "ValidationMethod: VALIDATION_ENDDAYOFYEAR_NOTEMPTY with Specification for: VALIDATION_ENDDAYOFYEAR_NOTEMPTY";
+  skos:prefLabel "ValidationMethod: VALIDATION_ENDDAYOFYEAR_NOTEMPTY with Specification for: VALIDATION_ENDDAYOFYEAR_NOTEMPTY";
+  bdqffdq:forValidation bdqtest:0267c35f-a02b-4dc9-9a01-38797faa6b2b-2025-03-06 .
+
+<urn:uuid:a997dcf7-9c0d-49ed-94b6-4489db26abf7> a bdqffdq:Specification;
+  skos:example "dwc:endDayOfYear=\"365\": Response.status=RUN_HAS_RESULT, Response.result=COMPLIANT, Response.comment=\"dwc:endDayOfYear is bdqval:NotEmpty\"",
+    "dwc:endDayOfYear=\"\": Response.status=RUN_HAS_RESULT, Response.result=NOT_COMPLIANT, Response.comment=\"dwc:endDayOfYear is bdqval:Empty\"";
+  bdqffdq:hasAuthoritiesDefaults "";
+  bdqffdq:hasExpectedResponse "COMPLIANT if dwc:endDayOfYear is bdqval:NotEmpty; otherwise NOT_COMPLIANT";
+  rdfs:label "Specification for: VALIDATION_ENDDAYOFYEAR_NOTEMPTY";
+  dcterms:description "COMPLIANT if dwc:endDayOfYear is bdqval:NotEmpty; otherwise NOT_COMPLIANT" .
+
+bdqtest:167d4346-6fac-40eb-9d2e-30b7683dac04-2025-03-06 a bdqffdq:Validation;
+  bdqffdq:hasResourceType bdqffdq:SingleRecord;
+  skos:note "This bdqval:Supplementary test is not regarded as CORE because of one or more of the reasons: not being widely applicable; not informative; not straightforward to implement or likely to return a high percentage of either bdqval:COMPLIANT or bdqval:NOT_COMPLIANT results (cf bdqval:Response.result). A Supplementary test may be implemented as CORE when a suitable Use Case exists.";
+  bdqffdq:hasDataQualityDimension bdqdim:Completeness;
+  dcterms:description "Is there a value in dwc:startDayOfYear?";
+  bdqffdq:hasCriterion bdqcrit:NotEmpty;
+  bdqffdq:hasActedUponInformationElement <urn:uuid:83d00e4e-6359-4545-87fc-94b080f46ead>;
+  dcterms:issued "2025-03-06"^^xsd:date;
+  skos:historyNote "https://github.com/tdwg/bdq/issues/264";
+  rdfs:label "VALIDATION_STARTDAYOFYEAR_NOTEMPTY";
+  dcterms:isVersionOf bdqtest:167d4346-6fac-40eb-9d2e-30b7683dac04;
+  skos:prefLabel "Missing prefLabel for SingleRecord" .
+
+<urn:uuid:b8dbe448-6499-48b6-9f8d-1ded6fb3ddfc> a bdqffdq:ValidationMethod;
+  skos:note "Example Implementations: Kurator/FilteredPush event_date_qc Library DOI: [10.5281/zenodo.596795](https://doi.org/10.5281/zenodo.596795)",
+    "Example Implementations Source Code: https://github.com/FilteredPush/event_date_qc/blob/v3.0.5/src/main/java/org/filteredpush/qc/date/DwCEventDQ.java#L2478",
+    "TG2 Validation TIME CODED Test Supplementary Completeness";
+  bdqffdq:hasSpecification <urn:uuid:c0446a29-31eb-4a79-a618-f63fc44cb38d>;
+  skos:historyNote "Source: TG2";
+  rdfs:label "ValidationMethod: VALIDATION_STARTDAYOFYEAR_NOTEMPTY with Specification for: VALIDATION_STARTDAYOFYEAR_NOTEMPTY";
+  skos:prefLabel "ValidationMethod: VALIDATION_STARTDAYOFYEAR_NOTEMPTY with Specification for: VALIDATION_STARTDAYOFYEAR_NOTEMPTY";
+  bdqffdq:forValidation bdqtest:167d4346-6fac-40eb-9d2e-30b7683dac04-2025-03-06 .
+
+<urn:uuid:c0446a29-31eb-4a79-a618-f63fc44cb38d> a bdqffdq:Specification;
+  skos:example "dwc:startDayOfYear=\"42\": Response.status=RUN_HAS_RESULT, Response.result=COMPLIANT, Response.comment=\"dwc:startDayOfYear is bdqval:NotEmpty\"",
+    "dwc:startDayOfYear=\"\": Response.status=RUN_HAS_RESULT, Response.result=NOT_COMPLIANT, Response.comment=\"dwc:startDayOfYear is bdqval:Empty\"";
+  bdqffdq:hasAuthoritiesDefaults "";
+  bdqffdq:hasExpectedResponse "COMPLIANT if dwc:startDayOfYear is bdqval:NotEmpty; otherwise NOT_COMPLIANT";
+  rdfs:label "Specification for: VALIDATION_STARTDAYOFYEAR_NOTEMPTY";
+  dcterms:description "COMPLIANT if dwc:startDayOfYear is bdqval:NotEmpty; otherwise NOT_COMPLIANT" .
+
+bdqtest:aaebbde6-a101-4665-ba1e-6d4d8c561a31-2025-03-06 a bdqffdq:Validation;
+  bdqffdq:hasResourceType bdqffdq:SingleRecord;
+  skos:note "This bdqval:Supplementary test is not regarded as CORE because assessment of dwc:eventTime is out of scope for the CORE use case, where temporal resolution is only considered down to the resolution of approximately one day.  Time is often known for observational occurrence data, but very seldom recorded for vouchered specimen data.  This test has significant value for research and other uses of observational data.   Any analysis of time data needs to be very cognizant of substantial problems related to temporal data of which time zones are just the tip of the iceberg, see: https://xkcd.com/2867/";
+  bdqffdq:hasDataQualityDimension bdqdim:Completeness;
+  dcterms:description "Is there a value in dwc:eventTime?";
+  bdqffdq:hasCriterion bdqcrit:NotEmpty;
+  bdqffdq:hasActedUponInformationElement <urn:uuid:148780d6-3d35-477b-a977-cbf609323cf8>;
+  dcterms:issued "2025-03-06"^^xsd:date;
+  skos:historyNote "https://github.com/tdwg/bdq/issues/255";
+  rdfs:label "VALIDATION_EVENTTIME_NOTEMPTY";
+  dcterms:isVersionOf bdqtest:aaebbde6-a101-4665-ba1e-6d4d8c561a31;
+  skos:prefLabel "Missing prefLabel for SingleRecord" .
+
+<urn:uuid:148780d6-3d35-477b-a977-cbf609323cf8> a bdqffdq:ActedUpon;
+  bdqffdq:composedOf dwc:eventTime;
+  rdfs:label "Information Element ActedUpon dwc:eventTime";
+  skos:prefLabel "Information Element ActedUpon dwc:eventTime" .
+
+<urn:uuid:ac515d80-749f-4e04-a324-8b6c91d985be> a bdqffdq:ValidationMethod;
+  skos:note "Example Implementations: Kurator/FilteredPush event_date_qc Library DOI: [10.5281/zenodo.596795](https://doi.org/10.5281/zenodo.596795)",
+    "Example Implementations Source Code: https://github.com/FilteredPush/event_date_qc/blob/v3.0.5/src/main/java/org/filteredpush/qc/date/DwCEventDQ.java#L2513",
+    "TG2 Validation TIME CODED Test Supplementary Completeness ISO/DCMI STANDARD";
+  bdqffdq:hasSpecification <urn:uuid:af43973f-9888-4ec6-8565-40a8654199cf>;
+  skos:historyNote "Source: TG2";
+  rdfs:label "ValidationMethod: VALIDATION_EVENTTIME_NOTEMPTY with Specification for: VALIDATION_EVENTTIME_NOTEMPTY";
+  skos:prefLabel "ValidationMethod: VALIDATION_EVENTTIME_NOTEMPTY with Specification for: VALIDATION_EVENTTIME_NOTEMPTY";
+  bdqffdq:forValidation bdqtest:aaebbde6-a101-4665-ba1e-6d4d8c561a31-2025-03-06 .
+
+<urn:uuid:af43973f-9888-4ec6-8565-40a8654199cf> a bdqffdq:Specification;
+  skos:example "dwc:eventTime=\"13:00:00Z/15:30:00Z\": Response.status=RUN_HAS_RESULT, Response.result=COMPLIANT, Response.comment=\"dwc:eventTime is bdqval:NotEmpty\"",
+    "dwc:eventTime=\"\": Response.status=RUN_HAS_RESULT, Response.result=NOT_COMPLIANT, Response.comment=\"dwc:eventTime is bdqval:Empty\"";
+  bdqffdq:hasAuthoritiesDefaults "";
+  bdqffdq:hasExpectedResponse "COMPLIANT if dwc:eventTime is bdqval:NotEmpty; otherwise NOT_COMPLIANT";
+  rdfs:label "Specification for: VALIDATION_EVENTTIME_NOTEMPTY";
+  dcterms:description "COMPLIANT if dwc:eventTime is bdqval:NotEmpty; otherwise NOT_COMPLIANT" .
+
+bdqtest:9bc8b105-902a-489c-aae8-3b7075e1b948-2025-03-06 a bdqffdq:Validation;
+  bdqffdq:hasResourceType bdqffdq:SingleRecord;
+  skos:note "This bdqval:Supplementary test is not regarded as CORE because of one or more of the reasons: not being widely applicable; not informative; likely to return a high percentage of either bdqval:COMPLIANT or bdqval:NOT_COMPLIANT results (cf bdqval:Response.result). A Supplementary test may be implemented as CORE when a suitable Use Case exists.";
+  bdqffdq:hasDataQualityDimension bdqdim:Completeness;
+  dcterms:description "Is there a value in dwc:verbatimEventDate?";
+  bdqffdq:hasCriterion bdqcrit:NotEmpty;
+  bdqffdq:hasActedUponInformationElement <urn:uuid:3ee9206d-bc44-462a-9510-120e13746c8f>;
+  dcterms:issued "2025-03-06"^^xsd:date;
+  skos:historyNote "https://github.com/tdwg/bdq/issues/250";
+  rdfs:label "ISSUE_VERBATIMEVENTDATE_NOTEMPTY";
+  dcterms:isVersionOf bdqtest:9bc8b105-902a-489c-aae8-3b7075e1b948;
+  skos:prefLabel "Missing prefLabel for SingleRecord" .
+
+<urn:uuid:3ee9206d-bc44-462a-9510-120e13746c8f> a bdqffdq:ActedUpon;
+  bdqffdq:composedOf dwc:verbatimEventDate;
+  rdfs:label "Information Element ActedUpon dwc:verbatimEventDate";
+  skos:prefLabel "Information Element ActedUpon dwc:verbatimEventDate" .
+
+<urn:uuid:0a095f6c-34f2-4653-a777-5574954c3ec3> a bdqffdq:ValidationMethod;
+  skos:note "Example Implementations: Kurator/FilteredPush event_date_qc Library DOI: [10.5281/zenodo.596795](https://doi.org/10.5281/zenodo.596795)",
+    "Example Implementations Source Code: https://github.com/FilteredPush/event_date_qc/blob/v3.0.5/src/main/java/org/filteredpush/qc/date/DwCEventDQ.java#L2547",
+    "TG2 Validation TIME CODED Test Supplementary Completeness";
+  bdqffdq:hasSpecification <urn:uuid:08c724b5-fa69-4411-b9b8-303c40710d38>;
+  skos:historyNote "Source: TG2";
+  rdfs:label "ValidationMethod: ISSUE_VERBATIMEVENTDATE_NOTEMPTY with Specification for: ISSUE_VERBATIMEVENTDATE_NOTEMPTY";
+  skos:prefLabel "ValidationMethod: ISSUE_VERBATIMEVENTDATE_NOTEMPTY with Specification for: ISSUE_VERBATIMEVENTDATE_NOTEMPTY";
+  bdqffdq:forValidation bdqtest:9bc8b105-902a-489c-aae8-3b7075e1b948-2025-03-06 .
+
+<urn:uuid:08c724b5-fa69-4411-b9b8-303c40710d38> a bdqffdq:Specification;
+  skos:example "dwc:verbatimEventDate=\"summer 2024\": Response.status=RUN_HAS_RESULT, Response.result=POTENTIAL_ISSUE, Response.comment=\"dwc:verbatimEventDate is bdqval:NotEmpty\"",
+    "dwc:verbatimEventDate=\"\": Response.status=RUN_HAS_RESULT, Response.result=NOT_ISSUE, Response.comment=\"dwc:verbatimEventDate is bdqval:Empty\"";
+  bdqffdq:hasAuthoritiesDefaults "";
+  bdqffdq:hasExpectedResponse "POTENTIAL_ISSUE if dwc:verbatimEventDate is bdqval:NotEmpty; otherwise NOT_ISSUE";
+  rdfs:label "Specification for: ISSUE_VERBATIMEVENTDATE_NOTEMPTY";
+  dcterms:description "POTENTIAL_ISSUE if dwc:verbatimEventDate is bdqval:NotEmpty; otherwise NOT_ISSUE" .
+
+bdqtest:dc2fc946-8114-491b-8a7b-3242a274a221-2025-03-06 a bdqffdq:Validation;
+  bdqffdq:hasResourceType bdqffdq:SingleRecord;
+  skos:note "This bdqval:Supplementary test is not regarded as CORE because of one or more of the reasons: not being widely applicable; not informative; not straightforward to implement or likely to return a high percentage of either bdqval:COMPLIANT or bdqval:NOT_COMPLIANT results (cf bdqval:Response.result). A Supplementary test may be implemented as CORE when a suitable Use Case exists.";
+  bdqffdq:hasDataQualityDimension bdqdim:Completeness;
+  dcterms:description "Is there a value in dwc:month?";
+  bdqffdq:hasCriterion bdqcrit:NotEmpty;
+  bdqffdq:hasActedUponInformationElement <urn:uuid:a16e8cb6-dbf5-44a9-becc-8bef83a37456>;
+  dcterms:issued "2025-03-06"^^xsd:date;
+  skos:historyNote "https://github.com/tdwg/bdq/issues/241";
+  rdfs:label "VALIDATION_MONTH_NOTEMPTY";
+  dcterms:isVersionOf bdqtest:dc2fc946-8114-491b-8a7b-3242a274a221;
+  skos:prefLabel "Missing prefLabel for SingleRecord" .
+
+<urn:uuid:a974a47e-f92a-4bd8-852a-36cb8e5ba7bb> a bdqffdq:ValidationMethod;
+  skos:note "Example Implementations: Kurator/FilteredPush event_date_qc Library DOI: [10.5281/zenodo.596795](https://doi.org/10.5281/zenodo.596795)",
+    "Example Implementations Source Code: https://github.com/FilteredPush/event_date_qc/blob/v3.0.5/src/main/java/org/filteredpush/qc/date/DwCEventDQ.java#L2581",
+    "TG2 Validation TIME CODED Test Supplementary Completeness";
+  bdqffdq:hasSpecification <urn:uuid:72c4b1da-c0d1-4da6-9128-92fa14439242>;
+  skos:historyNote "Source: TG2";
+  rdfs:label "ValidationMethod: VALIDATION_MONTH_NOTEMPTY with Specification for: VALIDATION_MONTH_NOTEMPTY";
+  skos:prefLabel "ValidationMethod: VALIDATION_MONTH_NOTEMPTY with Specification for: VALIDATION_MONTH_NOTEMPTY";
+  bdqffdq:forValidation bdqtest:dc2fc946-8114-491b-8a7b-3242a274a221-2025-03-06 .
+
+<urn:uuid:72c4b1da-c0d1-4da6-9128-92fa14439242> a bdqffdq:Specification;
+  skos:example "dwc:month=\"Jan\": Response.status=RUN_HAS_RESULT, Response.result=COMPLIANT, Response.comment=\"dwc:month is bdqval:NotEmpty\"",
+    "dwc:month=\"\": Response.status=RUN_HAS_RESULT, Response.result=NOT_COMPLIANT, Response.comment=\"dwc:month is bdqval:Empty\"";
+  bdqffdq:hasAuthoritiesDefaults "";
+  bdqffdq:hasExpectedResponse "COMPLIANT if dwc:month is bdqval:NotEmpty; otherwise NOT_COMPLIANT";
+  rdfs:label "Specification for: VALIDATION_MONTH_NOTEMPTY";
+  dcterms:description "COMPLIANT if dwc:month is bdqval:NotEmpty; otherwise NOT_COMPLIANT" .
+
+<urn:uuid:d6683806-e500-42f8-b480-61de33342745> a bdqffdq:MeasurementPolicy;
   bdqffdq:includedInPolicy bdqtest:56b6c695-adf1-418e-95d2-da04cad7be53-2025-03-07;
   rdfs:label "MeasurementPolicy: (1) measures  in UseCase bdquc:Spatial-Temporal_Patterns";
   bdqffdq:hasUseCase bdquc:Spatial-Temporal_Patterns .
@@ -826,7 +991,7 @@ bdqtest:47ff73ba-0028-4f79-9ce1-ee7008d66498-2025-03-06 a bdqffdq:Validation;
 bdquc:Spatial-Temporal_Patterns a bdqffdq:UseCase;
   rdfs:label "bdquc:Spatial-Temporal_Patterns" .
 
-<urn:uuid:923945b0-5e89-476a-9c49-9d342d60fc10> a bdqffdq:ValidationPolicy;
+<urn:uuid:e00b6116-b956-4e43-9d1f-1de28309610c> a bdqffdq:ValidationPolicy;
   bdqffdq:includedInPolicy bdqtest:f51e15a6-a67d-4729-9c28-3766299d2985-2025-03-07,
     bdqtest:c09ecbf9-34e3-4f3e-b74a-8796af15e59f-2025-03-06, bdqtest:4f2bf8fd-fc5c-493f-a44c-e7b16153c803-2025-03-06,
     bdqtest:5618f083-d55a-4ac2-92b5-b9fb227b832f-2025-03-06, bdqtest:ad0c8855-de69-4843-a80c-a5387d20fbc8-2025-03-06,
@@ -838,7 +1003,7 @@ bdquc:Spatial-Temporal_Patterns a bdqffdq:UseCase;
 bdquc:Alien-Species a bdqffdq:UseCase;
   rdfs:label "bdquc:Alien-Species" .
 
-<urn:uuid:03d57544-2df0-4516-88fb-e2b1b1961cea> a bdqffdq:ValidationPolicy;
+<urn:uuid:5bb3e19f-5318-4feb-8e09-6e63a23a9dc1> a bdqffdq:ValidationPolicy;
   bdqffdq:includedInPolicy bdqtest:f51e15a6-a67d-4729-9c28-3766299d2985-2025-03-07,
     bdqtest:3cff4dc4-72e9-4abe-9bf3-8a30f1618432-2025-03-06, bdqtest:c09ecbf9-34e3-4f3e-b74a-8796af15e59f-2025-03-06,
     bdqtest:4f2bf8fd-fc5c-493f-a44c-e7b16153c803-2025-03-06, bdqtest:ad0c8855-de69-4843-a80c-a5387d20fbc8-2025-03-06,
@@ -849,7 +1014,7 @@ bdquc:Alien-Species a bdqffdq:UseCase;
   bdqffdq:hasUseCase bdquc:Spatial-Temporal_Patterns;
   skos:prefLabel "ValidationPolicy: (11) validations  in UseCase bdquc:Spatial-Temporal_Patterns" .
 
-<urn:uuid:9424b4c0-cf2b-413b-a2a9-cf453ba8afd5> a bdqffdq:ValidationPolicy;
+<urn:uuid:d68232d5-6425-4894-9970-622c39a1cb6a> a bdqffdq:ValidationPolicy;
   bdqffdq:includedInPolicy bdqtest:f51e15a6-a67d-4729-9c28-3766299d2985-2025-03-07,
     bdqtest:c09ecbf9-34e3-4f3e-b74a-8796af15e59f-2025-03-06, bdqtest:4f2bf8fd-fc5c-493f-a44c-e7b16153c803-2025-03-06,
     bdqtest:ad0c8855-de69-4843-a80c-a5387d20fbc8-2025-03-06;
@@ -860,7 +1025,7 @@ bdquc:Alien-Species a bdqffdq:UseCase;
 bdquc:Species-Distribution-Modeling-Trees a bdqffdq:UseCase;
   rdfs:label "bdquc:Species-Distribution-Modeling-Trees" .
 
-<urn:uuid:046467f8-1ddb-4d50-ac33-f234360bee16> a bdqffdq:AmendmentPolicy;
+<urn:uuid:dbe3b097-dec3-42fc-b99f-0c407467ddee> a bdqffdq:AmendmentPolicy;
   bdqffdq:includedInPolicy bdqtest:710fe118-17e1-440f-b428-88ba3f547d6d-2025-03-06,
     bdqtest:718dfc3c-cb52-4fca-b8e2-0e722f375da7-2025-03-06, bdqtest:6d0a0c10-5e4a-4759-b448-88932f399812-2025-03-06,
     bdqtest:3892f432-ddd0-4a0a-b713-f2e2ecbd879d-2025-03-06, bdqtest:b129fa4d-b25b-43f7-9645-5ed4d44b357b-2025-03-06,
@@ -868,7 +1033,7 @@ bdquc:Species-Distribution-Modeling-Trees a bdqffdq:UseCase;
   rdfs:label "AmendmentPolicy: (7) amendments  in UseCase bdquc:Spatial-Temporal_Patterns";
   bdqffdq:hasUseCase bdquc:Spatial-Temporal_Patterns .
 
-<urn:uuid:03cdd8fe-c3d2-4bc5-be4b-dee6f73d00f8> a bdqffdq:AmendmentPolicy;
+<urn:uuid:30c9eaaf-45bc-4fe3-a5f2-6d04354d8bcd> a bdqffdq:AmendmentPolicy;
   bdqffdq:includedInPolicy bdqtest:710fe118-17e1-440f-b428-88ba3f547d6d-2025-03-06,
     bdqtest:718dfc3c-cb52-4fca-b8e2-0e722f375da7-2025-03-06;
   rdfs:label "AmendmentPolicy: (2) amendments  in UseCase bdquc:Species-Distribution-Modeling-Trees";

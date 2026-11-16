@@ -29,8 +29,8 @@ bdqtest:39bb2280-1215-447b-9221-fd13bc990641-2025-03-07 a bdqffdq:Amendment;
   dcterms:description "Proposes an amendment to the value of dwc:dateIdentified to a valid ISO date.";
   bdqffdq:hasActedUponInformationElement <urn:uuid:e4f1fc86-c84d-4e92-9cf2-5250f243b371>;
   dcterms:issued "2025-03-07"^^xsd:date;
-  dcterms:references <urn:uuid:4d1ead16-718b-4f8f-a28f-7451c0492a89>, <urn:uuid:c9d13053-f154-4661-9ee4-ea04fc980f6e>,
-    <urn:uuid:5131eb57-c602-47d6-b835-69eeb7ca128a>;
+  dcterms:references <urn:uuid:423a6fda-301d-4e9f-a7f9-30c3d6603631>, <urn:uuid:965c0435-3ea9-4203-bcd9-f68fdca398e5>,
+    <urn:uuid:69f646d9-a69d-4a6c-b488-469c2decebdd>;
   skos:historyNote "https://github.com/tdwg/bdq/issues/26";
   rdfs:label "AMENDMENT_DATEIDENTIFIED_STANDARDIZED";
   dcterms:isVersionOf bdqtest:39bb2280-1215-447b-9221-fd13bc990641;
@@ -54,13 +54,13 @@ bdqdim:Conformance a bdqffdq:DataQualityDimension;
 
 bdqffdq:ActedUpon rdfs:subClassOf bdqffdq:InformationElement .
 
-<urn:uuid:4d1ead16-718b-4f8f-a28f-7451c0492a89> a dcterms:BibliographicResource;
+<urn:uuid:423a6fda-301d-4e9f-a7f9-30c3d6603631> a dcterms:BibliographicResource;
   dcterms:bibliographicCitation "ISO (2019) ISO 8601-1:2019(en) Date and time — Representations for information interchange — Part 1: Basic rules. https://www.iso.org/obp/ui/" .
 
-<urn:uuid:c9d13053-f154-4661-9ee4-ea04fc980f6e> a dcterms:BibliographicResource;
+<urn:uuid:965c0435-3ea9-4203-bcd9-f68fdca398e5> a dcterms:BibliographicResource;
   dcterms:bibliographicCitation "Wikipedia (2020) ISO 8601. https://en.wikipedia.org/wiki/ISO_8601" .
 
-<urn:uuid:5131eb57-c602-47d6-b835-69eeb7ca128a> a dcterms:BibliographicResource;
+<urn:uuid:69f646d9-a69d-4a6c-b488-469c2decebdd> a dcterms:BibliographicResource;
   dcterms:bibliographicCitation "Library of Congress (2019) Extended Date/Time Format (EDTF). https://www.loc.gov/standards/datetime/" .
 
 <urn:uuid:0836e914-75d8-4cda-a39f-f21a08382732> a bdqffdq:AmendmentMethod;
@@ -91,8 +91,8 @@ bdqtest:66269bdd-9271-4e76-b25c-7ab81eebe1d8-2025-03-07 a bdqffdq:Validation;
   bdqffdq:hasCriterion bdqcrit:Standard;
   bdqffdq:hasActedUponInformationElement <urn:uuid:e4f1fc86-c84d-4e92-9cf2-5250f243b371>;
   dcterms:issued "2025-03-07"^^xsd:date;
-  dcterms:references <urn:uuid:4d1ead16-718b-4f8f-a28f-7451c0492a89>, <urn:uuid:c9d13053-f154-4661-9ee4-ea04fc980f6e>,
-    <urn:uuid:5131eb57-c602-47d6-b835-69eeb7ca128a>;
+  dcterms:references <urn:uuid:423a6fda-301d-4e9f-a7f9-30c3d6603631>, <urn:uuid:965c0435-3ea9-4203-bcd9-f68fdca398e5>,
+    <urn:uuid:69f646d9-a69d-4a6c-b488-469c2decebdd>;
   skos:historyNote "https://github.com/tdwg/bdq/issues/69";
   rdfs:label "VALIDATION_DATEIDENTIFIED_STANDARD";
   dcterms:isVersionOf bdqtest:66269bdd-9271-4e76-b25c-7ab81eebe1d8;
@@ -131,8 +131,8 @@ bdqtest:dc8aae4b-134f-4d75-8a71-c4186239178e-2025-03-07 a bdqffdq:Validation;
   bdqffdq:hasActedUponInformationElement <urn:uuid:e4f1fc86-c84d-4e92-9cf2-5250f243b371>;
   bdqffdq:hasConsultedInformationElement <urn:uuid:73513536-e916-4290-800a-c2daf8932e28>;
   dcterms:issued "2025-03-07"^^xsd:date;
-  dcterms:references <urn:uuid:4d1ead16-718b-4f8f-a28f-7451c0492a89>, <urn:uuid:c9d13053-f154-4661-9ee4-ea04fc980f6e>,
-    <urn:uuid:5131eb57-c602-47d6-b835-69eeb7ca128a>;
+  dcterms:references <urn:uuid:423a6fda-301d-4e9f-a7f9-30c3d6603631>, <urn:uuid:965c0435-3ea9-4203-bcd9-f68fdca398e5>,
+    <urn:uuid:69f646d9-a69d-4a6c-b488-469c2decebdd>;
   skos:historyNote "https://github.com/tdwg/bdq/issues/76";
   rdfs:label "VALIDATION_DATEIDENTIFIED_INRANGE";
   dcterms:isVersionOf bdqtest:dc8aae4b-134f-4d75-8a71-c4186239178e;
@@ -192,7 +192,168 @@ bdqval:latestValidDate a bdqffdq:Parameter .
 
 bdqval:includeEventDate a bdqffdq:Parameter .
 
-<urn:uuid:dea2fbbd-c573-43da-93f5-2bf089a10812> a bdqffdq:ValidationPolicy;
+bdqtest:391ca46d-3842-4a18-970c-0434cbc17f07-2025-03-06 a bdqffdq:Validation;
+  bdqffdq:hasResourceType bdqffdq:SingleRecord;
+  skos:note "There might be identification dates that are legitimately before dwc:eventDate.  This test will, by design, flag as problematic cases (such as LTER plots, bird banding data, and marine mammal sightings) where a known individual organism is identified by a specialist and then subsequently observed (or collected) without new taxonomic identifications being made.";
+  bdqffdq:hasDataQualityDimension bdqdim:Likelihood;
+  dcterms:description "Is the date of identification equal to, or later than the dwc:eventDate?";
+  bdqffdq:hasCriterion bdqcrit:Consistent;
+  bdqffdq:hasActedUponInformationElement <urn:uuid:0a0f77ca-111c-4605-a886-34a790657375>;
+  dcterms:issued "2025-03-06"^^xsd:date;
+  skos:historyNote "https://github.com/tdwg/bdq/issues/92";
+  rdfs:label "VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE";
+  dcterms:isVersionOf bdqtest:391ca46d-3842-4a18-970c-0434cbc17f07;
+  skos:prefLabel "Missing prefLabel for SingleRecord" .
+
+bdqdim:Likelihood a bdqffdq:DataQualityDimension;
+  rdfs:label "Likelihood" .
+
+bdqcrit:Consistent a bdqffdq:Criterion;
+  rdfs:label "Consistent" .
+
+<urn:uuid:0a0f77ca-111c-4605-a886-34a790657375> a bdqffdq:ActedUpon;
+  bdqffdq:composedOf dwc:eventDate, dwc:dateIdentified;
+  rdfs:label "Information Element ActedUpon dwc:eventDate, dwc:dateIdentified";
+  skos:prefLabel "Information Element ActedUpon dwc:eventDate, dwc:dateIdentified" .
+
+<urn:uuid:e405a2d1-aba1-46de-b5e6-74ce36546f3b> a bdqffdq:ValidationMethod;
+  skos:note "Example Implementations: Kurator/FilteredPush event_date_qc Library DOI: [10.5281/zenodo.596795](https://doi.org/10.5281/zenodo.596795)",
+    "Example Implementations Source Code: https://github.com/FilteredPush/event_date_qc/blob/addab1c1607e4a987bcb0a336e85e0dc2494272c/src/main/java/org/filteredpush/qc/date/DwCOtherDateDQ.java#L519",
+    "TG2 Validation TIME CODED Test Supplementary Likeliness ISO/DCMI STANDARD";
+  bdqffdq:hasSpecification <urn:uuid:ed9b418a-d4f9-441d-8f4a-778fb1c277da>;
+  skos:historyNote "Source: ALA";
+  rdfs:label "ValidationMethod: VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE with Specification for: VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE";
+  skos:prefLabel "ValidationMethod: VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE with Specification for: VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE";
+  bdqffdq:forValidation bdqtest:391ca46d-3842-4a18-970c-0434cbc17f07-2025-03-06 .
+
+<urn:uuid:ed9b418a-d4f9-441d-8f4a-778fb1c277da> a bdqffdq:Specification;
+  skos:example "dwc:dateIdentified=\"2001-01\", dwc:eventDate=\"2010-02-14\": Response.status=RUN_HAS_RESULT, Response.result=NOT_COMPLIANT, Response.comment=\"dwc:dateIdentified is before dwc:eventDate\"",
+    "dwc:dateIdentified=\"2021-01\", dwc:eventDate=\"2010-02-14\": Response.status=RUN_HAS_RESULT, Response.result=COMPLIANT, Response.comment=\"dwc:dateIdentified is after dwc:eventDate\"";
+  bdqffdq:hasAuthoritiesDefaults "";
+  bdqffdq:hasExpectedResponse "INTERNAL_PREREQUISITES_NOT_MET if either dwc:dateIdentified or dwc:eventDate are empty or are not interpretable as ISO 8601 dates; COMPLIANT if dwc:dateIdentified is equal to or is entirely later than dwc:eventDate; otherwise NOT_COMPLIANT";
+  rdfs:label "Specification for: VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE";
+  dcterms:description "INTERNAL_PREREQUISITES_NOT_MET if either dwc:dateIdentified or dwc:eventDate are empty or are not interpretable as ISO 8601 dates; COMPLIANT if dwc:dateIdentified is equal to or is entirely later than dwc:eventDate; otherwise NOT_COMPLIANT" .
+
+bdqtest:dfb4a260-4cbc-45b2-bf86-28be49c2cceb-2025-03-06 a bdqffdq:Amendment;
+  bdqffdq:hasResourceType bdqffdq:SingleRecord;
+  bdqffdq:hasEnhancement bdqenh:Standardized;
+  skos:note "The intent of the amended range is to capture the original uncertainty where possible. As in the example, we amend \"1999-11\" instead of \"1999-11-01/1999-11-31\".  An AMBIGUOUS response is possible. See Comments.";
+  bdqffdq:hasDataQualityDimension bdqdim:Conformance;
+  dcterms:description "Propose amendment of the value of dcterms:modified to a valid ISO date and time.";
+  bdqffdq:hasActedUponInformationElement <urn:uuid:88988556-29b3-4de0-9de2-a1d969d40288>;
+  dcterms:issued "2025-03-06"^^xsd:date;
+  dcterms:references <urn:uuid:eb81b410-8ae8-4950-aa69-159ac33e26a5>, <urn:uuid:112d181f-09b6-4664-8d0c-047eb0dcd938>,
+    <urn:uuid:a6c8829b-6bf3-42bf-aca3-86a2b86c17fb>;
+  skos:historyNote "https://github.com/tdwg/bdq/issues/273";
+  rdfs:label "AMENDMENT_MODIFIED_STANDARDIZED";
+  dcterms:isVersionOf bdqtest:dfb4a260-4cbc-45b2-bf86-28be49c2cceb;
+  skos:prefLabel "Missing prefLabel for SingleRecord" .
+
+<urn:uuid:88988556-29b3-4de0-9de2-a1d969d40288> a bdqffdq:ActedUpon;
+  bdqffdq:composedOf dcterms:modified;
+  rdfs:label "Information Element ActedUpon dcterms:modified";
+  skos:prefLabel "Information Element ActedUpon dcterms:modified" .
+
+<urn:uuid:eb81b410-8ae8-4950-aa69-159ac33e26a5> a dcterms:BibliographicResource;
+  dcterms:bibliographicCitation "ISO 8601-1: Latest version (currently 2019(en)) Date and time — Representations for information interchange — Part 1: Basic rules (https://www.iso.org/obp/ui/#iso:std:iso:8601:-1:ed-1:v1:en)" .
+
+<urn:uuid:112d181f-09b6-4664-8d0c-047eb0dcd938> a dcterms:BibliographicResource;
+  dcterms:bibliographicCitation "Wikipedia (2020). ISO 8601 (https://en.wikipedia.org/wiki/ISO_8601)" .
+
+<urn:uuid:a6c8829b-6bf3-42bf-aca3-86a2b86c17fb> a dcterms:BibliographicResource;
+  dcterms:bibliographicCitation "Library of Congress (2019). Extended Date/Time Format (EDTF) (https://www.loc.gov/standards/datetime/)" .
+
+<urn:uuid:9180fd00-2c49-4793-8598-443da633363d> a bdqffdq:AmendmentMethod;
+  skos:note "Example Implementations: Kurator/FilteredPush event_date_qc Library DOI: [10.5281/zenodo.596795](https://doi.org/10.5281/zenodo.596795)",
+    "Example Implementations Source Code: https://github.com/FilteredPush/event_date_qc/blob/addab1c1607e4a987bcb0a336e85e0dc2494272c/src/main/java/org/filteredpush/qc/date/DwCOtherDateDQ.java#L673",
+    "TG2 Amendment TIME CODED Test VOCABULARY Supplementary Conformance ISO/DCMI STANDARD";
+  bdqffdq:forAmendment bdqtest:dfb4a260-4cbc-45b2-bf86-28be49c2cceb-2025-03-06;
+  bdqffdq:hasSpecification <urn:uuid:369904b2-1176-419c-8daa-aba5e760aa48>;
+  skos:historyNote "Source: TG2";
+  rdfs:label "AmendmentMethod: AMENDMENT_MODIFIED_STANDARDIZED with Specification Specification for: AMENDMENT_MODIFIED_STANDARDIZED";
+  skos:prefLabel "AmendmentMethod: AMENDMENT_MODIFIED_STANDARDIZED with Specification Specification for: AMENDMENT_MODIFIED_STANDARDIZED" .
+
+<urn:uuid:369904b2-1176-419c-8daa-aba5e760aa48> a bdqffdq:Specification;
+  skos:example "dcterms:modified=\"2021-28-10T15:19\": Response.status=AMENDED, Response.result=dcterms:modified=\"2021-10-28T15:19\", Response.comment=\"dcterms:modified contains an interpretable value. Assuming year-day-month input format\"",
+    "dcterms:modified=\"10-28\": Response.status=NOT_AMENDED, Response.result=, Response.comment=\"dcterms:modified contains an ambiguous value\"";
+  bdqffdq:hasAuthoritiesDefaults "";
+  bdqffdq:hasExpectedResponse "INTERNAL_PREREQUISITES_NOT_MET if dcterms:modified is bdqval:Empty; AMENDED if the value of dcterms:modified is not a properly formatted ISO 8601 date/time but is unambiguous, and is altered to be a valid ISO 8601 date/time; otherwise NOT_AMENDED";
+  rdfs:label "Specification for: AMENDMENT_MODIFIED_STANDARDIZED";
+  dcterms:description "INTERNAL_PREREQUISITES_NOT_MET if dcterms:modified is bdqval:Empty; AMENDED if the value of dcterms:modified is not a properly formatted ISO 8601 date/time but is unambiguous, and is altered to be a valid ISO 8601 date/time; otherwise NOT_AMENDED" .
+
+bdqtest:c253f11a-6161-4692-bfce-4328f1961630-2025-03-06 a bdqffdq:Validation;
+  bdqffdq:hasResourceType bdqffdq:SingleRecord;
+  skos:note "This bdqval:Supplementary test is not regarded as CORE because of one or more of the reasons: not being widely applicable; not informative; likely to return a high percentage of either bdqval:COMPLIANT or bdqval:NOT_COMPLIANT results (cf bdqval:Response.result). A Supplementary test may be implemented as CORE when a suitable Use Case exists.";
+  bdqffdq:hasDataQualityDimension bdqdim:Conformance;
+  dcterms:description "Does the value of dcterms:modified a valid ISO date?";
+  bdqffdq:hasCriterion bdqcrit:Standard;
+  bdqffdq:hasActedUponInformationElement <urn:uuid:88988556-29b3-4de0-9de2-a1d969d40288>;
+  dcterms:issued "2025-03-06"^^xsd:date;
+  dcterms:references <urn:uuid:f33b5fa3-e7d3-47ea-b6ff-4133ec9a1762>;
+  skos:historyNote "https://github.com/tdwg/bdq/issues/272";
+  rdfs:label "VALIDATION_MODIFIED_STANDARD";
+  dcterms:isVersionOf bdqtest:c253f11a-6161-4692-bfce-4328f1961630;
+  skos:prefLabel "Missing prefLabel for SingleRecord" .
+
+<urn:uuid:f33b5fa3-e7d3-47ea-b6ff-4133ec9a1762> a dcterms:BibliographicResource;
+  dcterms:bibliographicCitation "Dublin Core Metadata Terms (https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#modified)" .
+
+<urn:uuid:9ddd0e81-be7e-47f9-a3d4-fa3704750ad5> a bdqffdq:ValidationMethod;
+  skos:note "Example Implementations: Kurator/FilteredPush event_date_qc Library DOI: [10.5281/zenodo.596795](https://doi.org/10.5281/zenodo.596795)",
+    "Example Implementations Source Code: https://github.com/FilteredPush/event_date_qc/blob/addab1c1607e4a987bcb0a336e85e0dc2494272c/src/main/java/org/filteredpush/qc/date/DwCOtherDateDQ.java#L624",
+    "Validation TIME CODED Test Supplementary Conformance ISO/DCMI STANDARD";
+  bdqffdq:hasSpecification <urn:uuid:aafbdb98-9875-4baa-bcd7-685bafadab82>;
+  skos:historyNote "Source: TG2";
+  rdfs:label "ValidationMethod: VALIDATION_MODIFIED_STANDARD with Specification for: VALIDATION_MODIFIED_STANDARD";
+  skos:prefLabel "ValidationMethod: VALIDATION_MODIFIED_STANDARD with Specification for: VALIDATION_MODIFIED_STANDARD";
+  bdqffdq:forValidation bdqtest:c253f11a-6161-4692-bfce-4328f1961630-2025-03-06 .
+
+<urn:uuid:aafbdb98-9875-4baa-bcd7-685bafadab82> a bdqffdq:Specification;
+  skos:example "dcterms:modified=\"2022-03-08T14\": Response.status=RUN_HAS_RESULT, Response.result=COMPLIANT, Response.comment=\"dwc:eventDate contains a valid ISO 8601-1:2019 date\"",
+    "dcterms:modified=\"1963-03-08T14:67-0600\": Response.status=RUN_HAS_RESULT, Response.result=NOT_COMPLIANT, Response.comment=\"dwc:eventDate does not contain a valid ISO 8601-1:2019 date\"";
+  bdqffdq:hasAuthoritiesDefaults "";
+  bdqffdq:hasExpectedResponse "INTERNAL_PREREQUISITES_NOT_MET if dcterms:modified is bdqval:Empty; COMPLIANT if the value of dcterms:modified is a valid ISO 8601 date; otherwise NOT_COMPLIANT.";
+  rdfs:label "Specification for: VALIDATION_MODIFIED_STANDARD";
+  dcterms:description "INTERNAL_PREREQUISITES_NOT_MET if dcterms:modified is bdqval:Empty; COMPLIANT if the value of dcterms:modified is a valid ISO 8601 date; otherwise NOT_COMPLIANT." .
+
+bdqtest:e17918fc-25ca-4a3a-828b-4502432b98c4-2025-03-06 a bdqffdq:Validation;
+  bdqffdq:hasResourceType bdqffdq:SingleRecord;
+  skos:note "This bdqval:Supplementary test is not regarded as CORE because of one or more of the reasons: not being widely applicable; not informative; not straightforward to implement or likely to return a high percentage of either bdqval:COMPLIANT or bdqval:NOT_COMPLIANT results (cf bdqval:Response.result). A Supplementary test may be implemented as CORE when a suitable Use Case exists. See Issue comments below.";
+  bdqffdq:hasDataQualityDimension bdqdim:Completeness;
+  dcterms:description "Is there a value in dcterms:modified?";
+  bdqffdq:hasCriterion bdqcrit:NotEmpty;
+  bdqffdq:hasActedUponInformationElement <urn:uuid:88988556-29b3-4de0-9de2-a1d969d40288>;
+  dcterms:issued "2025-03-06"^^xsd:date;
+  skos:historyNote "https://github.com/tdwg/bdq/issues/224";
+  rdfs:label "VALIDATION_MODIFIED_NOTEMPTY";
+  dcterms:isVersionOf bdqtest:e17918fc-25ca-4a3a-828b-4502432b98c4;
+  skos:prefLabel "Missing prefLabel for SingleRecord" .
+
+bdqdim:Completeness a bdqffdq:DataQualityDimension;
+  rdfs:label "Completeness" .
+
+bdqcrit:NotEmpty a bdqffdq:Criterion;
+  rdfs:label "NotEmpty" .
+
+<urn:uuid:b910b4b8-a788-4548-9e3b-00c3ec5c2446> a bdqffdq:ValidationMethod;
+  skos:note "Example Implementations: Kurator/FilteredPush event_date_qc Library DOI: [10.5281/zenodo.596795](https://doi.org/10.5281/zenodo.596795)",
+    "Example Implementations Source Code: https://github.com/FilteredPush/event_date_qc/blob/addab1c1607e4a987bcb0a336e85e0dc2494272c/src/main/java/org/filteredpush/qc/date/DwCOtherDateDQ.java#L589",
+    "TG2 Validation TIME CODED Test Supplementary Completeness";
+  bdqffdq:hasSpecification <urn:uuid:3eaefeb3-41e6-44de-82e5-577c03622785>;
+  skos:historyNote "Source: TG2";
+  rdfs:label "ValidationMethod: VALIDATION_MODIFIED_NOTEMPTY with Specification for: VALIDATION_MODIFIED_NOTEMPTY";
+  skos:prefLabel "ValidationMethod: VALIDATION_MODIFIED_NOTEMPTY with Specification for: VALIDATION_MODIFIED_NOTEMPTY";
+  bdqffdq:forValidation bdqtest:e17918fc-25ca-4a3a-828b-4502432b98c4-2025-03-06 .
+
+<urn:uuid:3eaefeb3-41e6-44de-82e5-577c03622785> a bdqffdq:Specification;
+  skos:example "dcterms:modified=\"2022-01-02\": Response.status=RUN_HAS_RESULT, Response.result=COMPLIANT, Response.comment=\"dcterms:modified is bdqval:NotEmpty\"",
+    "dcterms:modified=\"[null]\": Response.status=RUN_HAS_RESULT, Response.result=NOT_COMPLIANT, Response.comment=\"dcterms:modified is bdqval:Empty\"";
+  bdqffdq:hasAuthoritiesDefaults "";
+  bdqffdq:hasExpectedResponse "COMPLIANT if dcterms:modified is bdqval:NotEmpty; otherwise NOT_COMPLIANT";
+  rdfs:label "Specification for: VALIDATION_MODIFIED_NOTEMPTY";
+  dcterms:description "COMPLIANT if dcterms:modified is bdqval:NotEmpty; otherwise NOT_COMPLIANT" .
+
+<urn:uuid:0dfbf7a8-1c75-4597-85cf-4b6c6dacb50b> a bdqffdq:ValidationPolicy;
   bdqffdq:includedInPolicy bdqtest:66269bdd-9271-4e76-b25c-7ab81eebe1d8-2025-03-07,
     bdqtest:dc8aae4b-134f-4d75-8a71-c4186239178e-2025-03-07;
   rdfs:label "ValidationPolicy: (2) validations  in UseCase bdquc:Spatial-Temporal_Patterns";
@@ -202,7 +363,7 @@ bdqval:includeEventDate a bdqffdq:Parameter .
 bdquc:Spatial-Temporal_Patterns a bdqffdq:UseCase;
   rdfs:label "bdquc:Spatial-Temporal_Patterns" .
 
-<urn:uuid:edb52cd4-9f62-4c13-94bf-f217dc62a854> a bdqffdq:AmendmentPolicy;
+<urn:uuid:32a3d35f-edf8-47fb-94fa-418e7bb63183> a bdqffdq:AmendmentPolicy;
   bdqffdq:includedInPolicy bdqtest:39bb2280-1215-447b-9221-fd13bc990641-2025-03-07;
   rdfs:label "AmendmentPolicy: (1) amendments  in UseCase bdquc:Spatial-Temporal_Patterns";
   bdqffdq:hasUseCase bdquc:Spatial-Temporal_Patterns .
