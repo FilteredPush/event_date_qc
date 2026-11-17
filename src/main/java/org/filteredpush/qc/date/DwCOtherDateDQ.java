@@ -563,6 +563,7 @@ public class DwCOtherDateDQ {
 							result.setValue(ComplianceValue.NOT_COMPLIANT);
 							result.addComment("Provided value for dwc:dateIdentified '" + dateIdentified + "' is entirely before dwc:eventDate provided ["+eventDate+"]");
 						}
+						result.setResultState(ResultState.RUN_HAS_RESULT);
 					} else { 
 						result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
 						result.addComment("Provided value for dwc:eventDate '" + eventDate + "' is not a validly formatted ISO date .");
@@ -571,7 +572,6 @@ public class DwCOtherDateDQ {
 					result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
 					result.addComment("Provided value for dwc:dateIdentified '" + dateIdentified + "' is not a validly formatted ISO date .");
 				}
-				result.setResultState(ResultState.RUN_HAS_RESULT);
 			} catch (Exception e) { 
 				logger.debug(e.getMessage());
 				result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);

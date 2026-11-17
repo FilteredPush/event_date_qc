@@ -411,6 +411,17 @@ public class DwCOtherDateDQTestDefinitions {
 		assertEquals(ComplianceValue.NOT_COMPLIANT.getLabel(), result.getValue().getLabel());
 		assertNotNull(result.getComment());
 		
+
+		// an invalid date in either term: INTERNAL_PREREQUISITES_NOT_MET (not overwritten by RUN_HAS_RESULT)
+		result = DwCOtherDateDQ.validationDateidentifiedAftereventdate("1963-03-08", "1963-03-08X14:07");
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		assertNull(result.getValue());
+		result = DwCOtherDateDQ.validationDateidentifiedAftereventdate("1963-13-08", "1963-03-08");
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		assertNull(result.getValue());
+		result = DwCOtherDateDQ.validationDateidentifiedAftereventdate("1963-03-08", "1964-01-01");
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
 	}
 
 	/**
