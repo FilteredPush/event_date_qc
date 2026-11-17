@@ -30,18 +30,48 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
+	<dependencyManagement>
+		<dependencies>
+			<!-- not a dependency of this library: the version of the SLF4J API that dependencies bring,
+			     matching log4j-slf4j2-impl -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>2.0.16</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
+		<!-- Logging: the library logs through Apache Commons Logging (JCL) only, and ships no logging
+		     implementation or configuration; applications choose them. -->
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.3.5</version>
+		</dependency>
+		<!-- A logging implementation for the tests and the executable jar only: optional, so not passed
+		     on to users of the library. Commons Logging 1.3 finds Log4j by itself; log4j-slf4j2-impl
+		     sends the logging of dependencies that use SLF4J to Log4j too. -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.25.5</version>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j2-impl</artifactId>
+			<version>2.25.5</version>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
 		<dependency>
 			<groupId>org.datakurator</groupId>
 			<artifactId>ffdq-api</artifactId>
 			<version>2.1.0-SNAPSHOT</version>
 		</dependency>
 
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.2</version>
-		</dependency>
         <dependency>
             <groupId>commons-cli</groupId>
             <artifactId>commons-cli</artifactId>
@@ -62,21 +92,6 @@
 			<artifactId>junit</artifactId>
 			<version>4.13.1</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
-			<version>2.25.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>2.25.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-jcl</artifactId>
-			<version>2.16.0</version>
 		</dependency>		
 	</dependencies>
 	<build>
@@ -186,6 +201,11 @@
 							<outputDirectory>${project.basedir}</outputDirectory>
 							<outputFile>${project.artifactId}-${project.version}-${git.commit.id.abbrev}-executable.jar</outputFile>
 							<transformers>
+								<!-- the executable jar's logging configuration (the library jar has none) -->
+								<transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+									<resource>log4j2.xml</resource>
+									<file>src/main/executable/log4j2.xml</file>
+								</transformer>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 								<manifestEntries>

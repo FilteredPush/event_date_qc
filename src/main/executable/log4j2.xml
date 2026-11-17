@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Logging for the executable (command line) jar only; the library jar ships no logging
+     configuration.  Warnings and errors go to standard error, so that standard output carries
+     only the program's output. -->
+<Configuration status="WARN">
+  <Appenders>
+    <Console name="Console" target="SYSTEM_ERR">
+      <PatternLayout pattern="%-5level %c{1.} - %msg%n"/>
+    </Console>
+  </Appenders>
+  <Loggers>
+    <Root level="WARN">
+      <AppenderRef ref="Console"/>
+    </Root>
+  </Loggers>
+</Configuration>
