@@ -37,7 +37,7 @@
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
-				<version>2.0.16</version>
+				<version>2.0.20</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -47,7 +47,7 @@
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
-			<version>1.3.5</version>
+			<version>1.3.6</version>
 		</dependency>
 		<!-- A logging implementation for the tests and the executable jar only: optional, so not passed
 		     on to users of the library. Commons Logging 1.3 finds Log4j by itself; log4j-slf4j2-impl
@@ -138,13 +138,9 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>3.15.0</version>
 				<configuration>
-					<verbose>true</verbose>
-					<fork>true</fork>
-					<compilerVersion>1.8</compilerVersion>
-					<source>1.8</source>
-					<target>1.8</target>
+					<release>17</release>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -173,9 +169,9 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9.1</version>
+				<version>3.12.0</version>
 				<configuration>
-					<source>8</source>
+					<source>17</source>
 				</configuration>
 				<executions>
 					<execution>
@@ -189,7 +185,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.1.0</version>
+				<version>3.6.2</version>
+				<configuration>
+					<!-- the shaded jars are written to their own files; the installed and deployed pom
+					     must keep the library's dependencies (shade's default is a dependency-reduced pom) -->
+					<createDependencyReducedPom>false</createDependencyReducedPom>
+				</configuration>
 				<executions>
 					<execution>
 						<id>executable</id>
