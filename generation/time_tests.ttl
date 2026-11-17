@@ -64,6 +64,10 @@ bdqffdq:ActedUpon rdfs:subClassOf bdqffdq:InformationElement .
 
 bdqffdq:ValidationMethod rdfs:subClassOf bdqffdq:DataQualityMethod .
 
+bdqffdq:Issue rdfs:subClassOf bdqffdq:DataQualityNeed .
+
+bdqffdq:IssueMethod rdfs:subClassOf bdqffdq:DataQualityMethod .
+
 <urn:uuid:1fae3f77-7fcb-42c6-ab43-1ff28adf4fa4> a bdqffdq:Specification;
   skos:example "dwc:eventDate=\"1964-11-01T10:00-0600\": Response.status=RUN_HAS_RESULT, Response.result=COMPLIANT, Response.comment=\"dwc:eventdate is bdqval:NotEmpty\"",
     "dwc:eventDate=\"\": Response.status=RUN_HAS_RESULT, Response.result=NOT_COMPLIANT, Response.comment=\"dwc:eventDate is bdqval:Empty\"";
@@ -913,7 +917,7 @@ bdqtest:47ff73ba-0028-4f79-9ce1-ee7008d66498-2025-03-06 a bdqffdq:Validation;
   rdfs:label "Specification for: VALIDATION_EVENTTIME_NOTEMPTY";
   dcterms:description "COMPLIANT if dwc:eventTime is bdqval:NotEmpty; otherwise NOT_COMPLIANT" .
 
-<urn:uuid:9bc8b105-902a-489c-aae8-3b7075e1b948> a bdqffdq:Validation;
+<urn:uuid:9bc8b105-902a-489c-aae8-3b7075e1b948> a bdqffdq:Issue;
   bdqffdq:hasResourceType bdqffdq:SingleRecord;
   skos:note "This bdqval:Supplementary test is not regarded as CORE because of one or more of the reasons: not being widely applicable; not informative; likely to return a high percentage of either bdqval:COMPLIANT or bdqval:NOT_COMPLIANT results (cf bdqval:Response.result). A Supplementary test may be implemented as CORE when a suitable Use Case exists.";
   bdqffdq:hasDataQualityDimension bdqdim:Completeness;
@@ -930,15 +934,15 @@ bdqtest:47ff73ba-0028-4f79-9ce1-ee7008d66498-2025-03-06 a bdqffdq:Validation;
   rdfs:label "Information Element ActedUpon dwc:verbatimEventDate";
   skos:prefLabel "Information Element ActedUpon dwc:verbatimEventDate" .
 
-<urn:uuid:0a095f6c-34f2-4653-a777-5574954c3ec3> a bdqffdq:ValidationMethod;
+<urn:uuid:0a095f6c-34f2-4653-a777-5574954c3ec3> a bdqffdq:IssueMethod;
   skos:note "Example Implementations: Kurator/FilteredPush event_date_qc Library DOI: [10.5281/zenodo.596795](https://doi.org/10.5281/zenodo.596795)",
     "Example Implementations Source Code: https://github.com/FilteredPush/event_date_qc/blob/v3.0.5/src/main/java/org/filteredpush/qc/date/DwCEventDQ.java#L2547",
     "TG2 Validation TIME CODED Test Supplementary Completeness";
   bdqffdq:hasSpecification <urn:uuid:08c724b5-fa69-4411-b9b8-303c40710d38>;
   skos:historyNote "Source: TG2";
-  rdfs:label "ValidationMethod: ISSUE_VERBATIMEVENTDATE_NOTEMPTY with Specification for: ISSUE_VERBATIMEVENTDATE_NOTEMPTY";
-  skos:prefLabel "ValidationMethod: ISSUE_VERBATIMEVENTDATE_NOTEMPTY with Specification for: ISSUE_VERBATIMEVENTDATE_NOTEMPTY";
-  bdqffdq:forValidation <urn:uuid:9bc8b105-902a-489c-aae8-3b7075e1b948> .
+  rdfs:label "IssueMethod: ISSUE_VERBATIMEVENTDATE_NOTEMPTY with Specification Specification for: ISSUE_VERBATIMEVENTDATE_NOTEMPTY";
+  skos:prefLabel "IssueMethod: ISSUE_VERBATIMEVENTDATE_NOTEMPTY with Specification Specification for: ISSUE_VERBATIMEVENTDATE_NOTEMPTY";
+  bdqffdq:forIssue <urn:uuid:9bc8b105-902a-489c-aae8-3b7075e1b948> .
 
 <urn:uuid:08c724b5-fa69-4411-b9b8-303c40710d38> a bdqffdq:Specification;
   skos:example "dwc:verbatimEventDate=\"summer 2024\": Response.status=RUN_HAS_RESULT, Response.result=POTENTIAL_ISSUE, Response.comment=\"dwc:verbatimEventDate is bdqval:NotEmpty\"",
