@@ -2549,9 +2549,9 @@ public class DwCEventDQ {
 	 * Version: 2024-04-02
 	 *
 	 * @param verbatimEventDate the provided dwc:verbatimEventDate to evaluate as ActedUpon.
-	 * @return DQResponse the response of type ComplianceValue  to return
+	 * @return DQResponse the response of type IssueValue to return
 	 */
-	@Validation(label="ISSUE_VERBATIMEVENTDATE_NOTEMPTY", description="Is there a value in dwc:verbatimEventDate?")
+	@Issue(label="ISSUE_VERBATIMEVENTDATE_NOTEMPTY", description="Is there a value in dwc:verbatimEventDate?")
 	@Provides("9bc8b105-902a-489c-aae8-3b7075e1b948")
 	@ProvidesVersion("urn:uuid:9bc8b105-902a-489c-aae8-3b7075e1b948")
 	@Specification("POTENTIAL_ISSUE if dwc:verbatimEventDate is not EMPTY; otherwise NOT_ISSUE ")
