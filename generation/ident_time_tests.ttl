@@ -70,8 +70,8 @@ bdqffdq:ActedUpon rdfs:subClassOf bdqffdq:InformationElement .
   bdqffdq:forAmendment bdqtest:39bb2280-1215-447b-9221-fd13bc990641-2025-03-07;
   bdqffdq:hasSpecification <urn:uuid:16e40618-e9bd-479a-b1e8-8aee3467109f>;
   skos:historyNote "Source: Kurator";
-  rdfs:label "AmendmentMethod: AMENDMENT_DATEIDENTIFIED_STANDARDIZED with Specification Specification for: AMENDMENT_DATEIDENTIFIED_STANDARDIZED";
-  skos:prefLabel "AmendmentMethod: AMENDMENT_DATEIDENTIFIED_STANDARDIZED with Specification Specification for: AMENDMENT_DATEIDENTIFIED_STANDARDIZED" .
+  rdfs:label "AmendmentMethod: AMENDMENT_DATEIDENTIFIED_STANDARDIZED with Specification: Specification for: AMENDMENT_DATEIDENTIFIED_STANDARDIZED";
+  skos:prefLabel "AmendmentMethod: AMENDMENT_DATEIDENTIFIED_STANDARDIZED with Specification: Specification for: AMENDMENT_DATEIDENTIFIED_STANDARDIZED" .
 
 bdqffdq:AmendmentMethod rdfs:subClassOf bdqffdq:DataQualityMethod .
 
@@ -108,8 +108,8 @@ bdqcrit:Standard a bdqffdq:Criterion;
     "Example Implementations Source Code: https://github.com/FilteredPush/event_date_qc/blob/v3.0.5/src/main/java/org/filteredpush/qc/date/DwCOtherDateDQ.java#L61",
     "TG2 Validation TIME CODED Test Conformance ISO/DCMI STANDARD CORE";
   bdqffdq:hasSpecification <urn:uuid:89f8b2ea-fc35-4941-929a-0e32cfbeb1a6>;
-  rdfs:label "ValidationMethod: VALIDATION_DATEIDENTIFIED_STANDARD with Specification for: VALIDATION_DATEIDENTIFIED_STANDARD";
-  skos:prefLabel "ValidationMethod: VALIDATION_DATEIDENTIFIED_STANDARD with Specification for: VALIDATION_DATEIDENTIFIED_STANDARD";
+  rdfs:label "ValidationMethod: VALIDATION_DATEIDENTIFIED_STANDARD with Specification: Specification for: VALIDATION_DATEIDENTIFIED_STANDARD";
+  skos:prefLabel "ValidationMethod: VALIDATION_DATEIDENTIFIED_STANDARD with Specification: Specification for: VALIDATION_DATEIDENTIFIED_STANDARD";
   bdqffdq:forValidation bdqtest:66269bdd-9271-4e76-b25c-7ab81eebe1d8-2025-03-07 .
 
 bdqffdq:ValidationMethod rdfs:subClassOf bdqffdq:DataQualityMethod .
@@ -157,8 +157,8 @@ bdqffdq:Consulted rdfs:subClassOf bdqffdq:InformationElement .
     "TG2 Validation TIME CODED Test Likeliness ISO/DCMI STANDARD Parameterized CORE";
   bdqffdq:hasSpecification <urn:uuid:a25786df-a624-4ff2-8962-6b23e8b07b0b>;
   skos:historyNote "Source: GBIF, ALA";
-  rdfs:label "ValidationMethod: VALIDATION_DATEIDENTIFIED_INRANGE with Specification for: VALIDATION_DATEIDENTIFIED_INRANGE";
-  skos:prefLabel "ValidationMethod: VALIDATION_DATEIDENTIFIED_INRANGE with Specification for: VALIDATION_DATEIDENTIFIED_INRANGE";
+  rdfs:label "ValidationMethod: VALIDATION_DATEIDENTIFIED_INRANGE with Specification: Specification for: VALIDATION_DATEIDENTIFIED_INRANGE";
+  skos:prefLabel "ValidationMethod: VALIDATION_DATEIDENTIFIED_INRANGE with Specification: Specification for: VALIDATION_DATEIDENTIFIED_INRANGE";
   bdqffdq:forValidation bdqtest:dc8aae4b-134f-4d75-8a71-c4186239178e-2025-03-07 .
 
 <urn:uuid:a25786df-a624-4ff2-8962-6b23e8b07b0b> a bdqffdq:Specification;
@@ -221,8 +221,8 @@ bdqcrit:Consistent a bdqffdq:Criterion;
     "TG2 Validation TIME CODED Test Supplementary Likeliness ISO/DCMI STANDARD";
   bdqffdq:hasSpecification <urn:uuid:ed9b418a-d4f9-441d-8f4a-778fb1c277da>;
   skos:historyNote "Source: ALA";
-  rdfs:label "ValidationMethod: VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE with Specification for: VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE";
-  skos:prefLabel "ValidationMethod: VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE with Specification for: VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE";
+  rdfs:label "ValidationMethod: VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE with Specification: Specification for: VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE";
+  skos:prefLabel "ValidationMethod: VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE with Specification: Specification for: VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE";
   bdqffdq:forValidation <urn:uuid:391ca46d-3842-4a18-970c-0434cbc17f07> .
 
 <urn:uuid:ed9b418a-d4f9-441d-8f4a-778fb1c277da> a bdqffdq:Specification;
@@ -268,8 +268,8 @@ bdqcrit:Consistent a bdqffdq:Criterion;
   bdqffdq:forAmendment <urn:uuid:dfb4a260-4cbc-45b2-bf86-28be49c2cceb>;
   bdqffdq:hasSpecification <urn:uuid:369904b2-1176-419c-8daa-aba5e760aa48>;
   skos:historyNote "Source: TG2";
-  rdfs:label "AmendmentMethod: AMENDMENT_MODIFIED_STANDARDIZED with Specification Specification for: AMENDMENT_MODIFIED_STANDARDIZED";
-  skos:prefLabel "AmendmentMethod: AMENDMENT_MODIFIED_STANDARDIZED with Specification Specification for: AMENDMENT_MODIFIED_STANDARDIZED" .
+  rdfs:label "AmendmentMethod: AMENDMENT_MODIFIED_STANDARDIZED with Specification: Specification for: AMENDMENT_MODIFIED_STANDARDIZED";
+  skos:prefLabel "AmendmentMethod: AMENDMENT_MODIFIED_STANDARDIZED with Specification: Specification for: AMENDMENT_MODIFIED_STANDARDIZED" .
 
 <urn:uuid:369904b2-1176-419c-8daa-aba5e760aa48> a bdqffdq:Specification;
   skos:example "dcterms:modified=\"2021-28-10T15:19\": Response.status=AMENDED, Response.result=dcterms:modified=\"2021-10-28T15:19\", Response.comment=\"dcterms:modified contains an interpretable value. Assuming year-day-month input format\"",
@@ -301,8 +301,8 @@ bdqcrit:Consistent a bdqffdq:Criterion;
     "Validation TIME CODED Test Supplementary Conformance ISO/DCMI STANDARD";
   bdqffdq:hasSpecification <urn:uuid:aafbdb98-9875-4baa-bcd7-685bafadab82>;
   skos:historyNote "Source: TG2";
-  rdfs:label "ValidationMethod: VALIDATION_MODIFIED_STANDARD with Specification for: VALIDATION_MODIFIED_STANDARD";
-  skos:prefLabel "ValidationMethod: VALIDATION_MODIFIED_STANDARD with Specification for: VALIDATION_MODIFIED_STANDARD";
+  rdfs:label "ValidationMethod: VALIDATION_MODIFIED_STANDARD with Specification: Specification for: VALIDATION_MODIFIED_STANDARD";
+  skos:prefLabel "ValidationMethod: VALIDATION_MODIFIED_STANDARD with Specification: Specification for: VALIDATION_MODIFIED_STANDARD";
   bdqffdq:forValidation <urn:uuid:c253f11a-6161-4692-bfce-4328f1961630> .
 
 <urn:uuid:aafbdb98-9875-4baa-bcd7-685bafadab82> a bdqffdq:Specification;
@@ -337,8 +337,8 @@ bdqcrit:NotEmpty a bdqffdq:Criterion;
     "TG2 Validation TIME CODED Test Supplementary Completeness";
   bdqffdq:hasSpecification <urn:uuid:3eaefeb3-41e6-44de-82e5-577c03622785>;
   skos:historyNote "Source: TG2";
-  rdfs:label "ValidationMethod: VALIDATION_MODIFIED_NOTEMPTY with Specification for: VALIDATION_MODIFIED_NOTEMPTY";
-  skos:prefLabel "ValidationMethod: VALIDATION_MODIFIED_NOTEMPTY with Specification for: VALIDATION_MODIFIED_NOTEMPTY";
+  rdfs:label "ValidationMethod: VALIDATION_MODIFIED_NOTEMPTY with Specification: Specification for: VALIDATION_MODIFIED_NOTEMPTY";
+  skos:prefLabel "ValidationMethod: VALIDATION_MODIFIED_NOTEMPTY with Specification: Specification for: VALIDATION_MODIFIED_NOTEMPTY";
   bdqffdq:forValidation <urn:uuid:e17918fc-25ca-4a3a-828b-4502432b98c4> .
 
 <urn:uuid:3eaefeb3-41e6-44de-82e5-577c03622785> a bdqffdq:Specification;

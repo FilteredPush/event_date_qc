@@ -58,8 +58,8 @@ bdqffdq:ActedUpon rdfs:subClassOf bdqffdq:InformationElement .
     "TG2 Validation TIME CODED Test Completeness CORE";
   bdqffdq:hasSpecification <urn:uuid:1fae3f77-7fcb-42c6-ab43-1ff28adf4fa4>;
   skos:historyNote "Source: TG2-Gainesville";
-  rdfs:label "ValidationMethod: VALIDATION_EVENTDATE_NOTEMPTY with Specification for: VALIDATION_EVENTDATE_NOTEMPTY";
-  skos:prefLabel "ValidationMethod: VALIDATION_EVENTDATE_NOTEMPTY with Specification for: VALIDATION_EVENTDATE_NOTEMPTY";
+  rdfs:label "ValidationMethod: VALIDATION_EVENTDATE_NOTEMPTY with Specification: Specification for: VALIDATION_EVENTDATE_NOTEMPTY";
+  skos:prefLabel "ValidationMethod: VALIDATION_EVENTDATE_NOTEMPTY with Specification: Specification for: VALIDATION_EVENTDATE_NOTEMPTY";
   bdqffdq:forValidation bdqtest:f51e15a6-a67d-4729-9c28-3766299d2985-2025-03-07 .
 
 bdqffdq:ValidationMethod rdfs:subClassOf bdqffdq:DataQualityMethod .
@@ -112,8 +112,8 @@ bdqcrit:InRange a bdqffdq:Criterion;
     "TG2 Validation TIME CODED Test Conformance Parameterized CORE";
   bdqffdq:hasSpecification <urn:uuid:29a1fdc6-326b-4017-880d-d11ff0225b8f>;
   skos:historyNote "Source: VertNet";
-  rdfs:label "ValidationMethod: VALIDATION_EVENTDATE_INRANGE with Specification for: VALIDATION_EVENTDATE_INRANGE";
-  skos:prefLabel "ValidationMethod: VALIDATION_EVENTDATE_INRANGE with Specification for: VALIDATION_EVENTDATE_INRANGE";
+  rdfs:label "ValidationMethod: VALIDATION_EVENTDATE_INRANGE with Specification: Specification for: VALIDATION_EVENTDATE_INRANGE";
+  skos:prefLabel "ValidationMethod: VALIDATION_EVENTDATE_INRANGE with Specification: Specification for: VALIDATION_EVENTDATE_INRANGE";
   bdqffdq:forValidation bdqtest:3cff4dc4-72e9-4abe-9bf3-8a30f1618432-2025-03-06 .
 
 <urn:uuid:29a1fdc6-326b-4017-880d-d11ff0225b8f> a bdqffdq:Specification;
@@ -163,8 +163,8 @@ bdqtest:c09ecbf9-34e3-4f3e-b74a-8796af15e59f-2025-03-06 a bdqffdq:Validation;
     "TG2 Validation TIME CODED Test Completeness CORE";
   bdqffdq:hasSpecification <urn:uuid:42f331f4-a5a8-48b4-a08e-57048d1d1a77>;
   skos:historyNote "Source: TG2-Gainesville";
-  rdfs:label "ValidationMethod: VALIDATION_YEAR_NOTEMPTY with Specification for: VALIDATION_YEAR_NOTEMPTY";
-  skos:prefLabel "ValidationMethod: VALIDATION_YEAR_NOTEMPTY with Specification for: VALIDATION_YEAR_NOTEMPTY";
+  rdfs:label "ValidationMethod: VALIDATION_YEAR_NOTEMPTY with Specification: Specification for: VALIDATION_YEAR_NOTEMPTY";
+  skos:prefLabel "ValidationMethod: VALIDATION_YEAR_NOTEMPTY with Specification: Specification for: VALIDATION_YEAR_NOTEMPTY";
   bdqffdq:forValidation bdqtest:c09ecbf9-34e3-4f3e-b74a-8796af15e59f-2025-03-06 .
 
 <urn:uuid:42f331f4-a5a8-48b4-a08e-57048d1d1a77> a bdqffdq:Specification;
@@ -215,8 +215,8 @@ bdqffdq:Consulted rdfs:subClassOf bdqffdq:InformationElement .
   bdqffdq:forAmendment bdqtest:710fe118-17e1-440f-b428-88ba3f547d6d-2025-03-06;
   bdqffdq:hasSpecification <urn:uuid:46992280-0ed6-4c42-9e89-ed388ca1d43b>;
   skos:historyNote "Source: VertNet";
-  rdfs:label "AmendmentMethod: AMENDMENT_EVENT_FROM_EVENTDATE with Specification Specification for: AMENDMENT_EVENT_FROM_EVENTDATE";
-  skos:prefLabel "AmendmentMethod: AMENDMENT_EVENT_FROM_EVENTDATE with Specification Specification for: AMENDMENT_EVENT_FROM_EVENTDATE" .
+  rdfs:label "AmendmentMethod: AMENDMENT_EVENT_FROM_EVENTDATE with Specification: Specification for: AMENDMENT_EVENT_FROM_EVENTDATE";
+  skos:prefLabel "AmendmentMethod: AMENDMENT_EVENT_FROM_EVENTDATE with Specification: Specification for: AMENDMENT_EVENT_FROM_EVENTDATE" .
 
 bdqffdq:AmendmentMethod rdfs:subClassOf bdqffdq:DataQualityMethod .
 
@@ -253,8 +253,8 @@ bdqenh:Standardized a bdqffdq:Enhancement;
   bdqffdq:forAmendment bdqtest:718dfc3c-cb52-4fca-b8e2-0e722f375da7-2025-03-06;
   bdqffdq:hasSpecification <urn:uuid:6e0e22a1-c233-4c13-baa7-0ab48a4340e4>;
   skos:historyNote "Source: Paul Morris, Lee Belbin";
-  rdfs:label "AmendmentMethod: AMENDMENT_EVENTDATE_STANDARDIZED with Specification Specification for: AMENDMENT_EVENTDATE_STANDARDIZED";
-  skos:prefLabel "AmendmentMethod: AMENDMENT_EVENTDATE_STANDARDIZED with Specification Specification for: AMENDMENT_EVENTDATE_STANDARDIZED" .
+  rdfs:label "AmendmentMethod: AMENDMENT_EVENTDATE_STANDARDIZED with Specification: Specification for: AMENDMENT_EVENTDATE_STANDARDIZED";
+  skos:prefLabel "AmendmentMethod: AMENDMENT_EVENTDATE_STANDARDIZED with Specification: Specification for: AMENDMENT_EVENTDATE_STANDARDIZED" .
 
 <urn:uuid:6e0e22a1-c233-4c13-baa7-0ab48a4340e4> a bdqffdq:Specification;
   skos:example "dwc:eventDate=\"2021-28-10\": Response.status=AMENDED, Response.result=dwc:eventDate=\"2021-10-28\", Response.comment=\"dwc:eventDate contains an interpretable value. Assuming year-day-month input format\"",
@@ -288,8 +288,8 @@ bdqcrit:Standard a bdqffdq:Criterion;
     "TG2 Validation TIME CODED Test Conformance ISO/DCMI STANDARD CORE";
   bdqffdq:hasSpecification <urn:uuid:80c8f69b-4ad3-40ee-bccd-de016bfae367>;
   skos:historyNote "Source: Paul Morris";
-  rdfs:label "ValidationMethod: VALIDATION_EVENTDATE_STANDARD with Specification for: VALIDATION_EVENTDATE_STANDARD";
-  skos:prefLabel "ValidationMethod: VALIDATION_EVENTDATE_STANDARD with Specification for: VALIDATION_EVENTDATE_STANDARD";
+  rdfs:label "ValidationMethod: VALIDATION_EVENTDATE_STANDARD with Specification: Specification for: VALIDATION_EVENTDATE_STANDARD";
+  skos:prefLabel "ValidationMethod: VALIDATION_EVENTDATE_STANDARD with Specification: Specification for: VALIDATION_EVENTDATE_STANDARD";
   bdqffdq:forValidation bdqtest:4f2bf8fd-fc5c-493f-a44c-e7b16153c803-2025-03-06 .
 
 <urn:uuid:80c8f69b-4ad3-40ee-bccd-de016bfae367> a bdqffdq:Specification;
@@ -331,8 +331,8 @@ bdqcrit:Consistent a bdqffdq:Criterion;
     "TG2 Validation TIME CODED Test Consistency CORE";
   bdqffdq:hasSpecification <urn:uuid:83d057ea-a6f6-49e6-ac3c-0c418776a0e0>;
   skos:historyNote "Source: GBIF";
-  rdfs:label "ValidationMethod: VALIDATION_EVENT_CONSISTENT with Specification for: VALIDATION_EVENT_CONSISTENT";
-  skos:prefLabel "ValidationMethod: VALIDATION_EVENT_CONSISTENT with Specification for: VALIDATION_EVENT_CONSISTENT";
+  rdfs:label "ValidationMethod: VALIDATION_EVENT_CONSISTENT with Specification: Specification for: VALIDATION_EVENT_CONSISTENT";
+  skos:prefLabel "ValidationMethod: VALIDATION_EVENT_CONSISTENT with Specification: Specification for: VALIDATION_EVENT_CONSISTENT";
   bdqffdq:forValidation bdqtest:5618f083-d55a-4ac2-92b5-b9fb227b832f-2025-03-06 .
 
 <urn:uuid:83d057ea-a6f6-49e6-ac3c-0c418776a0e0> a bdqffdq:Specification;
@@ -362,8 +362,8 @@ bdqtest:ad0c8855-de69-4843-a80c-a5387d20fbc8-2025-03-06 a bdqffdq:Validation;
     "TG2 Validation TIME CODED Test Conformance Parameterized CORE";
   bdqffdq:hasSpecification <urn:uuid:aee43366-0352-448a-a5ea-85ddc8605da1>;
   skos:historyNote "Source: VertNet";
-  rdfs:label "ValidationMethod: VALIDATION_YEAR_INRANGE with Specification for: VALIDATION_YEAR_INRANGE";
-  skos:prefLabel "ValidationMethod: VALIDATION_YEAR_INRANGE with Specification for: VALIDATION_YEAR_INRANGE";
+  rdfs:label "ValidationMethod: VALIDATION_YEAR_INRANGE with Specification: Specification for: VALIDATION_YEAR_INRANGE";
+  skos:prefLabel "ValidationMethod: VALIDATION_YEAR_INRANGE with Specification: Specification for: VALIDATION_YEAR_INRANGE";
   bdqffdq:forValidation bdqtest:ad0c8855-de69-4843-a80c-a5387d20fbc8-2025-03-06 .
 
 <urn:uuid:aee43366-0352-448a-a5ea-85ddc8605da1> a bdqffdq:Specification;
@@ -413,8 +413,8 @@ bdqtest:6d0a0c10-5e4a-4759-b448-88932f399812-2025-03-06 a bdqffdq:Amendment;
   bdqffdq:forAmendment bdqtest:6d0a0c10-5e4a-4759-b448-88932f399812-2025-03-06;
   bdqffdq:hasSpecification <urn:uuid:b417d971-8b0f-49ab-9431-3364ba8694e2>;
   skos:historyNote "Source: VertNet, FP, Kurator";
-  rdfs:label "AmendmentMethod: AMENDMENT_EVENTDATE_FROM_VERBATIM with Specification Specification for: AMENDMENT_EVENTDATE_FROM_VERBATIM";
-  skos:prefLabel "AmendmentMethod: AMENDMENT_EVENTDATE_FROM_VERBATIM with Specification Specification for: AMENDMENT_EVENTDATE_FROM_VERBATIM" .
+  rdfs:label "AmendmentMethod: AMENDMENT_EVENTDATE_FROM_VERBATIM with Specification: Specification for: AMENDMENT_EVENTDATE_FROM_VERBATIM";
+  skos:prefLabel "AmendmentMethod: AMENDMENT_EVENTDATE_FROM_VERBATIM with Specification: Specification for: AMENDMENT_EVENTDATE_FROM_VERBATIM" .
 
 <urn:uuid:b417d971-8b0f-49ab-9431-3364ba8694e2> a bdqffdq:Specification;
   skos:example "dwc:eventDate=\"\", dwc:verbatimEventDate=\"Friday 29th Oct. 2021\": Response.status=FILLED_IN, Response.result=dwc:eventDate=\"2021-10-29\", Response.comment=\"dwc:verbatimEventDate contains an interpretable value (assuming some external lookup thesauri)\"",
@@ -449,8 +449,8 @@ bdqtest:41267642-60ff-4116-90eb-499fee2cd83f-2025-03-06 a bdqffdq:Validation;
     "TG2 Validation TIME CODED Test Completeness CORE";
   bdqffdq:hasSpecification <urn:uuid:b57460c4-16e1-4c1d-8a07-a53aee9e8922>;
   skos:historyNote "Source: @Tasilee";
-  rdfs:label "ValidationMethod: VALIDATION_EVENTTEMPORAL_NOTEMPTY with Specification for: VALIDATION_EVENTTEMPORAL_NOTEMPTY";
-  skos:prefLabel "ValidationMethod: VALIDATION_EVENTTEMPORAL_NOTEMPTY with Specification for: VALIDATION_EVENTTEMPORAL_NOTEMPTY";
+  rdfs:label "ValidationMethod: VALIDATION_EVENTTEMPORAL_NOTEMPTY with Specification: Specification for: VALIDATION_EVENTTEMPORAL_NOTEMPTY";
+  skos:prefLabel "ValidationMethod: VALIDATION_EVENTTEMPORAL_NOTEMPTY with Specification: Specification for: VALIDATION_EVENTTEMPORAL_NOTEMPTY";
   bdqffdq:forValidation bdqtest:41267642-60ff-4116-90eb-499fee2cd83f-2025-03-06 .
 
 <urn:uuid:b57460c4-16e1-4c1d-8a07-a53aee9e8922> a bdqffdq:Specification;
@@ -489,8 +489,8 @@ bdqtest:3892f432-ddd0-4a0a-b713-f2e2ecbd879d-2025-03-06 a bdqffdq:Amendment;
   bdqffdq:forAmendment bdqtest:3892f432-ddd0-4a0a-b713-f2e2ecbd879d-2025-03-06;
   bdqffdq:hasSpecification <urn:uuid:bda7e8a3-3366-43d5-8a8b-e206101dc90d>;
   skos:historyNote "Source: TG2-Gainesville";
-  rdfs:label "AmendmentMethod: AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY with Specification Specification for: AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY";
-  skos:prefLabel "AmendmentMethod: AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY with Specification Specification for: AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY" .
+  rdfs:label "AmendmentMethod: AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY with Specification: Specification for: AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY";
+  skos:prefLabel "AmendmentMethod: AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY with Specification: Specification for: AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY" .
 
 <urn:uuid:bda7e8a3-3366-43d5-8a8b-e206101dc90d> a bdqffdq:Specification;
   skos:example "dwc:eventDate=\"\", dwc:year=\"1420\", dwc:month=\"10\", dwc:day=\"29\": Response.status=FILLED_IN, Response.result=dwc:eventDate=\"1420-10-29\", Response.comment=\"dwc:year, dwc:month and dwc:day are interpretable, even if pre-Linnaeus\"",
@@ -526,8 +526,8 @@ bdqtest:8d787cb5-73e2-4c39-9cd1-67c7361dc02e-2025-03-06 a bdqffdq:Validation;
     "TG2 Validation TIME CODED Test Conformance CORE";
   bdqffdq:hasSpecification <urn:uuid:2563ae15-a5bf-48fc-91f3-6df869aece2d>;
   skos:historyNote "Source: TG2-Gainesville";
-  rdfs:label "ValidationMethod: VALIDATION_DAY_INRANGE with Specification for: VALIDATION_DAY_INRANGE";
-  skos:prefLabel "ValidationMethod: VALIDATION_DAY_INRANGE with Specification for: VALIDATION_DAY_INRANGE";
+  rdfs:label "ValidationMethod: VALIDATION_DAY_INRANGE with Specification: Specification for: VALIDATION_DAY_INRANGE";
+  skos:prefLabel "ValidationMethod: VALIDATION_DAY_INRANGE with Specification: Specification for: VALIDATION_DAY_INRANGE";
   bdqffdq:forValidation bdqtest:8d787cb5-73e2-4c39-9cd1-67c7361dc02e-2025-03-06 .
 
 <urn:uuid:2563ae15-a5bf-48fc-91f3-6df869aece2d> a bdqffdq:Specification;
@@ -562,8 +562,8 @@ bdqtest:01c6dafa-0886-4b7e-9881-2c3018c98bdc-2025-03-06 a bdqffdq:Validation;
     "TG2 Validation TIME CODED Test Conformance CORE";
   bdqffdq:hasSpecification <urn:uuid:2c5dbdbb-feab-474c-bcca-bf6d1b90ae66>;
   skos:historyNote "Source: TG2-Gainesville (MONTH_INVALID/MONTH_IN_RANGE previously in spreadsheet, from ALA?)";
-  rdfs:label "ValidationMethod: VALIDATION_MONTH_STANDARD with Specification for: VALIDATION_MONTH_STANDARD";
-  skos:prefLabel "ValidationMethod: VALIDATION_MONTH_STANDARD with Specification for: VALIDATION_MONTH_STANDARD";
+  rdfs:label "ValidationMethod: VALIDATION_MONTH_STANDARD with Specification: Specification for: VALIDATION_MONTH_STANDARD";
+  skos:prefLabel "ValidationMethod: VALIDATION_MONTH_STANDARD with Specification: Specification for: VALIDATION_MONTH_STANDARD";
   bdqffdq:forValidation bdqtest:01c6dafa-0886-4b7e-9881-2c3018c98bdc-2025-03-06 .
 
 <urn:uuid:2c5dbdbb-feab-474c-bcca-bf6d1b90ae66> a bdqffdq:Specification;
@@ -599,8 +599,8 @@ bdqtest:b129fa4d-b25b-43f7-9645-5ed4d44b357b-2025-03-06 a bdqffdq:Amendment;
   bdqffdq:forAmendment bdqtest:b129fa4d-b25b-43f7-9645-5ed4d44b357b-2025-03-06;
   bdqffdq:hasSpecification <urn:uuid:3eae7451-19c6-403c-ba36-29f8204d15ff>;
   skos:historyNote "Source: TG2-Gainesville";
-  rdfs:label "AmendmentMethod: AMENDMENT_DAY_STANDARDIZED with Specification Specification for: AMENDMENT_DAY_STANDARDIZED";
-  skos:prefLabel "AmendmentMethod: AMENDMENT_DAY_STANDARDIZED with Specification Specification for: AMENDMENT_DAY_STANDARDIZED" .
+  rdfs:label "AmendmentMethod: AMENDMENT_DAY_STANDARDIZED with Specification: Specification for: AMENDMENT_DAY_STANDARDIZED";
+  skos:prefLabel "AmendmentMethod: AMENDMENT_DAY_STANDARDIZED with Specification: Specification for: AMENDMENT_DAY_STANDARDIZED" .
 
 <urn:uuid:3eae7451-19c6-403c-ba36-29f8204d15ff> a bdqffdq:Specification;
   skos:example "dwc:day=\"23rd\": Response.status=AMENDED, Response.result=dwc:day=\"23\", Response.comment=\"dwc:day is interpretable as \"23\"\"",
@@ -630,8 +630,8 @@ bdqtest:2e371d57-1eb3-4fe3-8a61-dff43ced50cf-2026-04-24 a bdqffdq:Amendment;
   bdqffdq:forAmendment bdqtest:2e371d57-1eb3-4fe3-8a61-dff43ced50cf-2026-04-24;
   bdqffdq:hasSpecification <urn:uuid:4a514adf-766f-46a4-bf16-6febcb594f38>;
   skos:historyNote "Source: TG2-Gainesville";
-  rdfs:label "AmendmentMethod: AMENDMENT_MONTH_STANDARDIZED with Specification Specification for: AMENDMENT_MONTH_STANDARDIZED";
-  skos:prefLabel "AmendmentMethod: AMENDMENT_MONTH_STANDARDIZED with Specification Specification for: AMENDMENT_MONTH_STANDARDIZED" .
+  rdfs:label "AmendmentMethod: AMENDMENT_MONTH_STANDARDIZED with Specification: Specification for: AMENDMENT_MONTH_STANDARDIZED";
+  skos:prefLabel "AmendmentMethod: AMENDMENT_MONTH_STANDARDIZED with Specification: Specification for: AMENDMENT_MONTH_STANDARDIZED" .
 
 <urn:uuid:4a514adf-766f-46a4-bf16-6febcb594f38> a bdqffdq:Specification;
   skos:example "dwc:month=\"IV\": Response.status=AMENDED, Response.result=dwc:month=\"4\", Response.comment=\"dwc:month interpreted as roman numerals \"",
@@ -666,8 +666,8 @@ bdqtest:85803c7e-2a5a-42e1-b8d3-299a44cafc46-2025-03-06 a bdqffdq:Validation;
     "TG2 Validation TIME CODED Test Conformance CORE";
   bdqffdq:hasSpecification <urn:uuid:53c6af68-6120-4da6-87d8-a3e9551b9671>;
   skos:historyNote "Source: TG2-Gainesville";
-  rdfs:label "ValidationMethod: VALIDATION_STARTDAYOFYEAR_INRANGE with Specification for: VALIDATION_STARTDAYOFYEAR_INRANGE";
-  skos:prefLabel "ValidationMethod: VALIDATION_STARTDAYOFYEAR_INRANGE with Specification for: VALIDATION_STARTDAYOFYEAR_INRANGE";
+  rdfs:label "ValidationMethod: VALIDATION_STARTDAYOFYEAR_INRANGE with Specification: Specification for: VALIDATION_STARTDAYOFYEAR_INRANGE";
+  skos:prefLabel "ValidationMethod: VALIDATION_STARTDAYOFYEAR_INRANGE with Specification: Specification for: VALIDATION_STARTDAYOFYEAR_INRANGE";
   bdqffdq:forValidation bdqtest:85803c7e-2a5a-42e1-b8d3-299a44cafc46-2025-03-06 .
 
 <urn:uuid:53c6af68-6120-4da6-87d8-a3e9551b9671> a bdqffdq:Specification;
@@ -703,8 +703,8 @@ bdqtest:9a39d88c-7eee-46df-b32a-c109f9f81fb8-2025-03-06 a bdqffdq:Validation;
     "TG2 Validation TIME CODED Test Conformance CORE";
   bdqffdq:hasSpecification <urn:uuid:62f754b5-a0a1-4b24-9982-b76e4e169f71>;
   skos:historyNote "Source: TG2-Gainesville";
-  rdfs:label "ValidationMethod: VALIDATION_ENDDAYOFYEAR_INRANGE with Specification for: VALIDATION_ENDDAYOFYEAR_INRANGE";
-  skos:prefLabel "ValidationMethod: VALIDATION_ENDDAYOFYEAR_INRANGE with Specification for: VALIDATION_ENDDAYOFYEAR_INRANGE";
+  rdfs:label "ValidationMethod: VALIDATION_ENDDAYOFYEAR_INRANGE with Specification: Specification for: VALIDATION_ENDDAYOFYEAR_INRANGE";
+  skos:prefLabel "ValidationMethod: VALIDATION_ENDDAYOFYEAR_INRANGE with Specification: Specification for: VALIDATION_ENDDAYOFYEAR_INRANGE";
   bdqffdq:forValidation bdqtest:9a39d88c-7eee-46df-b32a-c109f9f81fb8-2025-03-06 .
 
 <urn:uuid:62f754b5-a0a1-4b24-9982-b76e4e169f71> a bdqffdq:Specification;
@@ -742,8 +742,8 @@ bdqtest:eb0a44fa-241c-4d64-98df-ad4aa837307b-2025-03-06 a bdqffdq:Amendment;
   bdqffdq:forAmendment bdqtest:eb0a44fa-241c-4d64-98df-ad4aa837307b-2025-03-06;
   bdqffdq:hasSpecification <urn:uuid:647bf697-e432-4b31-9a69-778396e14a82>;
   skos:historyNote "Source: TG2-Gainesville";
-  rdfs:label "AmendmentMethod: AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR with Specification Specification for: AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR";
-  skos:prefLabel "AmendmentMethod: AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR with Specification Specification for: AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR" .
+  rdfs:label "AmendmentMethod: AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR with Specification: Specification for: AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR";
+  skos:prefLabel "AmendmentMethod: AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR with Specification: Specification for: AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR" .
 
 <urn:uuid:647bf697-e432-4b31-9a69-778396e14a82> a bdqffdq:Specification;
   skos:example "dwc:year=\"1901\", dwc:startDayOfYear=\"15\", dwc:endDayOfYear=\"25\", dwc:eventDate=\"\": Response.status=FILLED_IN, Response.result=dwc:eventDate=\"1901-01-15/1901-01-25\", Response.comment=\"dwc:eventDate was interpreted from dwc:year, dwc:startDayOfYear and dwc:endDayOfYear\"",
@@ -778,8 +778,8 @@ bdqdim:Resolution a bdqffdq:DataQualityDimension;
     "TG2 Measure TIME CODED Test CORE";
   bdqffdq:hasSpecification <urn:uuid:be93a0ef-9bf7-417f-a26e-daae5d00dabb>;
   skos:historyNote "Source: Alex Thompson";
-  rdfs:label "MeasurementMethod: MEASURE_EVENTDATE_DURATIONINSECONDS with Specification Specification for: MEASURE_EVENTDATE_DURATIONINSECONDS";
-  skos:prefLabel "MeasurementMethod: MEASURE_EVENTDATE_DURATIONINSECONDS with Specification Specification for: MEASURE_EVENTDATE_DURATIONINSECONDS" .
+  rdfs:label "MeasurementMethod: MEASURE_EVENTDATE_DURATIONINSECONDS with Specification: Specification for: MEASURE_EVENTDATE_DURATIONINSECONDS";
+  skos:prefLabel "MeasurementMethod: MEASURE_EVENTDATE_DURATIONINSECONDS with Specification: Specification for: MEASURE_EVENTDATE_DURATIONINSECONDS" .
 
 bdqffdq:MeasurementMethod rdfs:subClassOf bdqffdq:DataQualityMethod .
 
@@ -810,8 +810,8 @@ bdqtest:47ff73ba-0028-4f79-9ce1-ee7008d66498-2025-03-06 a bdqffdq:Validation;
     "TG2 Validation TIME CODED Test Conformance CORE";
   bdqffdq:hasSpecification <urn:uuid:c0fce1a1-8879-4175-8a71-ce037655c358>;
   skos:historyNote "Source: TDWG2018 DQIG Meeting; TG2-Gainesville";
-  rdfs:label "ValidationMethod: VALIDATION_DAY_STANDARD with Specification for: VALIDATION_DAY_STANDARD";
-  skos:prefLabel "ValidationMethod: VALIDATION_DAY_STANDARD with Specification for: VALIDATION_DAY_STANDARD";
+  rdfs:label "ValidationMethod: VALIDATION_DAY_STANDARD with Specification: Specification for: VALIDATION_DAY_STANDARD";
+  skos:prefLabel "ValidationMethod: VALIDATION_DAY_STANDARD with Specification: Specification for: VALIDATION_DAY_STANDARD";
   bdqffdq:forValidation bdqtest:47ff73ba-0028-4f79-9ce1-ee7008d66498-2025-03-06 .
 
 <urn:uuid:c0fce1a1-8879-4175-8a71-ce037655c358> a bdqffdq:Specification;
@@ -840,8 +840,8 @@ bdqtest:47ff73ba-0028-4f79-9ce1-ee7008d66498-2025-03-06 a bdqffdq:Validation;
     "TG2 Validation TIME CODED Test Supplementary Completeness";
   bdqffdq:hasSpecification <urn:uuid:a997dcf7-9c0d-49ed-94b6-4489db26abf7>;
   skos:historyNote "Source: TG2";
-  rdfs:label "ValidationMethod: VALIDATION_ENDDAYOFYEAR_NOTEMPTY with Specification for: VALIDATION_ENDDAYOFYEAR_NOTEMPTY";
-  skos:prefLabel "ValidationMethod: VALIDATION_ENDDAYOFYEAR_NOTEMPTY with Specification for: VALIDATION_ENDDAYOFYEAR_NOTEMPTY";
+  rdfs:label "ValidationMethod: VALIDATION_ENDDAYOFYEAR_NOTEMPTY with Specification: Specification for: VALIDATION_ENDDAYOFYEAR_NOTEMPTY";
+  skos:prefLabel "ValidationMethod: VALIDATION_ENDDAYOFYEAR_NOTEMPTY with Specification: Specification for: VALIDATION_ENDDAYOFYEAR_NOTEMPTY";
   bdqffdq:forValidation <urn:uuid:0267c35f-a02b-4dc9-9a01-38797faa6b2b> .
 
 <urn:uuid:a997dcf7-9c0d-49ed-94b6-4489db26abf7> a bdqffdq:Specification;
@@ -870,8 +870,8 @@ bdqtest:47ff73ba-0028-4f79-9ce1-ee7008d66498-2025-03-06 a bdqffdq:Validation;
     "TG2 Validation TIME CODED Test Supplementary Completeness";
   bdqffdq:hasSpecification <urn:uuid:c0446a29-31eb-4a79-a618-f63fc44cb38d>;
   skos:historyNote "Source: TG2";
-  rdfs:label "ValidationMethod: VALIDATION_STARTDAYOFYEAR_NOTEMPTY with Specification for: VALIDATION_STARTDAYOFYEAR_NOTEMPTY";
-  skos:prefLabel "ValidationMethod: VALIDATION_STARTDAYOFYEAR_NOTEMPTY with Specification for: VALIDATION_STARTDAYOFYEAR_NOTEMPTY";
+  rdfs:label "ValidationMethod: VALIDATION_STARTDAYOFYEAR_NOTEMPTY with Specification: Specification for: VALIDATION_STARTDAYOFYEAR_NOTEMPTY";
+  skos:prefLabel "ValidationMethod: VALIDATION_STARTDAYOFYEAR_NOTEMPTY with Specification: Specification for: VALIDATION_STARTDAYOFYEAR_NOTEMPTY";
   bdqffdq:forValidation <urn:uuid:167d4346-6fac-40eb-9d2e-30b7683dac04> .
 
 <urn:uuid:c0446a29-31eb-4a79-a618-f63fc44cb38d> a bdqffdq:Specification;
@@ -905,8 +905,8 @@ bdqtest:47ff73ba-0028-4f79-9ce1-ee7008d66498-2025-03-06 a bdqffdq:Validation;
     "TG2 Validation TIME CODED Test Supplementary Completeness ISO/DCMI STANDARD";
   bdqffdq:hasSpecification <urn:uuid:af43973f-9888-4ec6-8565-40a8654199cf>;
   skos:historyNote "Source: TG2";
-  rdfs:label "ValidationMethod: VALIDATION_EVENTTIME_NOTEMPTY with Specification for: VALIDATION_EVENTTIME_NOTEMPTY";
-  skos:prefLabel "ValidationMethod: VALIDATION_EVENTTIME_NOTEMPTY with Specification for: VALIDATION_EVENTTIME_NOTEMPTY";
+  rdfs:label "ValidationMethod: VALIDATION_EVENTTIME_NOTEMPTY with Specification: Specification for: VALIDATION_EVENTTIME_NOTEMPTY";
+  skos:prefLabel "ValidationMethod: VALIDATION_EVENTTIME_NOTEMPTY with Specification: Specification for: VALIDATION_EVENTTIME_NOTEMPTY";
   bdqffdq:forValidation <urn:uuid:aaebbde6-a101-4665-ba1e-6d4d8c561a31> .
 
 <urn:uuid:af43973f-9888-4ec6-8565-40a8654199cf> a bdqffdq:Specification;
@@ -940,8 +940,8 @@ bdqtest:47ff73ba-0028-4f79-9ce1-ee7008d66498-2025-03-06 a bdqffdq:Validation;
     "TG2 Validation TIME CODED Test Supplementary Completeness";
   bdqffdq:hasSpecification <urn:uuid:08c724b5-fa69-4411-b9b8-303c40710d38>;
   skos:historyNote "Source: TG2";
-  rdfs:label "IssueMethod: ISSUE_VERBATIMEVENTDATE_NOTEMPTY with Specification Specification for: ISSUE_VERBATIMEVENTDATE_NOTEMPTY";
-  skos:prefLabel "IssueMethod: ISSUE_VERBATIMEVENTDATE_NOTEMPTY with Specification Specification for: ISSUE_VERBATIMEVENTDATE_NOTEMPTY";
+  rdfs:label "IssueMethod: ISSUE_VERBATIMEVENTDATE_NOTEMPTY with Specification: Specification for: ISSUE_VERBATIMEVENTDATE_NOTEMPTY";
+  skos:prefLabel "IssueMethod: ISSUE_VERBATIMEVENTDATE_NOTEMPTY with Specification: Specification for: ISSUE_VERBATIMEVENTDATE_NOTEMPTY";
   bdqffdq:forIssue <urn:uuid:9bc8b105-902a-489c-aae8-3b7075e1b948> .
 
 <urn:uuid:08c724b5-fa69-4411-b9b8-303c40710d38> a bdqffdq:Specification;
@@ -970,8 +970,8 @@ bdqtest:47ff73ba-0028-4f79-9ce1-ee7008d66498-2025-03-06 a bdqffdq:Validation;
     "TG2 Validation TIME CODED Test Supplementary Completeness";
   bdqffdq:hasSpecification <urn:uuid:72c4b1da-c0d1-4da6-9128-92fa14439242>;
   skos:historyNote "Source: TG2";
-  rdfs:label "ValidationMethod: VALIDATION_MONTH_NOTEMPTY with Specification for: VALIDATION_MONTH_NOTEMPTY";
-  skos:prefLabel "ValidationMethod: VALIDATION_MONTH_NOTEMPTY with Specification for: VALIDATION_MONTH_NOTEMPTY";
+  rdfs:label "ValidationMethod: VALIDATION_MONTH_NOTEMPTY with Specification: Specification for: VALIDATION_MONTH_NOTEMPTY";
+  skos:prefLabel "ValidationMethod: VALIDATION_MONTH_NOTEMPTY with Specification: Specification for: VALIDATION_MONTH_NOTEMPTY";
   bdqffdq:forValidation <urn:uuid:dc2fc946-8114-491b-8a7b-3242a274a221> .
 
 <urn:uuid:72c4b1da-c0d1-4da6-9128-92fa14439242> a bdqffdq:Specification;
