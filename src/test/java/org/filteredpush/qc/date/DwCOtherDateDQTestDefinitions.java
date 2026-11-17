@@ -433,5 +433,23 @@ public class DwCOtherDateDQTestDefinitions {
 		assertNotNull(result.getComment());
 		
 	}
-	
+
+	/**
+	 * Test method for {@link org.filteredpush.qc.date.DwCOtherDateDQ#correctModifiedDateFormat(java.lang.String)}:
+	 * an ambiguous date is not amended (no value is proposed), with the potential interpretation in the comment;
+	 * an unambiguous one is amended.
+	 */
+	@Test
+	public void testCorrectModifiedDateFormatAmbiguous() {
+		DQResponse<AmendmentValue> result = DwCOtherDateDQ.correctModifiedDateFormat("02/03/2020");
+		assertEquals(ResultState.NOT_AMENDED.getLabel(), result.getResultState().getLabel());
+		assertNull(result.getValue());
+		assertTrue(result.getComment().contains("ambiguous"));
+		assertTrue(result.getComment().contains("2020-02-03/2020-03-02"));
+
+		result = DwCOtherDateDQ.correctModifiedDateFormat("Jan 1-5 1902");
+		assertEquals(ResultState.AMENDED.getLabel(), result.getResultState().getLabel());
+		assertEquals("1902-01-01/1902-01-05", result.getValue().getObject().get("dcterms:modified"));
+	}
+
 }

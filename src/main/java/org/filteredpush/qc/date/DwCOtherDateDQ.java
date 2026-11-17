@@ -437,15 +437,16 @@ public class DwCOtherDateDQ {
 								)
 						)
 				{
-					Map<String, String> correctedValues = new HashMap<String, String>();
-					correctedValues.put("dcterms:modified", extractResponse.getResult());
-
-					result.setValue(new AmendmentValue(correctedValues));
-
 					if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
-						result.setResultState(ResultState.AMBIGUOUS);
+						// ambiguous: propose no change, describing the potential interpretation in the comment
+						result.setResultState(ResultState.NOT_AMENDED);
+						result.addComment("Potential interpretation of dcterms:modified [" + modified + "] as ["
+								+ extractResponse.getResult() + "], but such interpretation is ambiguous.");
 						result.addComment(extractResponse.getComment());
 					} else {
+						Map<String, String> correctedValues = new HashMap<String, String>();
+						correctedValues.put("dcterms:modified", extractResponse.getResult());
+						result.setValue(new AmendmentValue(correctedValues));
 						if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
 							result.addComment("Interpretation of dcterms:modified [" + modified + "] is suspect.");
 							result.addComment(extractResponse.getComment());

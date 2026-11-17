@@ -437,15 +437,16 @@ public class DwCEventDQ {
 								)
 						)
 				{
-					Map<String, String> extractedValues = new HashMap<>();
-					extractedValues.put("dwc:eventDate", extractResponse.getResult());
-
-					result.setValue(new AmendmentValue(extractedValues));
-
 					if (extractResponse.getResultState().equals(EventResult.EventQCResultState.AMBIGUOUS)) {
-						result.setResultState(ResultState.AMBIGUOUS);
+						// ambiguous: propose no change, describing the potential interpretation in the comment
+						result.setResultState(ResultState.NOT_AMENDED);
+						result.addComment("Potential interpretation of verbatimEventDate [" + verbatimEventDate + "] as ["
+								+ extractResponse.getResult() + "], but such interpretation is ambiguous.");
 						result.addComment(extractResponse.getComment());
 					} else {
+						Map<String, String> extractedValues = new HashMap<>();
+						extractedValues.put("dwc:eventDate", extractResponse.getResult());
+						result.setValue(new AmendmentValue(extractedValues));
 						if (extractResponse.getResultState().equals(EventResult.EventQCResultState.SUSPECT)) {
 							result.addComment("Interpretation of verbatimEventDate [" + verbatimEventDate + "] is suspect.");
 							result.addComment(extractResponse.getComment());
@@ -1044,7 +1045,9 @@ public class DwCEventDQ {
 							transposedValues.put("dwc:day", month);
 
 							result.setValue(new AmendmentValue(transposedValues));
-							result.setResultState(ResultState.TRANSPOSED);
+							result.setResultState(ResultState.AMENDED);
+							result.addComment("Proposed transposition of dwc:month [" + month + "] and dwc:day [" + day
+									+ "]: dwc:month is out of range for months, and the two values are in range when transposed.");
 						} else {
 							result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
 						}

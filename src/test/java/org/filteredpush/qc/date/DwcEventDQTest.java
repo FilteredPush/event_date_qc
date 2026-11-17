@@ -586,7 +586,8 @@ public class DwcEventDQTest {
 		String month = "30";
 		String day = "11";
 		DQResponse<AmendmentValue> result = DwCEventDQ.dayMonthTransposition(month,day);
-		assertEquals(ResultState.TRANSPOSED, result.getResultState());
+		assertEquals(ResultState.AMENDED, result.getResultState());
+		assertTrue(result.getComment().contains("transposition"));
 		assertEquals("11",result.getValue().getObject().get("dwc:month"));
 		assertEquals("30",result.getValue().getObject().get("dwc:day"));
 
