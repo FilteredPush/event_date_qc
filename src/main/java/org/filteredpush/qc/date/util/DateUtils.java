@@ -2941,6 +2941,10 @@ public class DateUtils {
     	boolean result = false;
     	if (!isEmpty(eventDate)) { 
     	    LocalDateInterval eventDateInterval = extractInterval(eventDate);
+    	    if (eventDateInterval == null) {
+    	    	// not interpretable as a date or date range
+    	    	return false;
+    	    }
     	    Duration eventDateDuration = eventDateInterval.toDuration();
     	    logger.debug(eventDateDuration.toDays());
     	    if (eventDateDuration.toDays()<1l) { 
@@ -2964,6 +2968,10 @@ public class DateUtils {
     	boolean result = false;
     	if (!isEmpty(eventDate)) { 
     	    LocalDateInterval eventDateInterval = extractDateInterval(eventDate);
+    	    if (eventDateInterval == null) {
+    	    	// not interpretable as a date or date range
+    	    	return false;
+    	    }
     	    Duration duration = eventDateInterval.toDuration();
     	    if (duration.toDays() <= 31l) { 
     	    	result = true;
@@ -2985,6 +2993,10 @@ public class DateUtils {
     	boolean result = false;
     	if (!isEmpty(eventDate)) { 
     	    LocalDateInterval eventDateInterval = extractDateInterval(eventDate);
+    	    if (eventDateInterval == null) {
+    	    	// not interpretable as a date or date range
+    	    	return false;
+    	    }
     	    Duration duration = eventDateInterval.toDuration();
     	    int daysInYear = 365;
     	    if (includesLeapDay(eventDate)) { 
@@ -3009,6 +3021,10 @@ public class DateUtils {
     	boolean result = false;
     	if (!isEmpty(eventDate)) { 
     	    LocalDateInterval eventDateInterval = extractDateInterval(eventDate);
+    	    if (eventDateInterval == null) {
+    	    	// not interpretable as a date or date range
+    	    	return false;
+    	    }
     	    Duration duration = eventDateInterval.toDuration();
     	    Duration minusDecade = (duration.minus(Duration.ofDays((365*10)+3)));
     	    logger.debug(minusDecade.toDays());

@@ -3352,4 +3352,33 @@ public class DwcEventDQTest {
         assertEquals(ResultState.RUN_HAS_RESULT, r4.getResultState());
         assertEquals(ComplianceValue.NOT_COMPLIANT, r4.getValue());
     }
+
+	/**
+	 * VALIDATION_EVENTDATE_CONSISTENT with a dwc:eventDate that is not interpretable as a date:
+	 * INTERNAL_PREREQUISITES_NOT_MET, not an exception.
+	 */
+	@Test
+	public void testValidationEventConsistentUninterpretableEventDate() {
+		DQResponse<ComplianceValue> result = DwCEventDQ.validationEventConsistent("1963-13-08", "1963", "3", "4", null, null);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		assertNull(result.getValue());
+		assertTrue(result.getComment().contains("not interpretable"));
+		result = DwCEventDQ.validationEventConsistent("not a date", null, "3", null, null, null);
+		assertEquals(ResultState.INTERNAL_PREREQUISITES_NOT_MET.getLabel(), result.getResultState().getLabel());
+		// an interpretable date is still assessed
+		result = DwCEventDQ.validationEventConsistent("1963-03-08", "1963", "3", "8", null, null);
+		assertEquals(ResultState.RUN_HAS_RESULT.getLabel(), result.getResultState().getLabel());
+		assertEquals(ComplianceValue.COMPLIANT.getLabel(), result.getValue().getLabel());
+	}
+
+	/**
+	 * The scale tests return false, rather than throwing, for a value that is not a date.
+	 */
+	@Test
+	public void testSpecificToScaleUninterpretable() {
+		assertFalse(org.filteredpush.qc.date.util.DateUtils.specificToDay("1963-13-08"));
+		assertFalse(org.filteredpush.qc.date.util.DateUtils.specificToMonthScale("1963-13-08"));
+		assertFalse(org.filteredpush.qc.date.util.DateUtils.specificToYearScale("1963-13-08"));
+		assertFalse(org.filteredpush.qc.date.util.DateUtils.specificToDecadeScale("1963-13-08"));
+	}
 }

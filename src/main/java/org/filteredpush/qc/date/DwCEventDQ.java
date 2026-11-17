@@ -1806,6 +1806,11 @@ public class DwCEventDQ {
 		} else if (DateUtils.isEmpty(year) && DateUtils.isEmpty(month) && DateUtils.isEmpty(day)  && DateUtils.isEmpty(startDayOfYear) && DateUtils.isEmpty(endDayOfYear)) {
 			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
 			result.addComment("Provided values for year, month, day, startDayOfYear and endDayOfYear are empty.  Unable to evaluate consistency.");
+		} else if (DateUtils.extractDateInterval(eventDate) == null) {
+			// dwc:eventDate is not interpretable as a date or date range, so its precision and values
+			// can't be compared with the other terms
+			result.setResultState(ResultState.INTERNAL_PREREQUISITES_NOT_MET);
+			result.addComment("Provided value for dwc:eventDate [" + eventDate + "] is not interpretable as an ISO 8601-1 date or date range.  Unable to evaluate consistency.");
 		} else {
 			LocalDateInterval interval = DateUtils.extractDateInterval(eventDate);
 			// (1) dwc:year is EMPTY or dwc:eventDate 
