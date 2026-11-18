@@ -23,7 +23,7 @@ Available in Maven Central.
     <dependency>
         <groupId>org.filteredpush</groupId>
         <artifactId>event_date_qc</artifactId>
-        <version>3.1.0</version>
+        <version>3.2.0</version>
     </dependency>
 
 # Building
