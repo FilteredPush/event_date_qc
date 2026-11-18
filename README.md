@@ -1,5 +1,5 @@
 # event_date_qc 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.filteredpush/event_date_qc/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.filteredpush/event_date_qc)
+[![Maven Central](https://img.shields.io/maven-central/v/org.filteredpush/event_date_qc)](https://central.sonatype.com/artifact/org.filteredpush/event_date_qc)
 [![Javadocs](http://javadoc.io/badge/org.filteredpush/event_date_qc.svg)](http://javadoc.io/doc/org.filteredpush/event_date_qc)
 
 Data Quality library for dwc:eventDate and other dwc:Event terms.
