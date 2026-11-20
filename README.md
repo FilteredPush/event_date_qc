@@ -16,6 +16,65 @@ This library provides implementations for the Time related tests in the TDWG BDQ
 
 Version 3.1.0 is up to date with the CORE and SUPPLEMENTAL Time related tests as of 2025-05-06.
 
+## BDQ Standard Tests
+
+event_date_qc implements the following CORE Tests of the draft TDWG [BDQ Standard](https://bdq.tdwg.org/) ([review draft](https://bdq.tdwg.org/draft/)). Each links to its entry in the BDQ Quick Reference Guide.
+
+**Validations**
+
+- [VALIDATION_DATEIDENTIFIED_INRANGE](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#VALIDATION_DATEIDENTIFIED_INRANGE)
+- [VALIDATION_DATEIDENTIFIED_STANDARD](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#VALIDATION_DATEIDENTIFIED_STANDARD)
+- [VALIDATION_DAY_INRANGE](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#VALIDATION_DAY_INRANGE)
+- [VALIDATION_DAY_STANDARD](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#VALIDATION_DAY_STANDARD)
+- [VALIDATION_ENDDAYOFYEAR_INRANGE](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#VALIDATION_ENDDAYOFYEAR_INRANGE)
+- [VALIDATION_EVENTDATE_INRANGE](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#VALIDATION_EVENTDATE_INRANGE)
+- [VALIDATION_EVENTDATE_NOTEMPTY](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#VALIDATION_EVENTDATE_NOTEMPTY)
+- [VALIDATION_EVENTDATE_STANDARD](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#VALIDATION_EVENTDATE_STANDARD)
+- [VALIDATION_EVENTTEMPORAL_NOTEMPTY](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#VALIDATION_EVENTTEMPORAL_NOTEMPTY)
+- [VALIDATION_EVENT_CONSISTENT](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#VALIDATION_EVENT_CONSISTENT)
+- [VALIDATION_MONTH_STANDARD](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#VALIDATION_MONTH_STANDARD)
+- [VALIDATION_STARTDAYOFYEAR_INRANGE](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#VALIDATION_STARTDAYOFYEAR_INRANGE)
+- [VALIDATION_YEAR_INRANGE](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#VALIDATION_YEAR_INRANGE)
+- [VALIDATION_YEAR_NOTEMPTY](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#VALIDATION_YEAR_NOTEMPTY)
+
+**Amendments**
+
+- [AMENDMENT_DATEIDENTIFIED_STANDARDIZED](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#AMENDMENT_DATEIDENTIFIED_STANDARDIZED)
+- [AMENDMENT_DAY_STANDARDIZED](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#AMENDMENT_DAY_STANDARDIZED)
+- [AMENDMENT_EVENTDATE_FROM_VERBATIM](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#AMENDMENT_EVENTDATE_FROM_VERBATIM)
+- [AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#AMENDMENT_EVENTDATE_FROM_YEARMONTHDAY)
+- [AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#AMENDMENT_EVENTDATE_FROM_YEARSTARTDAYOFYEARENDDAYOFYEAR)
+- [AMENDMENT_EVENTDATE_STANDARDIZED](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#AMENDMENT_EVENTDATE_STANDARDIZED)
+- [AMENDMENT_EVENT_FROM_EVENTDATE](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#AMENDMENT_EVENT_FROM_EVENTDATE)
+- [AMENDMENT_MONTH_STANDARDIZED](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#AMENDMENT_MONTH_STANDARDIZED)
+
+**Measures**
+
+- [MEASURE_EVENTDATE_DURATIONINSECONDS](https://bdq.tdwg.org/draft/docs/terms/bdqtest/#MEASURE_EVENTDATE_DURATIONINSECONDS)
+
+### Supplementary Tests
+
+These Tests are not in the BDQ Standard; each links to its tdwg/bdq issue.
+
+**Validations**
+
+- VALIDATION_DATEIDENTIFIED_AFTEREVENTDATE ([tdwg/bdq#92](https://github.com/tdwg/bdq/issues/92))
+- VALIDATION_ENDDAYOFYEAR_NOTEMPTY ([tdwg/bdq#267](https://github.com/tdwg/bdq/issues/267))
+- VALIDATION_EVENTTIME_NOTEMPTY ([tdwg/bdq#255](https://github.com/tdwg/bdq/issues/255))
+- VALIDATION_MODIFIED_NOTEMPTY ([tdwg/bdq#224](https://github.com/tdwg/bdq/issues/224))
+- VALIDATION_MODIFIED_STANDARD ([tdwg/bdq#272](https://github.com/tdwg/bdq/issues/272))
+- VALIDATION_MONTH_NOTEMPTY ([tdwg/bdq#241](https://github.com/tdwg/bdq/issues/241))
+- VALIDATION_STARTDAYOFYEAR_NOTEMPTY ([tdwg/bdq#264](https://github.com/tdwg/bdq/issues/264))
+
+**Amendments**
+
+- AMENDMENT_MODIFIED_STANDARDIZED ([tdwg/bdq#273](https://github.com/tdwg/bdq/issues/273))
+
+**Issues**
+
+- ISSUE_VERBATIMEVENTDATE_NOTEMPTY ([tdwg/bdq#250](https://github.com/tdwg/bdq/issues/250))
+
+
 # Include using maven
 
 Available in Maven Central.
@@ -229,3 +288,19 @@ To deploy a new release to maven central, set the version in pom.xml to a non-sn
 
 4. Confirm release by loging to the sonatype oss repository hosting nexus instance (https://oss.sonatype.org/index.html#welcome), and searching for the artifact, or checking the staging repositories if it is held up in staging.
 
+## Related BDQ libraries and applications
+
+This library is one of a set of libraries and applications for the draft TDWG [BDQ Standard](https://bdq.tdwg.org/) (Biodiversity Data Quality), about to go into public review ([review draft](https://bdq.tdwg.org/draft/)). None of them are part of the standard.
+
+| Repository | Kind | Role | Available from |
+|---|---|---|---|
+| [ffdq-api](https://github.com/kurator-org/ffdq-api) | Library | Java annotations and result API for Test implementations | [Maven Central](https://central.sonatype.com/artifact/org.datakurator/ffdq-api), [latest release](https://github.com/kurator-org/ffdq-api/releases/latest) |
+| [kurator-ffdq](https://github.com/kurator-org/kurator-ffdq) | Library | bdqffdq model, RDF reports, Test RDF generation and Test runner | [Maven Central](https://central.sonatype.com/artifact/org.datakurator/kurator-ffdq), [latest release](https://github.com/kurator-org/kurator-ffdq/releases/latest) |
+| [sci_name_qc](https://github.com/FilteredPush/sci_name_qc) | Test implementations | NAME Tests | [Maven Central](https://central.sonatype.com/artifact/org.filteredpush/sci_name_qc), [latest release](https://github.com/FilteredPush/sci_name_qc/releases/latest) |
+| [event_date_qc](https://github.com/FilteredPush/event_date_qc) (this repository) | Test implementations | TIME Tests | [Maven Central](https://central.sonatype.com/artifact/org.filteredpush/event_date_qc), [latest release](https://github.com/FilteredPush/event_date_qc/releases/latest) |
+| [rec_occur_qc](https://github.com/FilteredPush/rec_occur_qc) | Test implementations | OTHER (metadata) Tests and SingleRecord Measures | [Maven Central](https://central.sonatype.com/artifact/org.filteredpush/rec_occur_qc), [latest release](https://github.com/FilteredPush/rec_occur_qc/releases/latest) |
+| [geo_ref_qc](https://github.com/FilteredPush/geo_ref_qc) | Test implementations | SPACE Tests | [Maven Central](https://central.sonatype.com/artifact/org.filteredpush/geo_ref_qc), [latest release](https://github.com/FilteredPush/geo_ref_qc/releases/latest) |
+| [bdqtestrunner](https://github.com/FilteredPush/bdqtestrunner) | Application | Checks Test implementations against the BDQ Test validation data | [latest release](https://github.com/FilteredPush/bdqtestrunner/releases/latest) |
+| [bdq_workbench](https://github.com/FilteredPush/bdq_workbench) | Application | Runs BDQ Tests over Darwin Core data for a Use Case | [latest release](https://github.com/FilteredPush/bdq_workbench/releases/latest) |
+| [bdq_usecase_builder](https://github.com/FilteredPush/bdq_usecase_builder) | Application | Authors Use Cases and Test definitions | [latest release](https://github.com/FilteredPush/bdq_usecase_builder/releases/latest) |
+| [bdq_issue_to_csv](https://github.com/kurator-org/bdq_issue_to_csv) | Application | Converts tdwg/bdq Test issues to a term-version CSV | [latest release](https://github.com/kurator-org/bdq_issue_to_csv/releases/latest) |
