@@ -1,0 +1,58 @@
+name: Release
+
+# When a release is published (e.g. v3.2.1), build the tagged commit, run the unit tests, and
+# attach the executable jar, with SHA-256 and SHA-512 checksums, to that release.
+# The release is created by hand, with its notes, from a tag on the release commit; the pom
+# version must be the release version. Publishing the release (not pushing the tag) triggers
+# this workflow, so the release notes, which Zenodo archives, are written first.
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Check that the pom version matches the tag
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          POM_VERSION=$(mvn -B -q help:evaluate -Dexpression=project.version -DforceStdout)
+          if [ "$POM_VERSION" != "$VERSION" ]; then
+            echo "::error::pom version $POM_VERSION does not match tag $GITHUB_REF_NAME"
+            exit 1
+          fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Build and test (unit tests; the integration tests call live services)
+        run: mvn -B clean package
+
+      - name: Collect the executable jar and checksums
+        run: |
+          mkdir dist
+          cp event_date_qc-${VERSION}-*-executable.jar dist/
+          cd dist
+          for f in *.jar; do
+            sha256sum "$f" > "$f.sha256"
+            sha512sum "$f" > "$f.sha512"
+          done
+          ls -l
+
+      - name: Attach to the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$GITHUB_REF_NAME" dist/* --clobber
